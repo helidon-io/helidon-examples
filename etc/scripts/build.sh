@@ -31,6 +31,11 @@ mvn ${MAVEN_ARGS} --version
 # Do priming build to populate local maven cache with Helidon SNAPSHOT artifacts
 ${SCRIPT_DIR}/primebuild.sh main
 
+# Copyright and Checkstyle require the priming build, so we do these here and not
+# in seperate jobs
+${SCRIPT_DIR}/copyright.sh
+${SCRIPT_DIR}/checkstyle.sh
+
 # Build this repository
 mvn ${MAVEN_ARGS} -f ${WS_DIR}/pom.xml \
     clean install -e \
