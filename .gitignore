@@ -21,3 +21,60 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Java Flight Recorder
+*.jfr
+
+# Maven
+target/
+.m2/
+dependency-reduced-pom.xml
+pom.xml.versionsBackup
+
+# MacOS
+.DS_Store
+profile
+
+# IntelliJ Idea
+.idea/
+*.iws
+*.ipr
+*.iml
+*.releaseBackup
+atlassian-ide-plugin.xml
+
+# Netbeans
+nbactions.xml
+nb-configuration.xml
+
+# Eclipse
+.settings
+.settings/
+.project
+.classpath
+
+# Asciidoctor
+.asciidoctor/
+
+# Vim
+*.swp
+
+# Gradle
+.gradle/
+build/
+
+# Node.js
+node_modules/
+node/
+
+# Helidon CLI
+.helidon
+
+# Other
+*~
+user.txt
+ObjectStore/
+PutObjectStoreDirHere/
+package-lock.json
+RUNTIMEDB/
+
