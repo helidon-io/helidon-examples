@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2016, 2022 Oracle and/or its affiliates.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.helidon</groupId>
+        <artifactId>helidon-dependencies</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+        <relativePath></relativePath>
+    </parent>
+    <groupId>io.helidon.examples</groupId>
+    <artifactId>helidon-example-code-project</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Helidon Examples Project</name>
+    <description>Examples for Helidon</description>
+
+    <organization>
+        <name>Oracle Corporation</name>
+        <url>http://www.oracle.com/</url>
+    </organization>
+
+    <inceptionYear>2018</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <developerConnection>scm:git:git@github.com:helidon-io/helidon-examples.git</developerConnection>
+        <connection>scm:git:git@github.com:helidon-io/helidon-examples.git</connection>
+        <tag>HEAD</tag>
+        <url>https://github.com/helidon-io/helidon-examples</url>
+    </scm>
+
+    <properties>
+        <version.java>19</version.java>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <version.lib.checkstyle>9.1</version.lib.checkstyle>
+        <version.lib.asm>9.4</version.lib.asm>
+
+        <version.plugin.helidon-build-tools>3.0.0</version.plugin.helidon-build-tools>
+        <version.plugin.checkstyle>3.1.2</version.plugin.checkstyle>
+        <version.plugin.compiler>3.10.1</version.plugin.compiler>
+        <version.plugin.dependency>3.1.2</version.plugin.dependency>
+        <version.plugin.directory>1.0</version.plugin.directory>
+        <version.plugin.enforcer>3.0.0-M1</version.plugin.enforcer>
+        <version.plugin.exec>1.6.0</version.plugin.exec>
+        <version.plugin.jar>3.0.2</version.plugin.jar>
+        <version.plugin.license>1.16</version.plugin.license>
+        <version.plugin.os>1.5.0.Final</version.plugin.os>
+        <version.plugin.resources>2.7</version.plugin.resources>
+        <version.plugin.version-plugin>2.3</version.plugin.version-plugin>
+        <version.plugin.buildnumber>1.4</version.plugin.buildnumber>
+    </properties>
+
+    <modules>
+        <module>examples</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${version.plugin.resources}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${version.plugin.dependency}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${version.plugin.compiler}</version>
+                    <configuration>
+                        <source>${version.java}</source>
+                        <target>${version.java}</target>
+                        <release>${version.java}</release>
+                        <forceJavacCompilerUse>true</forceJavacCompilerUse>
+                        <compilerArgs>
+                            <arg>-Xlint:unchecked</arg>
+                            <!--
+                            https://issues.apache.org/jira/browse/MCOMPILER-368
+                             -->
+                            <arg>-Xpkginfo:always</arg>
+                        </compilerArgs>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.ow2.asm</groupId>
+                            <artifactId>asm</artifactId>
+                            <version>${version.lib.asm}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${version.plugin.enforcer}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.commonjava.maven.plugins</groupId>
+                    <artifactId>directory-maven-plugin</artifactId>
+                    <version>${version.plugin.directory}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${version.plugin.checkstyle}</version>
+                    <configuration>
+                        <skip>${checkstyle.skip}</skip>
+                        <sourceDirectories>
+                            <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                        </sourceDirectories>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${version.lib.checkstyle}</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>com.sun</groupId>
+                                    <artifactId>tools</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>${version.plugin.dependency-check}</version>
+                    <configuration>
+                        <skip>${dependency-check.skip}</skip>
+                        <skipTestScope>true</skipTestScope>
+                        <failBuildOnAnyVulnerability>false</failBuildOnAnyVulnerability>
+                        <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                        <excludes>
+                            <!-- Exclude stuff we do not deploy -->
+                            <exclude>io.helidon.tracing:helidon-tracing-tests</exclude>
+                            <exclude>io.helidon.config.tests*</exclude>
+                            <exclude>io.helidon.test*</exclude>
+                            <exclude>io.helidon.examples*</exclude>
+                            <exclude>io.helidon.microprofile.tests*</exclude>
+                            <!-- This should be excluded by above, but for some reason it persists -->
+                            <exclude>org.testng:testng</exclude>
+                        </excludes>
+                        <formats>
+                            <format>HTML</format>
+                            <format>CSV</format>
+                        </formats>
+                        <suppressionFiles>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <suppressionFile>${top.parent.basedir}/etc/dependency-check-suppression.xml</suppressionFile>
+                        </suppressionFiles>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>io.helidon.build-tools</groupId>
+                    <artifactId>helidon-enforcer-plugin</artifactId>
+                    <version>${version.plugin.helidon-build-tools}</version>
+                    <configuration>
+                        <rules>
+                            <rule>copyright</rule>
+                            <rule>typos</rule>
+                        </rules>
+                        <copyrightConfig>
+                            <failOnError>true</failOnError>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <templateFile>${top.parent.basedir}/etc/copyright.txt</templateFile>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <excludeFile>${top.parent.basedir}/etc/copyright-exclude.txt</excludeFile>
+                        </copyrightConfig>
+                        <typosConfig>
+                            <failOnError>true</failOnError>
+                            <typos>
+                                <typo>heldion</typo>
+                                <typo>helidion</typo>
+                                <typo>buidler</typo>
+                                <typo>vuilder</typo>
+                                <typo>bidler</typo>
+                            </typos>
+                        </typosConfig>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>buildnumber-maven-plugin</artifactId>
+                    <version>${version.plugin.buildnumber}</version>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>create</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-dependencies</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <dependencyConvergence>
+                                    <uniqueVersions>true</uniqueVersions>
+                                </dependencyConvergence>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.commonjava.maven.plugins</groupId>
+                <artifactId>directory-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-top-parent-basedir</id>
+                        <goals>
+                            <goal>highest-basedir</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <property>top.parent.basedir</property>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-top-parent-basedir-site</id>
+                        <goals>
+                            <goal>highest-basedir</goal>
+                        </goals>
+                        <phase>pre-site</phase>
+                        <configuration>
+                            <property>top.parent.basedir</property>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-license</id>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <!--suppress UnresolvedMavenProperty -->
+                                    <directory>${top.parent.basedir}/licensing/templates</directory>
+                                    <targetPath>META-INF/</targetPath>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>LICENSE.txt</include>
+                                        <include>NOTICE.txt</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>/etc/checkstyle.xml</configLocation>
+                    <suppressionsLocation>/etc/checkstyle-suppressions.xml</suppressionsLocation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>dependency-check</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>checkstyle</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>run-checkstyle</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>validate</phase>
+                                <configuration>
+                                    <!--suppress UnresolvedMavenProperty -->
+                                    <configLocation>${top.parent.basedir}/etc/checkstyle.xml</configLocation>
+                                    <!--suppress UnresolvedMavenProperty -->
+                                    <suppressionsLocation>${top.parent.basedir}/etc/checkstyle-suppressions.xml</suppressionsLocation>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>copyright</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.helidon.build-tools</groupId>
+                        <artifactId>helidon-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>helidon-enforcer</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-no-snapshots</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <phase>validate</phase>
+                                <configuration>
+                                    <rules>
+                                        <requireReleaseDeps>
+                                            <message>No snapshots allowed during the release build!</message>
+                                        </requireReleaseDeps>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
