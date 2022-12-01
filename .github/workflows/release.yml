@@ -31,4 +31,4 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
       - name: Release
-        run: etc/scripts/release.sh
+        run: etc/scripts/release.sh release_build
