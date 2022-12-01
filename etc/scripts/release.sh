@@ -88,6 +88,7 @@ fi
 if [ -z "${VERSION+x}" ]; then
 
     # get maven version
+    set -x
     MVN_VERSION=$(mvn ${MAVEN_ARGS} \
         -q \
         -f ${WS_DIR}/pom.xml \
@@ -127,6 +128,9 @@ update_version(){
 #
 release_build(){
     echo "Starting release build for ${FULL_VERSION}"
+    mvn --version
+    java --version
+    env
 
     # Branch we will push this release to
     local LATEST_BRANCH="helidon-4.x"
