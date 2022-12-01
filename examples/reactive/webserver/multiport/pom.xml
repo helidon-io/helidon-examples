@@ -29,6 +29,7 @@
 
     <groupId>io.helidon.examples.reactive</groupId>
     <artifactId>helidon-examples-reactive-webserver-multiport</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
     <name>Helidon Examples Reactive WebServer Multiple Ports</name>
 
     <properties>
