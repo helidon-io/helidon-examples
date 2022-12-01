@@ -128,8 +128,6 @@ update_version(){
 release_build(){
     echo "Starting release build for ${FULL_VERSION}"
 
-    # Branch we create the release from
-    local DEV_BRANCH="dev-4.x"
     # Branch we will push this release to
     local LATEST_BRANCH="helidon-4.x"
     # Branch we do the release build in
@@ -143,12 +141,11 @@ release_build(){
     git remote add release "${GIT_REMOTE}" > /dev/null 2>&1 || \
     git remote set-url release "${GIT_REMOTE}"
     git fetch release ${LATEST_BRANCH}
-    git fetch release ${DEV_BRANCH}
 
     # Create a local branch to do the release build in
     # It's based on the dev branch
     git branch -D "${GIT_BRANCH}" > /dev/null 2>&1 || true
-    git checkout -b "${GIT_BRANCH}" release/${DEV_BRANCH}
+    git checkout -b "${GIT_BRANCH}"
 
     # Merge this branch (based on dev-4.x) with the
     # helidon-4.x branch to ensure helidon-4.x has
@@ -178,12 +175,13 @@ release_build(){
         clean install -e
 
     # Create and push a git tag
-
     git tag -f "${FULL_VERSION}"
-    git push --force release refs/tags/"${FULL_VERSION}":refs/tags/"${FULL_VERSION}"
+    # TODO: Uncomment when finished testing
+    # git push --force release refs/tags/"${FULL_VERSION}":refs/tags/"${FULL_VERSION}"
 
     # Update helidon-4.x branch with this release
-    git push release ${LATEST_BRANCH}
+    # TODO: Uncomment when finished testing
+    # git push release ${LATEST_BRANCH}
 
     echo "======================"
     echo "Created tag:    ${FULL_VERSION}"
