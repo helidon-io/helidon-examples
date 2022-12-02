@@ -88,7 +88,6 @@ fi
 if [ -z "${VERSION+x}" ]; then
 
     # get maven version
-    set -x
     MVN_VERSION=$(mvn ${MAVEN_ARGS} \
         -q \
         -f ${WS_DIR}/pom.xml \
