@@ -110,10 +110,9 @@ printf "\n%s: FULL_VERSION=%s\n\n" "$(basename ${0})" "${FULL_VERSION}"
 update_version(){
     # Update version
     echo "Updating version to ${FULL_VERSION}"
-    mvn -e ${MAVEN_ARGS} -f ${WS_DIR}/pom.xml versions:set versions:set-property \
+    mvn -e ${MAVEN_ARGS} -f ${WS_DIR}/pom.xml versions:set \
         -DgenerateBackupPoms=false \
         -DnewVersion="${FULL_VERSION}" \
-        -Dproperty=helidon.version \
         -DprocessAllModules=true
 }
 
