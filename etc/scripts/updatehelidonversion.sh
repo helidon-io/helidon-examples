@@ -33,7 +33,11 @@ readonly POM_FILES=$(find . -name pom.xml -print)
 
 for f in ${POM_FILES}; do
     pom_dir=$(dirname $f)
-    awk -v version=${NEW_VERSION} -f ${SCRIPT_DIR}/updatehelidonversion.awk > ${pom_dir}/pom.xml.tmp $f
+    awk -v gavs=\
+io.helidon:helidon-dependencies:${NEW_VERSION},\
+io.helidon.applications:helidon-se:${NEW_VERSION},\
+io.helidon.applications:helidon-mp:${NEW_VERSION} \
+    -f ${SCRIPT_DIR}/updateparent.awk > ${pom_dir}/pom.xml.tmp $f
     if [ $? -eq 0 ]; then
         echo "Updated $f with Helidon version ${NEW_VERSION}"
         mv  ${pom_dir}/pom.xml.tmp $f
@@ -41,4 +45,3 @@ for f in ${POM_FILES}; do
         rm -f ${pom_dir}/pom.xml.tmp
     fi
 done
-
