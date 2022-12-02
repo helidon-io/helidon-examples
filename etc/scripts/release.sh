@@ -118,18 +118,16 @@ update_version(){
 
 # A release build of the examples consists of:
 #
-# 1. Checkout dev-N.x branch we want to release
-# 2. Merge helidon-N.x branch that we will push to at the end
-# 3. Update version to non-SNAPSHOT version. Should match Helidon version.
-# 4. Perform full test build against corresponding released Helidon version.
-# 3. Create tag
-# 4. Update "helidon-N.x" branch with latest
+# 1. Merge helidon-N.x branch that we will push to at the end
+# 2. Update version to non-SNAPSHOT version. Should match Helidon version.
+# 3. Perform full test build against corresponding released Helidon version.
+# 4. Create tag
+# 5. Update "helidon-N.x" branch with latest
 #
 release_build(){
     echo "Starting release build for ${FULL_VERSION}"
     mvn --version
     java --version
-    env
 
     # Branch we will push this release to
     local LATEST_BRANCH="helidon-4.x"

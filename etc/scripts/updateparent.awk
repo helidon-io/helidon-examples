@@ -25,9 +25,23 @@
 #   1 new version was not applied to file (this is not necessarily an error)
 #
 BEGIN {
-    if (version == "") {
-        print "Must provide version using '-v version=n.n.n"
+    if (gavs == "") {
+        print "Must provide one or more GAVs using '-v gavs=g1:a1:v1,g2:a2:v2" 
         exit 1
+    }
+
+    # Split list into array of GAVs
+    split(gavs, gavArray, ",")
+
+    for (i in gavArray) {
+        gav = gavArray[i]
+
+        # Split a GAV into it's part
+        split(gav, gavParts, ":")
+
+        # Map GA to V
+        ga = gavParts[1] ":" gavParts[2]
+        gaMap[ga] = gavParts[3]
     }
 
     fileChanged="false"
@@ -50,14 +64,11 @@ BEGIN {
 }
 
 /<version>/ && inParent == "true" {
+    ga = parentGroupId ":" parentArtifactId
+    v = gaMap[ga]
 
-    # Change version only for parents that are Helidon artifacts
-    if ( (parentGroupId == "io.helidon" && parentArtifactId == "helidon-dependencies") ||
-         (parentGroupId == "io.helidon.applications" && parentArtifactId == "helidon-se") ||
-         (parentGroupId == "io.helidon.applications" && parentArtifactId == "helidon-mp") ) {
-
-        # Makes sure indentation is correct
-        printf("%s<version>%s</version>\n", $1, version)
+    if (length(v) != 0) {
+        printf("%s<version>%s</version>\n", $1, v)
         fileChanged="true"
         next
     }
