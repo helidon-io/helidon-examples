@@ -109,27 +109,25 @@ printf "\n%s: FULL_VERSION=%s\n\n" "$(basename ${0})" "${FULL_VERSION}"
 update_version(){
     # Update version
     echo "Updating version to ${FULL_VERSION}"
-    mvn -e ${MAVEN_ARGS} -f ${WS_DIR}/pom.xml versions:set versions:set-property \
+    mvn -e ${MAVEN_ARGS} -f ${WS_DIR}/pom.xml versions:set \
         -DgenerateBackupPoms=false \
         -DnewVersion="${FULL_VERSION}" \
-        -Dproperty=helidon.version \
         -DprocessAllModules=true
 }
 
 # A release build of the examples consists of:
 #
-# 1. Checkout dev-N.x branch we want to release
-# 2. Merge helidon-N.x branch that we will push to at the end
-# 3. Update version to non-SNAPSHOT version. Should match Helidon version.
-# 4. Perform full test build against corresponding released Helidon version.
-# 3. Create tag
-# 4. Update "helidon-N.x" branch with latest
+# 1. Merge helidon-N.x branch that we will push to at the end
+# 2. Update version to non-SNAPSHOT version. Should match Helidon version.
+# 3. Perform full test build against corresponding released Helidon version.
+# 4. Create tag
+# 5. Update "helidon-N.x" branch with latest
 #
 release_build(){
     echo "Starting release build for ${FULL_VERSION}"
+    mvn --version
+    java --version
 
-    # Branch we create the release from
-    local DEV_BRANCH="dev-4.x"
     # Branch we will push this release to
     local LATEST_BRANCH="helidon-4.x"
     # Branch we do the release build in
@@ -143,12 +141,11 @@ release_build(){
     git remote add release "${GIT_REMOTE}" > /dev/null 2>&1 || \
     git remote set-url release "${GIT_REMOTE}"
     git fetch release ${LATEST_BRANCH}
-    git fetch release ${DEV_BRANCH}
 
     # Create a local branch to do the release build in
     # It's based on the dev branch
     git branch -D "${GIT_BRANCH}" > /dev/null 2>&1 || true
-    git checkout -b "${GIT_BRANCH}" release/${DEV_BRANCH}
+    git checkout -b "${GIT_BRANCH}"
 
     # Merge this branch (based on dev-4.x) with the
     # helidon-4.x branch to ensure helidon-4.x has
@@ -178,12 +175,13 @@ release_build(){
         clean install -e
 
     # Create and push a git tag
-
     git tag -f "${FULL_VERSION}"
-    git push --force release refs/tags/"${FULL_VERSION}":refs/tags/"${FULL_VERSION}"
+    # TODO: Uncomment when finished testing
+    # git push --force release refs/tags/"${FULL_VERSION}":refs/tags/"${FULL_VERSION}"
 
     # Update helidon-4.x branch with this release
-    git push release ${LATEST_BRANCH}
+    # TODO: Uncomment when finished testing
+    # git push release ${LATEST_BRANCH}
 
     echo "======================"
     echo "Created tag:    ${FULL_VERSION}"
