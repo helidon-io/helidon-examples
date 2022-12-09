@@ -136,8 +136,7 @@ release_build(){
     # Create a "release" remote that is the same as "origin"
     # We do this so the release branch can be in its own
     # namespace (based on the remote)
-    local GIT_REMOTE=$(git config --get remote.origin.url | \
-        sed "s,https://\([^/]*\)/,git@\1:,")
+    local GIT_REMOTE=$(git config --get remote.origin.url)
     git remote add release "${GIT_REMOTE}" > /dev/null 2>&1 || \
     git remote set-url release "${GIT_REMOTE}"
     git fetch release ${LATEST_BRANCH}
@@ -176,12 +175,10 @@ release_build(){
 
     # Create and push a git tag
     git tag -f "${FULL_VERSION}"
-    # TODO: Uncomment when finished testing
-    # git push --force release refs/tags/"${FULL_VERSION}":refs/tags/"${FULL_VERSION}"
+    git push --force release refs/tags/"${FULL_VERSION}":refs/tags/"${FULL_VERSION}"
 
     # Update helidon-4.x branch with this release
-    # TODO: Uncomment when finished testing
-    # git push release ${LATEST_BRANCH}
+    git push release HEAD:${LATEST_BRANCH}
 
     echo "======================"
     echo "Created tag:    ${FULL_VERSION}"
