@@ -112,6 +112,7 @@ update_version(){
     mvn -e ${MAVEN_ARGS} -f ${WS_DIR}/pom.xml versions:set \
         -DgenerateBackupPoms=false \
         -DnewVersion="${FULL_VERSION}" \
+        -DupdateMatchingVersions=false \
         -DprocessAllModules=true
 }
 
