@@ -35,5 +35,7 @@ jobs:
           cache: maven
       - name: Release
         run: |
+          git config user.email "helidon-robot_ww@oracle.com"
+          git config user.name "Helidon Robot"
           gh auth setup-git
           etc/scripts/release.sh release_build
