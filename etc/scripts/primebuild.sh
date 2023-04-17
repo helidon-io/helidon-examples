@@ -43,10 +43,8 @@ fi
 
 mvn ${MAVEN_ARGS} --version
 
-# depth 0? 1?
-git clone ${HELIDON_REPO}
+git clone ${HELIDON_REPO} --branch ${HELIDON_BRANCH} --single-branch --depth 1 
 cd ${HELIDON_REPO_NAME}
-git checkout ${HELIDON_BRANCH}
 
 HELIDON_VERSION_IN_REPO=`cat bom/pom.xml | grep "<helidon.version>" | cut -d">" -f 2 | cut -d"<" -f 1`
 
