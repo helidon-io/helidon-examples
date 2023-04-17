@@ -24,15 +24,15 @@ jobs:
         os: [ ubuntu-20.04, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
       - name: Set up JDK 17
         uses: actions/setup-java@v3.6.0
         with:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
       - name: Prime build
         run: etc/scripts/primebuild.sh
       - name: Upload Maven Artifacts
