@@ -30,6 +30,9 @@ jobs:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
       - name: Prime build
         run: etc/scripts/primebuild.sh
       - name: Upload Maven Artifacts
