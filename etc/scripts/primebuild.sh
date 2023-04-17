@@ -54,5 +54,5 @@ if [ ${HELIDON_VERSION} != ${HELIDON_VERSION_IN_REPO} ]; then
 fi
 
 echo "Building Helidon version ${HELIDON_VERSION} from Helidon repo branch ${HELIDON_BRANCH}"
-mvn clean install -DskipTests
+mvn clean install -DskipTests -Dmaven.test.skip=true -B
 
