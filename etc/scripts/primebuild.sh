@@ -43,6 +43,7 @@ fi
 
 mvn ${MAVEN_ARGS} --version
 
+# depth 0? 1?
 git clone ${HELIDON_REPO}
 cd ${HELIDON_REPO_NAME}
 git checkout ${HELIDON_BRANCH}
