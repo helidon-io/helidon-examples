@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   primebuild:
-    timeout-minutes: 15
+    timeout-minutes: 30
     strategy:
       matrix:
         os: [ ubuntu-20.04, macos-latest ]
@@ -33,13 +33,13 @@ jobs:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
-      - name: Prime build
+      - name: Helidon Priming build
         run: etc/scripts/primebuild.sh
       - name: Upload Maven Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: io-helidon-maven-artifacts
-          path: $HOME/.m2/repository/io/helidon
+          path: ~/.m2/repository/io/helidon
   copyright:
     needs: primebuild
     timeout-minutes: 10
@@ -65,7 +65,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: io-helidon-maven-artifacts
-          path: $HOME/.m2/repository/io/helidon
+          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v3
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v3.6.0
@@ -84,7 +84,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: io-helidon-maven-artifacts
-          path: $HOME/.m2/repository/io/helidon
+          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v3
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v3.6.0
@@ -106,7 +106,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: io-helidon-maven-artifacts
-          path: $HOME/.m2/repository/io/helidon
+          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
