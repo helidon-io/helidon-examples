@@ -18,18 +18,15 @@
 -->
 
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.helidon.examples</groupId>
         <artifactId>helidon-example-code-project</artifactId>
-        <version>4.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
-
     <groupId>io.helidon.examples</groupId>
     <artifactId>helidon-examples-project</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
     <name>Helidon Examples</name>
     <packaging>pom</packaging>
 
@@ -43,9 +40,27 @@
     </properties>
 
     <modules>
-        <module>nima</module>
-        <module>reactive</module>
+        <module>config</module>
+        <module>graphql</module>
+        <module>grpc</module>
+        <module>health</module>
+        <module>quickstarts</module>
         <module>microprofile</module>
+        <module>media</module>
+        <module>openapi</module>
+        <module>openapi-tools</module>
+        <module>security</module>
+        <module>translator-app</module>
+        <module>webserver</module>
+        <module>integrations</module>
+        <module>employee-app</module>
+        <module>dbclient</module>
+        <module>webclient</module>
+        <module>cors</module>
+        <module>messaging</module>
+        <module>logging</module>
+        <module>metrics</module>
+        <module>jbatch</module>
     </modules>
 
     <build>
@@ -63,4 +78,3 @@
     </build>
 
 </project>
-

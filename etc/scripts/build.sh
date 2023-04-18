@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #
-# Copyright (c) 2022 Oracle and/or its affiliates.
+# Copyright (c) 2022, 2023 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,14 +29,11 @@ readonly SCRIPT_DIR=$(dirname ${SCRIPT_PATH})
 mvn ${MAVEN_ARGS} --version
 
 # Do priming build to populate local maven cache with Helidon SNAPSHOT artifacts
-${SCRIPT_DIR}/primebuild.sh main
-
-# Copyright and Checkstyle require the priming build, so we do these here and not
-# in seperate jobs
-${SCRIPT_DIR}/copyright.sh
-${SCRIPT_DIR}/checkstyle.sh
+# Handled by workflow
+#${SCRIPT_DIR}/primebuild.sh
 
 # Build this repository
+echo "Build..."
 mvn ${MAVEN_ARGS} -f ${WS_DIR}/pom.xml \
     clean install -e \
     -Dmaven.test.failure.ignore=true

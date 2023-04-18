@@ -1,6 +1,6 @@
 #!/bin/bash 
 #
-# Copyright (c) 2022 Oracle and/or its affiliates.
+# Copyright (c) 2022, 2023 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,3 +45,8 @@ io.helidon.applications:helidon-mp:${NEW_VERSION} \
         rm -f ${pom_dir}/pom.xml.tmp
     fi
 done
+
+# Update helidon.version property in the top level pom
+cat pom.xml | sed -e "s#<helidon.version>[a-zA-Z0-9.-]*</helidon.version>#<helidon.version>${NEW_VERSION}</helidon.version>#" > ${TMPDIR}/pom.xml
+mv ${TMPDIR}/pom.xml ./pom.xml
+echo "Updated helidon.version in top level pom.xml with Helidon version ${NEW_VERSION}"
