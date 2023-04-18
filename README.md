@@ -40,7 +40,7 @@ git checkout helidon-3.x
 To checkout examples for a specific release of Helidon:
 
 ```
-git checkout tags/3.2.0
+git checkout tags/3.6.0
 ```
 
 ## License
