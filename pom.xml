@@ -85,8 +85,8 @@
         <version.plugin.resources>2.7</version.plugin.resources>
         <version.plugin.version-plugin>2.15.0</version.plugin.version-plugin>
         <version.plugin.buildnumber>1.4</version.plugin.buildnumber>
-        <version.plugin.spotbugs>4.4.2.2</version.plugin.spotbugs>
-        <version.plugin.findsecbugs>1.11.0</version.plugin.findsecbugs>
+        <version.plugin.spotbugs>4.7.3.4</version.plugin.spotbugs>
+        <version.plugin.findsecbugs>1.12.0</version.plugin.findsecbugs>
         <version.plugin.dependency-check>8.2.1</version.plugin.dependency-check>
     </properties>
 

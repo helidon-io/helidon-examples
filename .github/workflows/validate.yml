@@ -37,6 +37,7 @@ jobs:
         with:
           name: io-helidon-maven-artifacts
           path: ~/.m2/repository/io/helidon
+          retention-days: 1
   copyright:
     needs: primebuild
     timeout-minutes: 10
