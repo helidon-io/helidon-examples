@@ -53,7 +53,7 @@
     <scm>
         <developerConnection>scm:git:git@github.com:helidon-io/helidon-examples.git</developerConnection>
         <connection>scm:git:git@github.com:helidon-io/helidon-examples.git</connection>
-        <tag>HEAD</tag>
+        <tag>3.2.0</tag>
         <url>https://github.com/helidon-io/helidon-examples</url>
     </scm>
 

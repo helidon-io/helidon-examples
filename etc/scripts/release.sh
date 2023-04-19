@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2022 Oracle and/or its affiliates.
+# Copyright (c) 2022, 2023 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -84,7 +84,10 @@ if [ -z "${COMMAND}" ] ; then
     exit 1
 fi
 
-# Resolve FULL_VERSION
+# For releases this should be a released version of Helidon
+readonly HELIDON_VERSION=`cat ${WS_DIR}/pom.xml | grep "<helidon.version>" | cut -d">" -f 2 | cut -d"<" -f 1`
+
+# Resolve FULL_VERSION of this project
 if [ -z "${VERSION+x}" ]; then
 
     # get maven version
@@ -105,6 +108,7 @@ fi
 
 export FULL_VERSION
 printf "\n%s: FULL_VERSION=%s\n\n" "$(basename ${0})" "${FULL_VERSION}"
+printf "\n%s: HELIDON_VERSION=%s\n\n" "$(basename ${0})" "${HELIDON_VERSION}"
 
 update_version(){
     # Update version
@@ -119,20 +123,19 @@ update_version(){
 # A release build of the examples consists of:
 #
 # 1. Merge helidon-N.x branch that we will push to at the end
-# 2. Update version to non-SNAPSHOT version. Should match Helidon version.
-# 3. Perform full test build against corresponding released Helidon version.
-# 4. Create tag
-# 5. Update "helidon-N.x" branch with latest
+# 2. Perform full test build against corresponding released Helidon version.
+# 3. Create tag
+# 4. Update "helidon-N.x" branch with latest
 #
 release_build(){
-    echo "Starting release build for ${FULL_VERSION}"
+    echo "Starting release build for ${HELIDON_VERSION}"
     mvn --version
     java --version
 
     # Branch we will push this release to
-    local LATEST_BRANCH="helidon-4.x"
+    local LATEST_BRANCH="helidon-3.x"
     # Branch we do the release build in
-    local GIT_BRANCH="release/${FULL_VERSION}"
+    local GIT_BRANCH="release/${HELIDON_VERSION}"
 
     # Create a "release" remote that is the same as "origin"
     # We do this so the release branch can be in its own
@@ -147,17 +150,19 @@ release_build(){
     git branch -D "${GIT_BRANCH}" > /dev/null 2>&1 || true
     git checkout -b "${GIT_BRANCH}"
 
-    # Merge this branch (based on dev-4.x) with the
-    # helidon-4.x branch to ensure helidon-4.x has
+    # Merge this branch (based on dev-3.x) with the
+    # helidon-3.x branch to ensure helidon-3.x has
     # valid history when we push all this to it.
     git merge -s ours --no-ff release/${LATEST_BRANCH}
 
     # Now update the version to FULL_VERSION
-    update_version
+    # TODO remove: we do not update the example project version.
+    # Tags, etc are based on HELIDON_VERSION
+    # update_version
 
     # Update scm/tag entry in the parent pom
     cat pom.xml | \
-        sed -e s@'<tag>HEAD</tag>'@"<tag>${FULL_VERSION}</tag>"@g \
+        sed -e s@'<tag>HEAD</tag>'@"<tag>${HELIDON_VERSION}</tag>"@g \
         > pom.xml.tmp
     mv pom.xml.tmp pom.xml
 
@@ -166,7 +171,7 @@ release_build(){
     git config user.name || git config --global user.name "Helidon Robot"
 
     # Commit version changes
-    git commit -a -m "Release ${FULL_VERSION} [ci skip]"
+    git commit -a -m "Release ${HELIDON_VERSION} [ci skip]"
 
     # Run build as a sanity check
     ${SCRIPT_DIR}/copyright.sh
@@ -175,14 +180,14 @@ release_build(){
         clean install -e
 
     # Create and push a git tag
-    git tag -f "${FULL_VERSION}"
-    git push --force release refs/tags/"${FULL_VERSION}":refs/tags/"${FULL_VERSION}"
+    git tag -f "${HELIDON_VERSION}"
+    git push --force release refs/tags/"${HELIDON_VERSION}":refs/tags/"${HELIDON_VERSION}"
 
     # Update helidon-4.x branch with this release
     git push release HEAD:${LATEST_BRANCH}
 
     echo "======================"
-    echo "Created tag:    ${FULL_VERSION}"
+    echo "Created tag:    ${HELIDON_VERSION}"
     echo "Updated branch: ${LATEST_BRANCH}"
     echo "======================"
 }
