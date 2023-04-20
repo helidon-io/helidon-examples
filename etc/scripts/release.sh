@@ -19,12 +19,10 @@
 [ -h "${0}" ] && readonly SCRIPT_PATH="$(readlink "${0}")" || readonly SCRIPT_PATH="${0}"
 
 # Load pipeline environment setup and define WS_DIR
-. $(dirname -- "${SCRIPT_PATH}")/includes/pipeline-env.sh "${SCRIPT_PATH}" '../..'
+. "$(dirname -- "${SCRIPT_PATH}")/includes/pipeline-env.sh" "${SCRIPT_PATH}" '../..'
 
 # Setup error handling using default settings (defined in includes/error_handlers.sh)
 error_trap_setup
-
-readonly SCRIPT_DIR=$(dirname ${SCRIPT_PATH})
 
 usage(){
     cat <<EOF
@@ -85,7 +83,7 @@ if [ -z "${COMMAND}" ] ; then
 fi
 
 # For releases this should be a released version of Helidon
-readonly HELIDON_VERSION=`cat ${WS_DIR}/pom.xml | grep "<helidon.version>" | cut -d">" -f 2 | cut -d"<" -f 1`
+readonly HELIDON_VERSION=$(cat "${WS_DIR}/pom.xml" | grep "<helidon.version>" | cut -d">" -f 2 | cut -d"<" -f 1)
 
 # Resolve FULL_VERSION of this project
 if [ -z "${VERSION+x}" ]; then
@@ -107,8 +105,8 @@ else
 fi
 
 export FULL_VERSION
-printf "\n%s: FULL_VERSION=%s\n\n" "$(basename ${0})" "${FULL_VERSION}"
-printf "\n%s: HELIDON_VERSION=%s\n\n" "$(basename ${0})" "${HELIDON_VERSION}"
+printf "%s: FULL_VERSION=%s\n" "$(basename ${0})" "${FULL_VERSION}"
+printf "%s: HELIDON_VERSION=%s\n\n" "$(basename ${0})" "${HELIDON_VERSION}"
 
 update_version(){
     # Update version
@@ -123,9 +121,16 @@ update_version(){
 # A release build of the examples consists of:
 #
 # 1. Merge helidon-N.x branch that we will push to at the end
-# 2. Perform full test build against corresponding released Helidon version.
-# 3. Create tag
-# 4. Update "helidon-N.x" branch with latest
+# 2 Create tag
+# 3. Update "helidon-N.x" branch with latest
+#
+# A release build does not modify the source in any way. It assumes the
+# Helidon version has already been changed to the final version before
+# being triggered and it does not update the SNAPSHOT version of the
+# example project itself.
+#
+# A release build also does not do a test build of the examples. It
+# assume a validate workflow has been run first.
 #
 release_build(){
     echo "Starting release build for ${HELIDON_VERSION}"
@@ -134,50 +139,16 @@ release_build(){
 
     # Branch we will push this release to
     local LATEST_BRANCH="helidon-3.x"
-    # Branch we do the release build in
-    local GIT_BRANCH="release/${HELIDON_VERSION}"
 
-    # Create a "release" remote that is the same as "origin"
-    # We do this so the release branch can be in its own
-    # namespace (based on the remote)
-    local GIT_REMOTE=$(git config --get remote.origin.url)
-    git remote add release "${GIT_REMOTE}" > /dev/null 2>&1 || \
-    git remote set-url release "${GIT_REMOTE}"
-    git fetch release ${LATEST_BRANCH}
-
-    # Create a local branch to do the release build in
-    # It's based on the dev branch
-    git branch -D "${GIT_BRANCH}" > /dev/null 2>&1 || true
-    git checkout -b "${GIT_BRANCH}"
+    if [[ ${HELIDON_VERSION} == *-SNAPSHOT ]]; then
+        echo "Helidon version ${HELIDON_VERSION} is a SNAPSHOT version and not a released version. Failing release."
+        exit 1
+    fi
 
     # Merge this branch (based on dev-3.x) with the
     # helidon-3.x branch to ensure helidon-3.x has
     # valid history when we push all this to it.
     git merge -s ours --no-ff release/${LATEST_BRANCH}
-
-    # Now update the version to FULL_VERSION
-    # TODO remove: we do not update the example project version.
-    # Tags, etc are based on HELIDON_VERSION
-    # update_version
-
-    # Update scm/tag entry in the parent pom
-    cat pom.xml | \
-        sed -e s@'<tag>HEAD</tag>'@"<tag>${HELIDON_VERSION}</tag>"@g \
-        > pom.xml.tmp
-    mv pom.xml.tmp pom.xml
-
-    # Git user info
-    git config user.email || git config --global user.email "info@helidon.io"
-    git config user.name || git config --global user.name "Helidon Robot"
-
-    # Commit version changes
-    git commit -a -m "Release ${HELIDON_VERSION} [ci skip]"
-
-    # Run build as a sanity check
-    ${SCRIPT_DIR}/copyright.sh
-    ${SCRIPT_DIR}/checkstyle.sh
-    mvn ${MAVEN_ARGS} -f ${WS_DIR}/pom.xml \
-        clean install -e
 
     # Create and push a git tag
     git tag -f "${HELIDON_VERSION}"
