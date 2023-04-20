@@ -20,7 +20,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  call-validate-workflow:
+    uses: ./.github/workflows/validate.yml
+  release:
+    needs: call-validate-workflow
     timeout-minutes: 30
     runs-on: ubuntu-20.04
     steps:
