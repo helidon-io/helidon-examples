@@ -4,7 +4,7 @@
 
 name: "Validate"
 
-on: [pull_request]
+on: [pull_request, workflow_call]
 
 env:
   JAVA_VERSION: '17'
@@ -31,7 +31,10 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
       - name: Helidon Priming build
-        run: etc/scripts/primebuild.sh
+        run: |
+          mkdir -p ~/.m2/repository/io/helidon/
+          echo "empty file" > ~/.m2/repository/io/helidon/empty.txt
+          etc/scripts/primebuild.sh
       - name: Upload Maven Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -97,7 +100,6 @@ jobs:
     timeout-minutes: 20
     strategy:
       matrix:
-#        os: [ ubuntu-20.04, macos-latest ]
         os: [ ubuntu-20.04 ]
     runs-on: ${{ matrix.os }}
     steps:

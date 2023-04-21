@@ -148,14 +148,15 @@ release_build(){
     # Merge this branch (based on dev-3.x) with the
     # helidon-3.x branch to ensure helidon-3.x has
     # valid history when we push all this to it.
-    git merge -s ours --no-ff release/${LATEST_BRANCH}
+    git fetch origin
+    git merge -s ours --no-ff origin/${LATEST_BRANCH}
 
     # Create and push a git tag
     git tag -f "${HELIDON_VERSION}"
-    git push --force release refs/tags/"${HELIDON_VERSION}":refs/tags/"${HELIDON_VERSION}"
+    git push --force origin refs/tags/"${HELIDON_VERSION}":refs/tags/"${HELIDON_VERSION}"
 
     # Update helidon-3.x branch with this release
-    git push release HEAD:${LATEST_BRANCH}
+    git push origin HEAD:${LATEST_BRANCH}
 
     echo "======================"
     echo "Created tag:    ${HELIDON_VERSION}"
