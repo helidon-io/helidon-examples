@@ -17,6 +17,7 @@ Then:
 ```
 git clone https://github.com/helidon-io/helidon-examples.git
 cd helidon-examples
+git checkout helidon-3.x
 mvn clean install
 ```
 
@@ -43,9 +44,16 @@ To checkout examples for a specific release of Helidon:
 git checkout tags/3.6.0
 ```
 
+## Contributing
+
+This project welcomes contributions from the community. Before submitting a pull
+request, please [review our contribution guide](./CONTRIBUTING.md).
+
 ## License
 
-Helidon Examples are available under Apache License 2.0.
+Copyright (c) 2017, 2023 Oracle and/or its affiliates.
+
+Released under [Apache License 2.0](./LICENSE.txt).
 
 ## Third Party Attributions
 
