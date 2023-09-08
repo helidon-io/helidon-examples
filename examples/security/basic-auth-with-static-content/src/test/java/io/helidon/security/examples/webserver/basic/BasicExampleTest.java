@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import io.helidon.common.http.Http;
+import io.helidon.security.EndpointConfig;
 import io.helidon.security.Security;
 import io.helidon.security.providers.httpauth.HttpBasicAuthProvider;
 import io.helidon.webclient.WebClient;
@@ -151,8 +152,8 @@ public abstract class BasicExampleTest {
         // here we call the endpoint
         return client.get()
                 .uri(uri)
-                .property(HttpBasicAuthProvider.EP_PROPERTY_OUTBOUND_USER, username)
-                .property(HttpBasicAuthProvider.EP_PROPERTY_OUTBOUND_PASSWORD, password)
+                .property(EndpointConfig.PROPERTY_OUTBOUND_ID, username)
+                .property(EndpointConfig.PROPERTY_OUTBOUND_SECRET, password)
                 .request()
                 .await(5, TimeUnit.SECONDS);
     }

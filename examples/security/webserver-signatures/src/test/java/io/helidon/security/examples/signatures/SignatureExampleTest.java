@@ -29,8 +29,8 @@ import io.helidon.webserver.WebServer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static io.helidon.security.providers.httpauth.HttpBasicAuthProvider.EP_PROPERTY_OUTBOUND_PASSWORD;
-import static io.helidon.security.providers.httpauth.HttpBasicAuthProvider.EP_PROPERTY_OUTBOUND_USER;
+import static io.helidon.security.EndpointConfig.PROPERTY_OUTBOUND_ID;
+import static io.helidon.security.EndpointConfig.PROPERTY_OUTBOUND_SECRET;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -99,8 +99,8 @@ public abstract class SignatureExampleTest {
                                String service) {
         client.get()
                 .uri(uri)
-                .property(EP_PROPERTY_OUTBOUND_USER, username)
-                .property(EP_PROPERTY_OUTBOUND_PASSWORD, password)
+                .property(PROPERTY_OUTBOUND_ID, username)
+                .property(PROPERTY_OUTBOUND_SECRET, password)
                 .request(String.class)
                 .thenAccept(it -> {
                     // check login

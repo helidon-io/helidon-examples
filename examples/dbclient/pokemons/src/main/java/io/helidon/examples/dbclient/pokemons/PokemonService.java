@@ -74,16 +74,18 @@ public class PokemonService implements Service {
      */
     private void index(ServerRequest request, ServerResponse response) {
         response.headers().contentType(MediaType.TEXT_PLAIN);
-        response.send("Pokemon JDBC Example:\n"
-        + "     GET /type                - List all pokemon types\n"
-        + "     GET /pokemon             - List all pokemons\n"
-        + "     GET /pokemon/{id}        - Get pokemon by id\n"
-        + "     GET /pokemon/name/{name} - Get pokemon by name\n"
-        + "    POST /pokemon             - Insert new pokemon:\n"
-        + "                                {\"id\":<id>,\"name\":<name>,\"type\":<type>}\n"
-        + "     PUT /pokemon             - Update pokemon\n"
-        + "                                {\"id\":<id>,\"name\":<name>,\"type\":<type>}\n"
-        + "  DELETE /pokemon/{id}        - Delete pokemon with specified id\n");
+        response.send("""
+                Pokemon JDBC Example:
+                     GET /type                - List all pokemon types
+                     GET /pokemon             - List all pokemons
+                     GET /pokemon/{id}        - Get pokemon by id
+                     GET /pokemon/name/{name} - Get pokemon by name
+                    POST /pokemon             - Insert new pokemon:
+                                                {"id":<id>,"name":<name>,"type":<type>}
+                     PUT /pokemon             - Update pokemon
+                                                {"id":<id>,"name":<name>,"type":<type>}
+                  DELETE /pokemon/{id}        - Delete pokemon with specified id
+                """);
     }
 
     /**
