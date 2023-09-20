@@ -22,6 +22,7 @@ import io.helidon.grpc.client.ClientServiceDescriptor;
 import io.helidon.grpc.client.GrpcServiceClient;
 import io.helidon.grpc.examples.common.StringServiceGrpc;
 import io.helidon.grpc.examples.common.Strings;
+import io.helidon.security.EndpointConfig;
 import io.helidon.security.Security;
 import io.helidon.security.integration.grpc.GrpcClientSecurity;
 import io.helidon.security.providers.httpauth.HttpBasicAuthProvider;
@@ -64,8 +65,8 @@ public class SecureStringClient {
         // create the gRPC client security call credentials
         // setting the properties used by the basic auth provider for user name and password
         GrpcClientSecurity clientSecurity = GrpcClientSecurity.builder(security.createContext("test.client"))
-                .property(HttpBasicAuthProvider.EP_PROPERTY_OUTBOUND_USER, user)
-                .property(HttpBasicAuthProvider.EP_PROPERTY_OUTBOUND_PASSWORD, password)
+                .property(EndpointConfig.PROPERTY_OUTBOUND_ID, user)
+                .property(EndpointConfig.PROPERTY_OUTBOUND_SECRET, password)
                 .build();
 
         // Create the client service descriptor and add the call credentials

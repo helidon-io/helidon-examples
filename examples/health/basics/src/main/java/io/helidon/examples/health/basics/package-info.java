@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Example of healthchecks in helidon SE.
+ * Example of health checks in helidon SE.
  */
 package io.helidon.examples.health.basics;

@@ -24,7 +24,7 @@
     <parent>
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-mp</artifactId>
-        <version>3.2.1-SNAPSHOT</version>
+        <version>3.2.3-SNAPSHOT</version>
         <relativePath/>
     </parent>
     <groupId>io.helidon.examples.microprofile</groupId>
@@ -69,6 +69,11 @@
         <dependency>
             <groupId>io.helidon.webclient</groupId>
             <artifactId>helidon-webclient</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.media</groupId>
+            <artifactId>helidon-media-jsonb</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
