@@ -24,16 +24,21 @@ java -jar target/helidon-examples-microprofile-bean-validation.jar
 ## Exercise the application
 
 ```
-curl -X GET http://localhost:8080/greet
-{"message":"Hello World!"}
+curl -X GET http://localhost:8080/valid/<email>
+{"message":"Valid <email>!"}
 
-curl -X GET -I http://localhost:8080/greet/null
+curl -X GET -I http://localhost:8080/valid/null
 
 
-HTTP/1.1 400 Bad Request
-Content-Type: application/json
-transfer-encoding: chunked
-connection: keep-alive
-
+1 constraint violation(s) occurred during method validation.
+Constructor or Method: public jakarta.json.JsonObject io.helidon.examples.microprofile.bean.validation.ValidEmailResource.getMessage(java.lang.String)
+Argument values: [null]
+Constraint violations: 
+ (1) Kind: PARAMETER
+ parameter index: 0
+ message: must be a well-formed email address
+ root bean: io.helidon.examples.microprofile.bean.validation.ValidEmailResource$Proxy$_$$_WeldSubclass@58f396f6
+ property path: getMessage.arg0
+ constraint: @jakarta.validation.constraints.Email(flags={}, groups={}, regexp=".*", message="{jakarta.validation.constraints.Email.message}", payload={})
 
 ```

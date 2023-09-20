@@ -25,3 +25,5 @@ in `application.yaml`.
 mvn package
 java -jar target/helidon-examples-microprofile-security-oidc-login.jar
 ```
+
+Then open http://localhost:7987/test in the browser

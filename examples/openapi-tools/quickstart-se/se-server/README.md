@@ -14,7 +14,7 @@ java -jar target/openapi-java-server.jar
 curl -X GET http://localhost:8080/greet
 curl -X GET http://localhost:8080/greet/{name}
 curl -X PUT http://localhost:8080/greet/greeting
-
+curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Morning"}' http://localhost:8080/greet/greeting
 ```
 
 ## Try health and metrics

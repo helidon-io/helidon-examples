@@ -1,7 +1,11 @@
-# OpenAPI Helidon Quickstart
+# Helidon Client with OpenAPI 
 
-This is a sample for Helidon Quickstart project.
+## Build and run
 
+With JDK11+
+```bash
+mvn package
+java -jar target/openapi-mp-client.jar
+```
 
-## Overview
-This project was generated using the Helidon OpenAPI Generator.
+ 

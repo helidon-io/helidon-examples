@@ -45,15 +45,15 @@ java -jar target/helidon-examples-integrations-micrometer-se.jar
 These normal greeting app endpoints work just as in the original greeting app:
 
 ```bash
-curl -X GET http://localhost:8080/greet
+curl -X GET http://localhost:[PORT]/greet
 {"message":"Hello World!"}
 
-curl -X GET http://localhost:8080/greet/Joe
+curl -X GET http://localhost:[PORT]/greet/Joe
 {"message":"Hello Joe!"}
 
 curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Hola"}' http://localhost:8080/greet/greeting
 
-curl -X GET http://localhost:8080/greet/Jose
+curl -X GET http://localhost:[PORT]/greet/Jose
 {"message":"Hola Jose!"}
 ```
 

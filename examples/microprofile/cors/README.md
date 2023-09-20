@@ -25,7 +25,7 @@ curl -X GET http://localhost:8080/greet
 curl -X GET http://localhost:8080/greet/Joe
 {"message":"Hello Joe!"}
 
-curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Hola"}' http://localhost:8080/greet/greeting
+curl -X PUT -H "Content-Type: application/json" -d '{"message" : "Hola"}' http://localhost:8080/greet/greeting
 
 curl -X GET http://localhost:8080/greet/Jose
 {"message":"Hola Jose!"}
@@ -107,7 +107,7 @@ curl -i -X PUT \
     -H "Access-Control-Allow-Methods: PUT" \
     -H "Access-Control-Allow-Origin: http://foo.com" \
     -H "Content-Type: application/json" \
-    -d "{ \"greeting\" : \"Cheers\" }" \
+    -d "{ \"message\" : \"Cheers\" }" \
     http://localhost:8080/greet/greeting
 
 HTTP/1.1 204 No Content

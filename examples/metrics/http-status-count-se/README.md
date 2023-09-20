@@ -97,6 +97,6 @@ curl -H "Accept: application/json" -X GET http://localhost:8080/metrics
 curl -s -X GET http://localhost:8080/health
 ```
 ```listing
-{"outcome":"UP",...
+{"status":"UP",....
 
 ```

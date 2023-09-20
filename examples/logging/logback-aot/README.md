@@ -36,7 +36,7 @@ mvn clean package
 
 Run from command line:
 ```shell script
-java -jar target/helidon-examples-logging-sfl4j.jar
+java -jar target/helidon-examples-logging-slf4j-aot.jar
 ```
 
 Execute endpoint:
@@ -56,5 +56,5 @@ mvn clean package -Pnative-image
 
 Run from command line:
 ```shell script
-./target/helidon-examples-logging-sfl4j
+./target/helidon-examples-logging-slf4j-aot
 ```

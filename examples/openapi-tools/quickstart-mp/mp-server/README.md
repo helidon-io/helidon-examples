@@ -5,15 +5,16 @@
 With JDK11+
 ```bash
 mvn package
-java -jar target/openapi-java-server.jar
+java -jar target/openapi-mp-server.jar
 ```
 
 ## Exercise the application
 
 ```
-curl -X GET http://localhost:8080
-curl -X GET http://localhost:8080/{name}
-curl -X PUT http://localhost:8080/greeting
+curl -X GET http://localhost:8080/greet
+curl -X GET http://localhost:8080/greet/{name}
+curl -X PUT http://localhost:8080/greet/greeting
+curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Morning"}' http://localhost:8080/greet/greeting
 
 ```
 
