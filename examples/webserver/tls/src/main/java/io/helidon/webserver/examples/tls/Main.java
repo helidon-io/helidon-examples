@@ -51,7 +51,7 @@ public final class Main {
                 });
         startBuilderBasedServer(config.get("builder-based"))
                 .thenAccept(ws -> {
-                    System.out.println("Started builder based WebServer on http://localhost:" + ws.port());
+                    System.out.println("Started builder based WebServer on https://localhost:" + ws.port());
                 });
     }
 
