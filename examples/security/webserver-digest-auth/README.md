@@ -21,10 +21,10 @@ Try the application:
 
 The application starts on a random port, the following assumes it is `56551`
 ```bash
-curl http://localhost:56551/public
-curl --digest -u "jill:password" http://localhost:56551/noRoles
-curl --digest -u "john:password" http://localhost:56551/user
-curl --digest -u "jack:password" http://localhost:56551/admin
-curl -v --digest -u "john:password" http://localhost:56551/deny
-curl --digest -u "jack:password" http://localhost:56551/noAuthn
+curl http://localhost:[PORT]/public
+curl --digest -u "jill:password" http://localhost:[PORT]/noRoles
+curl --digest -u "john:password" http://localhost:[PORT]/user
+curl --digest -u "jack:password" http://localhost:[PORT]/admin
+curl -v --digest -u "john:password" http://localhost:[PORT]/deny
+curl --digest -u "jack:password" http://localhost:[PORT]/noAuthn
 ```

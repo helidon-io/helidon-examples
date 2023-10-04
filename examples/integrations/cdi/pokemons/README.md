@@ -3,7 +3,7 @@
 With Java:
 ```bash
 mvn package
-java -jar target/helidon-integrations-examples-pokemons-jpa.jar
+java -jar target/helidon-integrations-examples-pokemons.jar
 ```
 
 ## Exercise the application

@@ -12,9 +12,9 @@ java -jar target/helidon-examples-microprofile-hello-world-explicit.jar
 Then try the endpoints:
 
 ```
-curl -X GET http://localhost:7001/helloworld
-curl -X GET http://localhost:7001/helloworld/earth
+curl -X GET http://localhost:[PORT]/helloworld
+curl -X GET http://localhost:[PORT]/helloworld/earth
 ```
 
-By default the server will use a dynamic port, see the messages displayed
+By default, the server will use a dynamic port, see the messages displayed
 when the application starts.
