@@ -31,13 +31,13 @@ security:
         realm: "mic"
         users:
           - login: "jack"
-            password: "${CLEAR=password}"
+            password: "${CLEAR=changeit}"
             roles: ["user", "admin"]
           - login: "jill"
-            password: "${CLEAR=password}"
+            password: "${CLEAR=changeit}"
             roles: ["user"]
           - login: "john"
-            password: "${CLEAR=password}"
+            password: "${CLEAR=changeit}"
             roles: []
         outbound:
           - name: "propagate-to-all-targets"

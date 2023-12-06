@@ -31,7 +31,7 @@ cassandra:
 security:
   config:
     require-encryption: false
-    aes.insecure-passphrase: "jungle"
+    aes.insecure-passphrase: "changeit"
   provider-policy:
     type: "COMPOSITE"
     authentication:

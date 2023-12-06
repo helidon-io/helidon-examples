@@ -88,12 +88,12 @@ public abstract class JerseyMainTest {
     public void testProtectedOk() {
         testProtected(baseUri() + "/protected",
                       "jack",
-                      "password",
+                      "changeit",
                       Set.of("user", "admin"),
                       Set.of());
         testProtected(baseUri() + "/protected",
                       "jill",
-                      "password",
+                      "changeit",
                       Set.of("user"),
                       Set.of("admin"));
     }
@@ -101,21 +101,21 @@ public abstract class JerseyMainTest {
     @Test
     public void testWrongPwd() {
         // here we call the endpoint
-        try (Response response = callProtected(baseUri() + "/protected", "jack", "somePassword")) {
+        try (Response response = callProtected(baseUri() + "/protected", "jack", "changeme")) {
             assertThat(response.getStatus(), is(401));
         }
     }
 
     @Test
     public void testDenied() {
-        testProtectedDenied(baseUri() + "/protected", "john", "password");
+        testProtectedDenied(baseUri() + "/protected", "john", "changeit");
     }
 
     @Test
     public void testOutboundOk() {
         testProtected(baseUri() + "/outbound",
                       "jill",
-                      "password",
+                      "changeit",
                       Set.of("user"),
                       Set.of("admin"));
     }

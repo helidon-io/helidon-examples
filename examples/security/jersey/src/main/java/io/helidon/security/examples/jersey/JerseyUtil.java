@@ -55,9 +55,9 @@ class JerseyUtil {
                 System.out.printf("Started server on localhost:%d%n", webServer.port());
                 System.out.println();
                 System.out.println("Users:");
-                System.out.println("jack/password in roles: user, admin");
-                System.out.println("jill/password in roles: user");
-                System.out.println("john/password in no roles");
+                System.out.println("jack/changeit in roles: user, admin");
+                System.out.println("jill/changeit in roles: user");
+                System.out.println("john/changeit in no roles");
                 System.out.println();
                 System.out.println("***********************");
                 System.out.println("** Endpoints:        **");

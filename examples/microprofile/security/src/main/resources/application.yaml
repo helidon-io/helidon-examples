@@ -27,13 +27,13 @@ security:
       realm: "helidon"
       users:
       - login: "jack"
-        password: "password"
+        password: "changeit"
         roles: ["user", "admin"]
       - login: "jill"
-        password: "password"
+        password: "changeit"
         roles: ["user"]
       - login: "john"
-        password: "password"
+        password: "changeit"
   web-server:
     paths:
     - path: "/static-cp[/{*}]"

@@ -19,7 +19,7 @@ config-based:
   tls:
     private-key.keystore:
       resource.resource-path: "certificate.p12"
-      passphrase: "helidon"
+      passphrase: "changeit"
 
 builder-based:
   port: 8081

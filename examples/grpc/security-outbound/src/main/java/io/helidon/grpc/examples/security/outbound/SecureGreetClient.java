@@ -57,7 +57,7 @@ public class SecureGreetClient {
         // setting the properties used by the basic auth provider for user name and password
         GrpcClientSecurity clientSecurity = GrpcClientSecurity.builder(security.createContext("test.client"))
                 .property(EndpointConfig.PROPERTY_OUTBOUND_ID, "Bob")
-                .property(EndpointConfig.PROPERTY_OUTBOUND_SECRET, "password")
+                .property(EndpointConfig.PROPERTY_OUTBOUND_SECRET, "changeit")
                 .build();
 
         // create the GreetService client stub and use the GrpcClientSecurity call credentials

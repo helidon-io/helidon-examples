@@ -31,7 +31,7 @@ vault:
 security:
   providers:
     - config-vault:
-        master-password: "very much secret"
+        master-password: "changeit"
     - vault-kv2:
         address: "${vault.address}"
         token: "${vault.token}"

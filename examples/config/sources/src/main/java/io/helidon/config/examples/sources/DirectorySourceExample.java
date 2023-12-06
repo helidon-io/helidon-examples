@@ -50,7 +50,7 @@ public class DirectorySourceExample {
 
         String password = secrets.get("password").asString().get();
         System.out.println("Password: " + password);
-        assert password.equals("^ery$ecretP&ssword");
+        assert password.equals("changeit");
     }
 
 }

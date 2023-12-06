@@ -21,7 +21,7 @@ Try the endpoints:
 ```bash
 curl http://localhost:8080/rest
 curl -v http://localhost:8080/rest/protected
-curl -u "jack:password" http://localhost:8080/rest/protected
-curl -u "jack:password" http://localhost:8080/rest/protected
-curl -v -u "john:password" http://localhost:8080/rest/protected
+curl -u "jack:changeit" http://localhost:8080/rest/protected
+curl -u "jack:changeit" http://localhost:8080/rest/protected
+curl -v -u "john:changeit" http://localhost:8080/rest/protected
 ```

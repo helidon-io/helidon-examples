@@ -42,9 +42,9 @@ public final class BasicExampleBuilderMain {
     private static final Map<String, MyUser> USERS = new HashMap<>();
 
     static {
-        USERS.put("jack", new MyUser("jack", "password".toCharArray(), Set.of("user", "admin")));
-        USERS.put("jill", new MyUser("jill", "password".toCharArray(), Set.of("user")));
-        USERS.put("john", new MyUser("john", "password".toCharArray(), Set.of()));
+        USERS.put("jack", new MyUser("jack", "changeit".toCharArray(), Set.of("user", "admin")));
+        USERS.put("jill", new MyUser("jill", "changeit".toCharArray(), Set.of("user")));
+        USERS.put("john", new MyUser("john", "changeit".toCharArray(), Set.of()));
     }
 
     private BasicExampleBuilderMain() {

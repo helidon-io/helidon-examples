@@ -19,10 +19,10 @@ security:
   - http-basic-auth:
       users:
       - login: "jack"
-        password: "password"
+        password: "changeit"
         roles: ["user", "admin"]
       - login: "jill"
-        password: "anotherPassword"
+        password: "changeit"
         roles: ["user"]
   web-server:
     defaults:

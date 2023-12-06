@@ -27,8 +27,8 @@ webserver:
 http-basic-auth:
   users:
     - login: "Ted"
-      password: "secret"
+      password: "changeit"
       roles: ["user", "admin"]
     - login: "Bob"
-      password: "password"
+      password: "changeit"
       roles: ["user"]

@@ -81,7 +81,7 @@ public class ServerBuilderMain {
         KeyConfig keyConfig = KeyConfig.keystoreBuilder()
                 .trustStore()
                 .keystore(Resource.create("server.p12"))
-                .keystorePassphrase("password")
+                .keystorePassphrase("changeit")
                 .build();
         return WebServerTls.builder()
                 .clientAuth(ClientAuthentication.REQUIRE)

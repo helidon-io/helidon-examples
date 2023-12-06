@@ -37,4 +37,4 @@ security:
         realm: "helidon"
         users:
           - login: "john"
-            password: "password"
+            password: "changeit"

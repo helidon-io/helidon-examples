@@ -63,7 +63,7 @@ public final class Main {
                 .tls(WebServerTls.builder()
                         .privateKey(KeyConfig.keystoreBuilder()
                         .keystore(Resource.create("certificate.p12"))
-                        .keystorePassphrase("helidon")))
+                        .keystorePassphrase("changeit")))
                 .build()
                 .start();
     }

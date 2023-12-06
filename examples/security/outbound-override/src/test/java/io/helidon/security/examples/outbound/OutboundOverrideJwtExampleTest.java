@@ -62,7 +62,7 @@ public class OutboundOverrideJwtExampleTest {
         String value = webClient.get()
                 .path("/override")
                 .property(EndpointConfig.PROPERTY_OUTBOUND_ID, "jack")
-                .property(EndpointConfig.PROPERTY_OUTBOUND_SECRET, "password")
+                .property(EndpointConfig.PROPERTY_OUTBOUND_SECRET, "changeit")
                 .request(String.class)
                 .await();
 
@@ -74,7 +74,7 @@ public class OutboundOverrideJwtExampleTest {
         String value = webClient.get()
                 .path("/propagate")
                 .property(EndpointConfig.PROPERTY_OUTBOUND_ID, "jack")
-                .property(EndpointConfig.PROPERTY_OUTBOUND_SECRET, "password")
+                .property(EndpointConfig.PROPERTY_OUTBOUND_SECRET, "changeit")
                 .request(String.class)
                 .await();
 

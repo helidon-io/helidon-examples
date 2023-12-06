@@ -30,7 +30,7 @@ http-basic-auth:
       password: "secret"
       roles: ["user", "admin"]
     - login: "Bob"
-      password: "password"
+      password: "changeit"
       roles: ["user"]
   outbound:
     - name: propagate_all

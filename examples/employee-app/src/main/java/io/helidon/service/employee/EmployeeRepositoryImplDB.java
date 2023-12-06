@@ -44,7 +44,7 @@ final class EmployeeRepositoryImplDB implements EmployeeRepository {
         String driver = "oracle.jdbc.driver.OracleDriver";
 
         String dbUserName = config.get("app.user").asString().orElse("sys as SYSDBA");
-        String dbUserPassword = config.get("app.password").asString().orElse("password");
+        String dbUserPassword = config.get("app.password").asString().orElse("changeit");
         String dbHostURL = config.get("app.hosturl").asString().orElse("localhost:1521/xe");
 
         try {

@@ -54,7 +54,7 @@ public class ClientBuilderMain {
         KeyConfig keyConfig = KeyConfig.keystoreBuilder()
                 .trustStore()
                 .keystore(Resource.create("client.p12"))
-                .keystorePassphrase("password")
+                .keystorePassphrase("changeit")
                 .build();
         return WebClient.builder()
                 .tls(WebClientTls.builder()

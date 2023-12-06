@@ -48,9 +48,9 @@ public final class DigestExampleBuilderMain {
     private static final char[] HEX_ARRAY = "0123456789abcdef".toCharArray();
 
     static {
-        users.put("jack", new MyUser("jack", "password".toCharArray(), Set.of("user", "admin")));
-        users.put("jill", new MyUser("jill", "password".toCharArray(), Set.of("user")));
-        users.put("john", new MyUser("john", "password".toCharArray(), Set.of()));
+        users.put("jack", new MyUser("jack", "changeit".toCharArray(), Set.of("user", "admin")));
+        users.put("jill", new MyUser("jill", "changeit".toCharArray(), Set.of("user")));
+        users.put("john", new MyUser("john", "changeit".toCharArray(), Set.of()));
     }
 
     private DigestExampleBuilderMain() {
@@ -95,7 +95,7 @@ public final class DigestExampleBuilderMain {
                 .addAuthenticationProvider(
                         HttpDigestAuthProvider.builder()
                                 .realm("mic")
-                                .digestServerSecret("aPassword".toCharArray())
+                                .digestServerSecret("changeit".toCharArray())
                                 .userStore(buildUserStore()),
                         "digest-auth")
                 .build();

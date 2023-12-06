@@ -29,7 +29,7 @@ security:
     # This is a nice way to be able to override this with local properties or env-vars
     idcs-uri: "https://tenant-id.identity.oracle.com"
     idcs-client-id: "client-id"
-    idcs-client-secret: "client-secret"
+    idcs-client-secret: "changeit"
     # Used as a base for redirects back to us
     frontend-uri: "http://localhost:7987"
     proxy-host: "if you need proxy"

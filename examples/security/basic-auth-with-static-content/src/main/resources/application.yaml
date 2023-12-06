@@ -27,13 +27,13 @@ security:
         realm: "helidon"
         users:
           - login: "jack"
-            password: "${CLEAR=password}"
+            password: "${CLEAR=changeit}"
             roles: [ "user", "admin" ]
           - login: "jill"
-            password: "${CLEAR=password}"
+            password: "${CLEAR=changeit}"
             roles: [ "user" ]
           - login: "john"
-            password: "${CLEAR=password}"
+            password: "${CLEAR=changeit}"
             roles: [ ]
   web-server:
     # Configuration of integration with web server

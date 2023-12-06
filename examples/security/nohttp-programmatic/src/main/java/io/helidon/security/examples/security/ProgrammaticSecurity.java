@@ -135,7 +135,7 @@ public class ProgrammaticSecurity {
         SecurityContext securityContext = CONTEXT.get();
         securityContext.env(securityContext.env().derive()
                                        .path("/some/path")
-                                       .header("Authorization", buildBasic("aUser", "aPassword")));
+                                       .header("Authorization", buildBasic("aUser", "changeit")));
 
         AuthenticationResponse response = securityContext.atnClientBuilder().buildAndGet();
 

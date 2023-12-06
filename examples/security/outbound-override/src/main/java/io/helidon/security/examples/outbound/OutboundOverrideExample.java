@@ -94,7 +94,7 @@ public final class OutboundOverrideExample {
 
         webTarget(servingPort)
                 .property(EndpointConfig.PROPERTY_OUTBOUND_ID, "jill")
-                .property(EndpointConfig.PROPERTY_OUTBOUND_SECRET, "anotherPassword")
+                .property(EndpointConfig.PROPERTY_OUTBOUND_SECRET, "changeit")
                 .request(String.class)
                 .thenAccept(result -> res.send("You are: " + context.userName()
                                                        + ", backend service returned: " + result + "\n"))

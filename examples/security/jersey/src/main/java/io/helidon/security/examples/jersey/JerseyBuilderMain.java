@@ -44,9 +44,9 @@ public final class JerseyBuilderMain {
     private static volatile WebServer server;
 
     static {
-        addUser("jack", "password", List.of("user", "admin"));
-        addUser("jill", "password", List.of("user"));
-        addUser("john", "password", List.of());
+        addUser("jack", "changeit", List.of("user", "admin"));
+        addUser("jill", "changeit", List.of("user"));
+        addUser("john", "changeit", List.of());
     }
 
     private JerseyBuilderMain() {

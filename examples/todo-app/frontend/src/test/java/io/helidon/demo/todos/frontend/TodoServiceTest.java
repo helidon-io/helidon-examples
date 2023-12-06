@@ -52,7 +52,7 @@ public class TodoServiceTest {
 
     private static final JsonObject TODO = Json.createObjectBuilder().add("msg", "todo").build();
     private static final JsonArray TODOS = Json.createArrayBuilder().add(TODO).build();
-    private static final String ENCODED_ID = Base64.getEncoder().encodeToString("john:password".getBytes());
+    private static final String ENCODED_ID = Base64.getEncoder().encodeToString("john:changeit".getBytes());
 
     private static WebServer serverBackend;
     private static WebServer serverFrontend;

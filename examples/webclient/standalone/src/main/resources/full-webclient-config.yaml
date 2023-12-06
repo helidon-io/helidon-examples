@@ -66,10 +66,10 @@ client:
       truststore:
         keystore-resource-path: "path to the keystore"
         keystore-type: "JKS"
-        keystore-passphrase: "password"
+        keystore-passphrase: "changeit"
         trust-store: true
     client:
       keystore:
         keystore-resource-path: "path to client keystore"
-        keystore-passphrase: "password"
+        keystore-passphrase: "changeit"
         trust-store: true

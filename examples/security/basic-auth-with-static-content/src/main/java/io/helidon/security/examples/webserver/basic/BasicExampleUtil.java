@@ -35,9 +35,9 @@ final class BasicExampleUtil {
         System.out.printf("Started server on localhost:%d%n", webServer.port());
         System.out.println();
         System.out.println("Users:");
-        System.out.println("Jack/password in roles: user, admin");
-        System.out.println("Jill/password in roles: user");
-        System.out.println("John/password in no roles");
+        System.out.println("Jack/changeit in roles: user, admin");
+        System.out.println("Jill/changeit in roles: user");
+        System.out.println("John/changeit in no roles");
         System.out.println();
         System.out.println("***********************");
         System.out.println("** Endpoints:        **");
