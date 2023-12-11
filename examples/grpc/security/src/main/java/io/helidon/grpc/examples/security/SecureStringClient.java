@@ -53,7 +53,7 @@ public class SecureStringClient {
 
         // Obtain the user name and password from the program arguments
         String user = args.length >= 2 ? args[0] : "Ted";
-        String password = args.length >= 2 ? args[1] : "secret";
+        String password = args.length >= 2 ? args[1] : "changeit";
 
         Config config = Config.create();
 
