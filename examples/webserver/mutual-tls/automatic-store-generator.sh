@@ -124,7 +124,7 @@ while [ "$1" != "" ]; do
         -s | --single )    		shift
 								SINGLE=$1
                                 ;;
-        -h | --help )           echo "Some cool help"
+        -h | --help )           echo "Run the script by: ' ./automatic-store-generator.sh --name Helidon --type P12 --single true'"
                                 exit
                                 ;;
         * )                     echo "ERROR: Invalid parameter" $1

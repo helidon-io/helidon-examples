@@ -74,7 +74,7 @@ public abstract class SignatureExampleTest {
     public void testService1Hmac() {
         testProtected("http://localhost:" + getService1Port() + "/service1",
                       "jack",
-                      "password",
+                      "changeit",
                       Set.of("user", "admin"),
                       Set.of(),
                       "Service1 - HMAC signature");
@@ -84,7 +84,7 @@ public abstract class SignatureExampleTest {
     public void testService1Rsa() {
         testProtected("http://localhost:" + getService1Port() + "/service1-rsa",
                       "jack",
-                      "password",
+                      "changeit",
                       Set.of("user", "admin"),
                       Set.of(),
                       "Service1 - RSA signature");
