@@ -219,7 +219,7 @@ public class SignatureExampleBuilderMain {
                                                                         "src/main/resources/keystore.p12")))
                                                                 .keystorePassphrase("changeit".toCharArray())
                                                                 .keyAlias("myprivatekey")
-                                                                .keyPassphrase("password")
+                                                                .keyPassphrase("changeit")
                                                                 .build())
                                       .build())
                 .build();

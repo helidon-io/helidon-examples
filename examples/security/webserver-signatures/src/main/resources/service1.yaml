@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016, 2023 Oracle and/or its affiliates.
+# Copyright (c) 2016, 2024 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ security:
                   passphrase: "changeit"
                   # alias of the key to sign request
                   key.alias: "myprivatekey"
-                  key.passphrase: "password"
+                  key.passphrase: "changeit"
   web-server:
     # Configuration of integration with web server
     defaults:

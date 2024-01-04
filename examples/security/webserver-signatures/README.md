@@ -14,6 +14,10 @@ There are two examples with exactly the same behavior
     2. "internal" service protected by a combination of basic authentication (for user propagation) and http signature
     (for service authentication)
 
+## Steps to generate keystore (optional)
+1. run the scripts ``auomatic-store-generator.sh`` (openssl and keytool are required to be present on the PATH)
+2. move generated ``keystore.p12`` into the ``main/resources`` folder
+
 ## Build and run
 
 ```bash
