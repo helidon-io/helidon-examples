@@ -63,7 +63,6 @@ Let's change a little class `MessageServiceImpl` for our example :
 
 To run the application : 
 
-With JDK17+
 ```bash
 mvn package
 java -jar target/openapi-java-server.jar
@@ -279,7 +278,6 @@ server:
 
 To run the application :
 
-With JDK17+
 ```bash
 mvn package
 java -jar target/openapi-java-client.jar
