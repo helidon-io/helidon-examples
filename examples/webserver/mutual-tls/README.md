@@ -23,4 +23,12 @@ to invoke the endpoint using client certificate.
 
 Alternative approach is to install the private key and certificate
 to your browser and invoke the endpoint manually.  
- 
+
+### Howto regenerate certificates (optional)
+In order to regenerate bundled certificates: client.p12 and server.p12 use
+bundled script with given parameters:
+```bash
+./automatic-store-generator.sh --name Helidon --type P12 --single true
+```
+ and then copy generated certificates from ``out/client.p12`` and ``out/server.p12``
+ to `src/main/resources` other generated files can be deleted.

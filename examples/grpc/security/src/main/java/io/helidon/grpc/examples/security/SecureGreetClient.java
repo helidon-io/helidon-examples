@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2023 Oracle and/or its affiliates.
+ * Copyright (c) 2019, 2024 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class SecureGreetClient {
 
         // Obtain the user name and password from the program arguments
         String user = args.length >= 2 ? args[0] : "Ted";
-        String password = args.length >= 2 ? args[1] : "secret";
+        String password = args.length >= 2 ? args[1] : "changeit";
 
         Config config = Config.create();
 

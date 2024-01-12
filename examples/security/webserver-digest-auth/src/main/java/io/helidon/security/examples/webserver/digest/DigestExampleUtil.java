@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023 Oracle and/or its affiliates.
+ * Copyright (c) 2018, 2024 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,9 +43,9 @@ final class DigestExampleUtil {
             System.out.printf("Started server on localhost:%d%n", webServer.port());
             System.out.println();
             System.out.println("Users:");
-            System.out.println("Jack/password in roles: user, admin");
-            System.out.println("Jill/password in roles: user");
-            System.out.println("John/password in no roles");
+            System.out.println("jack/changeit in roles: user, admin");
+            System.out.println("jill/changeit in roles: user");
+            System.out.println("john/changeit in no roles");
             System.out.println();
             System.out.println("***********************");
             System.out.println("** Endpoints:        **");

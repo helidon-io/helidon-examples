@@ -14,6 +14,10 @@ There are two examples with exactly the same behavior
     2. "internal" service protected by a combination of basic authentication (for user propagation) and http signature
     (for service authentication)
 
+## Steps to generate keystore (optional)
+1. run the scripts ``auomatic-store-generator.sh`` (openssl and keytool are required to be present on the PATH)
+2. move generated ``keystore.p12`` into the ``main/resources`` folder
+
 ## Build and run
 
 ```bash
@@ -23,7 +27,7 @@ java -jar target/helidon-examples-security-webserver-signatures.jar
 
 Try the endpoints:
 ```bash
-curl -u "jack:password" http://localhost:8080/service1
-curl -u "jill:password" http://localhost:8080/service1-rsa
-curl -v -u "john:password" http://localhost:8080/service1
+curl -u "jack:changeit" http://localhost:8080/service1
+curl -u "jill:changeit" http://localhost:8080/service1-rsa
+curl -v -u "john:changeit" http://localhost:8080/service1
 ```

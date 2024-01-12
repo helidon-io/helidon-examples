@@ -23,9 +23,9 @@ Try the application:
 The application starts on a random port, the following assumes it is `56551`
 ```bash
 curl http://localhost:[PORT]/public
-curl -u "jill:password" http://localhost:[PORT]/noRoles
-curl -u "john:password" http://localhost:[PORT]/user
-curl -u "jack:password" http://localhost:[PORT]/admin
-curl -v -u "john:password" http://localhost:[PORT]/deny
-curl -u "jack:password" http://localhost:[PORT]/noAuthn
+curl -u "jill:changeit" http://localhost:[PORT]/noRoles
+curl -u "john:changeit" http://localhost:[PORT]/user
+curl -u "jack:changeit" http://localhost:[PORT]/admin
+curl -v -u "john:changeit" http://localhost:[PORT]/deny
+curl -u "jack:changeit" http://localhost:[PORT]/noAuthn
 ```
