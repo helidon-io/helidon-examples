@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023 Oracle and/or its affiliates.
+ * Copyright (c) 2018, 2024 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,9 +92,9 @@ public abstract class DigestExampleTest {
         testNotAuthorized(client, url);
 
         //Must be accessible with authentication - to everybody
-        testProtected(url, "jack", "password", Set.of("admin", "user"), Set.of());
-        testProtected(url, "jill", "password", Set.of("user"), Set.of("admin"));
-        testProtected(url, "john", "password", Set.of(), Set.of("admin", "user"));
+        testProtected(url, "jack", "changeit", Set.of("admin", "user"), Set.of());
+        testProtected(url, "jill", "changeit", Set.of("user"), Set.of("admin"));
+        testProtected(url, "john", "changeit", Set.of(), Set.of("admin", "user"));
     }
 
     @Test
@@ -104,9 +104,9 @@ public abstract class DigestExampleTest {
         testNotAuthorized(client, url);
 
         //Jack and Jill allowed (user role)
-        testProtected(url, "jack", "password", Set.of("admin", "user"), Set.of());
-        testProtected(url, "jill", "password", Set.of("user"), Set.of("admin"));
-        testProtectedDenied(url, "john", "password");
+        testProtected(url, "jack", "changeit", Set.of("admin", "user"), Set.of());
+        testProtected(url, "jill", "changeit", Set.of("user"), Set.of("admin"));
+        testProtectedDenied(url, "john", "changeit");
     }
 
     @Test
@@ -116,9 +116,9 @@ public abstract class DigestExampleTest {
         testNotAuthorized(client, url);
 
         //Only jack is allowed - admin role...
-        testProtected(url, "jack", "password", Set.of("admin", "user"), Set.of());
-        testProtectedDenied(url, "jill", "password");
-        testProtectedDenied(url, "john", "password");
+        testProtected(url, "jack", "changeit", Set.of("admin", "user"), Set.of());
+        testProtectedDenied(url, "jill", "changeit");
+        testProtectedDenied(url, "john", "changeit");
     }
 
     @Test
@@ -128,9 +128,9 @@ public abstract class DigestExampleTest {
         testNotAuthorized(client, url);
 
         // nobody has the correct role
-        testProtectedDenied(url, "jack", "password");
-        testProtectedDenied(url, "jill", "password");
-        testProtectedDenied(url, "john", "password");
+        testProtectedDenied(url, "jack", "changeit");
+        testProtectedDenied(url, "jill", "changeit");
+        testProtectedDenied(url, "john", "changeit");
     }
 
     @Test
@@ -142,9 +142,9 @@ public abstract class DigestExampleTest {
             assertThat(response.getStatus(), is(403));
 
             // doesn't matter, we are never challenged
-            testProtectedDenied(url, "jack", "password");
-            testProtectedDenied(url, "jill", "password");
-            testProtectedDenied(url, "john", "password");
+            testProtectedDenied(url, "jack", "changeit");
+            testProtectedDenied(url, "jill", "changeit");
+            testProtectedDenied(url, "john", "changeit");
         }
     }
 
