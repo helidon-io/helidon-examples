@@ -5,7 +5,6 @@ optional metrics exemplar support.
 
 ## Build and run
 
-With JDK11+
 ```bash
 mvn package
 java -jar target/helidon-examples-metrics-filtering-mp.jar

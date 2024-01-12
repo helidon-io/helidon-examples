@@ -10,7 +10,7 @@ docker run --publish=7474:7474 --publish=7687:7687 -e 'NEO4J_AUTH=neo4j/secret' 
 
 Goto the Neo4j browser and play the first step of the movies graph: [`:play movies`](http://localhost:7474/browser/?cmd=play&arg=movies).
 
-Build and run with With JDK11+
+Build and run
 ```bash
 mvn package
 java -jar target/helidon-examples-integration-neo4j-se.jar  
