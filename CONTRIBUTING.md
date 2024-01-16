@@ -9,13 +9,30 @@ Join us at [#helidon-users](http://slack.helidon.io) and participate in discussi
 
 ## Opening Issues
 
-If you hit a bug or have an enhancement request then file a [GitHub issue](https://github.com/helidon-io/helidon-examples/issues). When filing an issue remember that the better written the issue is, the more likely it is
-to be fixed. 
+For bugs or enhancement requests, please file a [GitHub issue](https://github.com/helidon-io/helidon/issues) unless it's
+security related. When filing a bug remember that the better written the bug is,
+the more likely it is to be fixed. If you think you've found a security
+vulnerability, do not raise a GitHub issue and follow the instructions in our
+[security policy](./SECURITY.md).
 
-## Contributing Code
+## Contributing code
 
 We welcome your code contributions. Before submitting code via a pull request,
- you will need to have signed the [Oracle Contributor Agreement][OCA] (OCA).
+you will need to have signed the [Oracle Contributor Agreement][OCA] (OCA) and
+your commits need to include the following line using the name and e-mail
+address you used to sign the OCA:
+
+```text
+Signed-off-by: Your Name <you@example.org>
+```
+
+This can be automatically added to pull requests by committing with `--sign-off`
+or `-s`, e.g.
+
+```text
+git commit --signoff
+```
+
 Only pull requests from committers that can be verified as having signed the OCA
 can be accepted.
 
