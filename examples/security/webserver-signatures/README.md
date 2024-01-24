@@ -15,7 +15,7 @@ There are two examples with exactly the same behavior
     (for service authentication)
 
 ## Steps to generate keystore (optional)
-1. run the scripts ``auomatic-store-generator.sh`` (openssl and keytool are required to be present on the PATH)
+1. run the scripts ``automatic-store-generator.sh`` (openssl and keytool are required to be present on the PATH)
 2. move generated ``keystore.p12`` into the ``main/resources`` folder
 
 ## Build and run
