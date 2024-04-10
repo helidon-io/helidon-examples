@@ -30,6 +30,7 @@
     </parent>
     <groupId>io.helidon.examples.employee</groupId>
     <artifactId>helidon-examples-employee-app</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Employee App</name>
 
     <properties>

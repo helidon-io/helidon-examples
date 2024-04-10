@@ -29,6 +29,7 @@
     </parent>
     <groupId>io.helidon.examples.todo</groupId>
     <artifactId>helidon-examples-todo-frontend</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples TODO Demo Frontend</name>
 
     <description>

@@ -29,6 +29,7 @@
 
     <groupId>io.helidon.examples.metrics</groupId>
     <artifactId>helidon-examples-metrics-exemplar</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>Helidon Examples Metrics Exemplar</name>
 

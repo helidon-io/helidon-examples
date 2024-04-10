@@ -29,6 +29,7 @@
     </parent>
     <groupId>io.helidon.examples.security</groupId>
     <artifactId>helidon-examples-security-google-login</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Security Examples Google Login</name>
 
     <description>

@@ -30,6 +30,7 @@
 
     <groupId>io.helidon.examples.integrations.oci</groupId>
     <artifactId>helidon-examples-integrations-oci-vault-reactive</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Integration OCI Vault Reactive</name>
     <description>Reactive integration with OCI Vault.</description>
 

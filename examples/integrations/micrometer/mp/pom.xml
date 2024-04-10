@@ -35,6 +35,7 @@
 
     <groupId>io.helidon.examples.integrations.micrometer</groupId>
     <artifactId>helidon-examples-integrations-micrometer-mp</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

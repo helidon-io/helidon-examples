@@ -26,9 +26,10 @@
         <version>2.6.8-SNAPSHOT</version>
         <relativePath/>
     </parent>
-    <groupId>io.helidon.examples.security</groupId>
     <modelVersion>4.0.0</modelVersion>
+    <groupId>io.helidon.examples.security</groupId>
     <artifactId>helidon-examples-security-outbound-override</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Security Examples Outbound Override</name>
 
     <properties>

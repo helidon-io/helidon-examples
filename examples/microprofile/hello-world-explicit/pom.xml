@@ -27,7 +27,10 @@
         <version>2.6.8-SNAPSHOT</version>
         <relativePath/>
     </parent>
+
+    <groupId>io.helidon.examples.microprofile</groupId>
     <artifactId>helidon-examples-microprofile-hello-world-explicit</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Microprofile Examples Explicit Hello World</name>
 
     <description>

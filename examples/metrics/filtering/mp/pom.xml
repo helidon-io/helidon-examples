@@ -28,6 +28,7 @@
 
     <groupId>io.helidon.examples.metrics.filtering</groupId>
     <artifactId>helidon-examples-metrics-filtering-mp</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Metrics MP Filtering</name>
 
     <dependencies>

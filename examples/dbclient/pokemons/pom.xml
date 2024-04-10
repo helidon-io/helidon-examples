@@ -28,8 +28,8 @@
 
     <groupId>io.helidon.examples.dbclient</groupId>
     <artifactId>helidon-examples-dbclient-pokemons</artifactId>
-    <name>Helidon Examples DB Client: Pokemons Database</name>
     <version>1.0.0-SNAPSHOT</version>
+    <name>Helidon Examples DB Client: Pokemons Database</name>
 
     <properties>
         <mainClass>io.helidon.examples.dbclient.pokemons.PokemonMain</mainClass>

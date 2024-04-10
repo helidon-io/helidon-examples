@@ -30,6 +30,7 @@
 
     <groupId>io.helidon.examples.integrations.oci</groupId>
     <artifactId>helidon-examples-integrations-oci-objectstorage-cdi</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Integration OCI Vault CDI</name>
     <description>CDI integration with OCI Vault.</description>
 

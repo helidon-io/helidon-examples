@@ -27,6 +27,7 @@
     </parent>
     <groupId>io.helidon.examples.health</groupId>
     <artifactId>helidon-examples-health-basics</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Health Examples Basics</name>
 
     <description>

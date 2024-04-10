@@ -28,6 +28,7 @@
 
     <groupId>io.helidon.examples.metrics</groupId>
     <artifactId>helidon-examples-metrics-kpi</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Metrics Key Performance Indicators</name>
     <properties>
         <mainClass>io.helidon.examples.metrics.kpi.Main</mainClass>

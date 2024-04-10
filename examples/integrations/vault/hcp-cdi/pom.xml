@@ -29,6 +29,7 @@
 
     <groupId>io.helidon.examples.integrations.vault</groupId>
     <artifactId>helidon-examples-integrations-vault-hcp-cdi</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Integration Vault CDI</name>
     <description>CDI integration with Vault.</description>
 

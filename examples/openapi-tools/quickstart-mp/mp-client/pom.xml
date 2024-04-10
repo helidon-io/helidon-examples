@@ -28,8 +28,8 @@
         <relativePath/>
     </parent>
     <artifactId>openapi-mp-client</artifactId>
-    <name>openapi-java-client</name>
     <version>1.0.0</version>
+    <name>openapi-java-client</name>
     <url>https://github.com/openapitools/openapi-generator</url>
     <description>OpenAPI Java</description>
     <packaging>jar</packaging>

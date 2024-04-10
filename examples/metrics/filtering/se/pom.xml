@@ -28,6 +28,7 @@
 
     <groupId>io.helidon.examples.metrics.filtering</groupId>
     <artifactId>helidon-examples-metrics-se</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Metrics SE Filtering</name>
     <properties>
         <mainClass>io.helidon.examples.metrics.filtering.se.Main</mainClass>

@@ -29,6 +29,7 @@
     </parent>
     <groupId>io.helidon.examples.integrations.neo4j</groupId>
     <artifactId>helidon-examples-integrations-neo4j-se</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Integrations Neo4j SE Example</name>
 
     <properties>

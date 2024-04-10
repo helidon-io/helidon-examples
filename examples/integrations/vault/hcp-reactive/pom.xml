@@ -29,6 +29,7 @@
 
     <groupId>io.helidon.examples.integrations.vault</groupId>
     <artifactId>helidon-examples-integrations-vault-hcp-reactive</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Integration Vault Reactive</name>
     <description>Reactive integration with Vault.</description>
 

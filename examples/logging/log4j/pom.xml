@@ -29,6 +29,7 @@
     </parent>
     <groupId>io.helidon.examples.logging</groupId>
     <artifactId>helidon-examples-logging-log4j</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Logging Log4j</name>
 
     <description>

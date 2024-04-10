@@ -26,6 +26,7 @@
     </parent>
     <groupId>io.helidon.examples</groupId>
     <artifactId>helidon-examples-openapi</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples OpenAPI </name>
 
     <description>

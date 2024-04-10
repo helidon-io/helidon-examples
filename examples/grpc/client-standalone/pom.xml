@@ -26,6 +26,7 @@
     </parent>
     <groupId>io.helidon.examples.grpc</groupId>
     <artifactId>helidon-examples-grpc-client-standalone</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon gRPC Server Examples Standalone client</name>
 
     <description>
