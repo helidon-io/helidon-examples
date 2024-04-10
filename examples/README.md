@@ -9,14 +9,7 @@ Helidon we recommend you start with our
 [quickstart](https://helidon.io/docs/v2/#/about/03_prerequisites)
 That will quickly get you going with your first Helidon application.
 
-After that you can come back here and dig into the examples. To access
-these examples we recommend checking out from a released tag. For example:
-
-```
-git clone git@github.com:oracle/helidon.git
-cd helidon
-git checkout tags/2.0.0
-```
+After that you can come back here and dig into the examples. 
 
 Our examples are Maven projects and can be built and run with
 Java 11 or newer -- so make sure you have those:
