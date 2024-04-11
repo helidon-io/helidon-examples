@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Download Maven Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: io-helidon-maven-artifacts
           path: ~/.m2/repository/io/helidon
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Download Maven Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: io-helidon-maven-artifacts
           path: ~/.m2/repository/io/helidon
@@ -104,7 +104,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Download Maven Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: io-helidon-maven-artifacts
           path: ~/.m2/repository/io/helidon
