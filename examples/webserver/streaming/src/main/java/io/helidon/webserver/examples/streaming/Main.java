@@ -16,6 +16,8 @@
 
 package io.helidon.webserver.examples.streaming;
 
+import io.helidon.common.reactive.Single;
+import io.helidon.config.Config;
 import io.helidon.webserver.Routing;
 import io.helidon.webserver.WebServer;
 
@@ -23,8 +25,6 @@ import io.helidon.webserver.WebServer;
  * Class Main. Entry point to streaming application.
  */
 public class Main {
-
-    static final String LARGE_FILE_RESOURCE = "/large-file.bin";
 
     private Main() {
     }
@@ -58,4 +58,5 @@ public class Main {
             System.out.println("Streaming service is down")
         );
     }
-}
+
+    }
