@@ -24,8 +24,6 @@ import io.helidon.webserver.WebServer;
  */
 public class Main {
 
-    static final String LARGE_FILE_RESOURCE = "/large-file.bin";
-
     private Main() {
     }
 
@@ -58,4 +56,5 @@ public class Main {
             System.out.println("Streaming service is down")
         );
     }
-}
+
+    }
