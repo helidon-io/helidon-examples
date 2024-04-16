@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023 Oracle and/or its affiliates.
+ * Copyright (c) 2018, 2024 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,25 +18,21 @@ package io.helidon.webserver.examples.streaming;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Logger;
 
 import io.helidon.common.configurable.ScheduledThreadPoolSupplier;
 import io.helidon.common.http.DataChunk;
+import io.helidon.common.http.Http;
 import io.helidon.common.reactive.IoMulti;
 import io.helidon.webserver.Routing;
 import io.helidon.webserver.ServerRequest;
 import io.helidon.webserver.ServerResponse;
 import io.helidon.webserver.Service;
-
-import static io.helidon.webserver.examples.streaming.Main.LARGE_FILE_RESOURCE;
 
 /**
  * StreamingService class. Uses a {@code Subscriber<RequestChunk>} and a
@@ -45,18 +41,9 @@ import static io.helidon.webserver.examples.streaming.Main.LARGE_FILE_RESOURCE;
 public class StreamingService implements Service {
     private static final Logger LOGGER = Logger.getLogger(StreamingService.class.getName());
     private final ScheduledExecutorService executor = ScheduledThreadPoolSupplier.create().get();
-    private final Path filePath;
+    private volatile Path filePath;
 
     StreamingService() {
-        URL resource = getClass().getResource(LARGE_FILE_RESOURCE);
-        if (resource == null) {
-            throw new IllegalStateException("Resource not found: " + LARGE_FILE_RESOURCE);
-        }
-        try {
-            filePath = Paths.get(resource.toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -68,23 +55,32 @@ public class StreamingService implements Service {
     private void upload(ServerRequest request, ServerResponse response) {
         LOGGER.info("Entering upload ... " + Thread.currentThread());
         Path tempFilePath = createTempFile("large-file", ".tmp");
+        filePath = tempFilePath;
+        LOGGER.info("Storing upload as " + tempFilePath);
         request.content()
                .map(DataChunk::data)
                .flatMapIterable(Arrays::asList)
                .to(IoMulti.writeToFile(tempFilePath)
                           .executor(executor)
-                          .build());
+                          .build())
+               .thenRun(() -> response.status(Http.Status.OK_200).send());
         LOGGER.info("Exiting upload ...");
     }
 
     private void download(ServerRequest request, ServerResponse response) {
         LOGGER.info("Entering download ..." + Thread.currentThread());
+        if (filePath == null) {
+            LOGGER.warning("No file to download.");
+            response.status(Http.Status.BAD_REQUEST_400).send("No file to download. Please upload file first.");
+            return;
+        }
         long length = filePath.toFile().length();
         response.headers().contentLength(length);
         response.send(IoMulti.multiFromByteChannelBuilder(newByteChannel(filePath))
                              .executor(executor)
-                             .build());
-        LOGGER.info("Exiting download ...");
+                             .build()
+                             .map(DataChunk::create));
+        LOGGER.info("Exiting download. Returning " + length + " bytes...");
     }
 
     @SuppressWarnings("SameParameterValue")

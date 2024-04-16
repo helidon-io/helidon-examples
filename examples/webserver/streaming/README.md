@@ -14,6 +14,6 @@ java -jar target/helidon-examples-webserver-streaming.jar
 
 Upload a file and download it back with `curl`:
 ```bash
-curl --data-binary "@target/classes/large-file.bin" http://localhost:8080/upload
+curl --data-binary "@large-file.bin" http://localhost:8080/upload
 curl http://localhost:8080/download
 ```
