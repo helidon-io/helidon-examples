@@ -56,5 +56,4 @@ public class Main {
             System.out.println("Streaming service is down")
         );
     }
-
-    }
+}
