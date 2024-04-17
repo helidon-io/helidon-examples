@@ -10,32 +10,32 @@ Use this example for inspiration in writing your own filter or just use the filt
 ## Build and run
 
 
-```bash
+```shell
 mvn package
 java -jar target/http-status-count-mp.jar
 ```
 
 ## Exercise the application
-```bash
+```shell
 curl -X GET http://localhost:8080/simple-greet
 ```
 ```listing
 {"message":"Hello World!"}
 ```
 
-```bash
+```shell
 curl -X GET http://localhost:8080/greet
 ```
 ```listing
 {"message":"Hello World!"}
 ```
-```bash
+```shell
 curl -X GET http://localhost:8080/greet/Joe
 ```
 ```listing
 {"message":"Hello Joe!"}
 ```
-```bash
+```shell
 curl -X PUT -H "Content-Type: application/json" -d '{"message" : "Hola"}' http://localhost:8080/greet/greeting
 
 curl -X GET http://localhost:8080/greet/Jose
@@ -45,7 +45,7 @@ curl -X GET http://localhost:8080/greet/Jose
 ```
 
 ## Try metrics
-```bash
+```shell
 # Prometheus Format
 curl -s -X GET http://localhost:8080/metrics/application
 ```
@@ -63,7 +63,7 @@ application_httpStatus_total{range="5xx"} 0
 ```
 # JSON Format
 
-```bash
+```shell
 curl -H "Accept: application/json" -X GET http://localhost:8080/metrics
 ```
 ```json

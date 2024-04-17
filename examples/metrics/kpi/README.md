@@ -11,15 +11,15 @@ You would typically write any given application to use only one of the approache
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 ```
 To use programmatic set-up:
-```bash
+```shell
 java -jar target/helidon-examples-metrics-kpi.jar 
 ```
 To use configuration:
-```bash
+```shell
 java -DuseConfig=true -jar target/helidon-examples-metrics-kpi.jar
 ````
 
@@ -100,7 +100,7 @@ vendor_requests_load_fifteen_min_rate_per_second 0.005104944851522425
 ## JSON output
 
 
-```bash
+```shell
 curl -s -X GET -H "Accept: application/json" http://localhost:8080/metrics/vendor
 {
   ...

@@ -4,7 +4,7 @@ This examples shows a simple application written using Helidon MP.
 It is explicit because in this example you write the `main` class
 and explicitly start the microprofile server.
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-microprofile-hello-world-explicit.jar
 ```

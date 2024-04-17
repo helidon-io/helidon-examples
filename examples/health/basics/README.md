@@ -8,7 +8,7 @@ custom health check.
 
 Start the application:
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-health-basics.jar
 ```
@@ -17,7 +17,7 @@ Note the port number reported by the application.
 
 Probe the health endpoints:
 
-```bash
+```shell
 curl -X GET http://localhost:PORT/health/
 curl -X GET http://localhost:PORT/health/ready
 

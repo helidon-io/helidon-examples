@@ -4,14 +4,14 @@ This application runs fault tolerance service on port 8079.
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-webserver-fault-tolerance.jar
 ```
 
 The output will be like:
 
-```bash
+```shell
 [Wed Sep 26 16:01:16 CEST 2023] INFO: io.helidon.common.LogConfig doConfigureLogging - Logging at initialization configured using classpath: /logging.properties 
 [Wed Sep 26 16:01:17 CEST 2023] INFO: io.helidon.common.HelidonFeatures features - Helidon SE 3.2.6-SNAPSHOT features: [Config, Fault Tolerance, Tracing, WebServer]
 [Wed Sep 26 16:01:17 CEST 2023] INFO: io.helidon.webserver.NettyWebServer lambda$start$9 - Channel '@default' started: [id: 0xb11f6086, L:/[0:0:0:0:0:0:0:0]:8079] 

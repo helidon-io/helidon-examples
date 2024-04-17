@@ -34,7 +34,7 @@ The `GreetingService` class
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-integrations-micrometer-se.jar
 ```
@@ -43,7 +43,7 @@ java -jar target/helidon-examples-integrations-micrometer-se.jar
 
 These normal greeting app endpoints work just as in the original greeting app:
 
-```bash
+```shell
 curl -X GET http://localhost:[PORT]/greet
 {"message":"Hello World!"}
 
@@ -59,7 +59,7 @@ curl -X GET http://localhost:[PORT]/greet/Jose
 ## Using Micrometer
 
 Access the `/micrometer` endpoint which reports the newly-added timer and counter.
-```bash
+```shell
 curl http://localhost:8080/micrometer
 ```
 

@@ -12,7 +12,7 @@ There are two examples with exactly the same behavior:
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-security-webserver-digest-auth.jar
 ```
@@ -20,7 +20,7 @@ java -jar target/helidon-examples-security-webserver-digest-auth.jar
 Try the application:
 
 The application starts on a random port, the following assumes it is `56551`
-```bash
+```shell
 curl http://localhost:[PORT]/public
 curl --digest -u "jill:changeit" http://localhost:[PORT]/noRoles
 curl --digest -u "john:changeit" http://localhost:[PORT]/user

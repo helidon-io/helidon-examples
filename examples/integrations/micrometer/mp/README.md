@@ -22,7 +22,7 @@ The example is similar to the one from the Helidon MP QuickStart with these diff
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-integrations-micrometer-mp.jar
 ```
@@ -31,7 +31,7 @@ java -jar target/helidon-examples-integrations-micrometer-mp.jar
 
 These normal greeting app endpoints work just as in the original greeting app:
 
-```bash
+```shell
 curl -X GET http://localhost:8080/greet
 {"message":"Hello World!"}
 
@@ -48,7 +48,7 @@ curl -X GET http://localhost:8080/greet/Jose
 
 Access the `/micrometer` endpoint which reports the newly-added timer and counter.
 
-```bash
+```shell
 curl http://localhost:8080/micrometer
 ```
 Because the `@Timer` annotation specifies a histogram, 

@@ -4,14 +4,14 @@ This application starts a web server with TLS support on the port 8081.
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-webserver-tls.jar
 ```
 
 The output will be like:
 
-```bash
+```shell
 [Wed Sep 27 16:11:25 CEST 2023] INFO: io.helidon.common.LogConfig doConfigureLogging - Logging at initialization configured using classpath: /logging.properties 
 [Wed Sep 27 16:11:25 CEST 2023] INFO: io.helidon.common.HelidonFeatures features - Helidon SE 3.2.6-SNAPSHOT features: [Config, Tracing, WebServer]
 [Wed Sep 27 16:11:25 CEST 2023] INFO: io.helidon.webserver.NettyWebServer lambda$start$9 - Channel '@default' started: [id: 0xb28f94e2, L:/[0:0:0:0:0:0:0:0]:8080] with TLS  

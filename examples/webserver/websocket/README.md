@@ -4,10 +4,10 @@ This application demonstrates use of websockets and REST.
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-webserver-websocket.jar
 ```
 
 Open http://localhost:8080/web/index.html in your browser.
-``
+
