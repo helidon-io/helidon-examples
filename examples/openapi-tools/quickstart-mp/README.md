@@ -9,7 +9,7 @@ For generation of our projects we will use `openapi-generator-cli.jar` that can 
 ## Build, prepare and run the Helidon MP server
 
 To generate Helidon MP server at first we create `mp-server` folder and then inside it we run the following command where `path-to-generator` is the directory where you downloaded the generator CLI JAR file and `path-to-openapi-doc` is the folder where `quickstart.yaml` is located:
-```bash
+```shell
 java -jar path-to-generator/openapi-generator-cli.jar \
           generate \
           -g java-helidon-server \  
@@ -54,24 +54,24 @@ Let's change a little class `MessageServiceImpl` for our example :
 
 To run the application : 
 
-```bash
+```shell
 mvn package
 java -jar target/openapi-java-server.jar
 ```
 
 To check that server works as expected run the following `curl` commands :
 
-```
+```shell
 curl -X GET http://localhost:8080/greet
-{"message":"World","greeting":"Hello"}
+#{"message":"World","greeting":"Hello"}
 
 curl -X GET http://localhost:8080/greet/Joe
-{"message":"Joe","greeting":"Hello"}
+#{"message":"Joe","greeting":"Hello"}
 
 curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Hola", "message":"Lisa"}' http://localhost:8080/greet/greeting
 
 curl -X GET http://localhost:8080/greet
-{"message":"Lisa","greeting":"Hola"}
+#{"message":"Lisa","greeting":"Hola"}
 ```
 
 ## Build, prepare and run the Helidon MP client
@@ -79,7 +79,7 @@ curl -X GET http://localhost:8080/greet
 The second part of this example is generating MicroProfile Rest Client that will communicate with the server that we have just created.
 
 To generate Helidon MP client at first we create `mp-client` folder and then inside it we run the following command where `path-to-generator` is the directory where you downloaded the generator CLI JAR file and `path-to-openapi-doc` is the folder where `quickstart.yaml` is located:
-```bash
+```shell
 java -jar path-to-generator/openapi-generator-cli.jar \
           generate \
           -g java-helidon-client \  
@@ -171,21 +171,21 @@ to
 
 To run the application :
 
-```bash
+```shell
 mvn package
 java -jar target/openapi-java-client.jar
 ```
 
 To check that the client works as expected and process all the requests using our server run the following `curl` commands :
 
-```
+```shell
 curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Hi", "message":"Mike"}' http://localhost:8081/greet/greeting
 
 curl -X GET http://localhost:8081/greet
-{"message":"Mike","greeting":"Hi"}
+#{"message":"Mike","greeting":"Hi"}
 
 curl -X GET http://localhost:8081/greet/Joe
-{"message":"Joe","greeting":"Hi"}
+#{"message":"Joe","greeting":"Hi"}
 ```
 
 ## Update applications

@@ -7,7 +7,7 @@ implemented.
 
 ## Build and run
 
-```bash
+```shell
 mvn -f ../pom.xml -pl common,client-standalone package
 java -jar target/helidon-examples-grpc-client-standalone.jar
 ```

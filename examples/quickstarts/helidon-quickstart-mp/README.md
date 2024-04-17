@@ -4,7 +4,7 @@ This example implements a simple Hello World REST service using MicroProfile.
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-quickstart-mp.jar
 ```

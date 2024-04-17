@@ -6,7 +6,7 @@ It is implicit because in this example you don't write the
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-microprofile-hello-world-implicit.jar
 ```

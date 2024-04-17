@@ -4,7 +4,7 @@ This example uses Microstream to persist a log entry for every greeting
 
 ## Build and run
 
-```
+```shell
 mvn package
 java -jar target/helidon-examples-integrations-microstream-greetings-se.jar
 ```

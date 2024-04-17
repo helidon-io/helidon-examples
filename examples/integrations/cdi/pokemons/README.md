@@ -1,7 +1,7 @@
 # JPA Pokemons Example
 
 With Java:
-```bash
+```shell
 mvn package
 java -jar target/helidon-integrations-examples-pokemons.jar
 ```

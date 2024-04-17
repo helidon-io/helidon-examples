@@ -5,7 +5,7 @@ optional metrics exemplar support.
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-metrics-se.jar
 ```

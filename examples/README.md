@@ -12,7 +12,7 @@ That will quickly get you going with your first Helidon application.
 After that you can come back here and dig into the examples. To access
 these examples we recommend checking out from a released tag. For example:
 
-```
+```shell
 git clone git@github.com:oracle/helidon.git
 cd helidon
 git checkout tags/2.0.0
@@ -21,7 +21,7 @@ git checkout tags/2.0.0
 Our examples are Maven projects and can be built and run with
 Java 11 or newer -- so make sure you have those:
 
-```
+```shell
 java -version
 mvn -version
 ```
@@ -31,14 +31,14 @@ mvn -version
 Each example has a `README` that you will follow. To build most examples
 just `cd` to the directory and run `mvn package`:
 
-```
+```shell
 cd examples/microprofile/hello-world-explicit
 mvn package
 ```
 
 Usually the example will produce an application jar file that you can run:
 
-```
+```shell
 java -jar target/example-name.jar
 ```
 

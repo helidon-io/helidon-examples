@@ -4,13 +4,13 @@ This application demonstrates various WebServer use cases together and in its co
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-webserver-tutorial.jar
 ```
 
 run
-```bash
+```shell
 curl -X POST http://localhost:8080/mgmt/shutdown
 ```
 in order to stop the server

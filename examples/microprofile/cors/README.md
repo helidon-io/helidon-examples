@@ -9,7 +9,7 @@ uncomment that line and then package and run the application.
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-microprofile-cors.jar
 ```
@@ -18,7 +18,7 @@ java -jar target/helidon-examples-microprofile-cors.jar
 
 These normal greeting app endpoints work just as in the original greeting app:
 
-```bash
+```shell
 curl -X GET http://localhost:8080/greet
 {"message":"Hello World!"}
 
@@ -40,7 +40,7 @@ The following requests illustrate the CORS protocol with the example app.
 By setting `Origin` and `Host` headers that do not indicate the same system we trigger CORS processing in the
  server:
 
-```bash
+```shell
 # Follow the CORS protocol for GET
 curl -i -X GET -H "Origin: http://foo.com" -H "Host: here.com" http://localhost:8080/greet
 
@@ -58,7 +58,7 @@ Note the new headers `Access-Control-Allow-Origin` and `Vary` in the response.
 
 The same happens for a `GET` requesting a personalized greeting (by passing the name of the
  person to be greeted):
-```bash
+```shell
 curl -i -X GET -H "Origin: http://foo.com" -H "Host: here.com" http://localhost:8080/greet/Joe
 {"greeting":"Hola Joe!"}
 ```
@@ -83,7 +83,7 @@ requests as "non-simple" ones.
    
 This command sends a pre-flight `OPTIONS` request to see if the server will accept a subsequent `PUT` request from the
 specified origin to change the greeting:
-```bash
+```shell
 curl -i -X OPTIONS \
     -H "Access-Control-Request-Method: PUT" \
     -H "Origin: http://foo.com" \
@@ -100,7 +100,7 @@ connection: keep-alive
 The successful status and the returned `Access-Control-Allow-xxx` headers indicate that the
  server accepted the pre-flight request. That means it is OK for us to send `PUT` request to perform the actual change 
  of greeting. (See below for how the server rejects a pre-flight request.)
-```bash
+```shell
 curl -i -X PUT \
     -H "Origin: http://foo.com" \
     -H "Host: here.com" \
@@ -117,7 +117,7 @@ Vary: Origin
 connection: keep-alive
 ```
 And we run one more `GET` to observe the change in the greeting:
-```bash
+```shell
 curl -i -X GET -H "Origin: http://foo.com" -H "Host: here.com" http://localhost:8080/greet/Joe
 {"greeting":"Cheers Joe!"}
 ```

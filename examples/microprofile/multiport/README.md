@@ -21,7 +21,7 @@ using @RoutingName.
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-microprofile-multiport.jar
 ```

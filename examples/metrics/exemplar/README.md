@@ -9,13 +9,13 @@ when it cannot contact the Zipkin server to report the tracing spans. Even so, t
 will contain valid exemplars.
 
 With Docker:
-```bash
+```shell
 docker run --name zipkin -d -p 9411:9411 openzipkin/zipkin
 ```
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-metrics-exemplar.jar
 ```

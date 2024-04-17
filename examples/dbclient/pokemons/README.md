@@ -36,12 +36,12 @@ To switch between JDBC drivers:
 ## Build
 
 To build a jar file
-```
+```shell
 mvn package
 ```
 
 To build a native image (supported only with Oracle, MongoDB, or H2 databases)
-```
+```shell
 mvn package -Pnative-image
 ```
 
@@ -53,19 +53,19 @@ Start your database before running this example.
 Example docker commands to start databases in temporary containers: 
 
 Oracle:
-```
+```shell
 docker run --rm --name xe -p 1521:1521 -p 8888:8080 wnameless/oracle-xe-11g-r2
 ```
 For details on an Oracle Docker image, see https://github.com/oracle/docker-images/tree/master/OracleDatabase/SingleInstance
 
 H2:
-```
+```shell
 docker run --rm --name h2 -p 9092:9082 -p 8082:8082 nemerosa/h2
 ```
 For details, see http://www.h2database.com/html/cheatSheet.html
 
 MySQL:
-```
+```shell
 docker run --rm --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root \
        -e MYSQL_DATABASE=pokemon -e MYSQL_USER=user -e MYSQL_PASSWORD=password  mysql:5.7
 ```

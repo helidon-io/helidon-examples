@@ -2,7 +2,7 @@
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/openapi-java-server.jar
 ```

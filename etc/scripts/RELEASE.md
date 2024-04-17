@@ -26,14 +26,14 @@ Here is the overall procedure:
 
 # Steps in detail
 
-```
+```shell
 # Set this to the version you are releasing. This should match the released version of Helidon
 export VERSION="3.0.0"
 ```
 
 1. Create local release branch
 
-   ```
+   ```shell
    # Checkout dev branch into release branch
    git fetch origin
    git checkout -b release-${VERSION} origin/dev-3.x
@@ -41,11 +41,11 @@ export VERSION="3.0.0"
    ```
 
 2. Update Helidon version used by examples. This should be a released version of Helidon
-   ```
+   ```shell
    etc/scripts/updatehelidonversion.sh ${VERSION}
    ```
 3. Commit and Push local release branch to upstream to trigger release workflow. 
-   ```
+   ```shell
    mvn clean install  # Do test build first
    git add .
    git commit
@@ -53,7 +53,7 @@ export VERSION="3.0.0"
    ```
 4. After workflow completes check status. Check for creation of tag. Check that `helidon-3.x`
    branch has been updated. 
-   ```
+   ```shell
    git fetch -t origin
    # Checkout and verify branch
    git checkout helidon-3.x 
