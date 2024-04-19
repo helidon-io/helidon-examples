@@ -1,6 +1,6 @@
 #!/bin/bash 
 #
-# Copyright (c) 2022, 2023 Oracle and/or its affiliates.
+# Copyright (c) 2022, 2024 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,6 +27,10 @@ readonly SCRIPT_DIR=$(dirname ${SCRIPT_PATH})
 if [ -z "${NEW_VERSION}" ]; then
     echo "usage: $0 <new-helidon-version>"
     exit 1
+fi
+
+if [ -z "${TMPDIR}" ]; then
+  readonly TMPDIR="/tmp"
 fi
 
 readonly POM_FILES=$(find . -name pom.xml -print)
