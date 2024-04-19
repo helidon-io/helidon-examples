@@ -29,6 +29,10 @@ if [ -z "${NEW_VERSION}" ]; then
     exit 1
 fi
 
+if [ -z "${TMPDIR}" ]; then
+  readonly TMPDIR="/tmp"
+fi
+
 readonly POM_FILES=$(find . -name pom.xml -print)
 
 for f in ${POM_FILES}; do
