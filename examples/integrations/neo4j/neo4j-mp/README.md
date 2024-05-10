@@ -9,9 +9,7 @@ Bring up a Neo4j instance via Docker
 ```shell
 docker run --publish=7474:7474 --publish=7687:7687 -e 'NEO4J_AUTH=neo4j/secret'  neo4j:4.0
 ```
-
 Goto the Neo4j browser and play the first step of the movies graph: [`:play movies`](http://localhost:7474/browser/?cmd=play&arg=movies).
-
 
 Then build
 ```shell
@@ -23,7 +21,6 @@ java -jar target/helidon-examples-integration-neo4j-mp.jar
 
 ```
 curl -X GET http://localhost:8080/movies
-
 ```
 
 ## Try health and metrics
@@ -42,30 +39,6 @@ curl -s -X GET http://localhost:8080/metrics
 curl -H 'Accept: application/json' -X GET http://localhost:8080/metrics
 {"base":...
 . . .
-
-```
-
-## Build the Docker Image
-
-```
-docker build -t helidon-integrations-neo4j-mp .
-```
-
-## Start the application with Docker
-
-```
-docker run --rm -p 8080:8080 helidon-integrations-neo4j-mp:latest
-```
-
-Exercise the application as described above
-
-## Deploy the application to Kubernetes
-
-```
-kubectl cluster-info                                # Verify which cluster
-kubectl get pods                                    # Verify connectivity to cluster
-kubectl create -f app.yaml                          # Deploy application
-kubectl get service helidon-integrations-neo4j-mp   # Verify deployed service
 ```
 
 ## Build a native image with GraalVM
@@ -73,12 +46,6 @@ kubectl get service helidon-integrations-neo4j-mp   # Verify deployed service
 GraalVM allows you to compile your programs ahead-of-time into a native
  executable. See https://www.graalvm.org/docs/reference-manual/aot-compilation/
  for more information.
-
-You can build a native executable in 2 different ways:
-* With a local installation of GraalVM
-* Using Docker
-
-### Local build
 
 Download Graal VM at https://www.graalvm.org/downloads. We recommend
 version `20.1.0` or later.
@@ -102,21 +69,6 @@ Start the application:
 ./target/helidon-quickstart-mp
 ```
 
-### Multi-stage Docker build
-
-Build the "native" Docker Image
-
-```
-docker build -t helidon-integrations-neo4j-mp-native -f Dockerfile.native .
-```
-
-Start the application:
-
-```
-docker run --rm -p 8080:8080 helidon-integrations-neo4j-mp-native:latest
-```
-
-
 ## Build a Java Runtime Image using jlink
 
 You can build a custom Java Runtime Image (JRI) containing the application jars and the JDK modules 
@@ -125,13 +77,6 @@ on which they depend. This image also:
 * Enables Class Data Sharing by default to reduce startup time. 
 * Contains a customized `start` script to simplify CDS usage and support debug and test modes. 
  
-You can build a custom JRI in two different ways:
-* Local
-* Using Docker
-
-
-### Local build
-
 ```
 # build the JRI
 mvn package -Pjlink-image
@@ -144,24 +89,4 @@ Start the application:
 
 ```
 ./target/helidon-integrations-neo4j-mp-jri/bin/start
-```
-
-### Multi-stage Docker build
-
-Build the JRI as a Docker Image
-
-```
-docker build -t helidon-integrations-neo4j-mp-jri -f Dockerfile.jlink .
-```
-
-Start the application:
-
-```
-docker run --rm -p 8080:8080 helidon-integrations-neo4j-mp-jri:latest
-```
-
-See the start script help:
-
-```
-docker run --rm helidon-integrations-neo4j-mp-jri:latest --help
 ```

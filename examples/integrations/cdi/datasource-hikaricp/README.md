@@ -57,17 +57,6 @@ javax.sql.DataSource.example.dataSource.password = Oracle
 
 ## Build and run
 
-With Docker:
-```shell
-docker build -t helidon-examples-integrations-datasource-hikaricp .
-docker run --rm -d \
-    --link oracle \
-    -e javax_sql_DataSource_example_dataSource_url="jdbc:oracle:thin:@oracle:1521:ORCL" \
-    --name helidon-examples-integrations-datasource-hikaricp \
-    -p 8080:8080 helidon-examples-integrations-datasource-hikaricp:latest
-```
-OR
-
 With Maven:
 ```shell
 mvn package
@@ -77,9 +66,4 @@ java -jar target/helidon-examples-integrations-datasource-hikaricp.jar
 Try the endpoint:
 ```shell
 curl http://localhost:8080/tables
-```
-
-Stop the docker containers:
-```shell
-docker stop oracle helidon-examples-integrations-datasource-hikaricp
 ```
