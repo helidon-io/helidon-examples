@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2022, 2023 Oracle and/or its affiliates.
+# Copyright (c) 2022, 2024 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -138,15 +138,15 @@ release_build(){
     java --version
 
     # Branch we will push this release to
-    local LATEST_BRANCH="helidon-3.x"
+    local LATEST_BRANCH="helidon-4.x"
 
     if [[ ${HELIDON_VERSION} == *-SNAPSHOT ]]; then
         echo "Helidon version ${HELIDON_VERSION} is a SNAPSHOT version and not a released version. Failing release."
         exit 1
     fi
 
-    # Merge this branch (based on dev-3.x) with the
-    # helidon-3.x branch to ensure helidon-3.x has
+    # Merge this branch (based on dev-4.x) with the
+    # helidon-4.x branch to ensure helidon-4.x has
     # valid history when we push all this to it.
     git fetch origin
     git merge -s ours --no-ff origin/${LATEST_BRANCH}
@@ -155,7 +155,7 @@ release_build(){
     git tag -f "${HELIDON_VERSION}"
     git push --force origin refs/tags/"${HELIDON_VERSION}":refs/tags/"${HELIDON_VERSION}"
 
-    # Update helidon-3.x branch with this release
+    # Update helidon-4.x branch with this release
     git push origin HEAD:${LATEST_BRANCH}
 
     echo "======================"

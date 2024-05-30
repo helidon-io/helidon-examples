@@ -25,7 +25,7 @@
     <parent>
         <groupId>io.helidon</groupId>
         <artifactId>helidon-dependencies</artifactId>
-        <version>3.2.9-SNAPSHOT</version>
+        <version>4.1.0-SNAPSHOT</version>
         <relativePath></relativePath>
     </parent>
     <groupId>io.helidon.examples</groupId>
@@ -58,10 +58,10 @@
     </scm>
 
     <properties>
-        <version.java>17</version.java>
+        <version.java>21</version.java>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <helidon.version>3.2.9-SNAPSHOT</helidon.version>
+        <helidon.version>4.1.0-SNAPSHOT</helidon.version>
 
         <spotbugs.skip>false</spotbugs.skip>
         <spotbugs.threshold>Medium</spotbugs.threshold>
@@ -69,25 +69,25 @@
         <dependency-check.skip>false</dependency-check.skip>
         <checkstyle.skip>false</checkstyle.skip>
 
-        <version.lib.checkstyle>9.1</version.lib.checkstyle>
-        <version.lib.asm>9.4</version.lib.asm>
+        <version.lib.checkstyle>10.12.5</version.lib.checkstyle>
+        <version.lib.asm>9.5</version.lib.asm>
 
-        <version.plugin.helidon-build-tools>3.0.4</version.plugin.helidon-build-tools>
-        <version.plugin.checkstyle>3.1.2</version.plugin.checkstyle>
-        <version.plugin.compiler>3.10.1</version.plugin.compiler>
-        <version.plugin.dependency>3.1.2</version.plugin.dependency>
+        <version.plugin.helidon-build-tools>4.0.6</version.plugin.helidon-build-tools>
+        <version.plugin.checkstyle>3.3.1</version.plugin.checkstyle>
+        <version.plugin.compiler>3.11.0</version.plugin.compiler>
+        <version.plugin.dependency>3.6.0</version.plugin.dependency>
         <version.plugin.directory>1.0</version.plugin.directory>
-        <version.plugin.enforcer>3.0.0-M1</version.plugin.enforcer>
-        <version.plugin.exec>1.6.0</version.plugin.exec>
-        <version.plugin.jar>3.0.2</version.plugin.jar>
+        <version.plugin.enforcer>3.3.0</version.plugin.enforcer>
+        <version.plugin.exec>3.1.0</version.plugin.exec>
+        <version.plugin.jar>3.3.0</version.plugin.jar>
         <version.plugin.license>1.16</version.plugin.license>
         <version.plugin.os>1.5.0.Final</version.plugin.os>
-        <version.plugin.resources>2.7</version.plugin.resources>
+        <version.plugin.resources>3.3.1</version.plugin.resources>
         <version.plugin.version-plugin>2.15.0</version.plugin.version-plugin>
-        <version.plugin.buildnumber>1.4</version.plugin.buildnumber>
-        <version.plugin.spotbugs>4.7.3.4</version.plugin.spotbugs>
+        <version.plugin.buildnumber>3.1.0</version.plugin.buildnumber>
+        <version.plugin.spotbugs>4.7.3.5</version.plugin.spotbugs>
         <version.plugin.findsecbugs>1.12.0</version.plugin.findsecbugs>
-        <version.plugin.dependency-check>8.2.1</version.plugin.dependency-check>
+        <version.plugin.dependency-check>9.0.8</version.plugin.dependency-check>
     </properties>
 
     <modules>

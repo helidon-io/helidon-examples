@@ -2,8 +2,8 @@
 # Releasing Helidon Examples
 
 These are the steps for doing a release of Helidon Examples. These steps
-will use release 3.0.0 in examples. Of course you are not releasing
-3.0.0, so make sure to change that release number to your release
+will use release 4.0.0 in examples. Of course you are not releasing
+4.0.0, so make sure to change that release number to your release
 number when copy/pasting.
 
 # Overview
@@ -28,7 +28,7 @@ Here is the overall procedure:
 
 ```shell
 # Set this to the version you are releasing. This should match the released version of Helidon
-export VERSION="3.0.0"
+export VERSION="4.0.0"
 ```
 
 1. Create local release branch
@@ -36,7 +36,7 @@ export VERSION="3.0.0"
    ```shell
    # Checkout dev branch into release branch
    git fetch origin
-   git checkout -b release-${VERSION} origin/dev-3.x
+   git checkout -b release-${VERSION} origin/dev-4.x
    git log  # Make sure you have what you think you have
    ```
 
@@ -51,13 +51,13 @@ export VERSION="3.0.0"
    git commit
    git push origin release-${VERSION}
    ```
-4. After workflow completes check status. Check for creation of tag. Check that `helidon-3.x`
+4. After workflow completes check status. Check for creation of tag. Check that `helidon-4.x`
    branch has been updated. 
    ```shell
    git fetch -t origin
    # Checkout and verify branch
-   git checkout helidon-3.x 
-   git rebase origin/helidon-3.x
+   git checkout helidon-4.x 
+   git rebase origin/helidon-4.x
    git log # Make sure it is what it should be
    mvn clean install
    # Checkout and veriy tag

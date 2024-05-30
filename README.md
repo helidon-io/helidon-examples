@@ -1,15 +1,13 @@
 
 # Helidon Examples
 
-Examples for Helidon 3.
-
-[Helidon 4 Examples](https://github.com/helidon-io/helidon/tree/main/examples) and [Helidon 2 Examples](https://github.com/helidon-io/helidon/tree/helidon-2.x/examples) are in the primary Helidon repository.
+Examples for Helidon 4.
 
 ## How to Run
 
-To build and run Helidon 3 examples you need:
+To build and run Helidon 4 examples you need:
 
-* Java 17 or later
+* Java 21 or later
 * Maven 3.6.1 or later
 
 Then:
@@ -17,7 +15,7 @@ Then:
 ```
 git clone https://github.com/helidon-io/helidon-examples.git
 cd helidon-examples
-git checkout helidon-3.x
+git checkout helidon-4.x
 mvn clean install
 ```
 
@@ -25,23 +23,23 @@ mvn clean install
 
 | Branch        | Description |
 | ------------- |-------------|
-| helidon-3.x   | Examples for the current release of Helidon 3 |
-| dev-3.x       | Development branch for Helidon 3 release currently under development |
+| helidon-4.x   | Examples for the current release of Helidon 4 |
+| dev-4.x       | Development branch for Helidon 4 release currently under development |
 
 | Tags          | Description |
 | ------------- |-------------|
 | N.N.N         | Examples for a specific version of Helion |
 
-To checkout examples for the most recent release of Helidon 3:
+To checkout examples for the most recent release of Helidon 4:
 
 ```
-git checkout helidon-3.x
+git checkout helidon-4.x
 ```
 
 To checkout examples for a specific release of Helidon:
 
 ```
-git checkout tags/3.2.5
+git checkout tags/4.1.0
 ```
 
 ## Documentation

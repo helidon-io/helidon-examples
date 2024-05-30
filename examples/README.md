@@ -15,11 +15,11 @@ these examples we recommend checking out from a released tag. For example:
 ```shell
 git clone git@github.com:oracle/helidon.git
 cd helidon
-git checkout tags/2.0.0
+git checkout tags/4.1.0
 ```
 
 Our examples are Maven projects and can be built and run with
-Java 11 or newer -- so make sure you have those:
+Java 21 or newer -- so make sure you have those:
 
 ```shell
 java -version

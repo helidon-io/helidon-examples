@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #
-# Copyright (c) 2018, 2023 Oracle and/or its affiliates.
+# Copyright (c) 2018, 2024 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ readonly HELIDON_REPO_NAME=helidon
 readonly HELIDON_REPO=https://github.com/helidon-io/${HELIDON_REPO_NAME}
 
 # Helidon branch and version we need to do prime build for
-readonly HELIDON_BRANCH="helidon-3.x"
+readonly HELIDON_BRANCH="main"
 readonly HELIDON_VERSION=`cat ${WS_DIR}/pom.xml | grep "<helidon.version>" | cut -d">" -f 2 | cut -d"<" -f 1`
 
 echo "HELIDON_VERSION=${HELIDON_VERSION}"
