@@ -8,7 +8,7 @@ on: [pull_request, workflow_call]
 
 env:
   JAVA_VERSION: '17'
-  JAVA_DISTRO: 'temurin'
+  JAVA_DISTRO: 'oracle'
   HELIDON_PIPELINES: 'true'
   MAVEN_HTTP_ARGS: '-Dmaven.wagon.httpconnectionManager.ttlSeconds=60 -Dmaven.wagon.http.retryHandler.count=3'
 
@@ -21,11 +21,11 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: Set up JDK 17
-        uses: actions/setup-java@v3.6.0
+        uses: actions/setup-java@v4.1.0
         with:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
@@ -36,7 +36,7 @@ jobs:
           echo "empty file" > ~/.m2/repository/io/helidon/empty.txt
           etc/scripts/primebuild.sh
       - name: Upload Maven Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: io-helidon-maven-artifacts
           path: ~/.m2/repository/io/helidon
@@ -46,11 +46,11 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v3.6.0
+        uses: actions/setup-java@v4.1.0
         with:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
@@ -63,13 +63,13 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Download Maven Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: io-helidon-maven-artifacts
           path: ~/.m2/repository/io/helidon
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v3.6.0
+        uses: actions/setup-java@v4.1.0
         with:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
@@ -82,13 +82,13 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Download Maven Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: io-helidon-maven-artifacts
           path: ~/.m2/repository/io/helidon
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v3.6.0
+        uses: actions/setup-java@v4.1.0
         with:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
@@ -104,15 +104,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Download Maven Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: io-helidon-maven-artifacts
           path: ~/.m2/repository/io/helidon
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
       - name: Set up JDK 17
-        uses: actions/setup-java@v3.6.0
+        uses: actions/setup-java@v4.1.0
         with:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
