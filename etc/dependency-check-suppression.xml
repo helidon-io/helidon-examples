@@ -24,6 +24,56 @@
    <packageUrl regex="true">^pkg:maven/io\.helidon\.integrations\.neo4j/helidon\-integrations\-neo4j@.*$</packageUrl>
    <cve>CVE-2021-34371</cve>
 </suppress>
+<suppress>
+  <notes><![CDATA[
+  file name: helidon-integrations-neo4j-health-3.2.9-SNAPSHOT.jar
+   ]]></notes>
+  <packageUrl regex="true">^pkg:maven/io\.helidon\.integrations\.neo4j/helidon\-integrations\-neo4j\-health@.*$</packageUrl>
+  <cve>CVE-2021-34371</cve>
+</suppress>
+   <suppress>
+      <notes><![CDATA[
+   file name: helidon-integrations-neo4j-metrics-3.2.9-SNAPSHOT.jar
+   ]]></notes>
+      <packageUrl regex="true">^pkg:maven/io\.helidon\.integrations\.neo4j/helidon\-integrations\-neo4j\-metrics@.*$</packageUrl>
+      <cve>CVE-2021-34371</cve>
+   </suppress>
+
+   <!-- False positive.
+        Confusing Helidon grpc examples with early versions of GRPC
+   -->
+   <suppress>
+      <notes><![CDATA[
+   file name: io.helidon.examples.grpc:helidon-examples-grpc-common:1.0.0-SNAPSHOT
+   ]]></notes>
+      <packageUrl regex="true">^pkg:maven/io\.helidon\.examples\.grpc/helidon\-examples\-grpc\-common@.*$</packageUrl>
+      <cpe>cpe:/a:grpc:grpc</cpe>
+   </suppress>
+
+   <!-- False positive.
+        This CVE is against mongo db not Helidon's mongodb support
+   -->
+   <suppress>
+      <notes><![CDATA[
+   file name: helidon-dbclient-mongodb-3.2.9-SNAPSHOT.jar
+   ]]></notes>
+      <packageUrl regex="true">^pkg:maven/io\.helidon\.dbclient/helidon\-dbclient\-mongodb@.*$</packageUrl>
+      <cve>CVE-2021-32036</cve>
+   </suppress>
+   <suppress>
+      <notes><![CDATA[
+   file name: helidon-dbclient-mongodb-3.2.9-SNAPSHOT.jar
+   ]]></notes>
+      <packageUrl regex="true">^pkg:maven/io\.helidon\.dbclient/helidon\-dbclient\-mongodb@.*$</packageUrl>
+      <cve>CVE-2014-8180</cve>
+   </suppress>
+   <suppress>
+      <notes><![CDATA[
+   file name: helidon-dbclient-mongodb-3.2.9-SNAPSHOT.jar
+   ]]></notes>
+      <packageUrl regex="true">^pkg:maven/io\.helidon\.dbclient/helidon\-dbclient\-mongodb@.*$</packageUrl>
+      <cve>CVE-2016-6494</cve>
+   </suppress>
 
 <!-- False positive.
      This CVE is against the H2 web admin console which we do not use
@@ -71,26 +121,6 @@
    <cve>CVE-2023-28867</cve>
 </suppress>
 
-<!-- False Postive. This CVE is against the kafka server. This is the kafka client
--->
-<suppress>
-   <notes><![CDATA[
-   file name: kafka-clients-2.8.1.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.apache\.kafka/kafka\-clients@.*$</packageUrl>
-   <cve>CVE-2022-34917</cve>
-</suppress>
-
-<!-- False Positive. CVE-2023-25194 is against Kafka Connect, not the client -->
-<!-- See https://github.com/jeremylong/DependencyCheck/issues/5469 -->
-<suppress>
-   <notes><![CDATA[
-   file name: kafka-clients-2.8.1.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.apache\.kafka/kafka\-clients@.*$</packageUrl>
-   <cve>CVE-2023-25194</cve>
-</suppress>
-
 <!-- False Positive. This CVE is against H2 1.x.
 -->
 <suppress>
@@ -111,6 +141,126 @@
    <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
    <vulnerabilityName>CVE-2020-8908</vulnerabilityName>
 </suppress>
+
+<!-- False Positive. These do not apply to server Java deployment and certainly not to our use of graalvm SDK.
+    This vulnerability applies to Java deployments, typically in clients running sandboxed
+    Java Web Start applications or sandboxed Java applets, that load and run untrusted code
+    (e.g., code that comes from the internet) and rely on the Java sandbox for security. This
+    vulnerability does not apply to Java deployments, typically in servers, that load and run only trusted code 
+-->
+<suppress>
+   <notes><![CDATA[
+   file name: graal-sdk-22.3.0.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.graalvm\.sdk/graal\-sdk@.*$</packageUrl>
+   <vulnerabilityName>CVE-2023-22006</vulnerabilityName>
+</suppress>
+<suppress>
+   <notes><![CDATA[
+   file name: graal-sdk-22.3.0.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.graalvm\.sdk/graal\-sdk@.*$</packageUrl>
+   <vulnerabilityName>CVE-2024-20932</vulnerabilityName>
+</suppress>
+
+<!-- 
+    This CVE is being disputed by the Jackson project and the community seems in agreement that this
+    CVE should be rejected. We are suppressing this for now to reduce noise in our scan and will
+    continue to monitor progress.
+    https://nvd.nist.gov/vuln/detail/CVE-2023-35116
+    https://github.com/FasterXML/jackson-databind/issues/3972
+
+-->
+<suppress>
+   <notes><![CDATA[
+   file name: jackson-databind-2.15.2.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
+   <cve>CVE-2023-35116</cve>
+</suppress>
+
+<!--
+    This CVE is is concerning proper use of Netty's hostname verification. Helidon enables hostname
+    verification by default and therefore this CVE does not apply. Some more info on the CVE here:
+    https://github.com/jeremylong/DependencyCheck/issues/5912
+-->
+<suppress>
+   <notes><![CDATA[
+   file name: netty-transport-4.1.100.Final.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/io\.netty/netty\-.*@.*$</packageUrl>
+   <cve>CVE-2023-4586</cve>
+</suppress>
+
+<!--
+    This is a FP. We have upgrade jgit to a fixed version, but it is still getting flagged.
+    Probably due to the funky version string used by jgit. See
+    https://github.com/jeremylong/DependencyCheck/issues/5943
+-->
+<suppress>
+   <notes><![CDATA[
+   file name: org.eclipse.jgit-6.7.0.202309050840-r.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.eclipse\.jgit/org\.eclipse\.jgit@.*$</packageUrl>
+   <cve>CVE-2023-4759</cve>
+</suppress>
+
+<!--
+    False Positives. These CVEs are against the Brave web browser, not brave-opentracing.
+-->
+<suppress>
+   <notes><![CDATA[
+   file name: brave-opentracing-1.0.0.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/io\.opentracing\.brave/brave\-opentracing@.*$</packageUrl>
+   <cve>CVE-2022-47932</cve>
+</suppress>
+<suppress>
+   <notes><![CDATA[
+   file name: brave-opentracing-1.0.0.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/io\.opentracing\.brave/brave\-opentracing@.*$</packageUrl>
+   <cve>CVE-2022-47933</cve>
+</suppress>
+<suppress>
+   <notes><![CDATA[
+   file name: brave-opentracing-1.0.0.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/io\.opentracing\.brave/brave\-opentracing@.*$</packageUrl>
+   <cve>CVE-2022-47934</cve>
+</suppress>
+<suppress>
+   <notes><![CDATA[
+   file name: brave-opentracing-1.0.0.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/io\.opentracing\.brave/brave\-opentracing@.*$</packageUrl>
+   <cve>CVE-2021-22929</cve>
+</suppress>
+<suppress>
+   <notes><![CDATA[
+   file name: brave-opentracing-1.0.0.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/io\.opentracing\.brave/brave\-opentracing@.*$</packageUrl>
+   <cve>CVE-2022-30334</cve>
+</suppress>
+<suppress>
+   <notes><![CDATA[
+   file name: brave-opentracing-1.0.0.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/io\.opentracing\.brave/brave\-opentracing@.*$</packageUrl>
+   <cve>CVE-2023-28360</cve>
+</suppress>
+
+   <!-- False Positive
+       CVE is against accesslog project, not helidon's access log support
+   -->
+   <suppress>
+      <notes><![CDATA[
+   file name: helidon-webserver-access-log-3.2.9-SNAPSHOT.jar
+   ]]></notes>
+      <packageUrl regex="true">^pkg:maven/io\.helidon\.webserver/helidon\-webserver\-access\-log@.*$</packageUrl>
+      <cve>CVE-2022-25760</cve>
+   </suppress>
 
 
 </suppressions>
