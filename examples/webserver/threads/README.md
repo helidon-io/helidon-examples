@@ -10,7 +10,7 @@ such cases:
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-examples-webserver-threads.jar
 ```
@@ -18,7 +18,7 @@ java -jar target/helidon-examples-webserver-threads.jar
 ## Exercise the application
 
 __Compute:__
-```
+```shell
 curl -X GET http://localhost:8080/thread/compute/5
 ```
 The `compute` endpoint runs a costly floating point computation using a platform thread.
@@ -27,7 +27,7 @@ Increase the number to make the computation more costly (and take longer).
 The request returns the results of the computation (not important!).
 
 __Fanout:__
-```
+```shell
 curl -X GET http://localhost:8080/thread/fanout/5
 ```
 The `fanout` endpoint simulates a fanout of remote calls that are run in parallel using
@@ -39,7 +39,7 @@ in parallel.
 The request returns a list of numbers showing the sleep value of each remote client call.
 
 __Sleep:__
-```
+```shell
 curl -X GET http://localhost:8080/thread/sleep/4
 ```
 This is a simple endpoint that just sleeps for the specified number of seconds. It is

@@ -30,7 +30,7 @@ running in this Docker container, verify that the following lines
 (among others) are present in
 `src/main/resources/META-INF/microprofile-config.properties`:
 
-```sh
+```properties
 javax.sql.DataSource.example.dataSourceClassName=com.mysql.cj.jdbc.MysqlDataSource
 javax.sql.DataSource.example.dataSource.url = jdbc:mysql://localhost:3306
 javax.sql.DataSource.example.dataSource.user = root
@@ -46,7 +46,7 @@ java -jar target/helidon-integrations-examples-datasource-hikaricp-mysql.jar
 ```
 
 Try the endpoint:
-```sh
+```shell
 curl http://localhost:8080/tables
 ```
 

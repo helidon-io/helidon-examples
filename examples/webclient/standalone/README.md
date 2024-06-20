@@ -27,6 +27,7 @@ Then run the client, passing the port number. It will connect
 to the server:
 
 ```shell
-java -cp "target/classes:target/libs/*" io.helidon.examples.webclient.standalone.ClientMain 35963
+export PORT=33417
+java -cp "target/classes:target/libs/*" io.helidon.examples.webclient.standalone.ClientMain ${PORT}
 ```
 

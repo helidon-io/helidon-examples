@@ -21,7 +21,7 @@ Try the application:
 
 The application starts on a random port, the following assumes it is `56551`
 ```shell
-export PORT=38529
+export PORT=45351
 curl http://localhost:${PORT}/public
 curl --digest -u "jill:changeit" http://localhost:${PORT}/noRoles
 curl --digest -u "john:changeit" http://localhost:${PORT}/user

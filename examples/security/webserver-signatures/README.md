@@ -23,7 +23,7 @@ java -jar target/helidon-examples-security-webserver-signatures.jar
 
 Try the endpoints (port is random, shall be replaced accordingly):
 ```shell
-export PORT=34941
+export PORT=39971
 curl -u "jack:changeit" http://localhost:${PORT}/service1
 curl -u "jill:changeit" http://localhost:${PORT}/service1-rsa
 curl -v -u "john:changeit" http://localhost:${PORT}/service1

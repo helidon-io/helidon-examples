@@ -6,8 +6,7 @@ With Docker:
 ```shell
 docker run --name zipkin -d -p 9411:9411 openzipkin/zipkin
 ```
-
-With Java 8+:
+With JDK:
 ```shell
 curl -sSL https://zipkin.io/quickstart.sh | bash -s
 java -jar zipkin.jar
@@ -21,8 +20,7 @@ docker build -t helidon-webserver-opentracing-example .
 docker run --rm -d --link zipkin --name helidon-webserver-opentracing-example \
     -p 8080:8080 helidon-webserver-opentracing-example:latest
 ```
-
-With Java 8+:
+With JDK:
 ```shell
 mvn package
 java -jar target/helidon-examples-webserver-opentracing.jar

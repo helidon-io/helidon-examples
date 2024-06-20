@@ -49,6 +49,11 @@
             <artifactId>micronaut-runtime</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.helidon.logging</groupId>
+            <artifactId>helidon-logging-jul</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>io.helidon.integrations.micronaut</groupId>
             <artifactId>helidon-integrations-micronaut-cdi</artifactId>
             <scope>runtime</scope>

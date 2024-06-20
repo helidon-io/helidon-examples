@@ -50,7 +50,7 @@ public final class Main {
     public static void main(String[] args) {
         WebServerConfig.Builder builder = WebServer.builder();
         setup(builder);
-        WebServer server = builder.build().start();
+        WebServer server = builder.port(8080).build().start();
 
         System.out.println("WEB server is up! http://localhost:" + server.port() + "/comments");
     }

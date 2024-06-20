@@ -48,7 +48,7 @@ public class DirectorySourceExample {
         System.out.println("Username: " + username);
         assert username.equals("libor");
 
-        String password = secrets.get("changeit").asString().get();
+        String password = secrets.get("password").asString().get();
         System.out.println("Password: " + password);
         assert password.equals("changeit");
     }

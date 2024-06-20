@@ -5,7 +5,7 @@ This example shows how to run Helidon DB over mongoDB.
 
 ## Build
 
-```
+```shell
 mvn package
 ```
 
@@ -13,13 +13,13 @@ mvn package
 
 This example requires a mongoDB database, start it using docker:
 
-```
+```shell
 docker run --rm --name mongo -p 27017:27017 mongo
 ```
 
 Then run the application:
 
-```
+```shell
 java -jar target/helidon-examples-dbclient-mongodb.jar
 ```
 

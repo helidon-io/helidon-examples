@@ -25,15 +25,15 @@ These normal greeting app endpoints work just as in the original greeting app:
 
 ```shell
 curl -X GET http://localhost:8080/greet
-{"message":"Hello World!"}
+#{"message":"Hello World!"}
 
 curl -X GET http://localhost:8080/greet/Joe
-{"message":"Hello Joe!"}
+#{"message":"Hello Joe!"}
 
 curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Hola"}' http://localhost:8080/greet/greeting
 
 curl -X GET http://localhost:8080/greet/Jose
-{"message":"Hola Jose!"}
+#{"message":"Hola Jose!"}
 ```
 
 ## Using CORS
@@ -49,6 +49,8 @@ By setting `Origin` and `Host` headers that do not indicate the same system we t
 # Follow the CORS protocol for GET
 curl -i -X GET -H "Origin: http://foo.com" -H "Host: here.com" http://localhost:8080/greet
 
+```
+```text
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Content-Type: application/json
@@ -66,6 +68,8 @@ The same happens for a `GET` requesting a personalized greeting (by passing the 
 ```shell
 curl -i -X GET -H "Origin: http://foo.com" -H "Host: here.com" http://localhost:8080/greet/Joe
 
+```
+```text
 HTTP/1.1 200 OK
 Date: Wed, 31 Jan 2024 11:58:06 +0100
 Access-Control-Allow-Origin: *
@@ -98,7 +102,8 @@ curl -i -X OPTIONS \
     -H "Origin: http://foo.com" \
     -H "Host: here.com" \
     http://localhost:8080/greet/greeting
-
+```    
+```text
 HTTP/1.1 200 OK
 Date: Wed, 31 Jan 2024 12:00:15 +0100
 Access-Control-Allow-Methods: PUT
@@ -119,7 +124,8 @@ curl -i -X PUT \
     -H "Content-Type: application/json" \
     -d "{ \"greeting\" : \"Cheers\" }" \
     http://localhost:8080/greet/greeting
-
+```
+```text
 HTTP/1.1 204 No Content
 Date: Wed, 31 Jan 2024 12:01:45 +0100
 Access-Control-Allow-Origin: http://foo.com
@@ -130,7 +136,8 @@ Vary: ORIGIN
 And we run one more `GET` to observe the change in the greeting:
 ```shell
 curl -i -X GET -H "Origin: http://foo.com" -H "Host: here.com" http://localhost:8080/greet/Joe
-
+```
+```text
 HTTP/1.1 200 OK
 Date: Wed, 31 Jan 2024 12:02:13 +0100
 Access-Control-Allow-Origin: *
@@ -157,6 +164,8 @@ curl -i -X OPTIONS \
     -H "Origin: http://other.com" \
     -H "Host: here.com" \
     http://localhost:8080/greet/greeting
+```
+```text
 HTTP/1.1 403 CORS origin is not in allowed list
 Date: Wed, 31 Jan 2024 12:02:51 +0100
 Connection: keep-alive
@@ -171,7 +180,7 @@ mvn package
 java  -jar target/helidon-examples-cors.jar
 ```
 Send the previous `OPTIONS` request again and note the successful result:
-```shell
+```text
 HTTP/1.1 200 OK
 Date: Wed, 31 Jan 2024 12:05:36 +0100
 Access-Control-Allow-Methods: PUT

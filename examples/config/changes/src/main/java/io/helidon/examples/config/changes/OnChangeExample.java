@@ -54,7 +54,7 @@ public class OnChangeExample {
 
     private static void logSecrets(Config secrets) {
         LOGGER.info("Loaded secrets are u: " + secrets.get("username").asString().get()
-                            + ", p: " + secrets.get("changeit").asString().get());
+                            + ", p: " + secrets.get("password").asString().get());
     }
 
 }

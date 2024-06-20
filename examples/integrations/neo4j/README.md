@@ -19,7 +19,8 @@ java -jar target/helidon-examples-integration-neo4j.jar
 Then access the rest API like this:
 
 ````shell
-curl localhost:8080/api/movies
+export PORT=38837
+curl localhost:${PORT}/api/movies
 ````
 
 # Health and metrics
@@ -33,6 +34,7 @@ Enable them in the driver:
 ```
 
 ```shell
-curl localhost:8080/observe/health
-curl localhost:8080/observe/metrics
+export PORT=38837
+curl localhost:${PORT}/observe/health
+curl localhost:${PORT}/observe/metrics
 ```

@@ -352,7 +352,7 @@ public class Main {
         }
         WebServer server;
         try {
-            method.invoke(null, params.toArray(new Object[0]));
+            method.invoke(new Main(), params.toArray(new Object[0]));
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             System.exit(2);

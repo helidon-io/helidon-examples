@@ -10,13 +10,13 @@ Uncomment the appropriate configuration in the application.xml for the desired d
 
 ## Build
 
-```
+```shell
 mvn package
 ```
 
 This example may also be run as a GraalVM native image in which case can be built using the following: 
 
-```
+```shell
 mvn package -Pnative-image
 ```
 
@@ -30,18 +30,18 @@ Instructions for H2 can be found here: http://www.h2database.com/html/cheatSheet
 Instructions for Oracle can be found here: https://github.com/oracle/docker-images/tree/master/OracleDatabase/SingleInstance
 
 MySQL can be run as a docker container with the following command:
-```
+```shell
 docker run --rm --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=pokemon -e MYSQL_USER=user -e MYSQL_PASSWORD=changeit  mysql:5.7
 ```
 
 
 Then run the application:
 
-```
+```shell
 java -jar target/helidon-examples-dbclient-jdbc.jar
 ```
 or in the case of native image
-```
+```shell
 ./target/helidon-examples-dbclient-jdbc
 ```
  
