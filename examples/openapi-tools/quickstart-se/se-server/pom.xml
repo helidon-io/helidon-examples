@@ -30,7 +30,7 @@
     </parent>
     <groupId>org.openapitools</groupId>
     <artifactId>openapi-se-server</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>openapi-java-server</name>
     <description>This is a sample for Helidon Quickstart project.</description>
 

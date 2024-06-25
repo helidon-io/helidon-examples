@@ -25,10 +25,10 @@
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-se</artifactId>
         <version>3.2.9-SNAPSHOT</version>
-        <relativePath>../../../applications/se/pom.xml</relativePath>
     </parent>
     <groupId>io.helidon.examples.todo</groupId>
     <artifactId>helidon-examples-todo-frontend</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples TODO Demo Frontend</name>
 
     <description>
