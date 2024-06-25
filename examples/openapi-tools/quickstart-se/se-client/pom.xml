@@ -30,7 +30,7 @@
     <artifactId>openapi-se-client</artifactId>
     <name>openapi-java-client</name>
     <description>This is a sample for Helidon Quickstart project.</description>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
