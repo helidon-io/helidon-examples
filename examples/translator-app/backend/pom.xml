@@ -28,6 +28,7 @@
     </parent>
     <groupId>io.helidon.examples.translator</groupId>
     <artifactId>helidon-examples-translator-backend</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Translator Backend</name>
 
     <description>

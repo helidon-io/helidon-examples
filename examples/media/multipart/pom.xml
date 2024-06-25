@@ -28,6 +28,7 @@
     </parent>
     <groupId>io.helidon.examples.media</groupId>
     <artifactId>helidon-examples-media-multipart</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Media Support Multipart</name>
 
     <description>

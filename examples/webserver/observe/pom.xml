@@ -26,6 +26,7 @@
 
     <groupId>io.helidon.examples.webserver</groupId>
     <artifactId>helidon-examples-webserver-observe</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples WebServer Observe</name>
 
     <properties>

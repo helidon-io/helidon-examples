@@ -26,6 +26,7 @@
 
     <groupId>io.helidon.examples.webserver</groupId>
     <artifactId>helidon-examples-webserver-imperative</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples WebServer Imperative</name>
     <description>Example of imperative ("pure" programmatic) approach using Helidon SE</description>
 

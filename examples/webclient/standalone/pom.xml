@@ -26,6 +26,7 @@
     </parent>
 
     <artifactId>helidon-examples-webclient-standalone</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples WebClient Standalone</name>
 
     <properties>

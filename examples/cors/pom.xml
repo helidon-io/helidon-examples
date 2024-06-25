@@ -27,6 +27,7 @@
     </parent>
     <groupId>io.helidon.examples</groupId>
     <artifactId>helidon-examples-cors</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples CORS SE</name>
 
     <description>

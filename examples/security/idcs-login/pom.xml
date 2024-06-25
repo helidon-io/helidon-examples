@@ -28,6 +28,7 @@
     </parent>
     <groupId>io.helidon.examples.security</groupId>
     <artifactId>helidon-examples-security-oidc</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Security IDCS Login</name>
 
     <description>
