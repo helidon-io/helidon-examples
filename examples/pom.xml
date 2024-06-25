@@ -27,6 +27,7 @@
     </parent>
     <groupId>io.helidon.examples</groupId>
     <artifactId>helidon-examples-project</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples</name>
     <packaging>pom</packaging>
 
@@ -40,30 +41,27 @@
     </properties>
 
     <modules>
-        <!--
         <module>config</module>
+        <module>cors</module>
+        <module>dbclient</module>
+        <module>employee-app</module>
         <module>graphql</module>
-        <module>grpc</module>
         <module>health</module>
-        <module>quickstarts</module>
-        <module>microprofile</module>
+        <module>integrations</module>
+        <module>jbatch</module>
+        <module>logging</module>
         <module>media</module>
+        <module>messaging</module>
+        <module>metrics</module>
+        <module>microprofile</module>
         <module>openapi</module>
         <module>openapi-tools</module>
+        <module>quickstarts</module>
         <module>security</module>
         <module>todo-app</module>
         <module>translator-app</module>
-        <module>webserver</module>
-        <module>integrations</module>
-        <module>employee-app</module>
-        <module>dbclient</module>
         <module>webclient</module>
-        <module>cors</module>
-        <module>messaging</module>
-        <module>logging</module>
-        <module>metrics</module>
-        <module>jbatch</module>
-        -->
+        <module>webserver</module>
     </modules>
 
     <build>
