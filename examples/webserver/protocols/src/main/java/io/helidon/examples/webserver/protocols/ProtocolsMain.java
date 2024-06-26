@@ -110,7 +110,7 @@ public class ProtocolsMain {
     }
 
     private static Keys privateKey() {
-        String password = "helidon";
+        String password = "changeit";
 
         return Keys.builder()
                 .keystore(keystore -> keystore
