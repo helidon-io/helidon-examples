@@ -73,9 +73,9 @@ public final class BasicExampleBuilderMain {
                 Signature example: from builder
 
                 "Users:
-                jack/password in roles: user, admin
-                jill/password in roles: user
-                john/password in no roles
+                jack/changeit in roles: user, admin
+                jill/changeit in roles: user
+                john/changeit in no roles
 
                 ***********************
                 ** Endpoints:        **
