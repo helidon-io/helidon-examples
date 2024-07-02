@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,10 @@ public class StatusTest {
 
     @Test
     void checkStatusMetrics() {
-        checkAfterStatus(171);
+        // intermediate responses are not "full" responses and since JDK 20 they are not returned by the client at all
+        if (Runtime.version().feature() < 20) {
+            checkAfterStatus(171);
+        }
         checkAfterStatus(200);
         checkAfterStatus(201);
         checkAfterStatus(204);
