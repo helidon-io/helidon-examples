@@ -21,14 +21,14 @@ mvn clean install
 
 ### How Repository is Organized
 
-| Branch        | Description |
-| ------------- |-------------|
-| helidon-4.x   | Examples for the current release of Helidon 4 |
-| dev-4.x       | Development branch for Helidon 4 release currently under development |
+| Branch      | Used By    | Modified By      | Description                                               |
+| ----------- |------------|------------------|--------------------------------------------------|
+| helidon-N.x | Customers  | Release workflow | Latest examples for major version N of Helidon   |
+| dev-N.x     | Developers | PRs              | Examples under development for major version N of Helidon |
 
-| Tags          | Description |
-| ------------- |-------------|
-| N.N.N         | Examples for a specific version of Helion |
+| Tags  | Used By    | Created By       | Description                                         |
+|-------|------------|------------------|-----------------------------------------------------|
+| N.N.N | Customers  | Release workflow | Released examples for a specific version of Helidon |
 
 To checkout examples for the most recent release of Helidon 4:
 
