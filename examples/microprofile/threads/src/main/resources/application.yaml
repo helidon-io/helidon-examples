@@ -1,0 +1,6 @@
+execute-on:
+  platform:
+    thread-name-prefix: "application-platform-executor"
+    core-pool-size: 1
+    max-pool-size: 2
+    queue-capacity: 10

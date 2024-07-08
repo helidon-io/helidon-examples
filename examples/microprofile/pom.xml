@@ -52,5 +52,6 @@
         <module>http-status-count-mp</module>
         <module>lra</module>
         <module>telemetry</module>
+        <module>threads</module>
     </modules>
 </project>
