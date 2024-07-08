@@ -46,6 +46,7 @@
         <module>protocols</module>
         <module>static-content</module>
         <module>streaming</module>
+        <module>threads</module>
         <module>tls</module>
         <module>threads</module>
         <module>tracing</module>
