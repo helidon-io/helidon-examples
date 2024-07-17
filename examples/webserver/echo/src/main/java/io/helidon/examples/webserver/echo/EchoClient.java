@@ -53,7 +53,7 @@ public class EchoClient {
 
             Headers headers = response.headers();
             for (Header header : headers) {
-                System.out.println("Header: " + header.name() + "=" + header.value());
+                System.out.println("Header: " + header.name() + "=" + header.get());
             }
             System.out.println("Entity:");
             System.out.println(response.as(String.class));
