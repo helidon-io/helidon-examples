@@ -42,11 +42,18 @@ can be accepted.
    you intend to submit.
 1. Fork this repository
 1. Create a branch in your fork to implement the changes. We recommend using
-   the issue number as part of your branch name, e.g. `1234-fixes`
+   the issue number as part of your branch name, e.g. `1234-fixes`. Make sure to
+   base your branch off of the corresponding `dev-N.x` branch (where N is the
+   major Helidon version).
 1. Submit the pull request. *Do not leave the pull request blank*. Explain exactly
    what your changes are meant to do and provide simple steps on how to validate
-   your changes. Ensure that you reference the issue you created as well.
+   your changes. Ensure that you reference the issue you created as well. Target
+   your PR to the corresponding `dev-N.x` branch.
 1. We will assign the pull request for review and running of PR validation workflow before it is merged.
+
+Development work for examples is performed in the `dev-N.x` branches (where
+`N` corresponds to a Helidon major version). For example, to make a change to
+a Helidon 3 example you would use the `dev-3.x` branch.
 
 ## Code of Conduct
 
