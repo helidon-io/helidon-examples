@@ -23,7 +23,7 @@
     <parent>
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-mp</artifactId>
-        <version>4.1.0-SNAPSHOT</version>
+        <version>4.0.11</version>
     </parent>
     <groupId>io.helidon.examples.jbatch</groupId>
     <artifactId>helidon-examples-jbatch</artifactId>
