@@ -3,8 +3,6 @@
 
 Examples for Helidon 2.
 
-[Helidon 4 Examples](https://github.com/helidon-io/helidon/tree/main/examples) and [Helidon 2 Examples](https://github.com/helidon-io/helidon/tree/helidon-2.x/examples) are in the primary Helidon repository.
-
 ## How to Run
 
 To build and run Helidon 2 examples you need:
@@ -23,16 +21,14 @@ mvn clean install
 
 ### How Repository is Organized
 
-| Branch        | Description |
-| ------------- |-------------|
-| helidon-3.x   | Examples for the current release of Helidon 3 |
-| helidon-2.x   | Examples for the current release of Helidon 2 |
-| dev-3.x       | Development branch for Helidon 3 release currently under development |
-| dev-2.x       | Development branch for Helidon 2 release currently under development |
+| Branch      | Used By    | Modified By      | Description                                               |
+| ----------- |------------|------------------|--------------------------------------------------|
+| helidon-N.x | Customers  | Release workflow | Latest examples for major version N of Helidon   |
+| dev-N.x     | Developers | PRs              | Examples under development for major version N of Helidon |
 
-| Tags          | Description |
-| ------------- |-------------|
-| N.N.N         | Examples for a specific version of Helion |
+| Tags  | Used By    | Created By       | Description                                         |
+|-------|------------|------------------|-----------------------------------------------------|
+| N.N.N | Customers  | Release workflow | Released examples for a specific version of Helidon |
 
 To checkout examples for the most recent release of Helidon 2:
 
@@ -43,7 +39,7 @@ git checkout helidon-2.x
 To checkout examples for a specific release of Helidon:
 
 ```
-git checkout tags/2.X.Y
+git checkout tags/2.6.7
 ```
 
 ## Documentation
