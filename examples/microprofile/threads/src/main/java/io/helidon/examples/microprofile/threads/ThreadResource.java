@@ -8,26 +8,33 @@ import java.util.concurrent.Future;
 
 import io.helidon.common.configurable.ThreadPoolSupplier;
 import io.helidon.microprofile.cdi.ExecuteOn;
+import io.helidon.microprofile.server.ServerCdiExtension;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
 
 @Path("/thread")
 @ApplicationScoped
 public class ThreadResource {
 
-    static final System.Logger LOGGER = System.getLogger(ThreadResource.class.getName());
-    static final Random rand = new Random(System.currentTimeMillis());
+    private static final System.Logger LOGGER = System.getLogger(ThreadResource.class.getName());
+    private static final Random rand = new Random(System.currentTimeMillis());
+    private static final Client client = ClientBuilder.newClient();
+
+    @Inject
+    ServerCdiExtension serverExtension;
 
     // Executor of virtual threads.
-    private static final ExecutorService virtualExecutorService = ThreadPoolSupplier.builder()
+    private final ExecutorService virtualExecutorService = ThreadPoolSupplier.builder()
             .threadNamePrefix("application-virtual-executor-")
             .virtualThreads(true)
             .build()
             .get();
-
     /**
      * Performs a CPU intensive operation. Uses the @ExecuteOn annotation
      * to have this handler executed on a platform thread (instead of a virtual
@@ -139,15 +146,12 @@ public class ThreadResource {
      */
     private String callRemote(int seconds) {
         LOGGER.log(System.Logger.Level.INFO, Thread.currentThread() + ": Calling remote sleep for " + seconds + "s");
-        /* TODO XXX
-        WebClient client = Main.webclient;
-        ClientResponseTyped<String> response = client.get("/sleep/" + seconds).request(String.class);
-        if (response.status().equals(Status.OK_200)) {
-            return response.entity();
+        Response response = client.target("http://localhost:" + serverExtension.port() + "/thread/sleep/" + seconds)
+                .request()
+                .get();
+        if (response.getStatus() == 200) {
+            return response.readEntity(String.class);
         }
-        return response.status().toString();
-         */
-        sleep(seconds);
-        return "200";
+        return Integer.toString(response.getStatus());
     }
 }
