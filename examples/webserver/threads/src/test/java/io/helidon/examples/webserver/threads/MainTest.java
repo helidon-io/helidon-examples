@@ -33,7 +33,7 @@ class MainTest {
 
     protected MainTest(WebClient client) {
         this.client = client;
-        Main.webclient = this.client; // Needed for ThreadService to make calls
+        Main.webClient(this.client); // Needed for ThreadService to make calls
     }
 
     @SetUpRoute

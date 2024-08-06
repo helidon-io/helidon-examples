@@ -37,7 +37,7 @@ import io.helidon.webserver.http.ServerResponse;
 class ThreadService implements HttpService {
 
     private static final System.Logger LOGGER = System.getLogger(ThreadService.class.getName());
-    private static final Random rand = new Random(System.currentTimeMillis());
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
 
     // ThreadPool of platform threads.
     private static ExecutorService platformExecutorService;
@@ -133,7 +133,7 @@ class ThreadService implements HttpService {
             // For this we use our virtual thread based executor. We submit the work and save the Futures
             var futures = new ArrayList<Future<String>>();
             for (int i = 0; i < count; i++) {
-                futures.add(virtualExecutorService.submit(() -> callRemote(rand.nextInt(5))));
+                futures.add(virtualExecutorService.submit(() -> callRemote(RANDOM.nextInt(5))));
             }
 
             // After work has been submitted we loop through the future and block getting the results.
@@ -156,14 +156,14 @@ class ThreadService implements HttpService {
     }
 
     /**
-     * Simulate a remote client call by calling this server's sleep endpoint
+     * Simulate a remote client call by calling this server's sleep endpoint.
      *
-     * @param seconds number of seconds the endpoint should sleep.
+     * @param seconds number of seconds the endpoint should sleep
      * @return string response from client
      */
     private String callRemote(int seconds) {
         LOGGER.log(Level.INFO, Thread.currentThread() + ": Calling remote sleep for " + seconds + "s");
-        WebClient client = Main.webclient;
+        WebClient client = Main.webClient();
         ClientResponseTyped<String> response = client.get("/sleep/" + seconds).request(String.class);
         if (response.status().equals(Status.OK_200)) {
             return response.entity();
@@ -172,7 +172,7 @@ class ThreadService implements HttpService {
     }
 
     /**
-     * Sleep current thread
+     * Sleep current thread.
      *
      * @param seconds number of seconds to sleep
      * @return number of seconds requested to sleep
@@ -187,14 +187,14 @@ class ThreadService implements HttpService {
     }
 
     /**
-     * Perform a CPU intensive computation
+     * Perform a CPU intensive computation.
      *
      * @param iterations: number of times to perform computation
      * @return result of computation
      */
     private double compute(int iterations) {
         LOGGER.log(Level.INFO, Thread.currentThread() + ": Computing with " + iterations + " iterations");
-        double d = 123456789.123456789 * rand.nextInt(100);
+        double d = 123456789.123456789 * RANDOM.nextInt(100);
         for (int i = 0; i < iterations; i++) {
             for (int n = 0; n < 1_000_000; n++) {
                 for (int j = 0; j < 5; j++) {

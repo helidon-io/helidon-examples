@@ -25,6 +25,7 @@
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-mp</artifactId>
         <version>4.1.0-SNAPSHOT</version>
+        <relativePath/>
     </parent>
     <groupId>io.helidon.examples.todos</groupId>
     <artifactId>helidon-examples-todo-backend</artifactId>
