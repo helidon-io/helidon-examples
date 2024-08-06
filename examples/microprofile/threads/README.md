@@ -2,13 +2,16 @@
 
 Helidon's adoption of virtual threads has eliminated a lot of the headaches
 of thread pools and thread pool tuning. But there are still cases where using
-application specific executors is desirable. This example illustrates two
+application specific executors might be desirable. This example illustrates two
 such cases:
 
 1. Using a virtual thread executor to execute multiple tasks in parallel.
 2. Using a platform thread executor to execute long-running CPU intensive operations.
 
-To accomplish this, the example uses Helidon's `@ExecuteOn` annotation.
+To accomplish this, the example uses two techniques:
+
+1. Using Helidon's `ThreadPoolSupplier` to manually create a virtual thread executor service.
+2. Using Helidon's `@ExecuteOn` annotation to  run a handler on a platform thread.
 
 ## Build and run
 
@@ -76,22 +79,13 @@ The `compute` endpoint in this example demonstrates this use case. You pass the 
 the number of times you want to make the computation, and it uses a small bounded pool
 of platform threads to execute the task. 
 
-### Use of Helidon's @ExecuteOn annotation
-
-This example uses `io.helidon.common.configurable.ThreadPoolSupplier` to create the 
-two executors used in the example. This provides a few benefits:
-
-1. ThreadPoolSupplier supports a number of tuning parameters that enable us to configure a small, bounded threadpool.
-2. You can drive the thread pool configuration via Helidon config -- see this example's `application.yaml`
-3. You get propagation of Helidon's Context which supports Helidon's features as well as direct use by the application.
-
 ### Logging
 
 In `logging.properties` the log level for `io.helidon.common.configurable.ThreadPool`
 is increased so that you can see the values used to configure the platform thread pool.
-When you start the application you will see a line like
+When you exercise the application you will see a line like
 ```
-ThreadPool 'application-platform-executor-thread-pool-1' {corePoolSize=1, maxPoolSize=2,
+ThreadPool 'application-platform-executor-thread-pool-2' {corePoolSize=1, maxPoolSize=2,
  queueCapacity=10, growthThreshold=1000, growthRate=0%, averageQueueSize=0.00, peakQueueSize=0, averageActiveThreads=0.00, peakPoolSize=0, currentPoolSize=0, completedTasks=0, failedTasks=0, rejectedTasks=0}
 ```
 This reflects the configuration of the platform thread pool created by the application
