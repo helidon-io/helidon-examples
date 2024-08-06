@@ -48,7 +48,6 @@
         <module>streaming</module>
         <module>threads</module>
         <module>tls</module>
-        <module>threads</module>
         <module>tracing</module>
         <module>tutorial</module>
         <module>websocket</module>
