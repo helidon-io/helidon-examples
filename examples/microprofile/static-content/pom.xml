@@ -25,6 +25,7 @@
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-mp</artifactId>
         <version>4.1.0-SNAPSHOT</version>
+        <relativePath/>
     </parent>
     <groupId>io.helidon.examples.microprofile</groupId>
     <artifactId>helidon-examples-microprofile-mp1_1-static-content</artifactId>
