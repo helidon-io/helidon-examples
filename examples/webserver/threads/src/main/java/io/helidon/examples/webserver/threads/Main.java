@@ -16,8 +16,8 @@
 
 package io.helidon.examples.webserver.threads;
 
-import io.helidon.logging.common.LogConfig;
 import io.helidon.config.Config;
+import io.helidon.logging.common.LogConfig;
 import io.helidon.webclient.api.WebClient;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
@@ -27,7 +27,7 @@ import io.helidon.webserver.http.HttpRouting;
  */
 public class Main {
 
-    static WebClient webclient;
+    private static WebClient webclient;
 
     /**
      * Cannot be instantiated.
@@ -40,7 +40,7 @@ public class Main {
      * @param args command line arguments.
      */
     public static void main(String[] args) {
-        
+
         // load logging configuration
         LogConfig.configureRuntime();
 
@@ -69,5 +69,9 @@ public class Main {
     static void routing(HttpRouting.Builder routing) {
         routing
                .register("/thread", new ThreadService());
+    }
+
+    static WebClient webClient() {
+        return webclient;
     }
 }
