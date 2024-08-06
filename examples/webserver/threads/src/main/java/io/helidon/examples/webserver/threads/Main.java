@@ -74,4 +74,8 @@ public class Main {
     static WebClient webClient() {
         return webclient;
     }
+
+    static void webClient(WebClient newClient) {
+        webclient = newClient;
+    }
 }
