@@ -43,14 +43,14 @@ class MainTest {
 
     @Test
     void testFanOut() {
-        try (HttpClientResponse response = client.get("/thread/fanout/2").request()) {
+        try (HttpClientResponse response = client.get("thread/fanout/2").request()) {
             assertThat(response.status(), is(Status.OK_200));
         }
     }
 
     @Test
     void testCompute() {
-        try (HttpClientResponse response = client.get("/thread/compute").request()) {
+        try (HttpClientResponse response = client.get("thread/compute/1").request()) {
             assertThat(response.status(), is(Status.OK_200));
         }
     }
