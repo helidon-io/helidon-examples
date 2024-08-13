@@ -1,6 +1,6 @@
 #!awk -f
 #
-# Copyright (c) 2023 Oracle and/or its affiliates.
+# Copyright (c) 2023, 2024 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
 #
 BEGIN {
     if (gavs == "") {
-        print "Must provide one or more GAVs using '-v gavs=g1:a1:v1,g2:a2:v2" 
+        print "Must provide one or more GAVs using '-v gavs=g1:a1:v1,g2:a2:v2"
         exit 1
     }
 
@@ -48,6 +48,7 @@ BEGIN {
     inParent="false"
     parentGroupId=""
     parentArtifactId=""
+    parentRelativePath="false"
     FS="[<>]"
 }
 
@@ -74,11 +75,19 @@ BEGIN {
     }
 }
 
+/<relativePath/ && inParent == "true" {
+    parentRelativePath="true"
+}
+
 /<\/parent>/ {
     inParent="false"
     parentGroupId=""
     parentArtifactId=""
+    if (parentRelativePath == "false") {
+        printf("%s<relativePath/>\n", $1$1)
+    }
 }
+
 
 {
     print $0

@@ -53,5 +53,6 @@
         <module>lra</module>
         <module>telemetry</module>
         <module>grpc</module>
+        <module>threads</module>
     </modules>
 </project>
