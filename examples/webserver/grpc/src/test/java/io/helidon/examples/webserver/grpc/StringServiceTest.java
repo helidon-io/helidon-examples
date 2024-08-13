@@ -30,11 +30,9 @@ import io.helidon.webclient.api.WebClient;
 import io.helidon.webclient.grpc.GrpcClient;
 import io.helidon.webserver.Router;
 import io.helidon.webserver.WebServer;
-import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.grpc.GrpcRouting;
 import io.helidon.webserver.testing.junit5.ServerTest;
 import io.helidon.webserver.testing.junit5.SetUpRoute;
-import io.helidon.webserver.testing.junit5.SetUpServer;
 
 import io.grpc.Channel;
 import io.grpc.stub.StreamObserver;
@@ -64,19 +62,6 @@ class StringServiceTest {
                 .tls(clientTls)
                 .baseUri("https://localhost:" + server.port())
                 .build();
-    }
-
-    @SetUpServer
-    public static void setup(WebServerConfig.Builder builder) {
-        builder.tls(tls -> tls.privateKey(key -> key
-                        .keystore(store -> store
-                                .passphrase("password")
-                                .keystore(Resource.create("server.p12"))))
-                .privateKeyCertChain(key -> key
-                        .keystore(store -> store
-                                .trustStore(true)
-                                .passphrase("password")
-                                .keystore(Resource.create("server.p12")))));
     }
 
     @SetUpRoute

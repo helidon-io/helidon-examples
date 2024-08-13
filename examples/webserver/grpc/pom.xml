@@ -66,7 +66,7 @@
             <!-- required for @Generated -->
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.helidon.webserver.testing.junit5</groupId>
