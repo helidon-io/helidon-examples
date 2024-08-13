@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,9 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.helidon.examples.webserver.grpc.Strings.StringMessage;
 import io.helidon.grpc.core.CollectingObserver;
 import io.helidon.webserver.grpc.GrpcService;
-import io.helidon.examples.webserver.grpc.Strings;
-import io.helidon.examples.webserver.grpc.Strings.StringMessage;
 
 import com.google.protobuf.Descriptors;
 import io.grpc.stub.StreamObserver;
@@ -40,19 +39,33 @@ class StringService implements GrpcService {
 
     @Override
     public void update(Routing router) {
-        router.unary("Upper", this::grpcUnaryUpper)
-                .unary("Lower", this::grpcUnaryLower)
-                .bidi("Echo", this::grpcBidi)
-                .serverStream("Split", this::grpcServerStream)
-                .clientStream("Join", this::grpcClientStream);
+        router.unary("Upper", this::upper)
+                .unary("Lower", this::lower)
+                .serverStream("Split", this::split)
+                .clientStream("Join", this::join)
+                .bidi("Echo", this::echo);
     }
 
-    private void grpcServerStream(StringMessage request, StreamObserver<StringMessage> observer) {
+    private void upper(StringMessage request, StreamObserver<StringMessage> observer) {
+        String requestText = request.getText();
+        complete(observer, StringMessage.newBuilder()
+                .setText(requestText.toUpperCase(Locale.ROOT))
+                .build());
+    }
+
+    private void lower(StringMessage request, StreamObserver<StringMessage> observer) {
+        String requestText = request.getText();
+        complete(observer, StringMessage.newBuilder()
+                .setText(requestText.toLowerCase(Locale.ROOT))
+                .build());
+    }
+
+    private void split(StringMessage request, StreamObserver<StringMessage> observer) {
         String[] parts = request.getText().split(" ");
         stream(observer, Stream.of(parts).map(this::response));
     }
 
-    private StreamObserver<StringMessage> grpcClientStream(StreamObserver<StringMessage> observer) {
+    private StreamObserver<StringMessage> join(StreamObserver<StringMessage> observer) {
         return CollectingObserver.create(
                 Collectors.joining(" "),
                 observer,
@@ -60,34 +73,23 @@ class StringService implements GrpcService {
                 this::response);
     }
 
-    private StreamObserver<StringMessage> grpcBidi(StreamObserver<StringMessage> observer) {
+    private StreamObserver<Strings.StringMessage> echo(StreamObserver<Strings.StringMessage> observer) {
         return new StreamObserver<>() {
-            public void onNext(StringMessage value) {
+            @Override
+            public void onNext(Strings.StringMessage value) {
                 observer.onNext(value);
             }
 
+            @Override
             public void onError(Throwable t) {
-                t.printStackTrace();
+                observer.onError(t);
             }
 
+            @Override
             public void onCompleted() {
                 observer.onCompleted();
             }
         };
-    }
-
-    private void grpcUnaryUpper(StringMessage request, StreamObserver<StringMessage> observer) {
-        String requestText = request.getText();
-        complete(observer, StringMessage.newBuilder()
-                .setText(requestText.toUpperCase(Locale.ROOT))
-                .build());
-    }
-
-    private void grpcUnaryLower(StringMessage request, StreamObserver<StringMessage> observer) {
-        String requestText = request.getText();
-        complete(observer, StringMessage.newBuilder()
-                .setText(requestText.toLowerCase(Locale.ROOT))
-                .build());
     }
 
     private StringMessage response(String text) {

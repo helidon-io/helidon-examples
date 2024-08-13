@@ -38,10 +38,18 @@
     </description>
 
     <properties>
-        <mainClass>io.helidon.examples.webserver.grpc.Main</mainClass>
+        <mainClass>io.helidon.examples.webserver.grpc.GrpcMain</mainClass>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.grpc</groupId>
+            <artifactId>helidon-grpc-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.helidon.webserver</groupId>
             <artifactId>helidon-webserver-grpc</artifactId>
@@ -51,7 +59,11 @@
             <artifactId>protobuf-java</artifactId>
         </dependency>
         <dependency>
-            <!-- todo required for @Generated -->
+            <groupId>io.helidon.webclient</groupId>
+            <artifactId>helidon-webclient-grpc</artifactId>
+        </dependency>
+        <dependency>
+            <!-- required for @Generated -->
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
             <version>1.3.2</version>
