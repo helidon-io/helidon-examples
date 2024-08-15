@@ -33,7 +33,6 @@ public class Main {
 
     private static final System.Logger LOGGER = System.getLogger(Main.class.getName());
 
-    private static int RATE_LIMIT = 0;
     private static Semaphore rateLimitSem = null;
 
     /**
@@ -72,9 +71,9 @@ public class Main {
      */
     static void routing(HttpRouting.Builder routing) {
         routing.get("/sleep/{seconds}", Main::sleepHandler);
-        RATE_LIMIT = Config.global().get("app").get("ratelimit").asInt().orElse(20);
-        LOGGER.log(System.Logger.Level.INFO, "         Application rate limit is " + RATE_LIMIT );
-        rateLimitSem = new Semaphore(RATE_LIMIT);
+        int rateLimit = Config.global().get("app").get("ratelimit").asInt().orElse(20);
+        LOGGER.log(System.Logger.Level.INFO, "         Application rate limit is " + rateLimit);
+        rateLimitSem = new Semaphore(rateLimit);
     }
 
     /**
