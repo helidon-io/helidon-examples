@@ -23,8 +23,8 @@ java -jar target/helidon-examples-webserver-ratelimit.jar
 
 The application logs the limits it is using:
 ```
-2024.08.15 14:34:27.694 WebServer maxConcurrentRequests is 10
 2024.08.15 14:34:27.694          Application rate limit is 5
+2024.08.15 14:34:27.694 WebServer maxConcurrentRequests is 10
 ```
 
 ## Exercise the application
