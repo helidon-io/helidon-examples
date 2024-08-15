@@ -45,6 +45,7 @@
         <module>observe</module>
         <module>opentracing</module>
         <module>protocols</module>
+        <module>ratelimit</module>
         <module>static-content</module>
         <module>streaming</module>
         <module>threads</module>
