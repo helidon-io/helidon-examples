@@ -30,10 +30,14 @@ The application logs the limits it is using:
 ## Exercise the application
 
 Send a burst of 15 concurrent requests to the server:
-```
-for i in $(seq 15); do \
-  curl --noproxy '*' -o /dev/null -s -w "%{http_code}\n" http://localhost:8080/sleep/3 & \
-done | cat
+```shell
+curl -s  \
+  --noproxy '*' \
+  -o /dev/null \
+  --parallel \
+  --parallel-immediate \
+  -w "%{http_code}\n" \
+  "http://localhost:8080/sleep/3?c=[1-15]"
 ```
 
 When the 15 concurrent requests hit the server:
@@ -44,7 +48,7 @@ When the 15 concurrent requests hit the server:
 * The next 5 requests will then be processed and return a 200 after sleeping for 3 more seconds.
 
 You will see this in the output:
-```asciidoc
+```
 503
 503
 503

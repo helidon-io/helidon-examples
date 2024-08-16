@@ -16,15 +16,11 @@
 
 package io.helidon.examples.webserver.ratelimit;
 
-import java.util.concurrent.Semaphore;
-
 import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpRouting;
-import io.helidon.webserver.http.ServerRequest;
-import io.helidon.webserver.http.ServerResponse;
 
 /**
  * The application main class.
@@ -32,8 +28,6 @@ import io.helidon.webserver.http.ServerResponse;
 public class Main {
 
     private static final System.Logger LOGGER = System.getLogger(Main.class.getName());
-
-    private static Semaphore rateLimitSem = null;
 
     /**
      * Cannot be instantiated.
@@ -70,47 +64,6 @@ public class Main {
      * Updates HTTP Routing.
      */
     static void routing(HttpRouting.Builder routing) {
-        routing.get("/sleep/{seconds}", Main::sleepHandler);
-        int rateLimit = Config.global().get("app").get("ratelimit").asInt().orElse(20);
-        LOGGER.log(System.Logger.Level.INFO, "         Application rate limit is " + rateLimit);
-        rateLimitSem = new Semaphore(rateLimit);
-    }
-
-    /**
-     * Sleep for a specified number of seconds.
-     * The optional path parameter controls the number of seconds to sleep. Defaults to 1
-     *
-     * @param request  server request
-     * @param response server response
-     */
-    private static void sleepHandler(ServerRequest request, ServerResponse response) {
-        int seconds = request.path().pathParameters().first("seconds").asInt().orElse(1);
-
-        try {
-            rateLimitSem.acquire();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            response.send(String.valueOf(sleep(seconds)));
-        } finally {
-            rateLimitSem.release();
-        }
-    }
-
-    /**
-     * Sleep current thread.
-     *
-     * @param seconds number of seconds to sleep
-     * @return number of seconds requested to sleep
-     */
-    private static int sleep(int seconds) {
-        try {
-            Thread.sleep(seconds * 1_000L);
-        } catch (InterruptedException e) {
-            LOGGER.log(System.Logger.Level.WARNING, e);
-        }
-        return seconds;
+        routing.register("/", new SleepService());
     }
 }
