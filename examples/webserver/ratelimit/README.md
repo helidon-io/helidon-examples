@@ -1,15 +1,16 @@
 # Helidon SE Rate Limiting Example
 
-This example demonstrates two mechanisms to perform request rate limiting in a Helidon SE application.
-The mechanisms shown here will also work with Helidon MP.
+This example demonstrates three mechanisms to perform request rate limiting in a Helidon SE application.
+Similar mechanisms will also work with Helidon MP.
 
 The example does the following:
 
 1. Sets WebServer's `max-concurrent-requests` to 10
-2. Uses a `java.util.concurrent.Semaphore` to limit the number of requests processed concurrently to 5
+2. Uses a `java.util.concurrent.Semaphore` to limit the number of requests processed concurrently to 5 on one endpoint.
+3. Uses `io.helidon.faulttolerance.Bulkhead` to limit the number of requests processed concurrently to 5 on another endpoint.
 
-The server has one endpoint: `sleep` that sleeps for the specified number of seconds. The
-sleep operation is protected by a `Semaphore` to allow no more than five requests to be processed concurrently.
+The server has two endpoints: `sleep` and `sleep-bulkhead`. Both sleep for the specified number of seconds. The
+sleep operation is protected by a `Semaphore` (first endpoint) or a Bulkhead (second endpoint) to allow no more than five requests to be processed concurrently.
 
 These values are configured in `application.yaml`
 
@@ -29,7 +30,7 @@ The application logs the limits it is using:
 
 ## Exercise the application
 
-Send a burst of 15 concurrent requests to the server:
+Send a burst of 15 concurrent requests to the `sleep` endpoint (each requesting a sleep of 3 seconds):
 ```shell
 curl -s  \
   --noproxy '*' \
@@ -68,3 +69,16 @@ You will see this in the output:
 200
 200
 ```
+
+Now repeat for the endpoint the is protected by the bulkhead:
+```shell
+curl -s  \
+  --noproxy '*' \
+  -o /dev/null \
+  --parallel \
+  --parallel-immediate \
+  -w "%{http_code}\n" \
+  "http://localhost:8080/sleep-bulkhead/3?c=[1-15]"
+```
+
+You should see the same results.

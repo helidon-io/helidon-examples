@@ -46,4 +46,11 @@ class MainTest {
             assertThat(response.status(), is(Status.OK_200));
         }
     }
+
+    @Test
+    void testSleepBulkhead() {
+        try (HttpClientResponse response = client.get("sleep-bulkhead/1").request()) {
+            assertThat(response.status(), is(Status.OK_200));
+        }
+    }
 }
