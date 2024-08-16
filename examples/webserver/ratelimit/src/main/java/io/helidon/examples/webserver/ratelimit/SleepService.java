@@ -44,7 +44,7 @@ class SleepService  implements HttpService {
         rateLimitSem = new Semaphore(rateLimit);
         rateLimitBulkhead = Bulkhead.builder()
                 .limit(rateLimit)
-                .queueLength(rateLimit)
+                .queueLength(rateLimit * 2)
                 .build();
     }
 
