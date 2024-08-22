@@ -35,6 +35,8 @@ security:
       - login: "john"
         password: "changeit"
   web-server:
+    access-log:
+      format: "%h %l %u %t %r %s %b %{Referer}i"
     paths:
     - path: "/static-cp[/{*}]"
       authenticate: true
