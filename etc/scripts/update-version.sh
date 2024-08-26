@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2023, 2024 Oracle and/or its affiliates.
+# Copyright (c) 2022, 2024 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,10 +41,36 @@ readonly SCRIPT_PATH
 WS_DIR=$(cd $(dirname -- "${SCRIPT_PATH}") ; cd ../.. ; pwd -P)
 readonly WS_DIR
 
-# shellcheck disable=SC2086
-mvn ${MAVEN_ARGS} \
-  -f ${WS_DIR}/pom.xml \
-  -DskipTests \
-  -Dmaven.test.skip=true \
-  -Pspotbugs \
-  install
+readonly VERSION=${1}
+
+if [ -z "${VERSION}" ]; then
+    echo "usage: $(basename "${0}") <version>"
+    exit 1
+fi
+
+# arg1: pattern
+# arg2: include pattern
+search() {
+  set +o pipefail
+  grep "${1}" -Er . --include "${2}" | cut -d ':' -f 1 | xargs git ls-files | sort | uniq
+}
+
+PATH=${PATH}:"${WS_DIR}"/etc/scripts
+cd "${WS_DIR}"
+
+# Update parent versions
+while read -r pom; do
+    if update-version.awk -v version="${VERSION}" "${pom}" > "${pom}.tmp"; then
+      echo "Updating ${pom}"
+      mv "${pom}.tmp" "${pom}"
+    else
+      rm -f "${pom}.tmp"
+    fi
+done < <(find . -name pom.xml -exec git ls-files {} \; | sort | uniq)
+
+# Update helidon.version properties
+while read -r pom ; do
+  echo "Updating helidon.version in ${pom}"
+  sed -e "s#<helidon.version>[a-zA-Z0-9.-]*</helidon.version>#<helidon.version>${VERSION}</helidon.version>#" "${pom}" > "${pom}.tmp"
+  mv "${pom}.tmp" "${pom}"
+done < <(search "<helidon.version>" pom.xml)

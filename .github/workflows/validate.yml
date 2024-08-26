@@ -10,14 +10,17 @@ env:
   JAVA_VERSION: '21'
   JAVA_DISTRO: 'oracle'
   HELIDON_PIPELINES: 'true'
-  MAVEN_HTTP_ARGS: '-Dmaven.wagon.httpconnectionManager.ttlSeconds=60 -Dmaven.wagon.http.retryHandler.count=3'
+  MAVEN_ARGS: |
+    -B -fae -e
+    -Dmaven.wagon.httpconnectionManager.ttlSeconds=60
+    -Dmaven.wagon.http.retryHandler.count=3
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  primebuild:
+  prime-build:
     timeout-minutes: 30
     runs-on: ubuntu-20.04
     steps:
@@ -34,7 +37,7 @@ jobs:
         run: |
           mkdir -p ~/.m2/repository/io/helidon/
           echo "empty file" > ~/.m2/repository/io/helidon/empty.txt
-          etc/scripts/primebuild.sh
+          etc/scripts/prime-build.sh
       - name: Upload Maven Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -42,7 +45,7 @@ jobs:
           path: ~/.m2/repository/io/helidon
           retention-days: 1
   copyright:
-    needs: primebuild
+    needs: prime-build
     timeout-minutes: 10
     runs-on: ubuntu-20.04
     steps:
@@ -58,7 +61,7 @@ jobs:
       - name: Copyright
         run: etc/scripts/copyright.sh
   checkstyle:
-    needs: primebuild
+    needs: prime-build
     timeout-minutes: 10
     runs-on: ubuntu-20.04
     steps:
@@ -76,8 +79,17 @@ jobs:
           cache: maven
       - name: Checkstyle
         run: etc/scripts/checkstyle.sh
+  shellcheck:
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - name: ShellCheck
+        run: etc/scripts/shellcheck.sh
   spotbugs:
-    needs: primebuild
+    needs: prime-build
     timeout-minutes: 10
     runs-on: ubuntu-20.04
     steps:
@@ -96,7 +108,7 @@ jobs:
       - name: Spotbugs
         run: etc/scripts/spotbugs.sh
   build:
-    needs: primebuild
+    needs: prime-build
     timeout-minutes: 20
     strategy:
       matrix:
@@ -119,4 +131,3 @@ jobs:
           cache: maven
       - name: Maven build
         run: etc/scripts/build.sh
-

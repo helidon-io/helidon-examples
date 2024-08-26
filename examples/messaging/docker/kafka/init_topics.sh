@@ -20,45 +20,48 @@
 # topic messaging-test-topic-1 and topic messaging-test-topic-2
 #
 
-ZOOKEEPER_URL=localhost:2181
-KAFKA_TOPICS="/opt/kafka/bin/kafka-topics.sh --if-not-exists --zookeeper $ZOOKEEPER_URL"
+readonly ZOOKEEPER_URL="localhost:2181"
+
+kafka_topics() {
+  /opt/kafka/bin/kafka-topics.sh --if-not-exists --zookeeper "${ZOOKEEPER_URL}" "${@}"
+}
 
 while sleep 2; do
-  brokers=$(echo dump | nc localhost 2181 | grep brokers | wc -l)
+  brokers=$(echo dump | nc localhost 2181 | grep -c brokers)
   echo "Checking if Kafka is up: ${brokers}"
-  if [[ "$brokers" -gt "0" ]]; then
+  if [[ "${brokers}" -gt "0" ]]; then
     echo "KAFKA IS UP !!!"
 
     echo "Creating test topics"
-    bash $KAFKA_TOPICS \
+    kafka_topics \
       --create \
       --replication-factor 1 \
       --partitions 10 \
       --topic messaging-test-topic-1
-    bash $KAFKA_TOPICS \
+    kafka_topics \
       --create \
       --replication-factor 1 \
       --partitions 10 \
       --topic messaging-test-topic-2
-    bash $KAFKA_TOPICS \
+    kafka_topics \
       --create \
       --replication-factor 1 \
       --partitions 10 \
       --config compression.type=snappy \
       --topic messaging-test-topic-snappy-compressed
-    bash $KAFKA_TOPICS \
+    kafka_topics \
       --create \
       --replication-factor 1 \
       --partitions 10 \
       --config compression.type=lz4 \
       --topic messaging-test-topic-lz4-compressed
-    bash $KAFKA_TOPICS \
+    kafka_topics \
       --create \
       --replication-factor 1 \
       --partitions 10 \
       --config compression.type=zstd \
       --topic messaging-test-topic-zstd-compressed
-    bash $KAFKA_TOPICS \
+    kafka_topics \
       --create \
       --replication-factor 1 \
       --partitions 10 \
