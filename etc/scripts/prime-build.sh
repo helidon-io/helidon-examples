@@ -62,7 +62,7 @@ if [[ ! ${HELIDON_VERSION} == *-SNAPSHOT ]]; then
     exit 0
 fi
 
-cd "$(mktmp -d)"
+cd "$(mktemp -d)"
 
 git clone ${HELIDON_REPO} --branch ${HELIDON_BRANCH} --single-branch --depth 1
 cd helidon
