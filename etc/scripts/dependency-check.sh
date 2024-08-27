@@ -48,11 +48,12 @@ die() { cat "${RESULT_FILE}" ; echo "Dependency report in ${WS_DIR}/target" ; ec
 # Setting NVD_API_KEY is not required but improves behavior of NVD API throttling
 
 # shellcheck disable=SC2086
-mvn ${MAVEN_ARGS} -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN org.owasp:dependency-check-maven:aggregate \
-        -f "${WS_DIR}"/pom.xml \
-        -Dtop.parent.basedir="${WS_DIR}" \
-        -Dnvd-api-key="${NVD_API_KEY}" \
-        > "${RESULT_FILE}" || die "Error running the Maven command"
+mvn ${MAVEN_ARGS} \
+  -f "${WS_DIR}"/pom.xml \
+  -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN org.owasp:dependency-check-maven:aggregate \
+  -Dtop.parent.basedir="${WS_DIR}" \
+  -Dnvd-api-key="${NVD_API_KEY}" \
+  > "${RESULT_FILE}" || die "Error running the Maven command"
 
 grep -i "One or more dependencies were identified with known vulnerabilities" "${RESULT_FILE}" \
     && die "CVE SCAN ERROR" || echo "CVE SCAN OK"

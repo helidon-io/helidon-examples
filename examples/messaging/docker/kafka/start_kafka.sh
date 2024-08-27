@@ -46,4 +46,4 @@ if [ $state -ne 0 ]; then
 fi
 
 # Keep Kafka up till Ctrl+C
-read ;
+read -r ;

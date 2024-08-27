@@ -2,7 +2,7 @@
 # Releasing Helidon Examples
 
 These are the steps for doing a release of Helidon Examples. These steps
-will use release 4.0.0 in examples. Of course you are not releasing
+will use release 4.0.0 in examples. Of course, you are not releasing
 4.0.0, so make sure to change that release number to your release
 number when copy/pasting.
 
@@ -18,7 +18,7 @@ creates a release tag and updates the corresponding helidon-X.X branch.
 Here is the overall procedure:
 
 1. Create a local release branch from the corresponding dev branch.
-2. Update the version of Helidon consumed by the examples. Typically this will be
+2. Update the version of Helidon consumed by the examples. Typically, this will be
    needed as the dev branch poms reference a snapshot version of Helidon.
 3. Push release branch to upstream, release workflow runs
 4. Verify tag and branch update performed by workflow by pulling the branch and tag and 
@@ -42,7 +42,7 @@ export VERSION="4.0.0"
 
 2. Update Helidon version used by examples. This should be a released version of Helidon
    ```shell
-   etc/scripts/updatehelidonversion.sh ${VERSION}
+   etc/scripts/update-version.sh ${VERSION}
    ```
 3. Commit and Push local release branch to upstream to trigger release workflow. 
    ```shell
@@ -60,8 +60,8 @@ export VERSION="4.0.0"
    git rebase origin/helidon-4.x
    git log # Make sure it is what it should be
    mvn clean install
-   # Checkout and veriy tag
-   git checkout tags/${VERISON}
+   # Checkout and verify tag
+   git checkout tags/${VERSION}
    git log # Make sure it is what it should be
    mvn clean install
    ```
