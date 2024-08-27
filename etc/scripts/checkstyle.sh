@@ -20,19 +20,19 @@ set -o errtrace || true # trace ERR through commands and functions
 set -o errexit || true  # exit the script if any statement returns a non-true return value
 
 on_error(){
-    CODE="${?}" && \
-    set +x && \
-    printf "[ERROR] Error(code=%s) occurred at %s:%s command: %s\n" \
-        "${CODE}" "${BASH_SOURCE[0]}" "${LINENO}" "${BASH_COMMAND}"
+  CODE="${?}" && \
+  set +x && \
+  printf "[ERROR] Error(code=%s) occurred at %s:%s command: %s\n" \
+      "${CODE}" "${BASH_SOURCE[0]}" "${LINENO}" "${BASH_COMMAND}"
 }
 trap on_error ERR
 
 # Path to this script
 if [ -h "${0}" ] ; then
-    SCRIPT_PATH="$(readlink "${0}")"
+  SCRIPT_PATH="$(readlink "${0}")"
 else
-    # shellcheck disable=SC155
-    SCRIPT_PATH="${0}"
+  # shellcheck disable=SC155
+  SCRIPT_PATH="${0}"
 fi
 readonly SCRIPT_PATH
 
@@ -54,10 +54,10 @@ rm -f "${WS_DIR}"/target/checkstyle-*
 
 # shellcheck disable=SC2086
 mvn ${MAVEN_ARGS} checkstyle:checkstyle-aggregate \
-    -f "${WS_DIR}"/pom.xml \
-    -Dcheckstyle.output.format="plain" \
-    -Dcheckstyle.output.file="${RESULT_FILE}" \
-    > ${LOG_FILE} 2>&1 || (cat ${LOG_FILE} ; exit 1)
+  -f "${WS_DIR}"/pom.xml \
+  -Dcheckstyle.output.format="plain" \
+  -Dcheckstyle.output.file="${RESULT_FILE}" \
+  > ${LOG_FILE} 2>&1 || (cat ${LOG_FILE} ; exit 1)
 
 grep "^\[ERROR\]" "${RESULT_FILE}" \
-    && die "CHECKSTYLE ERROR" || echo "CHECKSTYLE OK"
+  && die "CHECKSTYLE ERROR" || echo "CHECKSTYLE OK"

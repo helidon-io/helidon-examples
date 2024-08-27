@@ -15,6 +15,8 @@
 # limitations under the License.
 #
 
+set -x
+
 set -o pipefail || true  # trace ERR through pipes
 set -o errtrace || true # trace ERR through commands and functions
 set -o errexit || true  # exit the script if any statement returns a non-true return value
@@ -41,8 +43,6 @@ readonly SCRIPT_PATH
 WS_DIR=$(cd $(dirname -- "${SCRIPT_PATH}") ; cd ../.. ; pwd -P)
 readonly WS_DIR
 
-readonly HELIDON_REPO=https://github.com/helidon-io/helidon
-
 version() {
   awk 'BEGIN {FS="[<>]"} ; /<helidon.version>/ {print $3; exit 0}' "${1}"
 }
@@ -58,21 +58,20 @@ echo "HELIDON_VERSION=${HELIDON_VERSION}"
 # If it is not a SNAPSHOT version then we are using a released version of Helidon and
 # do not want to prime
 if [[ ! ${HELIDON_VERSION} == *-SNAPSHOT ]]; then
-    echo "Helidon version ${HELIDON_VERSION} is not a SNAPSHOT version. Skipping priming build."
-    exit 0
+  echo "Helidon version ${HELIDON_VERSION} is not a SNAPSHOT version. Skipping priming build."
+  exit 0
 fi
 
 cd "$(mktemp -d)"
 
-git clone ${HELIDON_REPO} --branch ${HELIDON_BRANCH} --single-branch --depth 1
-cd helidon
+git clone https://github.com/helidon-io/helidon --branch ${HELIDON_BRANCH} --single-branch --depth 1
 
-HELIDON_VERSION_IN_REPO=$(version bom/pom.xml)
+HELIDON_VERSION_IN_REPO=$(version helidon/bom/pom.xml)
 readonly HELIDON_VERSION_IN_REPO
 
 if [ "${HELIDON_VERSION}" != "${HELIDON_VERSION_IN_REPO}" ]; then
-    echo "ERROR: Examples Helidon version ${HELIDON_VERSION} does not match version in Helidon repo ${HELIDON_VERSION_IN_REPO}"
-    exit 1
+  echo "ERROR: Examples Helidon version ${HELIDON_VERSION} does not match version in Helidon repo ${HELIDON_VERSION_IN_REPO}"
+  exit 1
 fi
 
 # shellcheck disable=SC2086
@@ -81,7 +80,8 @@ mvn ${MAVEN_ARGS} --version
 echo "Building Helidon version ${HELIDON_VERSION} from Helidon repo branch ${HELIDON_BRANCH}"
 
 # shellcheck disable=SC2086
-mvn ${MAVEN_ARGS} \
+mvn ${MAVEN_ARGS} -T8 \
+  -f helidon/pom.xml \
   -DskipTests \
   -Dmaven.test.skip=true \
-  clean install
+  install

@@ -1,4 +1,4 @@
-#!/usr/bin/env awk -f
+#!/usr/bin/env -S awk -f
 #
 # Copyright (c) 2023, 2024 Oracle and/or its affiliates.
 #
