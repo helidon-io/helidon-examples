@@ -21,9 +21,3 @@ You'll notice a short delay as the application computes the credit score.
 Now repeat the same request. You'll see the score is returned instantly
 as it is retrieved from the cache.
 
-## Try health
-
-```
-curl -s -X GET http://localhost:8080/health
-{"outcome":"UP",...
-```
