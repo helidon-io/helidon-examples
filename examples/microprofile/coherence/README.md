@@ -6,7 +6,7 @@ Sample Helidon MP applications that uses Coherence CE as a cache for application
 
 ```shell
 mvn package
-java -jar target/helidon-creditscore-mp.jar
+java -jar target/helidon-examples-microprofile-coherence.jar
 ```
 
 ## Exercise the application
