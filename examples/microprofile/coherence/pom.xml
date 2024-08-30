@@ -33,7 +33,8 @@
 
     <groupId>io.helidon.examples.microprofile</groupId>
     <artifactId>helidon-examples-microprofile-coherence</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <name>Helidon Examples Microprofile Coherence</name>
+    <version>1.0.0-SNAPSHOT</version>
 
     <dependencyManagement>
         <dependencies>
