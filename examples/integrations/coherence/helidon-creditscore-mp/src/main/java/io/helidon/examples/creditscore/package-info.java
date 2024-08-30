@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-package io.helidon.bestbank.creditscore;
+package io.helidon.examples.creditscore;

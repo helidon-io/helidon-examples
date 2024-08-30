@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.bestbank.creditscore;
+package io.helidon.examples.creditscore;
 
 import com.oracle.coherence.cdi.Name;
 import com.tangosol.net.NamedCache;
