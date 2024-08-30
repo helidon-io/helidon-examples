@@ -33,6 +33,7 @@
     <name>Helidon Examples Microprofile</name>
 
     <modules>
+        <module>coherence</module>
         <module>graphql</module>
         <module>hello-world-implicit</module>
         <module>hello-world-explicit</module>

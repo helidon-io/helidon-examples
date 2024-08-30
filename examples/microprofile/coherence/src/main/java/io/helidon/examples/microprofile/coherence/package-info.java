@@ -13,11 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.examples.creditscore;
 
-public record Person(
-    String firstName,
-    String lastName,
-    String dateOfBirth,
-    String ssn,
-    int creditScore) {}
+package io.helidon.examples.microprofile.coherence;

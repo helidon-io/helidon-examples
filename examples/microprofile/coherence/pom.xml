@@ -31,8 +31,8 @@
         <version.lib.coherence>24.03.1</version.lib.coherence>
     </properties>
 
-    <groupId>io.helidon.bestbank</groupId>
-    <artifactId>helidon-creditscore-mp</artifactId>
+    <groupId>io.helidon.examples.microprofile</groupId>
+    <artifactId>helidon-examples-microprofile-coherence</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencyManagement>

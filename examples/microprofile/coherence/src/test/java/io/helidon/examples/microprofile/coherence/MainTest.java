@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.helidon.examples.creditscore;
+package io.helidon.examples.microprofile.coherence;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.client.WebTarget;

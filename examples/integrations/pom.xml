@@ -39,7 +39,6 @@
         <module>oci</module>
         <module>vault</module>
         <module>microstream</module>
-        <module>coherence</module>
     </modules>
 
 </project>
