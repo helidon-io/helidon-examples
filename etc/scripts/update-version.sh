@@ -74,3 +74,11 @@ while read -r pom ; do
   sed -e "s#<helidon.version>[a-zA-Z0-9.-]*</helidon.version>#<helidon.version>${VERSION}</helidon.version>#" "${pom}" > "${pom}.tmp"
   mv "${pom}.tmp" "${pom}"
 done < <(search "<helidon.version>" pom.xml)
+
+# Update helidonversion property in build.gradle files
+while read -r buildgradle ; do
+  echo "Updating helidonversion in ${buildgradle}"
+  sed -e "s#helidonversion = '[a-zA-Z0-9.-]*'#helidonversion = '${VERSION}'#" "${buildgradle}" > "${buildgradle}.tmp"
+  mv "${buildgradle}.tmp" "${buildgradle}"
+done < <(find . -name build.gradle -print)
+
