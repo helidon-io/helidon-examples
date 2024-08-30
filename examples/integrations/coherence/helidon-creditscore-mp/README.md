@@ -4,14 +4,14 @@ Sample Helidon MP applications that uses Coherence CE as a cache for application
 
 ## Build and run
 
-```bash
+```shell
 mvn package
 java -jar target/helidon-creditscore-mp.jar
 ```
 
 ## Exercise the application
 
-```
+```shell
 curl -X POST -H "Content-Type: application/json" \
  -d '{"ssn" : "123-45-6789", "firstName" : "Frank", "lastName" : "Helidon", "dateOfBirth" : "02/14/2019"}' \
   http://localhost:8080/creditscore

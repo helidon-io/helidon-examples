@@ -20,6 +20,4 @@ public record Person(
     String lastName,
     String dateOfBirth,
     String ssn,
-    int creditScore
-) {
-}
+    int creditScore) {}

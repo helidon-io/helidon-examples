@@ -45,10 +45,6 @@ public class CreditscoreService {
     @Name(CACHE_NAME)
     private NamedCache<String, Integer> creditScoreCache;
 
-    CreditscoreService() {
-
-    }
-
     /**
      * Generate a credit score.
      * @param person Person to generate score for

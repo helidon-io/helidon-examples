@@ -37,18 +37,20 @@ class MainTest {
 
     @Test
     void testCreditScore() {
+
+        final String JSON_PAYLOAD = """
+        {
+            "ssn" : "123-45-6789",
+            "firstName" : "Frank",
+            "lastName" : "Helidon",
+            "dateOfBirth" : "02/19/2019"
+        }
+        """;
+
         try (Response r = target
                 .path("creditscore")
                 .request()
-                .post(Entity.entity("""
-                                {
-                                    "ssn" : "123-45-6789",
-                                    "firstName" : "Frank",
-                                    "lastName" : "Helidon",
-                                    "dateOfBirth" : "02/19/2019"
-                                }
-                                """, MediaType.APPLICATION_JSON)
-                )){
+                .post(Entity.entity(JSON_PAYLOAD, MediaType.APPLICATION_JSON))){
             assertThat(r.getStatus(), is(200));
         }
     }
