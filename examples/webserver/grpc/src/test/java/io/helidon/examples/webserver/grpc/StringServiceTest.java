@@ -26,6 +26,8 @@ import java.util.concurrent.TimeoutException;
 
 import io.helidon.common.configurable.Resource;
 import io.helidon.common.tls.Tls;
+import io.helidon.http.Status;
+import io.helidon.webclient.api.HttpClientResponse;
 import io.helidon.webclient.api.WebClient;
 import io.helidon.webclient.grpc.GrpcClient;
 import io.helidon.webserver.Router;
@@ -38,7 +40,9 @@ import io.grpc.Channel;
 import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -130,6 +134,19 @@ class StringServiceTest {
         StringServiceGrpc.StringServiceBlockingStub service = StringServiceGrpc.newBlockingStub(channel);
         Strings.StringMessage res = service.upper(newStringMessage("hello"));
         assertThat(res.getText(), is("[[HELLO]]"));
+    }
+
+    /**
+     * Tests server health using HTTP, not gRPC.
+     */
+    @Test
+    void testHealthHttp() {
+        try (HttpClientResponse res = webClient.get("/observe/health").request()) {
+            assertThat(res.status(), is(Status.OK_200));
+            String value = res.as(String.class);
+            assertThat(value, containsString("UP"));
+            assertThat(value, not(containsString("DOWN")));
+        }
     }
 
     static Strings.StringMessage newStringMessage(String data) {
