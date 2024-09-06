@@ -15,7 +15,7 @@
 #
 
 server:
-  port: 0
+  port: 8080
   tls:
     trust:
       keystore:
@@ -28,3 +28,8 @@ server:
         passphrase: "password"
         resource:
           resource-path: "server.p12"
+  features:
+    observe:
+      observers:
+        health:
+          details: true

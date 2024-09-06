@@ -28,6 +28,11 @@ server:
         passphrase: "password"
         resource:
           resource-path: "server.p12"
+  features:
+    observe:
+      observers:
+        health:
+          details: true
 
 grpc-client:
   poll-wait-time: PT30S
