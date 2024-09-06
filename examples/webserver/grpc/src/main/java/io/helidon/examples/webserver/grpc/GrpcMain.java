@@ -44,7 +44,7 @@ class GrpcMain {
         // create a health check to verify gRPC endpoint
         ObserveFeature observe = ObserveFeature.builder()
                 .addObserver(HealthObserver.builder()
-                                     .details(true)
+                                     .config(serverConfig.get("features.observe.observers.health"))
                                      .addCheck(new StringServiceHealthCheck(serverConfig))
                                      .build())
                 .build();
