@@ -26,7 +26,7 @@
     <name>Helidon Standalone Quickstart MP Example</name>
 
     <properties>
-        <helidon.version>2.6.9-SNAPSHOT</helidon.version>
+        <helidon.version>2.6.10-SNAPSHOT</helidon.version>
         <mainClass>io.helidon.microprofile.cdi.Main</mainClass>
 
         <maven.compiler.source>11</maven.compiler.source>
