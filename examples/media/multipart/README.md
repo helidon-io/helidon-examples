@@ -1,4 +1,4 @@
-# Helidon SE MultiPart Example
+# Helidon SE Media MultiPart Example
 
 This example demonstrates how to use `MultiPartSupport` with both the `WebServer`
  and `WebClient` APIs.

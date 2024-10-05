@@ -36,6 +36,7 @@
     </description>
 
     <modules>
+        <module>form</module>
         <module>multipart</module>
     </modules>
 </project>

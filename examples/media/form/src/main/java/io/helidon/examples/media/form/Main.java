@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.examples.media.multipart;
+package io.helidon.examples.media.form;
 
 import io.helidon.http.Header;
 import io.helidon.http.HeaderNames;
@@ -25,7 +25,7 @@ import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.staticcontent.StaticContentService;
 
 /**
- * This application provides a simple file upload service with a UI to exercise multipart.
+ * This application provides a simple service with a UI to exercise forms.
  */
 public final class Main {
     private static final Header UI_LOCATION = HeaderValues.createCached(HeaderNames.LOCATION, "/ui");
@@ -65,6 +65,6 @@ public final class Main {
                 .register("/ui", StaticContentService.builder("WEB")
                         .welcomeFileName("index.html")
                         .build())
-                .register("/api", new FileService());
+                .register("/api", new FormService());
     }
 }

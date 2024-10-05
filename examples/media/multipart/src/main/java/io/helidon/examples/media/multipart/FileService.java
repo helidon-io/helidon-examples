@@ -23,14 +23,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import io.helidon.common.media.type.MediaTypes;
+import io.helidon.http.BadRequestException;
 import io.helidon.http.ContentDisposition;
 import io.helidon.http.Header;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.HeaderValues;
+import io.helidon.http.NotFoundException;
 import io.helidon.http.ServerResponseHeaders;
 import io.helidon.http.media.multipart.MultiPart;
 import io.helidon.http.media.multipart.ReadablePart;
@@ -40,26 +43,22 @@ import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 
 import jakarta.json.Json;
-import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonBuilderFactory;
 
-import static io.helidon.http.Status.BAD_REQUEST_400;
 import static io.helidon.http.Status.MOVED_PERMANENTLY_301;
-import static io.helidon.http.Status.NOT_FOUND_404;
 
 /**
  * File service.
  */
 public final class FileService implements HttpService {
     private static final Header UI_LOCATION = HeaderValues.createCached(HeaderNames.LOCATION, "/ui");
-    private final JsonBuilderFactory jsonFactory;
+    private final JsonBuilderFactory jsonFactory = Json.createBuilderFactory(Map.of());
     private final Path storage;
 
     /**
      * Create a new file upload service instance.
      */
     FileService() {
-        jsonFactory = Json.createBuilderFactory(Map.of());
         storage = createStorage();
         System.out.println("Storage: " + storage);
     }
@@ -67,33 +66,32 @@ public final class FileService implements HttpService {
     @Override
     public void routing(HttpRules rules) {
         rules.get("/", this::list)
-             .get("/{fname}", this::download)
+             .get("/{fileName}", this::download)
              .post("/", this::upload);
     }
 
     private static Path createStorage() {
         try {
-            return Files.createTempDirectory("fileupload");
+            return Files.createTempDirectory("file-upload");
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private static Stream<String> listFiles(Path storage) {
+    private static List<String> listFiles(Path storage) {
         try (Stream<Path> walk = Files.walk(storage)) {
             return walk.filter(Files::isRegularFile)
                        .map(storage::relativize)
                        .map(Path::toString)
-                       .toList()
-                       .stream();
+                       .toList();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private static OutputStream newOutputStream(Path storage, String fname) {
+    private static OutputStream newOutputStream(Path storage, String fileName) {
         try {
-            return Files.newOutputStream(storage.resolve(fname),
+            return Files.newOutputStream(storage.resolve(fileName),
                     StandardOpenOption.CREATE,
                     StandardOpenOption.WRITE,
                     StandardOpenOption.TRUNCATE_EXISTING);
@@ -103,24 +101,23 @@ public final class FileService implements HttpService {
     }
 
     private void list(ServerRequest req, ServerResponse res) {
-        JsonArrayBuilder arrayBuilder = jsonFactory.createArrayBuilder();
-        listFiles(storage).forEach(arrayBuilder::add);
-        res.send(jsonFactory.createObjectBuilder().add("files", arrayBuilder).build());
+        res.send(jsonFactory.createObjectBuilder()
+                .add("files", jsonFactory.createArrayBuilder(listFiles(storage)))
+                .build());
     }
 
     private void download(ServerRequest req, ServerResponse res) {
-        Path filePath = storage.resolve(req.path().pathParameters().get("fname"));
+        Path filePath = req.path().pathParameters().first("fileName")
+                .map(storage::resolve)
+                .orElseThrow();
         if (!filePath.getParent().equals(storage)) {
-            res.status(BAD_REQUEST_400).send("Invalid file name");
-            return;
+            throw new BadRequestException("Invalid file name");
         }
         if (!Files.exists(filePath)) {
-            res.status(NOT_FOUND_404).send();
-            return;
+            throw new NotFoundException("File not found");
         }
         if (!Files.isRegularFile(filePath)) {
-            res.status(BAD_REQUEST_400).send("Not a file");
-            return;
+            throw new BadRequestException("Not a file");
         }
         ServerResponseHeaders headers = res.headers();
         headers.contentType(MediaTypes.APPLICATION_OCTET_STREAM);
@@ -136,7 +133,8 @@ public final class FileService implements HttpService {
         while (mp.hasNext()) {
             ReadablePart part = mp.next();
             if ("file[]".equals(URLDecoder.decode(part.name(), StandardCharsets.UTF_8))) {
-                try (InputStream in = part.inputStream(); OutputStream out = newOutputStream(storage, part.fileName().get())) {
+                try (InputStream in = part.inputStream();
+                        OutputStream out = newOutputStream(storage, part.fileName().orElseThrow())) {
                     in.transferTo(out);
                 } catch (IOException e) {
                     throw new RuntimeException("Failed to write content", e);
