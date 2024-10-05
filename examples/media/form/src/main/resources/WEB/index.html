@@ -19,35 +19,49 @@
 <html lang="en">
 <meta charset="utf-8"/>
 <head>
-  <title>Helidon Examples Media Multipart</title>
+  <title>Helidon Examples Media Form</title>
   <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js"></script>
-  <script id="repository_tpl" type="x-tmpl-mustache">
+  <script id="data_tpl" type="x-tmpl-mustache">
       <ul>
-      {{#files}}
+      {{#entries}}
         <li>
-          <a href="/api/{{.}}">{{.}}</a>
+          <span>{{key}}</span>
+          <ul>
+            {{#value}}
+              <li>{{.}}</li>
+            {{/value}}
+          </ul>
         </li>
-      {{/files}}
+      {{/entries}}
       </ul>
-    </script>
+  </script>
+  <style>
+    label {
+      display: block;
+      margin: 20px 0 20px 0;
+    }
+  </style>
 </head>
 <body>
-<h1>Uploaded files</h1>
-<div id="repository"></div>
+<h1>Data</h1>
+<div id="data"></div>
 
-<h1>Upload (buffered)</h1>
-<form action="/api" enctype="multipart/form-data" method="post">
-  Select a file to upload:
-  <input multiple name="file[]" type="file"/>
-  <input name="submit" type="submit" value="Upload!">
-</form>
-
-<h1>Upload (stream)</h1>
-<form action="/api?stream" enctype="multipart/form-data" method="post">
-  Select a file to upload:
-  <input multiple name="file[]" type="file"/>
-  <input name="submit" type="submit" value="Upload!">
+<h1>Form</h1>
+<form action="/api" method="post">
+  <label>
+    Foo:
+    <input type="text" name="foo" value="foo1" />
+    <input type="text" name="foo" value="foo2" />
+    <input type="text" name="foo" value="foo3" />
+  </label>
+  <label>
+    Bar:
+    <input type="text" name="bar" value="bar1" />
+    <input type="text" name="bar" value="bar2" />
+    <input type="text" name="bar" value="bar3" />
+  </label>
+  <input type="submit" />
 </form>
 
 <script type="text/javascript">
@@ -56,9 +70,11 @@
       url: "/api",
       method: "GET"
     }).done(function(data) {
-      const template = $('#repository_tpl').html()
+      const template = $('#data_tpl').html()
       Mustache.parse(template);
-      $("#repository").append(Mustache.render(template, data))
+      $("#data").append(Mustache.render(template, {
+        entries: Object.entries(data).map(e => { return { key: e[0], value: e[1]}})
+      }))
     });
   });
 </script>

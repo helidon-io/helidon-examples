@@ -28,26 +28,22 @@
         <relativePath/>
     </parent>
     <groupId>io.helidon.examples.media</groupId>
-    <artifactId>helidon-examples-media-multipart</artifactId>
+    <artifactId>helidon-examples-media-form</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Helidon Examples Media Support Multipart</name>
+    <name>Helidon Examples Media Support Form</name>
 
     <description>
-        Example of a form based file upload.
+        Example of a form usage.
     </description>
 
     <properties>
-        <mainClass>io.helidon.examples.media.multipart.Main</mainClass>
+        <mainClass>io.helidon.examples.media.form.Main</mainClass>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>io.helidon.webserver</groupId>
             <artifactId>helidon-webserver</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.http.media</groupId>
-            <artifactId>helidon-http-media-multipart</artifactId>
         </dependency>
         <dependency>
             <groupId>io.helidon.http.media</groupId>

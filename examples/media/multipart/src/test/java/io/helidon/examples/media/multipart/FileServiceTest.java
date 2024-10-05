@@ -82,13 +82,13 @@ public class FileServiceTest {
         Path file = Files.writeString(Files.createTempFile(null, null), "stream bar\n");
         Path file2 = Files.writeString(Files.createTempFile(null, null), "stream foo\n");
         try (Http1ClientResponse response = client.post("/api")
-                                                  .queryParam("stream", "true")
-                                                  .followRedirects(false)
-                                                  .submit(WriteableMultiPart
-                                                          .builder()
-                                                          .addPart(writeablePart("file[]", "streamed-foo.txt", file))
-                                                          .addPart(writeablePart("otherPart", "streamed-foo2.txt", file2))
-                                                          .build())) {
+                .queryParam("stream", "true")
+                .followRedirects(false)
+                .submit(WriteableMultiPart
+                        .builder()
+                        .addPart(writeablePart("file[]", "streamed-foo.txt", file))
+                        .addPart(writeablePart("otherPart", "streamed-foo2.txt", file2))
+                        .build())) {
             assertThat(response.status(), is(Status.MOVED_PERMANENTLY_301));
         }
     }
@@ -100,7 +100,7 @@ public class FileServiceTest {
             assertThat(response.status(), is(Status.OK_200));
             JsonObject json = response.as(JsonObject.class);
             assertThat(json, Matchers.is(notNullValue()));
-            List<String> files = json.getJsonArray("files").getValuesAs(v -> ((JsonString) v).getString());
+            List<String> files = json.getJsonArray("files").getValuesAs(JsonString::getString);
             assertThat(files, hasItem("foo.txt"));
         }
     }
@@ -119,9 +119,9 @@ public class FileServiceTest {
 
     private WriteablePart writeablePart(String partName, String fileName, Path filePath) throws IOException {
         return WriteablePart.builder(partName)
-                            .fileName(fileName)
-                            .content(Files.readAllBytes(filePath))
-                            .contentType(MediaTypes.MULTIPART_FORM_DATA)
-                            .build();
+                .fileName(fileName)
+                .content(Files.readAllBytes(filePath))
+                .contentType(MediaTypes.MULTIPART_FORM_DATA)
+                .build();
     }
 }
