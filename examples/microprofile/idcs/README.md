@@ -11,18 +11,26 @@ This project contains two samples, one (IdcsApplication.java) and a second (Reac
 [This documentation](https://docs.oracle.com/en/cloud/paas/identity-cloud/uaids/oracle-identity-cloud-service.html#GUID-BC4769EE-258A-4B53-AED5-6BA9888C8275) describes basics of IDCS as well as how you can get IDCS instance.
 
 1. [Log in to the IDCS console](https://docs.oracle.com/en/cloud/paas/identity-cloud/uaids/how-access-oracle-identity-cloud-service.html) and create a new application of type "confidential app"
-2. Within  **Resources**
-    1. Create two resources called `first_scope` and `second_scope`
-    2. Primary Audience = `http://localhost:7987/"`   (ensure there is a trailing /)
-3. Within **Client Configuration**
-    1. Register a client
-    2. Allowed Grant Types = Client Credentials,JWT Assertion, Refresh Token, Authorization Code
-    3. Check "Allow non-HTTPS URLs"
-    4. Set Redirect URL to `http://localhost:7987/oidc/redirect`
-    5. Client Type = Confidential
-    6. Add all Scopes defined in the resources section
-    7. Set allowed operations to `Introspect`
-    8. Set Post Logout Redirect URL to `http://localhost:7987/loggedout`
+2. Within **Add application details**
+   1. Enter your application name
+   2. Enter your application description
+   3. Click `Next` to configure OAuth
+3. Within  **Resource server configuration**
+   1. Primary Audience = `http://localhost:7987/"`   (ensure there is a trailing **/**)
+   2. Select `Add scopes`
+   3. Add two scopes called `first_scope` and `second_scope`
+4. Within **Client Configuration**
+   1. Allowed Grant Types = Client Credentials,JWT Assertion, Refresh Token, Authorization Code
+   2. Check "Allow non-HTTPS URLs"
+   3. Set Redirect URL to `http://localhost:7987/oidc/redirect`
+   4. Set Post Logout Redirect URL to `http://localhost:7987/loggedout`
+   5. Client Type = Confidential
+   6. Set allowed operations to `Introspect`
+   7. Check `Add resources`
+   8. Select your application name from the list
+5. Within **Configure Policy**
+   1. Skip and do later
+6. Press `finish` to create the application
 
 Ensure you save and *activate* the application
 
