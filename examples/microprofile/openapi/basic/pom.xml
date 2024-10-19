@@ -27,7 +27,7 @@
         <version>4.2.0-SNAPSHOT</version>
         <relativePath/>
     </parent>
-    <groupId>io.helidon.examples.microprofile.openapi</groupId>
+    <groupId>io.helidon.examples.microprofile</groupId>
     <artifactId>helidon-examples-microprofile-openapi-basic</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Microprofile OpenAPI Basic</name>
