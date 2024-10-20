@@ -139,6 +139,11 @@ public class GreetResource {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
+    /**
+     * Simplistic method to return a type from outside this project.
+     *
+     * @return {@link jakarta.ws.rs.core.MediaType}
+     */
     @Path("/mediatype")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
