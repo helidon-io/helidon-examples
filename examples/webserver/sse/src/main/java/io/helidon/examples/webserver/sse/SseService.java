@@ -16,7 +16,6 @@
 package io.helidon.examples.webserver.sse;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 import io.helidon.http.sse.SseEvent;
 import io.helidon.webserver.http.HttpRules;
@@ -28,7 +27,7 @@ import io.helidon.webserver.sse.SseSink;
 import jakarta.json.spi.JsonProvider;
 
 /**
- * An HTTP that sends SSE.
+ * SSE service.
  */
 class SseService implements HttpService {
 

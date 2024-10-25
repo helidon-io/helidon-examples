@@ -13,4 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * Helidon Examples WebServer SSE.
+ */
 package io.helidon.examples.webserver.sse;
