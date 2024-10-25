@@ -15,6 +15,9 @@
  */
 package io.helidon.examples.webserver.sse;
 
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
 import io.helidon.http.sse.SseEvent;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
@@ -22,10 +25,14 @@ import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 import io.helidon.webserver.sse.SseSink;
 
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
+import jakarta.json.spi.JsonProvider;
 
+/**
+ * An HTTP that sends SSE.
+ */
 class SseService implements HttpService {
+
+    private static final JsonProvider JSON_PROVIDER = JsonProvider.provider();
 
     @Override
     public void routing(HttpRules httpRules) {
@@ -33,26 +40,37 @@ class SseService implements HttpService {
                 .get("/sse_json", this::sseJson);
     }
 
-    void sseText(ServerRequest req, ServerResponse res) {
+    void sseText(ServerRequest req, ServerResponse res) throws InterruptedException {
+        int count = req.query().first("count").asInt().orElse(1);
+        int delay = req.query().first("delay").asInt().orElse(0);
         try (SseSink sseSink = res.sink(SseSink.TYPE)) {
-            sseSink.emit(SseEvent.builder()
-                                 .comment("first line")
-                                 .name("first")
-                                 .data("hello")
-                                 .build())
-                    .emit(SseEvent.builder()
-                                  .name("second")
-                                  .data("world")
-                                  .build());
+            for (int i = 0; i < count; i++) {
+                sseSink.emit(SseEvent.builder()
+                        .comment("comment#" + i)
+                        .name("my-event")
+                        .data("data#" + i)
+                        .build());
+
+                if (delay > 0) {
+                    Thread.sleep(Duration.ofSeconds(delay));
+                }
+            }
         }
     }
 
-    void sseJson(ServerRequest req, ServerResponse res) {
-        JsonObject json = Json.createObjectBuilder()
-                .add("hello", "world")
-                .build();
+    void sseJson(ServerRequest req, ServerResponse res) throws InterruptedException {
+        int count = req.query().first("count").asInt().orElse(1);
+        int delay = req.query().first("delay").asInt().orElse(0);
         try (SseSink sseSink = res.sink(SseSink.TYPE)) {
-            sseSink.emit(SseEvent.create(json));
+            for (int i = 0; i < count; i++) {
+                sseSink.emit(SseEvent.create(JSON_PROVIDER.createObjectBuilder()
+                        .add("data", "data#" + i)
+                        .build()));
+
+                if (delay > 0) {
+                    Thread.sleep(Duration.ofSeconds(delay));
+                }
+            }
         }
     }
 }

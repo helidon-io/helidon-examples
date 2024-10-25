@@ -1,9 +1,9 @@
 # Helidon SE SSE Example
 
-This is a very simple example showing how to use the Helidon SSE API to send events from the
-server to a client. It defines a couple of SSE "hello world" endpoints that send either
-text or JSON messages. It also uses the SSE extensions to the Helidon WebClient API to test 
-these endpoints.
+This example demonstrates how to use Server Sent Events (SSE) with both the WebServer and WebClient APIs.
+
+This project implements a couple of SSE endpoints that send either text or JSON messages.
+The unit test uses the WebClient API to test the endpoints.
 
 ## Build, run and test
 
@@ -13,5 +13,4 @@ mvn package
 java -jar target/helidon-examples-webserver-sse.jar
 ```
 
-See `SseServiceTest` for additional information on the tests that are executed during
-the build process.
+Then open http://localhost:8080 in your browser.

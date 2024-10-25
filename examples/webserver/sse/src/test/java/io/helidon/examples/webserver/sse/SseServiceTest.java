@@ -16,18 +16,19 @@
 
 package io.helidon.examples.webserver.sse;
 
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import jakarta.json.JsonObject;
+
 import io.helidon.http.sse.SseEvent;
 import io.helidon.webclient.http1.Http1Client;
-import io.helidon.webclient.http1.Http1ClientResponse;
 import io.helidon.webclient.sse.SseSource;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.testing.junit5.ServerTest;
 import io.helidon.webserver.testing.junit5.SetUpRoute;
 
-import jakarta.json.JsonObject;
 import org.junit.jupiter.api.Test;
 
 import static io.helidon.http.HeaderValues.ACCEPT_EVENT_STREAM;
@@ -51,50 +52,44 @@ class SseServiceTest {
 
     @Test
     void testSseText() throws InterruptedException {
-        try (Http1ClientResponse r = client.get("/sse_text").header(ACCEPT_EVENT_STREAM).request()) {
-            CountDownLatch latch = new CountDownLatch(1);
-            r.source(SseSource.TYPE, new SseSource() {
-                private int state = 0;
-
-                @Override
-                public void onEvent(SseEvent event) {
-                    switch (state) {
-                    case 0 -> {
-                        assertThat(event.comment().isPresent(), is(true));
-                        assertThat(event.comment().get(), is("first line"));
-                        assertThat(event.name().isPresent(), is(true));
-                        assertThat(event.name().get(), is("first"));
-                        assertThat(event.data(), is("hello"));
-                    }
-                    case 1 -> {
-                        assertThat(event.name().isPresent(), is(true));
-                        assertThat(event.name().get(), is("second"));
-                        assertThat(event.data(), is("world"));
-                    }
-                    }
-                    state++;
-                }
-
-                @Override
-                public void onClose() {
-                    latch.countDown();
-                }
+        try (var response = client.get("/sse_text")
+                .queryParam("count", "3")
+                .header(ACCEPT_EVENT_STREAM).request()) {
+            var latch = new CountDownLatch(3);
+            var events = new ArrayList<SseEvent>();
+            response.source(SseSource.TYPE, event -> {
+                events.add(event);
+                latch.countDown();
             });
             assertThat(latch.await(5, TimeUnit.SECONDS), is(true));
+            assertThat(events.size(), is(3));
+            for (int i = 0; i < 3; i++) {
+                var event = events.get(i);
+                assertThat(event.comment().orElse(null), is("comment#" + i));
+                assertThat(event.name().orElse(null), is("my-event"));
+                assertThat(event.data(String.class), is("data#" + i));
+            }
         }
     }
 
     @Test
     void testSseJson() throws InterruptedException {
-        try (Http1ClientResponse r = client.get("/sse_json").header(ACCEPT_EVENT_STREAM).request()) {
-            CountDownLatch latch = new CountDownLatch(1);
-            r.source(SseSource.TYPE, event -> {
-                JsonObject json = event.data(JsonObject.class);
-                assertThat(json, is(notNullValue()));
-                assertThat(json.getString("hello"), is("world"));
+        try (var response = client.get("/sse_json")
+                .queryParam("count", "3")
+                .header(ACCEPT_EVENT_STREAM).request()) {
+            var latch = new CountDownLatch(3);
+            var events = new ArrayList<JsonObject>();
+            response.source(SseSource.TYPE, event -> {
+                events.add(event.data(JsonObject.class));
                 latch.countDown();
             });
             assertThat(latch.await(5, TimeUnit.SECONDS), is(true));
+            assertThat(events.size(), is(3));
+            for (int i = 0; i < 3; i++) {
+                var event = events.get(i);
+                assertThat(event, is(notNullValue()));
+                assertThat(event.getString("data", null), is("data#" + i));
+            }
         }
     }
 }
