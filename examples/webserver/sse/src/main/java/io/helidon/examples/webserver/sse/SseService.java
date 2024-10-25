@@ -15,6 +15,8 @@
  */
 package io.helidon.examples.webserver.sse;
 
+import java.io.UncheckedIOException;
+import java.lang.System.Logger.Level;
 import java.time.Duration;
 
 import io.helidon.http.sse.SseEvent;
@@ -31,6 +33,7 @@ import jakarta.json.spi.JsonProvider;
  */
 class SseService implements HttpService {
 
+    private static final System.Logger LOGGER = System.getLogger(SseService.class.getName());
     private static final JsonProvider JSON_PROVIDER = JsonProvider.provider();
 
     @Override
@@ -44,11 +47,16 @@ class SseService implements HttpService {
         int delay = req.query().first("delay").asInt().orElse(0);
         try (SseSink sseSink = res.sink(SseSink.TYPE)) {
             for (int i = 0; i < count; i++) {
-                sseSink.emit(SseEvent.builder()
-                        .comment("comment#" + i)
-                        .name("my-event")
-                        .data("data#" + i)
-                        .build());
+                try {
+                    sseSink.emit(SseEvent.builder()
+                                         .comment("comment#" + i)
+                                         .name("my-event")
+                                         .data("data#" + i)
+                                         .build());
+                } catch (UncheckedIOException e) {
+                    LOGGER.log(Level.DEBUG, e.getMessage());    // connection close?
+                    return;
+                }
 
                 if (delay > 0) {
                     Thread.sleep(Duration.ofSeconds(delay));
@@ -62,9 +70,14 @@ class SseService implements HttpService {
         int delay = req.query().first("delay").asInt().orElse(0);
         try (SseSink sseSink = res.sink(SseSink.TYPE)) {
             for (int i = 0; i < count; i++) {
-                sseSink.emit(SseEvent.create(JSON_PROVIDER.createObjectBuilder()
-                        .add("data", "data#" + i)
-                        .build()));
+                try {
+                    sseSink.emit(SseEvent.create(JSON_PROVIDER.createObjectBuilder()
+                                                         .add("data", "data#" + i)
+                                                         .build()));
+                } catch (UncheckedIOException e) {
+                    LOGGER.log(Level.DEBUG, e.getMessage());    // connection close?
+                    return;
+                }
 
                 if (delay > 0) {
                     Thread.sleep(Duration.ofSeconds(delay));
