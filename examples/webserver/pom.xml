@@ -39,6 +39,7 @@
         <module>echo</module>
         <module>fault-tolerance</module>
         <module>grpc</module>
+        <module>grpc-random</module>
         <module>imperative</module>
         <module>multiport</module>
         <module>mutual-tls</module>
