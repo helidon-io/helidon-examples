@@ -39,7 +39,7 @@ class Main {
         Config.global(config);
         Config serverConfig = config.get("server");
 
-        // start server and register gRPC routing and health check
+        // start server and register gRPC routing
         WebServer.builder()
                 .config(serverConfig)
                 .addRouting(GrpcRouting.builder().service(new RandomService()))

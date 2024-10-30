@@ -28,3 +28,9 @@ server:
         passphrase: "password"
         resource:
           resource-path: "server.p12"
+
+grpc-protocol-config:
+  poll-wait-time: PT30S
+  abort-poll-time-expired: true
+  init-buffer-size: 10000
+  heartbeat-period: PT10S

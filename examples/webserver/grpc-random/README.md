@@ -1,4 +1,4 @@
-# Helidon gRPC SE Randome Example
+# Helidon gRPC SE Random Example
 
 
 This example shows a simple _Random_ service written with the Helidon gRPC SE 

@@ -26,9 +26,11 @@ import java.util.concurrent.TimeoutException;
 
 import io.helidon.common.configurable.Resource;
 import io.helidon.common.tls.Tls;
+import io.helidon.config.Config;
 import io.helidon.examples.webserver.grpc.random.Random.ParamMessage;
 import io.helidon.webclient.api.WebClient;
 import io.helidon.webclient.grpc.GrpcClient;
+import io.helidon.webclient.grpc.GrpcClientProtocolConfig;
 import io.helidon.webserver.Router;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.grpc.GrpcRouting;
@@ -65,9 +67,14 @@ class RandomServiceTest {
                                 .trustStore(true)
                                 .keystore(Resource.create("client.p12"))))
                 .build();
+        Config config = Config.create();
+        GrpcClientProtocolConfig protocolConfig = GrpcClientProtocolConfig.builder()
+                .config(config.get("grpc-protocol-config"))
+                .build();
         this.webClient = WebClient.builder()
                 .tls(clientTls)
                 .baseUri("https://localhost:" + server.port())
+                .addProtocolConfig(protocolConfig)
                 .build();
     }
 
