@@ -19,10 +19,10 @@ server:
   sockets:
     - name: "private"
       port: 8081
-      bind-address: "localhost"
+      host: "localhost"
     - name: "admin"
       port: 8082
-      bind-address: "localhost"
+      host: "localhost"
   features:
     observe:
       sockets: "admin"
