@@ -74,12 +74,14 @@ public final class Main {
         Config config = mongo ? Config.create(ConfigSources.classpath(MONGO_CFG)) : Config.create();
         Config.global(config);
 
-        WebServer server = setupServer(WebServer.builder());
+        WebServer server = setupServer(WebServer.builder())
+                .build()
+                .start();
 
         System.out.println("WEB server is up! http://localhost:" + server.port() + "/");
     }
 
-    static WebServer setupServer(WebServerConfig.Builder builder) {
+    static WebServerConfig.Builder setupServer(WebServerConfig.Builder builder) {
 
         Config config = Config.global();
         // Client services are added through a service loader - see mongoDB example for explicit services
@@ -94,9 +96,7 @@ public final class Main {
                 .build();
         return builder.config(config.get("server"))
                 .addFeature(observe)
-                .routing(Main::routing)
-                .build()
-                .start();
+                .routing(Main::routing);
     }
 
     /**

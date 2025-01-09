@@ -46,12 +46,14 @@ public final class JdbcExampleMain {
         LogConfig.configureRuntime();
 
         // Prepare routing for the server
-        WebServer server = setupServer(WebServer.builder());
+        WebServer server = setupServer(WebServer.builder())
+                .build()
+                .start();
 
         System.out.println("WEB server is up! http://localhost:" + server.port() + "/");
     }
 
-    static WebServer setupServer(WebServerConfig.Builder builder) {
+    static WebServerConfig.Builder setupServer(WebServerConfig.Builder builder) {
         // By default, this will pick up application.yaml from the classpath
         Config config = Config.global();
 
@@ -68,8 +70,6 @@ public final class JdbcExampleMain {
         return builder
                 .config(config.get("server"))
                 .addFeature(observe)
-                .routing(routing -> routing.register("/db", new PokemonService(dbClient)))
-                .build()
-                .start();
+                .routing(routing -> routing.register("/db", new PokemonService(dbClient)));
     }
 }

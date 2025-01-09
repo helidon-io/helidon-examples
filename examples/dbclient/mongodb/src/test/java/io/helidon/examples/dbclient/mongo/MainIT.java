@@ -58,7 +58,11 @@ public class MainIT {
     static void beforeAll() {
         String url = String.format("mongodb://127.0.0.1:%s/pokemon", container.getMappedPort(27017));
         System.setProperty(CONNECTION_URL_KEY, url);
-        server = MongoDbExampleMain.setupServer(WebServer.builder());
+        server = MongoDbExampleMain.setupServer(WebServer.builder())
+                .port(-1)
+                .build()
+                .start();
+
         client = WebClient.create(config -> config.baseUri("http://localhost:" + server.port())
                 .addMediaSupport(JsonbSupport.create(Config.create()))
                 .addMediaSupport(JsonpSupport.create()));

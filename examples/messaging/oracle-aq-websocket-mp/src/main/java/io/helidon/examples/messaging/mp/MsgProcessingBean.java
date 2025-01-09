@@ -23,19 +23,18 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.SubmissionPublisher;
 
-import io.helidon.common.reactive.BufferedEmittingPublisher;
 import io.helidon.common.reactive.Multi;
 import io.helidon.messaging.connectors.aq.AqMessage;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.jms.JMSException;
 import jakarta.jms.MapMessage;
 import org.eclipse.microprofile.reactive.messaging.Acknowledgment;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
-import org.eclipse.microprofile.reactive.streams.operators.ReactiveStreams;
-import org.reactivestreams.FlowAdapters;
-import org.reactivestreams.Publisher;
 
 /**
  * Bean for message processing.
@@ -43,21 +42,11 @@ import org.reactivestreams.Publisher;
 @ApplicationScoped
 public class MsgProcessingBean {
 
-    private final BufferedEmittingPublisher<String> emitter = BufferedEmittingPublisher.create();
     private final SubmissionPublisher<String> broadCaster = new SubmissionPublisher<>();
 
-    /**
-     * Create a publisher for the emitter.
-     *
-     * @return A Publisher from the emitter
-     */
-    @Outgoing("to-queue-1")
-    public Publisher<String> toFirstQueue() {
-        // Create new publisher for emitting to by this::process
-        return ReactiveStreams
-                .fromPublisher(FlowAdapters.toPublisher(emitter))
-                .buildRs();
-    }
+    @Inject
+    @Channel("to-queue-1")
+    private Emitter<String> emitter;
 
     /**
      * Example of resending message from one queue to another and logging the payload to DB in the process.
@@ -88,11 +77,13 @@ public class MsgProcessingBean {
      * Broadcasts an event.
      *
      * @param msg Message to broadcast
+     * @return immediately completed future
      */
     @Incoming("from-queue-2")
-    public void fromSecondQueue(AqMessage<String> msg) {
+    public CompletionStage<Void> fromSecondQueue(AqMessage<String> msg) {
         // Broadcast to all subscribers
         broadCaster.submit(msg.getPayload());
+        return CompletableFuture.completedFuture(null);
     }
 
     /**
@@ -120,10 +111,10 @@ public class MsgProcessingBean {
     }
 
     Multi<String> subscribeMulti() {
-        return Multi.create(broadCaster).log();
+        return Multi.create(broadCaster);
     }
 
     void process(final String msg) {
-        emitter.emit(msg);
+        emitter.send(msg);
     }
 }

@@ -26,14 +26,8 @@ docker run --name='activemq' --rm -p 61616:61616 -p 8161:8161 rmohr/activemq
 ### Test Oracle database
 * Start ActiveMQ server locally: 
 ```shell
-cd ./docker/oracle-aq-18-xe
+cd ./docker/oracle-aq
 ./buildAndRun.sh
-```
-
-For stopping Oracle database container use:
-```shell
-cd ./docker/oracle-aq-18-xe
-./stopAndClean.sh
 ```
 
 ## Helidon SE Reactive Messaging with Kafka Example

@@ -51,6 +51,8 @@ public class MainTest {
     @SetUpServer
     public static void setup(WebServerConfig.Builder server) {
         Main.setup(server);
+        // random port
+        server.port(-1);
     }
 
     @Test

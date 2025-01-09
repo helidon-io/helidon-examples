@@ -16,63 +16,45 @@
 
 package io.helidon.examples.integrations.cdi.pokemon;
 
-import io.helidon.microprofile.server.Server;
+import io.helidon.microprofile.testing.junit5.HelidonTest;
 
-import jakarta.enterprise.inject.se.SeContainer;
-import jakarta.enterprise.inject.spi.CDI;
 import jakarta.json.JsonArray;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+@HelidonTest
 class MainTest {
 
-    private static Server server;
-    private static Client client;
-
-    @BeforeAll
-    public static void startTheServer() {
-        client = ClientBuilder.newClient();
-        server = Server.create().start();
-    }
-
-    @AfterAll
-    static void destroyClass() {
-        CDI<Object> current = CDI.current();
-        ((SeContainer) current).close();
-    }
 
     @Test
-    void testPokemonTypes() {
-        JsonArray types = client.target(getConnectionString("/type"))
+    void testPokemonTypes(WebTarget client) {
+        JsonArray types = client.path("/type")
                 .request()
                 .get(JsonArray.class);
         assertThat(types.size(), is(18));
     }
 
     @Test
-    void testPokemon() {
-        assertThat(getPokemonCount(), is(6));
+    void testPokemon(WebTarget client) {
+        assertThat(getPokemonCount(client), is(6));
 
-        Pokemon pokemon = client.target(getConnectionString("/pokemon/1"))
+        Pokemon pokemon = client.path("/pokemon/1")
                 .request()
                 .get(Pokemon.class);
         assertThat(pokemon.getName(), is("Bulbasaur"));
 
-        pokemon = client.target(getConnectionString("/pokemon/name/Charmander"))
+        pokemon = client.path("/pokemon/name/Charmander")
                 .request()
                 .get(Pokemon.class);
         assertThat(pokemon.getType(), is(10));
 
-        try (Response response = client.target(getConnectionString("/pokemon/1"))
+        try (Response response = client.path("/pokemon/1")
                 .request()
                 .get()) {
             assertThat(response.getStatus(), is(200));
@@ -82,29 +64,25 @@ class MainTest {
         test.setType(1);
         test.setId(100);
         test.setName("Test");
-        try (Response response = client.target(getConnectionString("/pokemon"))
+        try (Response response = client.path("/pokemon")
                 .request()
                 .post(Entity.entity(test, MediaType.APPLICATION_JSON))) {
             assertThat(response.getStatus(), is(204));
-            assertThat(getPokemonCount(), is(7));
+            assertThat(getPokemonCount(client), is(7));
         }
 
-        try (Response response = client.target(getConnectionString("/pokemon/100"))
+        try (Response response = client.path("/pokemon/100")
                 .request()
                 .delete()) {
             assertThat(response.getStatus(), is(204));
-            assertThat(getPokemonCount(), is(6));
+            assertThat(getPokemonCount(client), is(6));
         }
     }
 
-    private int getPokemonCount() {
-        JsonArray pokemons = client.target(getConnectionString("/pokemon"))
+    private int getPokemonCount(WebTarget client) {
+        JsonArray pokemons = client.path("/pokemon")
                 .request()
                 .get(JsonArray.class);
         return pokemons.size();
-    }
-
-    private String getConnectionString(String path) {
-        return "http://localhost:" + server.port() + path;
     }
 }

@@ -13,8 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+FROM container-registry.oracle.com/database/express:latest
 
-FROM oracle/database:18.4.0-xe as base
-
-
-COPY init.sql /docker-entrypoint-initdb.d/setup/
+ENV "ORACLE_PWD"="frank"
+ENV "ORACLE_ALLOW_REMOTE"="true"
+ENV "ORACLE_SID"="XE"
+ENV "PORT"="1521"
+COPY ["init.sql","/opt/oracle/scripts/startup/"]
+EXPOSE 1521

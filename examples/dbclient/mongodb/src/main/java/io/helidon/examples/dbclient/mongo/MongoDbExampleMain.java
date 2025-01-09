@@ -56,20 +56,20 @@ public final class MongoDbExampleMain {
         // load logging configuration
         LogConfig.configureRuntime();
 
-        WebServer server = setupServer(WebServer.builder());
+        WebServer server = setupServer(WebServer.builder())
+                .build()
+                .start();
 
         System.out.println("WEB server is up! http://localhost:" + server.port() + "/");
         return server;
     }
 
-    static WebServer setupServer(WebServerConfig.Builder builder) {
+    static WebServerConfig.Builder setupServer(WebServerConfig.Builder builder) {
         // By default, this will pick up application.yaml from the classpath
         Config config = Config.create();
 
         return builder.routing(routing -> routing(routing, config))
-                .config(config.get("server"))
-                .build()
-                .start();
+                .config(config.get("server"));
     }
 
     /**

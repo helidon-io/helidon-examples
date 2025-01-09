@@ -42,7 +42,11 @@ abstract class AbstractPokemonServiceTest {
     private static WebClient client;
 
     static void beforeAll() {
-        server = Main.setupServer(WebServer.builder());
+        server = Main.setupServer(WebServer.builder())
+                .port(-1)
+                .build()
+                .start();
+
         client = WebClient.create(config -> config.baseUri("http://localhost:" + server.port())
                 .addMediaSupport(JsonpSupport.create()));
     }

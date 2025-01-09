@@ -15,6 +15,8 @@
 # limitations under the License.
 #
 
-docker stop oracle-aq-example
-docker container rm oracle-aq-example
-docker image rm helidon/oracle-aq-example:latest
+IMAGE_NAME=helidon/oracle-aq-example
+CONTAINER_NAME=oracle-aq-example
+
+docker build -t ${IMAGE_NAME} . -f Dockerfile
+docker run -p 1521:1521 --rm --name ${CONTAINER_NAME} ${IMAGE_NAME}

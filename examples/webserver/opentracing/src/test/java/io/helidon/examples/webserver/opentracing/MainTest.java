@@ -51,7 +51,11 @@ public class MainTest {
 
     @BeforeAll
     static void checkContainer() {
-        server = Main.setupServer(WebServer.builder(), container.getMappedPort(9411));
+        server = Main.setupServer(WebServer.builder(), container.getMappedPort(9411))
+                .port(-1)
+                .build()
+                .start();
+
         client = WebClient.create(config -> config.baseUri("http://localhost:" + server.port())
                 .addMediaSupport(JsonpSupport.create()));
         zipkinClient = Http1Client.create(config -> config

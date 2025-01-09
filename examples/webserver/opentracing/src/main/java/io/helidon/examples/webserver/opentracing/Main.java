@@ -49,12 +49,14 @@ public final class Main {
         // configure logging in order to not have the standard JVM defaults
         LogConfig.configureRuntime();
 
-        WebServer server = setupServer(WebServerConfig.builder(), 9411);
+        WebServer server = setupServer(WebServerConfig.builder(), 9411)
+                .build()
+                .start();
 
         System.out.println("Started at http://localhost:" + server.port());
     }
 
-    static WebServer setupServer(WebServerConfig.Builder builder, int port) {
+    static WebServerConfig.Builder setupServer(WebServerConfig.Builder builder, int port) {
         Config config = Config.builder()
                 .sources(ConfigSources.create(Map.of("host", "localhost",
                         "port", "8080")))
@@ -72,8 +74,6 @@ public final class Main {
                         .build())
                 .routing(routing -> routing
                         .get("/test", (req, res) -> res.send("Hello World!"))
-                        .post("/hello", (req, res) -> res.send("Hello: " + req.content().as(String.class))))
-                .build()
-                .start();
+                        .post("/hello", (req, res) -> res.send("Hello: " + req.content().as(String.class))));
     }
 }
