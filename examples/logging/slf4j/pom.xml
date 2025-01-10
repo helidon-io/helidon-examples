@@ -38,6 +38,7 @@
 
     <properties>
         <mainClass>io.helidon.examples.logging.slf4j.Main</mainClass>
+        <version.lib.logback>1.5.16</version.lib.logback>
     </properties>
 
     <dependencies>
@@ -60,6 +61,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>${version.lib.logback}</version>
         </dependency>
     </dependencies>
 
