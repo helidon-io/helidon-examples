@@ -7,7 +7,6 @@
 .exe
 .gif
 .gitignore
-.github/
 .ico
 .jar
 .jks
