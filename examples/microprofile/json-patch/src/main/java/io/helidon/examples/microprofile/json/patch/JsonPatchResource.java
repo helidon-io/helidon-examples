@@ -33,7 +33,7 @@ import jakarta.ws.rs.Path;
 @ApplicationScoped
 public class JsonPatchResource {
     private static final JsonProvider JSON_PROVIDER = JsonProvider.provider();
-    private static final Storage STORAGE = new Storage();
+    private final Storage storage = new Storage();
 
     /**
      * Get JSON object from storage.
@@ -42,7 +42,7 @@ public class JsonPatchResource {
      */
     @GET
     public JsonObject get() {
-        return STORAGE.object();
+        return storage.object();
     }
 
     /**
@@ -53,7 +53,7 @@ public class JsonPatchResource {
     @PUT
     @Consumes("application/json")
     public void put(JsonObject jsonObject) {
-        STORAGE.object(jsonObject);
+        storage.object(jsonObject);
     }
 
     /**
@@ -65,7 +65,7 @@ public class JsonPatchResource {
     @Consumes("application/json-patch+json")
     public void patch(JsonArray operations) {
         JsonPatch patch = JSON_PROVIDER.createPatch(operations);
-        JsonObject object = patch.apply(STORAGE.object());
-        STORAGE.object(object);
+        JsonObject object = patch.apply(storage.object());
+        storage.object(object);
     }
 }

@@ -31,7 +31,7 @@ import jakarta.json.spi.JsonProvider;
 public class JsonPatchService implements HttpService {
 
     private static final JsonProvider JSON_PROVIDER = JsonProvider.provider();
-    private static final Storage STORAGE = new Storage();
+    private final Storage storage = new Storage();
 
     @Override
     public void routing(HttpRules rules) {
@@ -41,20 +41,20 @@ public class JsonPatchService implements HttpService {
     }
 
     private void get(ServerRequest req, ServerResponse res) {
-        res.send(STORAGE.object());
+        res.send(storage.object());
     }
 
     private void put(ServerRequest req, ServerResponse res) {
         JsonObject jsonObject = req.content().as(JsonObject.class);
-        STORAGE.object(jsonObject);
+        storage.object(jsonObject);
         res.send();
     }
 
     private void patch(ServerRequest req, ServerResponse res) {
         JsonArray operations = req.content().as(JsonArray.class);
         JsonPatch patch = JSON_PROVIDER.createPatch(operations);
-        JsonObject jsonObject = patch.apply(STORAGE.object());
-        STORAGE.object(jsonObject);
+        JsonObject jsonObject = patch.apply(storage.object());
+        storage.object(jsonObject);
         res.send();
     }
 }

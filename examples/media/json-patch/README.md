@@ -1,4 +1,4 @@
-# Helidon SE Media JSON Batch Example
+# Helidon SE Media JSON Patch Example
 
 This example demonstrates `application/json-patch+json` media type support.
 
