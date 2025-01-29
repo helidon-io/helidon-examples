@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package io.helidon.examples.media.multipart;
 
+import io.helidon.common.socket.SocketOptions;
 import io.helidon.http.Header;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.HeaderValues;
@@ -44,6 +45,9 @@ public final class Main {
 
         WebServer server = WebServer.builder()
                 .routing(Main::routing)
+                .connectionOptions(SocketOptions.builder()
+                        .socketReceiveBufferSize(32 * 1024)     // can improve upload times
+                        .build())
                 .port(8080)
                 .build()
                 .start();
