@@ -6,7 +6,7 @@ Sample Helidon SE applications that uses Coherence CE as a cache for application
 
 ```shell
 mvn package
-java -Dcoherence.distributed.localstorage=true -jar target/helidon-examples-coherence.jar
+java -jar target/helidon-examples-coherence.jar
 ```
 
 ## Exercise the application
