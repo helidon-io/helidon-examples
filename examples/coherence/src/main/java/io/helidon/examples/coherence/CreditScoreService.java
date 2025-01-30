@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,50 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.examples.microprofile.coherence;
+package io.helidon.examples.coherence;
 
-import com.oracle.coherence.cdi.Name;
+import io.helidon.http.Status;
+import io.helidon.webserver.http.HttpRules;
+import io.helidon.webserver.http.HttpService;
+import io.helidon.webserver.http.ServerRequest;
+import io.helidon.webserver.http.ServerResponse;
+
+import com.tangosol.net.CacheFactory;
 import com.tangosol.net.NamedCache;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
 import static java.lang.System.Logger.Level.INFO;
 
 /**
- * Credit score application.
+ * Credit score service.
  */
-@ApplicationScoped
-@Path("/creditscore")
-public class CreditscoreService {
+class CreditScoreService implements HttpService {
 
-    private static final System.Logger LOGGER = System.getLogger(CreditscoreService.class.getName());
-    private static final String CACHE_NAME = "creditScoreCache";
-
+    private static final System.Logger LOGGER = System.getLogger(CreditScoreService.class.getName());
     private static final int SCORE_MAX = 800;
     private static final int SCORE_MIN = 550;
 
-    @Inject
-    @Name(CACHE_NAME)
-    private NamedCache<String, Integer> creditScoreCache;
+    private final NamedCache<String, Integer> creditScoreCache = CacheFactory.getCache("creditScoreCache");
 
-    /**
-     * Generate a credit score.
-     * @param person Person to generate score for
-     * @return Person with score populated and ssn redacted
-     */
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response postMethodCreditScore(Person person) {
+    @Override
+    public void routing(HttpRules rules) {
+        rules.post(this::postCreditScore);
+    }
 
+    private void postCreditScore(ServerRequest req, ServerResponse res) {
+        Person person = req.content().as(Person.class);
         if (person.firstName() == null || person.lastName() == null || person.dateOfBirth() == null || person.ssn() == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Bad request").build();
+            res.status(Status.BAD_REQUEST_400).send("Bad Request");
+            return;
         }
 
         LOGGER.log(INFO, "Computing credit score for " + person.firstName() + " " + person.lastName());
@@ -68,15 +58,13 @@ public class CreditscoreService {
             creditScore = calculateCreditScore(person);
             creditScoreCache.put(ssn, creditScore);
         }
-        return Response.ok(
-                new Person(person.firstName(), person.lastName(), person.dateOfBirth(), "NNN-NN-NNNN", creditScore))
-                .build();
+        res.send(new Person(person.firstName(), person.lastName(), person.dateOfBirth(), "NNN-NN-NNNN", creditScore));
     }
 
     private int calculateCreditScore(Person p) {
         int score = Math.abs(p.hashCode()) % SCORE_MAX;
         while (score < SCORE_MIN) {
-            score = score + 100;
+            score += 100;
         }
         // Pause for dramatic effect
         sleep();
@@ -85,7 +73,7 @@ public class CreditscoreService {
 
     private void sleep() {
         try {
-            Thread.sleep(2 * 1_000L);
+            Thread.sleep(2_000L);
         } catch (InterruptedException ignored) {
         }
     }

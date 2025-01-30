@@ -1,12 +1,12 @@
-# Helidon Example Microprofile Coherence
+# Helidon Example Coherence
 
-Sample Helidon MP applications that uses Coherence CE as a cache for application data.
+Sample Helidon SE applications that uses Coherence CE as a cache for application data.
 
 ## Build and run
 
 ```shell
 mvn package
-java -jar target/helidon-examples-microprofile-coherence.jar
+java -jar target/helidon-examples-coherence.jar
 ```
 
 ## Exercise the application
@@ -18,6 +18,4 @@ curl -X POST -H "Content-Type: application/json" \
 ```
 
 You'll notice a short delay as the application computes the credit score.
-Now repeat the same request. You'll see the score is returned instantly
-as it is retrieved from the cache.
-
+Now repeat the same request. You'll see the score is returned instantly as it is retrieved from the cache.
