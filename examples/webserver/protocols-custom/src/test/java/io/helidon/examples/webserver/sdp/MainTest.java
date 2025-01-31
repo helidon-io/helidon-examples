@@ -7,7 +7,6 @@ import io.helidon.webserver.http.HttpRouting;
 import io.helidon.webserver.testing.junit5.DirectClient;
 import io.helidon.webserver.testing.junit5.RoutingTest;
 import io.helidon.webserver.testing.junit5.SetUpRoute;
-import jakarta.json.JsonObject;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
