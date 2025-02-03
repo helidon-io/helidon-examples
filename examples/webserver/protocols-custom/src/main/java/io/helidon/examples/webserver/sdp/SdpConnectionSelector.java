@@ -39,7 +39,9 @@ public class SdpConnectionSelector implements ServerConnectionSelector {
 
     @Override
     public Support supports(BufferData bufferData) {
-        LOGGER.log(Level.DEBUG, "SDP: supports called. bufferData=\n" + bufferData.debugDataHex());
+        if (LOGGER.isLoggable(Level.DEBUG)) {
+            LOGGER.log(Level.DEBUG, "SDP: supports() called. bufferData=\n" + bufferData.debugDataHex());
+        }
         /* Must start with "sdp\n" */
         if (bufferData.read() == 's'
                 && bufferData.read() == 'd'
