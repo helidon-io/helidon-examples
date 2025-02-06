@@ -55,7 +55,7 @@ public class GenAiService implements HttpService {
     private String COMPARTMENT_ID;
     private String CHAT_MODEL_ID;
     private String EMBED_MODEL_ID;
-    private static final String USER_MESSAGE_PARAM = "userMessage" ;
+    private static final String USER_MESSAGE_PARAM = "userMessage";
     private static final String EMBEDDING_INPUTS_PARAM = "embeddingInputs";
 
     GenAiService(GenerativeAiInferenceClient generativeAiInferenceClient,
@@ -72,6 +72,15 @@ public class GenAiService implements HttpService {
         rules.get("/embedText/{" + EMBEDDING_INPUTS_PARAM + "}", this::embedText);
     }
 
+    /**
+     * Handles an HTTP GET request to initiate a chat session with the Oracle Cloud Infrastructure Generative AI service.
+     *
+     * This method takes a user-provided message as input and sends it to the Generative AI service for processing.
+     * It then retrieves the response from the service and returns it back to the client.
+     *
+     * @param req the incoming HTTP request containing the user's message
+     * @param res the outgoing HTTP response to send back to the client
+     */
     public void chat(ServerRequest req, ServerResponse res) {
         String userMessage = req.path().pathParameters().get(USER_MESSAGE_PARAM);
         LOGGER.log(Level.INFO, "Start Running Chat Example ...");
@@ -108,7 +117,17 @@ public class GenAiService implements HttpService {
         res.send(chatResult.toString());
     }
 
-    public String embedText(ServerRequest req, ServerResponse res) {
+    /**
+     * Handles an HTTP GET request to generate embeddings for a given set of text inputs using the Oracle Cloud Infrastructure Generative AI service.
+     *
+     * This method takes a comma-separated string of text inputs as a path parameter, splits them into individual inputs,
+     * and sends them to the Generative AI service for embedding generation. It then retrieves the generated embeddings
+     * from the service and returns them back to the client as a JSON string.
+     *
+     * @param req the incoming HTTP request containing the text inputs
+     * @param res the outgoing HTTP response to send back to the client
+     */
+    public void embedText(ServerRequest req, ServerResponse res) {
         String embeddingInputs = req.path().pathParameters().get(EMBEDDING_INPUTS_PARAM);
         List<String> embeddingInputsList = Arrays.asList(embeddingInputs.split(","));
         LOGGER.log(Level.INFO, "Start Running EmbedText Example ...");
@@ -125,7 +144,7 @@ public class GenAiService implements HttpService {
         EmbedTextResult embedTextResult = embedTextResponse.getEmbedTextResult();
         LOGGER.log(Level.INFO, embedTextResult.toString());
         generativeAiInferenceClient.close();
-        return embedTextResult.toString();
+        res.send(embedTextResult.toString());
     }
 }
 

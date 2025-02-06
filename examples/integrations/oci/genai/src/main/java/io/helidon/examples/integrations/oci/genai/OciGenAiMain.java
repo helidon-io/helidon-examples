@@ -20,16 +20,15 @@ import java.io.IOException;
 
 import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
-import io.helidon.webserver.WebServer;
-
 import io.helidon.service.registry.GlobalServiceRegistry;
 import io.helidon.service.registry.ServiceRegistry;
+import io.helidon.webserver.WebServer;
 
+import com.oracle.bmc.Region;
 import com.oracle.bmc.auth.AuthenticationDetailsProvider;
 import com.oracle.bmc.auth.SessionTokenAuthenticationDetailsProvider;
 import com.oracle.bmc.generativeaiinference.GenerativeAiInferenceClient;
 import com.oracle.bmc.model.BmcException;
-import com.oracle.bmc.Region;
 
 /**
  * Main class of the example.
@@ -51,17 +50,19 @@ public final class OciGenAiMain {
         // load logging configuration
         LogConfig.configureRuntime();
 
-        // By default, this will pick up application.yaml from the classpath
+        // initialize global config from default configuration
         Config config = Config.create();
+        Config.global(config);
 
         // Initialize GenAI client based on OCI Auth as configured in config system
         ServiceRegistry registry = GlobalServiceRegistry.registry();
         AuthenticationDetailsProvider authProvider = registry.get(SessionTokenAuthenticationDetailsProvider.class);
-                // new SessionTokenAuthenticationDetailsProvider(ConfigFileReader.DEFAULT_FILE_PATH,"helidonocidev");
+        // new SessionTokenAuthenticationDetailsProvider(ConfigFileReader.DEFAULT_FILE_PATH,"helidonocidev");
         GenerativeAiInferenceClient generativeAiInferenceClient = GenerativeAiInferenceClient.builder()
                 .region(Region.valueOf(config.get("oci.genai.region").asString().get()))
                 .build(authProvider);
-        System.out.println("********* generativeAiInferenceClient *********" + generativeAiInferenceClient.getEndpoint() );
+        System.out.println("********* generativeAiInferenceClient *********" + generativeAiInferenceClient.getEndpoint());
+
         // Prepare routing for the server
         WebServer server = WebServer.builder()
                 .config(config.get("server"))
@@ -74,6 +75,6 @@ public final class OciGenAiMain {
                 .build()
                 .start();
 
-        System.out.println("WEB server is up! http://localhost:" + server.port() + "/");
+        System.out.println("WEB server is up! http://localhost:" + server.port() + "/genai");
     }
 }

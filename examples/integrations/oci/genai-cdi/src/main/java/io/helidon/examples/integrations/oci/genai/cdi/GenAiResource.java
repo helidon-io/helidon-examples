@@ -38,7 +38,6 @@ import com.oracle.bmc.generativeaiinference.requests.ChatRequest;
 import com.oracle.bmc.generativeaiinference.requests.EmbedTextRequest;
 import com.oracle.bmc.generativeaiinference.responses.ChatResponse;
 import com.oracle.bmc.generativeaiinference.responses.EmbedTextResponse;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -75,6 +74,14 @@ public class GenAiResource {
         generativeAiInferenceClient.setRegion(Region.valueOf(region));
     }
 
+    /**
+     * Handles HTTP GET requests to initiate a chat session with the Oracle Cloud Infrastructure (OCI)
+     * Generative AI service. It takes a user-provided message as input and returns the response from
+     * the chat model.
+     *
+     * @param userMessage the message sent by the user to initiate or continue the conversation
+     * @return the response from the chat model as a JSON string
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("chat")
@@ -113,6 +120,14 @@ public class GenAiResource {
         return chatResult.toString();
     }
 
+    /**
+     * Handles HTTP GET requests to generate embeddings for a list of text inputs using the Oracle Cloud Infrastructure (OCI)
+     * Generative AI service. It takes a list of text inputs as query parameters and returns the generated embeddings as a JSON
+     * string.
+     *
+     * @param embeddingInputs a list of text inputs to generate embeddings for
+     * @return the generated embeddings as a JSON string
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("embedText")
