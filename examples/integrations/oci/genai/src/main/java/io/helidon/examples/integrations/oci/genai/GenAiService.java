@@ -28,7 +28,6 @@ import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 
-import com.oracle.bmc.Region;
 import com.oracle.bmc.generativeaiinference.GenerativeAiInferenceClient;
 import com.oracle.bmc.generativeaiinference.model.ChatContent;
 import com.oracle.bmc.generativeaiinference.model.ChatDetails;
@@ -62,7 +61,6 @@ public class GenAiService implements HttpService {
     GenAiService(GenerativeAiInferenceClient generativeAiInferenceClient,
                   Config config) {
         this.generativeAiInferenceClient = generativeAiInferenceClient;
-        generativeAiInferenceClient.setRegion(Region.valueOf(config.get("oci.genai.region").asString().get()));
         this.COMPARTMENT_ID = config.get("oci.genai.compartment_id").asString().get();
         this.CHAT_MODEL_ID = config.get("oci.genai.chat.model_id").asString().get();
         this.EMBED_MODEL_ID = config.get("oci.genai.embedding.model_id").asString().get();

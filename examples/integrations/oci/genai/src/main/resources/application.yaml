@@ -19,14 +19,12 @@ server:
   host: 0.0.0.0
 
 # OCI Auth related properties
-# https://helidon.io/docs/latest/apidocs/io.helidon.integrations.oci.sdk.cdi/io/helidon/integrations/oci/sdk/cdi/OciExtension.html
-# config,config-file,session-token-config-file,session-token-builder,instance-principals,resource-principal,oke-workload-identity
+# https://github.com/helidon-io/helidon/blob/main/integrations/oci/oci/README.md
 helidon.oci:
+  region: us-chicago-1
   authentication:
-    authentication-method: "auto"
-    allowed-authentication-methods: ["session-token"]
-    session-token: # same as config + session token and some additional configuration
-      session-token: "token"
+    config-file:
+      profile: "token"
 
 # OCI GenAI related properties
 oci:

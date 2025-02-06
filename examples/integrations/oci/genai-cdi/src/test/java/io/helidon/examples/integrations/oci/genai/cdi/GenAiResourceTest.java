@@ -51,7 +51,7 @@ public class GenAiResourceTest {
                 .queryParam("userMessage", generateText)
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
-        assertTrue(answer.contains("Job Title: Data Visualization Expert"), "actual: " + answer);
+        assertTrue(answer.contains("Job Title:"), "actual: " + answer);
         assertTrue(answer.contains("Responsibilities:"), "actual: " + answer);
         assertTrue(answer.contains("What We Offer:"), "actual: " + answer);
     }

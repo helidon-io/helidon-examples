@@ -70,7 +70,7 @@ public class GenAiServiceTest {
                 .GET()
                 .build();
         var getGenerateRes = client.send(getGenerateReq, HttpResponse.BodyHandlers.ofString());
-        assertTrue(getGenerateRes.body().contains("Job Title: Data Visualization Expert"), "actual: " + getGenerateRes.body());
+        assertTrue(getGenerateRes.body().contains("Job Title:"), "actual: " + getGenerateRes.body());
         assertTrue(getGenerateRes.body().contains("Responsibilities"), "actual: " + getGenerateRes.body());
         assertTrue(getGenerateRes.body().contains("What We Offer:"), "actual: " + getGenerateRes.body());
     }

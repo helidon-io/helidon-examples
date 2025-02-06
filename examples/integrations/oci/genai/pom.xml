@@ -35,7 +35,7 @@
     <description>Integration with OCI GenAI.</description>
 
     <properties>
-        <mainClass>io.helidon.examples.integrations.oci.atp.OciGenAiMain</mainClass>
+        <mainClass>io.helidon.examples.integrations.oci.genai.OciGenAiMain</mainClass>
     </properties>
 
     <dependencies>
