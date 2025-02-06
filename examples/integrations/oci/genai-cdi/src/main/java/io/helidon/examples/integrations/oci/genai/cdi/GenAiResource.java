@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,29 +21,34 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.oracle.bmc.Region;
 import com.oracle.bmc.generativeaiinference.GenerativeAiInferenceClient;
-import com.oracle.bmc.generativeaiinference.requests.ChatRequest;
-import com.oracle.bmc.generativeaiinference.responses.ChatResponse;
 import com.oracle.bmc.generativeaiinference.model.ChatContent;
 import com.oracle.bmc.generativeaiinference.model.ChatDetails;
 import com.oracle.bmc.generativeaiinference.model.ChatResult;
+import com.oracle.bmc.generativeaiinference.model.EmbedTextDetails;
+import com.oracle.bmc.generativeaiinference.model.EmbedTextResult;
 import com.oracle.bmc.generativeaiinference.model.GenericChatRequest;
 import com.oracle.bmc.generativeaiinference.model.Message;
 import com.oracle.bmc.generativeaiinference.model.OnDemandServingMode;
+import com.oracle.bmc.generativeaiinference.model.ServingMode;
 import com.oracle.bmc.generativeaiinference.model.TextContent;
 import com.oracle.bmc.generativeaiinference.model.UserMessage;
-import com.oracle.bmc.Region;
+import com.oracle.bmc.generativeaiinference.requests.ChatRequest;
+import com.oracle.bmc.generativeaiinference.requests.EmbedTextRequest;
+import com.oracle.bmc.generativeaiinference.responses.ChatResponse;
+import com.oracle.bmc.generativeaiinference.responses.EmbedTextResponse;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
- * JAX-RS resource - REST API for the Gen AI example.
+ * JAX-RS resource - REST API example of how to use OCI Generative AI Service.
  */
 @Path("/genai")
 public class GenAiResource {
@@ -52,12 +57,16 @@ public class GenAiResource {
     private final GenerativeAiInferenceClient generativeAiInferenceClient;
 
     @Inject
-    @ConfigProperty(name="oci.genai.compartment.id")
+    @ConfigProperty(name = "oci.genai.compartment.id")
     private String COMPARTMENT_ID;
 
     @Inject
-    @ConfigProperty(name="oci.genai.model.id")
-    private String MODEL_ID;
+    @ConfigProperty(name = "oci.genai.chat.model.id")
+    private String CHAT_MODEL_ID;
+
+    @Inject
+    @ConfigProperty(name = "oci.genai.embedding.model.id")
+    private String EMBED_MODEL_ID;
 
     @Inject
     GenAiResource(GenerativeAiInferenceClient generativeAiInferenceClient,
@@ -69,8 +78,9 @@ public class GenAiResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("chat")
-    public String chatModelAsk(@QueryParam("userMessage") String userMessage) {
-        LOGGER.log(Level.INFO, "UserMessage is: "  + userMessage);
+    public String chat(@QueryParam("userMessage") String userMessage) {
+        LOGGER.log(Level.INFO, "Start Running Chat Example ...");
+        LOGGER.log(Level.INFO, "UserMessage is: " + userMessage);
         ChatContent content = TextContent.builder()
                 .text(userMessage)
                 .build();
@@ -85,8 +95,11 @@ public class GenAiResource {
                 .messages(messages)
                 .isStream(false)
                 .build();
+        ServingMode servingmode = OnDemandServingMode.builder()
+                .modelId(CHAT_MODEL_ID)
+                .build();
         ChatDetails details = ChatDetails.builder()
-                .servingMode(OnDemandServingMode.builder().modelId(MODEL_ID).build())
+                .servingMode(servingmode)
                 .compartmentId(COMPARTMENT_ID)
                 .chatRequest(chatRequest)
                 .build();
@@ -95,8 +108,30 @@ public class GenAiResource {
                 .build();
         ChatResponse response = generativeAiInferenceClient.chat(request);
         ChatResult chatResult = response.getChatResult();
-        LOGGER.log(Level.INFO, "Chat Result is: "  + chatResult.toString());
+        LOGGER.log(Level.INFO, "Chat Result is: " + chatResult.toString());
+        generativeAiInferenceClient.close();
         return chatResult.toString();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("embedText")
+    public String embedText(@QueryParam("embeddingInputs") List<String> embeddingInputs) {
+        LOGGER.log(Level.INFO, "Start Running EmbedText Example ...");
+        LOGGER.log(Level.INFO, "Embedding Inputs is: " + embeddingInputs);
+        EmbedTextDetails embedTextDetails = EmbedTextDetails.builder()
+                .servingMode(OnDemandServingMode.builder().modelId(EMBED_MODEL_ID).build())
+                .compartmentId(COMPARTMENT_ID)
+                .inputs(embeddingInputs)
+                .build();
+        EmbedTextRequest embedTextRequest = EmbedTextRequest.builder()
+                .embedTextDetails(embedTextDetails)
+                .build();
+        EmbedTextResponse embedTextResponse = generativeAiInferenceClient.embedText(embedTextRequest);
+        EmbedTextResult embedTextResult = embedTextResponse.getEmbedTextResult();
+        LOGGER.log(Level.INFO, embedTextResult.toString());
+        generativeAiInferenceClient.close();
+        return embedTextResult.toString();
     }
 }
 
