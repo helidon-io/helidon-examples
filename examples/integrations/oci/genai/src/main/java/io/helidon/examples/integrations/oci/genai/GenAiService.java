@@ -55,8 +55,8 @@ public class GenAiService implements HttpService {
     private String compartmentId;
     private String chatModelId;
     private String embedModelId;
-    private static final String chatQueryParam = "userMessage";
-    private static final String embeddingQueryParam = "embeddingInputs";
+    private static final String CHAT_QUERY_PARAM = "userMessage";
+    private static final String EMBEDDING_QUERY_PARAM = "embeddingInputs";
 
     GenAiService(GenerativeAiInferenceClient generativeAiInferenceClient,
                   Config config) {
@@ -82,7 +82,7 @@ public class GenAiService implements HttpService {
      * @param res the outgoing HTTP response to send back to the client
      */
     public void chat(ServerRequest req, ServerResponse res) {
-        String userMessage = req.query().get(chatQueryParam);
+        String userMessage = req.query().get(CHAT_QUERY_PARAM);
         LOGGER.log(Level.INFO, "Start Running Chat Example ...");
         LOGGER.log(Level.INFO, "UserMessage is: "  + userMessage);
         ChatContent content = TextContent.builder()
@@ -128,7 +128,7 @@ public class GenAiService implements HttpService {
      * @param res the outgoing HTTP response to send back to the client
      */
     public void embedText(ServerRequest req, ServerResponse res) {
-        String embeddingInputs = req.query().get(embeddingQueryParam);
+        String embeddingInputs = req.query().get(EMBEDDING_QUERY_PARAM);
         List<String> embeddingInputsList = Arrays.asList(embeddingInputs.split(","));
         LOGGER.log(Level.INFO, "Start Running EmbedText Example ...");
         LOGGER.log(Level.INFO, "Embedding Inputs is: " + embeddingInputs);

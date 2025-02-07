@@ -20,14 +20,11 @@ import java.io.IOException;
 
 import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
-import io.helidon.service.registry.GlobalServiceRegistry;
-import io.helidon.service.registry.ServiceRegistry;
 import io.helidon.webserver.WebServer;
 
-import com.oracle.bmc.Region;
 import com.oracle.bmc.ConfigFileReader;
+import com.oracle.bmc.Region;
 import com.oracle.bmc.auth.AuthenticationDetailsProvider;
-import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider;
 import com.oracle.bmc.auth.SessionTokenAuthenticationDetailsProvider;
 import com.oracle.bmc.generativeaiinference.GenerativeAiInferenceClient;
 import com.oracle.bmc.model.BmcException;
@@ -61,8 +58,10 @@ public final class OciGenAiMain {
         //registry.get(SessionTokenAuthenticationDetailsProvider.class) doens't work
         //BasicAuthenticationDetailsProvider authProvider = registry.get(BasicAuthenticationDetailsProvider.class);
         //assertThat(provider, instanceOf(SessionTokenAuthenticationDetailsProvider.class));
-        //SessionTokenAuthenticationDetailsProvider sessionTokenAuthenticationDetailsProvider = (SessionTokenAuthenticationDetailsProvider) provider;
-        AuthenticationDetailsProvider authProvider = new SessionTokenAuthenticationDetailsProvider(ConfigFileReader.DEFAULT_FILE_PATH,"token");
+        //SessionTokenAuthenticationDetailsProvider sessionTokenAuthenticationDetailsProvider
+        // = (SessionTokenAuthenticationDetailsProvider) provider;
+        AuthenticationDetailsProvider authProvider = new SessionTokenAuthenticationDetailsProvider(
+                ConfigFileReader.DEFAULT_FILE_PATH, "token");
         GenerativeAiInferenceClient generativeAiInferenceClient = GenerativeAiInferenceClient.builder()
                 .region(Region.valueOf(config.get("oci.genai.region").asString().get()))
                 .build(authProvider);
