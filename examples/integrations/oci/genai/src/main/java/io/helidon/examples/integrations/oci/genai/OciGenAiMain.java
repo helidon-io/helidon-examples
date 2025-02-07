@@ -25,7 +25,9 @@ import io.helidon.service.registry.ServiceRegistry;
 import io.helidon.webserver.WebServer;
 
 import com.oracle.bmc.Region;
+import com.oracle.bmc.ConfigFileReader;
 import com.oracle.bmc.auth.AuthenticationDetailsProvider;
+import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider;
 import com.oracle.bmc.auth.SessionTokenAuthenticationDetailsProvider;
 import com.oracle.bmc.generativeaiinference.GenerativeAiInferenceClient;
 import com.oracle.bmc.model.BmcException;
@@ -55,13 +57,15 @@ public final class OciGenAiMain {
         Config.global(config);
 
         // Initialize GenAI client based on OCI Auth as configured in config system
-        ServiceRegistry registry = GlobalServiceRegistry.registry();
-        AuthenticationDetailsProvider authProvider = registry.get(SessionTokenAuthenticationDetailsProvider.class);
-        // new SessionTokenAuthenticationDetailsProvider(ConfigFileReader.DEFAULT_FILE_PATH,"helidonocidev");
+        //ServiceRegistry registry = GlobalServiceRegistry.registry();
+        //registry.get(SessionTokenAuthenticationDetailsProvider.class) doens't work
+        //BasicAuthenticationDetailsProvider authProvider = registry.get(BasicAuthenticationDetailsProvider.class);
+        //assertThat(provider, instanceOf(SessionTokenAuthenticationDetailsProvider.class));
+        //SessionTokenAuthenticationDetailsProvider sessionTokenAuthenticationDetailsProvider = (SessionTokenAuthenticationDetailsProvider) provider;
+        AuthenticationDetailsProvider authProvider = new SessionTokenAuthenticationDetailsProvider(ConfigFileReader.DEFAULT_FILE_PATH,"token");
         GenerativeAiInferenceClient generativeAiInferenceClient = GenerativeAiInferenceClient.builder()
                 .region(Region.valueOf(config.get("oci.genai.region").asString().get()))
                 .build(authProvider);
-        System.out.println("********* generativeAiInferenceClient *********" + generativeAiInferenceClient.getEndpoint());
 
         // Prepare routing for the server
         WebServer server = WebServer.builder()

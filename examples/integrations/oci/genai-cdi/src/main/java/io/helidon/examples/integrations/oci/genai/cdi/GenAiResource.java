@@ -57,15 +57,15 @@ public class GenAiResource {
 
     @Inject
     @ConfigProperty(name = "oci.genai.compartment.id")
-    private String COMPARTMENT_ID;
+    private String compartmentId;
 
     @Inject
     @ConfigProperty(name = "oci.genai.chat.model.id")
-    private String CHAT_MODEL_ID;
+    private String chatModelId;
 
     @Inject
     @ConfigProperty(name = "oci.genai.embedding.model.id")
-    private String EMBED_MODEL_ID;
+    private String embedModelId;
 
     @Inject
     GenAiResource(GenerativeAiInferenceClient generativeAiInferenceClient,
@@ -103,11 +103,11 @@ public class GenAiResource {
                 .isStream(false)
                 .build();
         ServingMode servingmode = OnDemandServingMode.builder()
-                .modelId(CHAT_MODEL_ID)
+                .modelId(chatModelId)
                 .build();
         ChatDetails details = ChatDetails.builder()
                 .servingMode(servingmode)
-                .compartmentId(COMPARTMENT_ID)
+                .compartmentId(compartmentId)
                 .chatRequest(chatRequest)
                 .build();
         ChatRequest request = ChatRequest.builder()
@@ -135,8 +135,8 @@ public class GenAiResource {
         LOGGER.log(Level.INFO, "Start Running EmbedText Example ...");
         LOGGER.log(Level.INFO, "Embedding Inputs is: " + embeddingInputs);
         EmbedTextDetails embedTextDetails = EmbedTextDetails.builder()
-                .servingMode(OnDemandServingMode.builder().modelId(EMBED_MODEL_ID).build())
-                .compartmentId(COMPARTMENT_ID)
+                .servingMode(OnDemandServingMode.builder().modelId(embedModelId).build())
+                .compartmentId(compartmentId)
                 .inputs(embeddingInputs)
                 .build();
         EmbedTextRequest embedTextRequest = EmbedTextRequest.builder()

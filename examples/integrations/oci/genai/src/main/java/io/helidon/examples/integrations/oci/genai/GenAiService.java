@@ -52,24 +52,24 @@ public class GenAiService implements HttpService {
     private static final Logger LOGGER = Logger.getLogger(GenAiService.class.getName());
 
     private final GenerativeAiInferenceClient generativeAiInferenceClient;
-    private String COMPARTMENT_ID;
-    private String CHAT_MODEL_ID;
-    private String EMBED_MODEL_ID;
-    private static final String USER_MESSAGE_PARAM = "userMessage";
-    private static final String EMBEDDING_INPUTS_PARAM = "embeddingInputs";
+    private String compartmentId;
+    private String chatModelId;
+    private String embedModelId;
+    private static final String chatQueryParam = "userMessage";
+    private static final String embeddingQueryParam = "embeddingInputs";
 
     GenAiService(GenerativeAiInferenceClient generativeAiInferenceClient,
                   Config config) {
         this.generativeAiInferenceClient = generativeAiInferenceClient;
-        this.COMPARTMENT_ID = config.get("oci.genai.compartment_id").asString().get();
-        this.CHAT_MODEL_ID = config.get("oci.genai.chat.model_id").asString().get();
-        this.EMBED_MODEL_ID = config.get("oci.genai.embedding.model_id").asString().get();
+        this.compartmentId = config.get("oci.genai.compartment_id").asString().get();
+        this.chatModelId = config.get("oci.genai.chat.model_id").asString().get();
+        this.embedModelId = config.get("oci.genai.embedding.model_id").asString().get();
     }
 
     @Override
     public void routing(HttpRules rules) {
-        rules.get("/chat/{" + USER_MESSAGE_PARAM + "}", this::chat);
-        rules.get("/embedText/{" + EMBEDDING_INPUTS_PARAM + "}", this::embedText);
+        rules.get("/chat", this::chat);
+        rules.get("/embedText", this::embedText);
     }
 
     /**
@@ -82,7 +82,7 @@ public class GenAiService implements HttpService {
      * @param res the outgoing HTTP response to send back to the client
      */
     public void chat(ServerRequest req, ServerResponse res) {
-        String userMessage = req.path().pathParameters().get(USER_MESSAGE_PARAM);
+        String userMessage = req.query().get(chatQueryParam);
         LOGGER.log(Level.INFO, "Start Running Chat Example ...");
         LOGGER.log(Level.INFO, "UserMessage is: "  + userMessage);
         ChatContent content = TextContent.builder()
@@ -100,11 +100,11 @@ public class GenAiService implements HttpService {
                 .isStream(false)
                 .build();
         ServingMode servingmode = OnDemandServingMode.builder()
-                .modelId(CHAT_MODEL_ID)
+                .modelId(chatModelId)
                 .build();
         ChatDetails details = ChatDetails.builder()
                 .servingMode(servingmode)
-                .compartmentId(COMPARTMENT_ID)
+                .compartmentId(compartmentId)
                 .chatRequest(chatRequest)
                 .build();
         ChatRequest request = ChatRequest.builder()
@@ -128,13 +128,13 @@ public class GenAiService implements HttpService {
      * @param res the outgoing HTTP response to send back to the client
      */
     public void embedText(ServerRequest req, ServerResponse res) {
-        String embeddingInputs = req.path().pathParameters().get(EMBEDDING_INPUTS_PARAM);
+        String embeddingInputs = req.query().get(embeddingQueryParam);
         List<String> embeddingInputsList = Arrays.asList(embeddingInputs.split(","));
         LOGGER.log(Level.INFO, "Start Running EmbedText Example ...");
         LOGGER.log(Level.INFO, "Embedding Inputs is: " + embeddingInputs);
         EmbedTextDetails embedTextDetails = EmbedTextDetails.builder()
-                .servingMode(OnDemandServingMode.builder().modelId(EMBED_MODEL_ID).build())
-                .compartmentId(COMPARTMENT_ID)
+                .servingMode(OnDemandServingMode.builder().modelId(embedModelId).build())
+                .compartmentId(compartmentId)
                 .inputs(embeddingInputsList)
                 .build();
         EmbedTextRequest embedTextRequest = EmbedTextRequest.builder()
