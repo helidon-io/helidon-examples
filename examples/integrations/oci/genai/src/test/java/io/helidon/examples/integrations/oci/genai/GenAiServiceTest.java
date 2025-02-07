@@ -24,46 +24,37 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
-import io.helidon.http.Status;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.testing.junit5.ServerTest;
-import io.helidon.webclient.http1.Http1Client;
-import io.helidon.webclient.http1.Http1ClientResponse;
 
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ServerTest
-public class OciGenAiMainTest {
+public class GenAiServiceTest {
 
-    private static Http1Client client;
-    //private final URI baseUri;
+    private static HttpClient client;
+    private final URI baseUri;
 
-    protected OciGenAiMainTest(Http1Client client) {
-        this.client = client;
-//        baseUri = URI.create("http://localhost:" + server.port());
-//        client = HttpClient.newBuilder()
-//                .version(HttpClient.Version.HTTP_1_1)
-//                .connectTimeout(Duration.ofSeconds(15))
-//                .build();
+    protected GenAiServiceTest(WebServer server) {
+        baseUri = URI.create("http://localhost:" + server.port());
+        client = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .connectTimeout(Duration.ofSeconds(15))
+                .build();
     }
 
     @Test
     public void testChat() throws Exception {
         String userMessage = "Which are the most used Large Language Models?";
         String encodedUserMessage = URLEncoder.encode(userMessage, StandardCharsets.UTF_8);
-        Http1ClientResponse response = client.get("/genai/chat?userMessage=" + encodedUserMessage)
-                .request();
-        assertThat(response.status(), is(Status.OK_200));
-//        HttpRequest getChatReq = HttpRequest.newBuilder()
-//                .uri(baseUri.resolve("/genai/chat?userMessage=" + encodedUserMessage))
-//                .GET()
-//                .build();
-//        var getChatRes = client.send(getChatReq, HttpResponse.BodyHandlers.ofString());
-//        assertTrue(getChatRes.body().contains("BERT"), "actual: " + getChatRes.body());
+        HttpRequest getChatReq = HttpRequest.newBuilder()
+                .uri(baseUri.resolve("/genai/chat?userMessage=" + encodedUserMessage))
+                .GET()
+                .build();
+        var getChatRes = client.send(getChatReq, HttpResponse.BodyHandlers.ofString());
+        assertTrue(getChatRes.body().contains("BERT"), "actual: " + getChatRes.body());
     }
 
     //    @Test
