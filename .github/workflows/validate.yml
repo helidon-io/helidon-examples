@@ -44,6 +44,11 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-20.04
     steps:
+      - name: Free disk space
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/share/powershell
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
