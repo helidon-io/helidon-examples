@@ -16,17 +16,11 @@
 
 package io.helidon.examples.integrations.oci.genai;
 
-import java.io.IOException;
-
 import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
+import io.helidon.webserver.http.HttpRouting;
 
-import com.oracle.bmc.ConfigFileReader;
-import com.oracle.bmc.Region;
-import com.oracle.bmc.auth.AuthenticationDetailsProvider;
-import com.oracle.bmc.auth.SessionTokenAuthenticationDetailsProvider;
-import com.oracle.bmc.generativeaiinference.GenerativeAiInferenceClient;
 import com.oracle.bmc.model.BmcException;
 
 /**
@@ -45,7 +39,7 @@ public final class OciGenAiMain {
      *
      * @param args command line arguments.
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         // load logging configuration
         LogConfig.configureRuntime();
 
@@ -53,31 +47,24 @@ public final class OciGenAiMain {
         Config config = Config.create();
         Config.global(config);
 
-        // Initialize GenAI client based on OCI Auth as configured in config system
-        //ServiceRegistry registry = GlobalServiceRegistry.registry();
-        //registry.get(SessionTokenAuthenticationDetailsProvider.class) doens't work
-        //BasicAuthenticationDetailsProvider authProvider = registry.get(BasicAuthenticationDetailsProvider.class);
-        //assertThat(provider, instanceOf(SessionTokenAuthenticationDetailsProvider.class));
-        //SessionTokenAuthenticationDetailsProvider sessionTokenAuthenticationDetailsProvider
-        // = (SessionTokenAuthenticationDetailsProvider) provider;
-        AuthenticationDetailsProvider authProvider = new SessionTokenAuthenticationDetailsProvider(
-                ConfigFileReader.DEFAULT_FILE_PATH, "token");
-        GenerativeAiInferenceClient generativeAiInferenceClient = GenerativeAiInferenceClient.builder()
-                .region(Region.valueOf(config.get("oci.genai.region").asString().get()))
-                .build(authProvider);
-
         // Prepare routing for the server
         WebServer server = WebServer.builder()
                 .config(config.get("server"))
-                .routing(routing -> routing
-                        .register("/genai", new GenAiService(generativeAiInferenceClient, config))
-                        // OCI SDK error handling
-                        .error(BmcException.class, (req, res, ex) ->
-                                res.status(ex.getStatusCode())
-                                        .send(ex.getMessage())))
+                .routing(OciGenAiMain::routing)
                 .build()
                 .start();
 
         System.out.println("WEB server is up! http://localhost:" + server.port() + "/genai");
+    }
+
+    /**
+     * Updates HTTP Routing and registers observe providers.
+     */
+    static void routing(HttpRouting.Builder routing) {
+        routing.register("/genai", new GenAiService())
+                // OCI SDK error handling
+                .error(BmcException.class, (req, res, ex) ->
+                        res.status(ex.getStatusCode())
+                                .send(ex.getMessage()));
     }
 }

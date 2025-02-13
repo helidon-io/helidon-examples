@@ -18,26 +18,18 @@ server:
   port: 8080
   host: 0.0.0.0
 
-# OCI Auth related properties
-# https://github.com/helidon-io/helidon/blob/main/integrations/oci/oci/README.md
-#helidon.oci:
-#  region: us-chicago-1
-#  authentication-method: "auto"
-#  allowed-authentication-methods: [ "session-token" ]
-#  authentication:
-#    config-file:
-#      profile: token
-#      path: /Users/arjdesai/.oci/config
-
-# OCI GenAI related properties
 oci:
+  # OCI Auth related properties
+  config:
+    profile: <name of the session-token auth profile in your default oci configuration file>
+  # OCI GenAI related properties
   genai:
     # https://docs.oracle.com/en-us/iaas/tools/java/3.53.1/com/oracle/bmc/Region.html
     # ENDPOINT will be set as: "https://inference.generativeai.%s.oci.oraclecloud.com"
-    region: us-chicago-1
+    region: <your subscribed region e.g. us-chicago-1>
     # Please use the compartmentId that has policies grant permissions for using Generative AI Service
-    compartment_id: ocid1.tenancy.oc1..aaaaaaaajvzlykcfhewzdlwnphkuowjuobt53bi5eyhok4pazitzd4w7t4eq
-    # meta.llama-3.1-70b-instruct
-    chat.model_id: ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceyaiir6nnhmlgwvh37dr2mvragxzszqmz3hok52pcgmpqta
-    # cohere.embed-english-light-v3.0
-    embedding.model_id: ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceya6fw6mqgi2mcmehwvd7h2ysqe25rbhprgclypiyh46wra
+    compartment_id: <ocid of your compartment where model is running>
+    # meta.llama-3.1-70b-instruct is ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceyaiir6nnhmlgwvh37dr2mvragxzszqmz3hok52pcgmpqta
+    chat.model_id: <ocid of LLM that you want to use>
+    # cohere.embed-english-light-v3.0 is ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceya6fw6mqgi2mcmehwvd7h2ysqe25rbhprgclypiyh46wra
+    embedding.model_id: <ocid of embedding model that you want to use>

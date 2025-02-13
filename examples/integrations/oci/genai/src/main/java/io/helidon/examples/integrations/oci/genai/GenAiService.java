@@ -16,6 +16,7 @@
 
 package io.helidon.examples.integrations.oci.genai;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,10 @@ import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 
+import com.oracle.bmc.ConfigFileReader;
+import com.oracle.bmc.Region;
+import com.oracle.bmc.auth.AuthenticationDetailsProvider;
+import com.oracle.bmc.auth.SessionTokenAuthenticationDetailsProvider;
 import com.oracle.bmc.generativeaiinference.GenerativeAiInferenceClient;
 import com.oracle.bmc.generativeaiinference.model.ChatContent;
 import com.oracle.bmc.generativeaiinference.model.ChatDetails;
@@ -50,17 +55,25 @@ import com.oracle.bmc.generativeaiinference.responses.EmbedTextResponse;
  */
 public class GenAiService implements HttpService {
     private static final Logger LOGGER = Logger.getLogger(GenAiService.class.getName());
-
-    private final GenerativeAiInferenceClient generativeAiInferenceClient;
-    private String compartmentId;
-    private String chatModelId;
-    private String embedModelId;
     private static final String CHAT_QUERY_PARAM = "userMessage";
     private static final String EMBEDDING_QUERY_PARAM = "embeddingInputs";
+    private final GenerativeAiInferenceClient generativeAiInferenceClient;
+    private final String compartmentId;
+    private final String chatModelId;
+    private final String embedModelId;
 
-    GenAiService(GenerativeAiInferenceClient generativeAiInferenceClient,
-                  Config config) {
-        this.generativeAiInferenceClient = generativeAiInferenceClient;
+    GenAiService() {
+        Config config = Config.global();
+        // Initialize GenAI client based on OCI Auth as configured in config system
+        try {
+            AuthenticationDetailsProvider authProvider = new SessionTokenAuthenticationDetailsProvider(
+                    ConfigFileReader.DEFAULT_FILE_PATH, config.get("oci.config.profile").asString().get());
+            this.generativeAiInferenceClient = GenerativeAiInferenceClient.builder()
+                    .region(Region.valueOf(config.get("oci.genai.region").asString().get()))
+                    .build(authProvider);
+        } catch (IOException ioe) {
+            throw new RuntimeException("Can't create GenAIService as OCI Auth Failed" + ioe.getMessage());
+        }
         this.compartmentId = config.get("oci.genai.compartment_id").asString().get();
         this.chatModelId = config.get("oci.genai.chat.model_id").asString().get();
         this.embedModelId = config.get("oci.genai.embedding.model_id").asString().get();
@@ -84,7 +97,7 @@ public class GenAiService implements HttpService {
     public void chat(ServerRequest req, ServerResponse res) {
         String userMessage = req.query().get(CHAT_QUERY_PARAM);
         LOGGER.log(Level.INFO, "Start Running Chat Example ...");
-        LOGGER.log(Level.INFO, "UserMessage is: "  + userMessage);
+        LOGGER.log(Level.INFO, "UserMessage is: " + userMessage);
         ChatContent content = TextContent.builder()
                 .text(userMessage)
                 .build();
@@ -112,13 +125,13 @@ public class GenAiService implements HttpService {
                 .build();
         ChatResponse response = generativeAiInferenceClient.chat(request);
         ChatResult chatResult = response.getChatResult();
-        LOGGER.log(Level.INFO, "Chat Result is: "  + chatResult.toString());
-        generativeAiInferenceClient.close();
+        LOGGER.log(Level.INFO, "Chat Result is: " + chatResult.toString());
         res.send(chatResult.toString());
     }
 
     /**
-     * Handles an HTTP GET request to generate embeddings for a given set of text inputs using the Oracle Cloud Infrastructure Generative AI service.
+     * Handles an HTTP GET request to generate embeddings for a given set of text inputs using the Oracle Cloud Infrastructure
+     * Generative AI service.
      *
      * This method takes a comma-separated string of text inputs as a path parameter, splits them into individual inputs,
      * and sends them to the Generative AI service for embedding generation. It then retrieves the generated embeddings
@@ -143,7 +156,6 @@ public class GenAiService implements HttpService {
         EmbedTextResponse embedTextResponse = generativeAiInferenceClient.embedText(embedTextRequest);
         EmbedTextResult embedTextResult = embedTextResponse.getEmbedTextResult();
         LOGGER.log(Level.INFO, embedTextResult.toString());
-        generativeAiInferenceClient.close();
         res.send(embedTextResult.toString());
     }
 }
