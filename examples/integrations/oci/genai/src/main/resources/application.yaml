@@ -29,7 +29,9 @@ oci:
     region: <your subscribed region e.g. us-chicago-1>
     # Please use the compartmentId that has policies grant permissions for using Generative AI Service
     compartment_id: <ocid of your compartment where model is running>
-    # meta.llama-3.1-70b-instruct is ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceyaiir6nnhmlgwvh37dr2mvragxzszqmz3hok52pcgmpqta
+    # For meta.llama-3.1-70b-instruct OCID is
+    # ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceyaiir6nnhmlgwvh37dr2mvragxzszqmz3hok52pcgmpqta
     chat.model_id: <ocid of LLM that you want to use>
-    # cohere.embed-english-light-v3.0 is ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceya6fw6mqgi2mcmehwvd7h2ysqe25rbhprgclypiyh46wra
+    # For cohere.embed-english-light-v3.0 OCID is
+    # ocid1.generativeaimodel.oc1.us-chicago-1.amaaaaaask7dceya6fw6mqgi2mcmehwvd7h2ysqe25rbhprgclypiyh46wra
     embedding.model_id: <ocid of embedding model that you want to use>
