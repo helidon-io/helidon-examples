@@ -27,7 +27,7 @@
 
     <properties>
         <helidon.version>4.2.0-SNAPSHOT</helidon.version>
-        <mainClass>io.helidon.microprofile.cdi.Main</mainClass>
+        <mainClass>io.helidon.Main</mainClass>
 
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
