@@ -42,7 +42,7 @@ concurrency:
 jobs:
   prime-build:
     timeout-minutes: 30
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -67,7 +67,7 @@ jobs:
   copyright:
     needs: prime-build
     timeout-minutes: 10
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -83,7 +83,7 @@ jobs:
   checkstyle:
     needs: prime-build
     timeout-minutes: 10
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Download Maven Artifacts
         uses: actions/download-artifact@v4
@@ -103,7 +103,7 @@ jobs:
         run: etc/scripts/checkstyle.sh
   shellcheck:
     timeout-minutes: 5
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -113,7 +113,7 @@ jobs:
   spotbugs:
     needs: prime-build
     timeout-minutes: 10
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Download Maven Artifacts
         uses: actions/download-artifact@v4
@@ -136,7 +136,7 @@ jobs:
     timeout-minutes: 20
     strategy:
       matrix:
-        os: [ ubuntu-20.04 ]
+        os: [ ubuntu-22.04 ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Download Maven Artifacts
