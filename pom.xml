@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2016, 2024 Oracle and/or its affiliates.
+    Copyright (c) 2016, 2025 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
     <parent>
         <groupId>io.helidon</groupId>
         <artifactId>helidon-dependencies</artifactId>
-        <version>3.2.12-SNAPSHOT</version>
+        <version>3.2.13-SNAPSHOT</version>
         <relativePath></relativePath>
     </parent>
     <groupId>io.helidon.examples</groupId>
@@ -61,7 +61,7 @@
         <version.java>17</version.java>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <helidon.version>3.2.12-SNAPSHOT</helidon.version>
+        <helidon.version>3.2.13-SNAPSHOT</helidon.version>
 
         <spotbugs.skip>false</spotbugs.skip>
         <spotbugs.threshold>Medium</spotbugs.threshold>
@@ -87,7 +87,7 @@
         <version.plugin.buildnumber>1.4</version.plugin.buildnumber>
         <version.plugin.spotbugs>4.7.3.4</version.plugin.spotbugs>
         <version.plugin.findsecbugs>1.12.0</version.plugin.findsecbugs>
-        <version.plugin.dependency-check>9.0.9</version.plugin.dependency-check>
+        <version.plugin.dependency-check>12.1.0</version.plugin.dependency-check>
     </properties>
 
     <modules>
