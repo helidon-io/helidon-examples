@@ -25,7 +25,6 @@
         <artifactId>helidon-example-code-project</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <groupId>io.helidon.examples</groupId>
     <artifactId>helidon-examples-project</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples</name>
@@ -47,6 +46,7 @@
         <module>employee-app</module>
         <module>graphql</module>
         <module>health</module>
+        <module>inject</module>
         <module>integrations</module>
         <module>jbatch</module>
         <module>logging</module>
@@ -72,11 +72,11 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
                     <configuration>
+                        <!--suppress MavenModelInspection -->
                         <mainClass>${mainClass}</mainClass>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
-
 </project>
