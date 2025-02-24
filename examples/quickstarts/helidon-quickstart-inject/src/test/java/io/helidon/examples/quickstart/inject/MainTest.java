@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2025 Oracle and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.helidon.examples.quickstart.inject;
+
+import io.helidon.http.Status;
+import io.helidon.service.registry.GlobalServiceRegistry;
+import io.helidon.testing.junit5.Testing;
+import io.helidon.webclient.http1.Http1Client;
+import io.helidon.webclient.http1.Http1ClientResponse;
+
+import jakarta.json.JsonObject;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+/**
+ * There is currently no test annotation available for
+ */
+// this makes sure we have a service registry dedicated to this test
+// Helidon currently does not have a server test annotation that works with service registry, some steps are manual for now
+@Testing.Test
+class MainTest {
+    private static Http1Client client;
+
+    @BeforeAll
+    static void setup() {
+        // invoke post construct on startup service, to make sure the server starts
+        // if more than one service has a RunLevel, you can also lookup based on the run levels
+        // no need for @AfterAll, as the registry will be shut down thanks to the Testing.Test annotation
+        StartupService startupService = GlobalServiceRegistry.registry()
+                .get(StartupService.class);
+
+        // and create a client
+        client = Http1Client.builder()
+                .baseUri("http://localhost:" + startupService.serverPort())
+                .build();
+    }
+
+    @Test
+    void testRootRoute() {
+        try (Http1ClientResponse response = client.get("/greet").request()) {
+            assertThat(response.status(), is(Status.OK_200));
+            JsonObject json = response.as(JsonObject.class);
+            assertThat(json.getString("message"), is("Hello World!"));
+        }
+    }
+
+    @Test
+    void testHealthObserver() {
+        try (Http1ClientResponse response = client.get("/observe/health").request()) {
+            assertThat(response.status(), is(Status.NO_CONTENT_204));
+        }
+    }
+
+    @Test
+    void testDeadlockHealthCheck() {
+        try (Http1ClientResponse response = client.get("/observe/health/live/deadlock").request()) {
+            assertThat(response.status(), is(Status.NO_CONTENT_204));
+        }
+    }
+
+    @Test
+    void testMetricsObserver() {
+        try (Http1ClientResponse response = client.get("/observe/metrics").request()) {
+            assertThat(response.status(), is(Status.OK_200));
+        }
+    }
+
+}
