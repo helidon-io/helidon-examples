@@ -32,6 +32,7 @@ import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 @ApplicationScoped
 public class MenuItemsIngestor {
@@ -40,10 +41,11 @@ public class MenuItemsIngestor {
     private final MenuItemsService menuItemsService;
 
     @Produces
-    private final EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
+    final EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
 
     @Produces
-    private final EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+    @Named("EmbeddingStore")
+    final EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
 
     @Inject
     MenuItemsIngestor(MenuItemsService menuItemsService) {

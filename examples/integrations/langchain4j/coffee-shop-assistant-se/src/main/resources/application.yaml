@@ -28,7 +28,6 @@ langchain4j:
       enabled: true
       max-results: 10
       min-score: 0.6
-      embedding-model: "@default"
-      embedding-store: "@default"
+      embedding-store: "EmbeddingStore"
 app:
   menu-items: "data/menu.json"

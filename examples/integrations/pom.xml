@@ -33,6 +33,7 @@
 
     <modules>
         <module>cdi</module>
+        <module>langchain4j</module>
         <module>micronaut</module>
         <module>neo4j</module>
         <module>micrometer</module>

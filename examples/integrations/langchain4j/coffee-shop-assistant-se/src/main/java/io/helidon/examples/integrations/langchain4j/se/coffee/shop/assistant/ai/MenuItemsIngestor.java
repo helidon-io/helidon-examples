@@ -38,7 +38,7 @@ public class MenuItemsIngestor {
 
     @Service.Inject
     MenuItemsIngestor(Config config,
-                      EmbeddingStore<TextSegment> embeddingStore,
+                      @Service.Named("EmbeddingStore") EmbeddingStore<TextSegment> embeddingStore,
                       EmbeddingModel embeddingModel,
                       MenuItemsService menuItemsService) {
         this.embeddingStore = embeddingStore;

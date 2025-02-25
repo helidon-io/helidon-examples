@@ -17,6 +17,7 @@ package io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.ai
 
 import java.util.function.Supplier;
 
+import io.helidon.integrations.langchain4j.Ai;
 import io.helidon.service.registry.Service;
 
 import dev.langchain4j.data.segment.TextSegment;
@@ -27,6 +28,7 @@ import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
  * Creates EmbeddingStore as a service
  */
 @Service.Singleton
+@Service.Named("EmbeddingStore")
 public class EmbeddingStoreFactory implements Supplier<EmbeddingStore<TextSegment>> {
     @Override
     public EmbeddingStore<TextSegment> get() {
