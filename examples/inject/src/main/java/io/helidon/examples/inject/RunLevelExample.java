@@ -26,7 +26,7 @@ import io.helidon.service.registry.ServiceRegistry;
 import io.helidon.service.registry.ServiceRegistryManager;
 
 /**
- * A example that illustrates {@link Service.RunLevel}.
+ * An example that illustrates {@link Service.RunLevel}.
  */
 class RunLevelExample {
 
@@ -93,8 +93,12 @@ class RunLevelExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        startRunLevels(registry);
-        STARTUP_EVENTS.forEach(System.out::println);
+        var manager = ServiceRegistryManager.create();
+        try {
+            startRunLevels(manager.registry());
+            STARTUP_EVENTS.forEach(System.out::println);
+        } finally {
+            manager.shutdown();
+        }
     }
 }

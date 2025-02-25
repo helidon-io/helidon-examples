@@ -16,7 +16,7 @@
 package io.helidon.examples.inject;
 
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that illustrates usages of {@link Service.Qualifier}.
@@ -92,9 +92,8 @@ class CustomQualifierExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var blueDrawing = registry.get(BlueDrawing.class);
-        var greenDrawing = registry.get(GreenDrawing.class);
+        var blueDrawing = Services.get(BlueDrawing.class);
+        var greenDrawing = Services.get(GreenDrawing.class);
 
         System.out.printf("blue drawing: %s%n", blueDrawing.circle().name());
         System.out.printf("green drawing: %s%n", greenDrawing.circle().name());

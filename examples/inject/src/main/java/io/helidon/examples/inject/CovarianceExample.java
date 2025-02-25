@@ -18,7 +18,7 @@ package io.helidon.examples.inject;
 import java.util.List;
 
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that demonstrates covariant lookups.
@@ -61,8 +61,7 @@ class CovarianceExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var shelter = registry.get(Shelter.class);
+        var shelter = Services.get(Shelter.class);
 
         System.out.println("All pets:");
         shelter.all.stream().map(Pet::name).forEach(System.out::println);

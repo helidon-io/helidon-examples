@@ -18,7 +18,7 @@ package io.helidon.examples.inject;
 import java.util.List;
 
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that demonstrates using generics.
@@ -80,8 +80,7 @@ class GenericsExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var myService = registry.get(MyService.class);
+        var myService = Services.get(MyService.class);
 
         System.out.println(myService.blueCircle().name());
         System.out.println(myService.greenCircle().name());

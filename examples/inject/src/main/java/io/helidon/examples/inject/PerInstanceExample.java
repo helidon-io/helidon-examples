@@ -16,7 +16,7 @@
 package io.helidon.examples.inject;
 
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that illustrates usages of {@link Service.PerInstance}.
@@ -81,9 +81,7 @@ class PerInstanceExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-
-        var circles = registry.get(Circles.class);
+        var circles = Services.get(Circles.class);
 
         System.out.printf("blue circle name: %s%n", circles.blue().name());
         System.out.printf("blue circle color hex-code: %s%n", circles.blue().color().hexCode());

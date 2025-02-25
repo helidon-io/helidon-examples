@@ -23,7 +23,7 @@ import io.helidon.common.GenericType;
 import io.helidon.service.registry.Lookup;
 import io.helidon.service.registry.Qualifier;
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that illustrates the various factories.
@@ -145,10 +145,9 @@ class FactoryExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var myService = registry.get(MyService.class);
-        var colors = registry.get(Colors.class);
-        var systemInfo = registry.get(SystemInfo.class);
+        var myService = Services.get(MyService.class);
+        var colors = Services.get(Colors.class);
+        var systemInfo = Services.get(SystemInfo.class);
 
         System.out.printf("%s%n", myService);
         System.out.printf("%s%n", colors);

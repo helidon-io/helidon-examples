@@ -17,7 +17,7 @@ package io.helidon.examples.inject;
 
 import io.helidon.common.Weight;
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that illustrates usages of {@link Weight} to order services.
@@ -60,8 +60,7 @@ class WeightedExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var color = registry.get(Color.class);
+        var color = Services.get(Color.class);
 
         System.out.printf("color name: %s%n", color.name());
     }

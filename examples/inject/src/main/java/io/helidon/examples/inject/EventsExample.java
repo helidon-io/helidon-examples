@@ -20,7 +20,7 @@ import java.util.List;
 
 import io.helidon.service.registry.Event;
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that illustrates usages of {@link Event}.
@@ -132,13 +132,12 @@ class EventsExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var myEmitter = registry.get(MyEmitter.class);
-        var myObserver = registry.get(MyObserver.class);
-        var myIdEmitter = registry.get(MyIdEmitter.class);
-        var myIdObserver = registry.get(MyIdObserver.class);
-        var myNameEmitter = registry.get(MyNameEmitter.class);
-        var myNameObserver = registry.get(MyNameObserver.class);
+        var myEmitter = Services.get(MyEmitter.class);
+        var myObserver = Services.get(MyObserver.class);
+        var myIdEmitter = Services.get(MyIdEmitter.class);
+        var myIdObserver = Services.get(MyIdObserver.class);
+        var myNameEmitter = Services.get(MyNameEmitter.class);
+        var myNameObserver = Services.get(MyNameObserver.class);
 
         myEmitter.emit("foo");
         myEmitter.emit("bar");

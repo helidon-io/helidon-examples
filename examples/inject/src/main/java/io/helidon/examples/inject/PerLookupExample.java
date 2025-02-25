@@ -18,7 +18,7 @@ package io.helidon.examples.inject;
 import java.util.function.Supplier;
 
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that illustrates usages of {@link Service.PerLookup} without scope.
@@ -45,15 +45,14 @@ class PerLookupExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var myInstance1 = registry.get(MyInstance.class);
-        var myInstance2 = registry.get(MyInstance.class);
+        var myInstance1 = Services.get(MyInstance.class);
+        var myInstance2 = Services.get(MyInstance.class);
 
         System.out.printf("%s - %s%n",
                 System.identityHashCode(myInstance1),
                 System.identityHashCode(myInstance2));
 
-        var mySingleton = registry.get(MySingleton.class);
+        var mySingleton = Services.get(MySingleton.class);
 
         System.out.printf("%s - %s%n",
                 System.identityHashCode(mySingleton.instance().get()),

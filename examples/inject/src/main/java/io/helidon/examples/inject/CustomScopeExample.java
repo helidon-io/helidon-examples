@@ -24,7 +24,7 @@ import io.helidon.common.types.TypeName;
 import io.helidon.service.registry.Scope;
 import io.helidon.service.registry.Scopes;
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that illustrates usages of {@link Service.Scope}.
@@ -94,10 +94,9 @@ class CustomScopeExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var myService = registry.get(MyService.class);
+        var myService = Services.get(MyService.class);
 
-        var scopes = registry.get(Scopes.class);
+        var scopes = Services.get(Scopes.class);
         try (var ignored = scopes.createScope(MyScope.TYPE, "id", Map.of())) {
             System.out.println(myService.contract.get().sayHello());
         }

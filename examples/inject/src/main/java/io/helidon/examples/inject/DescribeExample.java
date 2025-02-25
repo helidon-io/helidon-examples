@@ -62,9 +62,13 @@ class DescribeExample {
                 // pass the non managed instance of the described contract
                 .putContractInstance(MyContract.class, new MyContractImpl())
                 .build();
-        var registry = ServiceRegistryManager.create(injectConfig).registry();
 
-        var myContract = registry.get(MyContract.class);
-        System.out.println(myContract.sayHello());
+        var manager = ServiceRegistryManager.start(injectConfig);
+        try {
+            var myContract = manager.registry().get(MyContract.class);
+            System.out.println(myContract.sayHello());
+        } finally {
+            manager.shutdown();
+        }
     }
 }

@@ -22,7 +22,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that illustrates usages of {@link Service.Inject}.
@@ -216,7 +216,7 @@ class InjectionPointsExample {
      * @param optionalGreeter optional greeter
      */
     @Service.Singleton
-    record GreetingWithOptionalIP(@Service.Named("non-existing") Optional<Greeter> optionalGreeter) implements Greeting {
+    record GreetingWithOptionalIp(@Service.Named("non-existing") Optional<Greeter> optionalGreeter) implements Greeting {
 
         @Override
         public Greeter greeter() {
@@ -280,8 +280,7 @@ class InjectionPointsExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var greetings = registry.get(Greetings.class);
+        var greetings = Services.get(Greetings.class);
 
         greetings.greet().forEach(System.out::println);
     }

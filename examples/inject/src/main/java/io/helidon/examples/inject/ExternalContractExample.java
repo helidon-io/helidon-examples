@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Random;
 
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that illustrates usages of {@link Service.ExternalContracts}.
@@ -30,11 +30,18 @@ class ExternalContractExample {
     }
 
     /**
-     * A service that implements {@link CharSequence} contract.
+     * An abstract class outside our control.
+     */
+    abstract static class NameGenerator {
+        abstract String name();
+    }
+
+    /**
+     * A service that implements {@link NameGenerator}.
      */
     @Service.PerLookup
-    @Service.ExternalContracts(CharSequence.class)
-    static class RandomName implements CharSequence {
+    @Service.ExternalContracts(NameGenerator.class)
+    static class RandomNameGenerator extends NameGenerator {
 
         static final List<String> NAMES = List.of(
                 "Joe", "Jack", "Julia", "Jeanne", "Jessica",
@@ -45,29 +52,13 @@ class ExternalContractExample {
         private final String name = NAMES.get(RANDOM.nextInt(0, NAMES.size() - 1));
 
         @Override
-        public int length() {
-            return name.length();
-        }
-
-        @Override
-        public char charAt(int index) {
-            return name.charAt(index);
-        }
-
-        @Override
-        public CharSequence subSequence(int start, int end) {
-            return name.subSequence(start, end);
-        }
-
-        @Override
-        public String toString() {
+        String name() {
             return name;
         }
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var name = registry.get(CharSequence.class);
-        System.out.println(name);
+        var greeter = Services.get(RandomNameGenerator.class);
+        System.out.println(greeter.name());
     }
 }

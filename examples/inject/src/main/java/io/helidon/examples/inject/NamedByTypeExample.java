@@ -16,7 +16,7 @@
 package io.helidon.examples.inject;
 
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that illustrates usages of {@link Service.NamedByType}.
@@ -78,9 +78,8 @@ class NamedByTypeExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var blueCircle = registry.get(BlueSquare.class);
-        var greenCircle = registry.get(GreenSquare.class);
+        var blueCircle = Services.get(BlueSquare.class);
+        var greenCircle = Services.get(GreenSquare.class);
 
         System.out.printf("blue square color hex-code: %s%n", blueCircle.color().hexCode());
         System.out.printf("green square color hex-code: %s%n", greenCircle.color().hexCode());

@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 import io.helidon.service.registry.Interception;
 import io.helidon.service.registry.InterceptionContext;
 import io.helidon.service.registry.Service;
-import io.helidon.service.registry.ServiceRegistryManager;
+import io.helidon.service.registry.Services;
 
 /**
  * An example that illustrates usages of {@link Interception.Interceptor}.
@@ -174,12 +174,11 @@ class InterceptorExample {
     }
 
     public static void main(String[] args) {
-        var registry = ServiceRegistryManager.create().registry();
-        var myService = registry.get(MyConcreteService.class);
-        var myIFaceContract = registry.get(MyContract.class);
-        var myAbstractClassContract = registry.get(MyAbstractClassContract.class);
-        var myIFaceProvidedContract = registry.get(MyOtherContract.class);
-        var myAbstractClassProvidedContract = registry.get(MyOtherAbstractClassContract.class);
+        var myService = Services.get(MyConcreteService.class);
+        var myIFaceContract = Services.get(MyContract.class);
+        var myAbstractClassContract = Services.get(MyAbstractClassContract.class);
+        var myIFaceProvidedContract = Services.get(MyOtherContract.class);
+        var myAbstractClassProvidedContract = Services.get(MyOtherAbstractClassContract.class);
 
         System.out.println(myService.sayHello("Joe"));
         System.out.println(myService.sayHello("Jack"));
