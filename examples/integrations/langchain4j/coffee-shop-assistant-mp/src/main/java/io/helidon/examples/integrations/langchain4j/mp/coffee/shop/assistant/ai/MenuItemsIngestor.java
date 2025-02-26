@@ -49,6 +49,13 @@ public class MenuItemsIngestor {
     private final EmbeddingModel embeddingModel;
     private final EmbeddingStore<TextSegment> embeddingStore;
 
+    /**
+     * Constructs a {@code MenuItemsIngestor} instance.
+     *
+     * @param embeddingStore    the embedding store where generated embeddings are stored
+     * @param embeddingModel    the embedding model used for generating embeddings
+     * @param menuItemsService  the service for retrieving menu items from a JSON file
+     */
     @Inject
     public MenuItemsIngestor(MenuItemsService menuItemsService,
                              EmbeddingModel embeddingModel,
@@ -84,9 +91,13 @@ public class MenuItemsIngestor {
     /**
      * Initializes the embedding store by processing menu items.
      *
-     * This method retrieves menu items, converts them into text representations,
-     * generates embeddings using the provided embedding model, and stores them
-     * in the embedding store.
+     * This method is triggered automatically after the CDI {@link ApplicationScoped} context
+     * is fully initialized. It retrieves menu items from the configured source, converts them
+     * into text representations, generates embeddings using the provided {@link EmbeddingModel},
+     * and stores them in the {@link EmbeddingStore}.
+     *
+     * @param initEvent an initialization event indicating that the {@link ApplicationScoped}
+     *                  context has been fully initialized (not used in the method)
      */
     public void ingest(@Observes @Initialized(ApplicationScoped.class) Object initEvent) {
         // Create ingestor with given embedding model and embedding storage

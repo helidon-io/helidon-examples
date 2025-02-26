@@ -15,13 +15,14 @@
  */
 package io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.data;
 
-import dev.langchain4j.agent.tool.Tool;
-import io.helidon.service.registry.Service;
-
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
+
+import io.helidon.service.registry.Service;
+
+import dev.langchain4j.agent.tool.Tool;
 
 /**
  * A service for managing and processing customer orders.

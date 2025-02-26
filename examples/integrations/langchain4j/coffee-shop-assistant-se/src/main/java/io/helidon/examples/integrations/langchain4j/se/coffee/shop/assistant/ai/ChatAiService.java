@@ -15,8 +15,9 @@
  */
 package io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.ai;
 
-import dev.langchain4j.service.SystemMessage;
 import io.helidon.integrations.langchain4j.Ai;
+
+import dev.langchain4j.service.SystemMessage;
 
 /**
  * AI-powered assistant service for a coffee shop.

@@ -15,11 +15,12 @@
  */
 package io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.ai;
 
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import java.util.function.Supplier;
+
 import io.helidon.service.registry.Service;
 
-import java.util.function.Supplier;
+import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
 
 /**
  * A service factory that provides an instance of {@link EmbeddingModel}.

@@ -15,14 +15,15 @@
  */
 package io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.data;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.helidon.common.config.Config;
-import io.helidon.service.registry.Service;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+
+import io.helidon.common.config.Config;
+import io.helidon.service.registry.Service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * A service for managing and retrieving menu items from a JSON file.

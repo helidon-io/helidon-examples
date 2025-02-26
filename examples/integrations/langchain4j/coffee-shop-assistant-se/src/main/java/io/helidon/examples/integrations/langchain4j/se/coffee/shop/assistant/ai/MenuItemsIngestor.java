@@ -15,17 +15,18 @@
  */
 package io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.ai;
 
-import dev.langchain4j.data.document.Document;
-import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.store.embedding.EmbeddingStore;
-import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
+import java.util.logging.Logger;
+
 import io.helidon.common.config.Config;
 import io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.data.MenuItem;
 import io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.data.MenuItemsService;
 import io.helidon.service.registry.Service;
 
-import java.util.logging.Logger;
+import dev.langchain4j.data.document.Document;
+import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.store.embedding.EmbeddingStore;
+import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 
 /**
  * A simple ingestor that populates the embedding store with menu items.
