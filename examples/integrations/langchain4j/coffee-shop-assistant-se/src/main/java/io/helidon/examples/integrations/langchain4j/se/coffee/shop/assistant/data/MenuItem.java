@@ -17,6 +17,12 @@ package io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.da
 
 import java.util.List;
 
+/**
+ * Represents a menu item in the coffee shop.
+ *
+ * A menu item includes details such as its name, description, category, price,
+ * tags, and optional add-ons.
+ */
 public class MenuItem {
     private String name;
     private String description;

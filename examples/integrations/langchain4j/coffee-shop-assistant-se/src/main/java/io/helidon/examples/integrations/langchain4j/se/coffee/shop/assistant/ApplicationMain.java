@@ -22,7 +22,22 @@ import io.helidon.logging.common.LogConfig;
 import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 
+/**
+ * Coffee Shop Assistant application.
+ */
 public class ApplicationMain {
+
+    /**
+     * Cannot be instantiated.
+     */
+    private ApplicationMain() {
+    }
+
+    /**
+     * Application main entry point.
+     *
+     * @param args command line arguments.
+     */
     public static void main(String[] args) {
         // Make sure logging is enabled as the first thing
         LogConfig.configureRuntime();

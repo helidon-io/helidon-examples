@@ -34,25 +34,61 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+/**
+ * A simple ingestor that populates the embedding store with menu items.
+ *
+ * This service reads menu items from a JSON file, converts them into text-based
+ * representations, generates embeddings using an {@link EmbeddingModel}, and
+ * stores them in the specified {@link EmbeddingStore}.
+ */
 @ApplicationScoped
 public class MenuItemsIngestor {
     private static final Logger LOGGER = Logger.getLogger(MenuItemsIngestor.class.getName());
 
     private final MenuItemsService menuItemsService;
-
-    @Produces
-    final EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
-
-    @Produces
-    @Named("EmbeddingStore")
-    final EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+    private final EmbeddingModel embeddingModel;
+    private final EmbeddingStore<TextSegment> embeddingStore;
 
     @Inject
-    MenuItemsIngestor(MenuItemsService menuItemsService) {
+    public MenuItemsIngestor(MenuItemsService menuItemsService,
+                             EmbeddingModel embeddingModel,
+                             @Named("EmbeddingStore") EmbeddingStore<TextSegment> embeddingStore) {
         this.menuItemsService = menuItemsService;
+        this.embeddingModel = embeddingModel;
+        this.embeddingStore = embeddingStore;
     }
 
-    public void ingest(@Observes @Initialized(ApplicationScoped.class) Object pointless) {
+    /**
+     * Produces the embedding model used for generating embeddings.
+     *
+     * @return a new instance of {@link AllMiniLmL6V2EmbeddingModel}
+     */
+    @Produces
+    @ApplicationScoped
+    public EmbeddingModel produceEmbeddingModel() {
+        return new AllMiniLmL6V2EmbeddingModel();
+    }
+
+    /**
+     * Produces the embedding store where embeddings are stored.
+     *
+     * @return an instance of {@link InMemoryEmbeddingStore}
+     */
+    @Produces
+    @ApplicationScoped
+    @Named("EmbeddingStore")
+    public EmbeddingStore<TextSegment> produceEmbeddingStore() {
+        return new InMemoryEmbeddingStore<>();
+    }
+
+    /**
+     * Initializes the embedding store by processing menu items.
+     *
+     * This method retrieves menu items, converts them into text representations,
+     * generates embeddings using the provided embedding model, and stores them
+     * in the embedding store.
+     */
+    public void ingest(@Observes @Initialized(ApplicationScoped.class) Object initEvent) {
         // Create ingestor with given embedding model and embedding storage
         var ingestor = EmbeddingStoreIngestor.builder()
                 .embeddingModel(embeddingModel)
@@ -73,6 +109,12 @@ public class MenuItemsIngestor {
         LOGGER.info("Ingested menu items: " + documents.size());
     }
 
+    /**
+     * Converts a {@link MenuItem} into a text-based document for embedding generation.
+     *
+     * @param item the menu item to convert
+     * @return a {@link Document} containing a formatted text representation of the menu item
+     */
     private Document generateDocument(MenuItem item) {
         var str = String.format(
                 "%s: %s. Category: %s. Price: $%.2f. Tags: %s. Add-ons: %s.",
