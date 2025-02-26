@@ -26,17 +26,17 @@ class SingletonExample {
     private SingletonExample() {
     }
 
-    /**
-     * A singleton service.
-     */
-    @Service.Singleton
-    static class MySingleton {
-    }
-
     public static void main(String[] args) {
         var myService1 = Services.get(MySingleton.class);
         var myService2 = Services.get(MySingleton.class);
 
         System.out.printf("%s - %s%n", System.identityHashCode(myService1), System.identityHashCode(myService2));
+    }
+
+    /**
+     * A singleton service.
+     */
+    @Service.Singleton
+    static class MySingleton {
     }
 }

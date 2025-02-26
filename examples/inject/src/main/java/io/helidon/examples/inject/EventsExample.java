@@ -30,6 +30,27 @@ class EventsExample {
     private EventsExample() {
     }
 
+    public static void main(String[] args) {
+        var myEmitter = Services.get(MyEmitter.class);
+        var myObserver = Services.get(MyObserver.class);
+        var myIdEmitter = Services.get(MyIdEmitter.class);
+        var myIdObserver = Services.get(MyIdObserver.class);
+        var myNameEmitter = Services.get(MyNameEmitter.class);
+        var myNameObserver = Services.get(MyNameObserver.class);
+
+        myEmitter.emit("foo");
+        myEmitter.emit("bar");
+        System.out.println(myObserver.messages);
+
+        myIdEmitter.emit("123");
+        myIdEmitter.emit("456");
+        System.out.println(myIdObserver.ids);
+
+        myNameEmitter.emit("Jack");
+        myNameEmitter.emit("Jill");
+        System.out.println(myNameObserver.names);
+    }
+
     /**
      * A custom event payload.
      * @param msg message
@@ -129,26 +150,5 @@ class EventsExample {
         void event(String name) {
             names.add(name);
         }
-    }
-
-    public static void main(String[] args) {
-        var myEmitter = Services.get(MyEmitter.class);
-        var myObserver = Services.get(MyObserver.class);
-        var myIdEmitter = Services.get(MyIdEmitter.class);
-        var myIdObserver = Services.get(MyIdObserver.class);
-        var myNameEmitter = Services.get(MyNameEmitter.class);
-        var myNameObserver = Services.get(MyNameObserver.class);
-
-        myEmitter.emit("foo");
-        myEmitter.emit("bar");
-        System.out.println(myObserver.messages);
-
-        myIdEmitter.emit("123");
-        myIdEmitter.emit("456");
-        System.out.println(myIdObserver.ids);
-
-        myNameEmitter.emit("Jack");
-        myNameEmitter.emit("Jill");
-        System.out.println(myNameObserver.names);
     }
 }

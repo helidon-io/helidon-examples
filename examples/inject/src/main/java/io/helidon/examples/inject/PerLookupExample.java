@@ -28,6 +28,21 @@ class PerLookupExample {
     private PerLookupExample() {
     }
 
+    public static void main(String[] args) {
+        var myInstance1 = Services.get(MyInstance.class);
+        var myInstance2 = Services.get(MyInstance.class);
+
+        System.out.printf("%s - %s%n",
+                System.identityHashCode(myInstance1),
+                System.identityHashCode(myInstance2));
+
+        var mySingleton = Services.get(MySingleton.class);
+
+        System.out.printf("%s - %s%n",
+                System.identityHashCode(mySingleton.instance().get()),
+                System.identityHashCode(mySingleton.instance().get()));
+    }
+
     /**
      * A service with the per-lookup scope.
      */
@@ -42,20 +57,5 @@ class PerLookupExample {
      */
     @Service.Singleton
     record MySingleton(Supplier<MyInstance> instance) {
-    }
-
-    public static void main(String[] args) {
-        var myInstance1 = Services.get(MyInstance.class);
-        var myInstance2 = Services.get(MyInstance.class);
-
-        System.out.printf("%s - %s%n",
-                System.identityHashCode(myInstance1),
-                System.identityHashCode(myInstance2));
-
-        var mySingleton = Services.get(MySingleton.class);
-
-        System.out.printf("%s - %s%n",
-                System.identityHashCode(mySingleton.instance().get()),
-                System.identityHashCode(mySingleton.instance().get()));
     }
 }

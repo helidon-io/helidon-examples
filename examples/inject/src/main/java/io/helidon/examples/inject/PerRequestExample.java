@@ -31,6 +31,15 @@ class PerRequestExample {
     private PerRequestExample() {
     }
 
+    public static void main(String[] args) {
+        var myService = Services.get(MyService.class);
+        var scopes = Services.get(Scopes.class);
+
+        try (Scope ignored = scopes.createScope(Service.PerRequest.TYPE, "test-1", Map.of())) {
+            System.out.println(myService.contract().get().sayHello());
+        }
+    }
+
     /**
      * A service in request scope.
      */
@@ -49,14 +58,5 @@ class PerRequestExample {
      */
     @Service.Singleton
     record MyService(Supplier<MyRequestScopeService> contract) {
-    }
-
-    public static void main(String[] args) {
-        var myService = Services.get(MyService.class);
-        var scopes = Services.get(Scopes.class);
-
-        try (Scope ignored = scopes.createScope(Service.PerRequest.TYPE, "test-1", Map.of())) {
-            System.out.println(myService.contract().get().sayHello());
-        }
     }
 }

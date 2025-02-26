@@ -26,6 +26,14 @@ class NamedByTypeExample {
     private NamedByTypeExample() {
     }
 
+    public static void main(String[] args) {
+        var blueCircle = Services.get(BlueSquare.class);
+        var greenCircle = Services.get(GreenSquare.class);
+
+        System.out.printf("blue square color hex-code: %s%n", blueCircle.color().hexCode());
+        System.out.printf("green square color hex-code: %s%n", greenCircle.color().hexCode());
+    }
+
     /**
      * A service to be implemented by named services.
      */
@@ -75,13 +83,5 @@ class NamedByTypeExample {
      */
     @Service.Singleton
     record GreenSquare(@Service.NamedByType(Green.class) Color color) {
-    }
-
-    public static void main(String[] args) {
-        var blueCircle = Services.get(BlueSquare.class);
-        var greenCircle = Services.get(GreenSquare.class);
-
-        System.out.printf("blue square color hex-code: %s%n", blueCircle.color().hexCode());
-        System.out.printf("green square color hex-code: %s%n", greenCircle.color().hexCode());
     }
 }

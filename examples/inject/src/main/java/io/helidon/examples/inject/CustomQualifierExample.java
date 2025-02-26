@@ -26,6 +26,14 @@ class CustomQualifierExample {
     private CustomQualifierExample() {
     }
 
+    public static void main(String[] args) {
+        var blueDrawing = Services.get(BlueDrawing.class);
+        var greenDrawing = Services.get(GreenDrawing.class);
+
+        System.out.printf("blue drawing: %s%n", blueDrawing.circle().name());
+        System.out.printf("green drawing: %s%n", greenDrawing.circle().name());
+    }
+
     /**
      * A service to be implemented by qualified services.
      */
@@ -89,13 +97,5 @@ class CustomQualifierExample {
      */
     @Service.Singleton
     record GreenDrawing(@Green Circle circle) {
-    }
-
-    public static void main(String[] args) {
-        var blueDrawing = Services.get(BlueDrawing.class);
-        var greenDrawing = Services.get(GreenDrawing.class);
-
-        System.out.printf("blue drawing: %s%n", blueDrawing.circle().name());
-        System.out.printf("green drawing: %s%n", greenDrawing.circle().name());
     }
 }

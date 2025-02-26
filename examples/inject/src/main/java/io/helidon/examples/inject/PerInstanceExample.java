@@ -26,6 +26,15 @@ class PerInstanceExample {
     private PerInstanceExample() {
     }
 
+    public static void main(String[] args) {
+        var circles = Services.get(Circles.class);
+
+        System.out.printf("blue circle name: %s%n", circles.blue().name());
+        System.out.printf("blue circle color hex-code: %s%n", circles.blue().color().hexCode());
+        System.out.printf("green circle name: %s%n", circles.green().name());
+        System.out.printf("green circle color hex-code: %s%n", circles.green().color().hexCode());
+    }
+
     /**
      * A service to be implemented by named services.
      */
@@ -78,14 +87,5 @@ class PerInstanceExample {
     @Service.Singleton
     record Circles(@Service.Named("blue") Circle blue,
                    @Service.Named("green") Circle green) {
-    }
-
-    public static void main(String[] args) {
-        var circles = Services.get(Circles.class);
-
-        System.out.printf("blue circle name: %s%n", circles.blue().name());
-        System.out.printf("blue circle color hex-code: %s%n", circles.blue().color().hexCode());
-        System.out.printf("green circle name: %s%n", circles.green().name());
-        System.out.printf("green circle color hex-code: %s%n", circles.green().color().hexCode());
     }
 }

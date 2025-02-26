@@ -27,6 +27,21 @@ class DescribeExample {
     private DescribeExample() {
     }
 
+    public static void main(String[] args) {
+        var injectConfig = ServiceRegistryConfig.builder()
+                // pass the non managed instance of the described contract
+                .putContractInstance(MyContract.class, new MyContractImpl())
+                .build();
+
+        var manager = ServiceRegistryManager.start(injectConfig);
+        try {
+            var myContract = manager.registry().get(MyContract.class);
+            System.out.println(myContract.sayHello());
+        } finally {
+            manager.shutdown();
+        }
+    }
+
     /**
      * A service that needs to be described separately.
      */
@@ -55,20 +70,5 @@ class DescribeExample {
      */
     @Service.Singleton
     record MyService(MyContract myContract) {
-    }
-
-    public static void main(String[] args) {
-        var injectConfig = ServiceRegistryConfig.builder()
-                // pass the non managed instance of the described contract
-                .putContractInstance(MyContract.class, new MyContractImpl())
-                .build();
-
-        var manager = ServiceRegistryManager.start(injectConfig);
-        try {
-            var myContract = manager.registry().get(MyContract.class);
-            System.out.println(myContract.sayHello());
-        } finally {
-            manager.shutdown();
-        }
     }
 }

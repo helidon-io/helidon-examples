@@ -34,6 +34,15 @@ class CustomScopeExample {
     private CustomScopeExample() {
     }
 
+    public static void main(String[] args) {
+        var myService = Services.get(MyService.class);
+
+        var scopes = Services.get(Scopes.class);
+        try (var ignored = scopes.createScope(MyScope.TYPE, "id", Map.of())) {
+            System.out.println(myService.contract.get().sayHello());
+        }
+    }
+
     /**
      * A custom scope annotation.
      */
@@ -91,14 +100,5 @@ class CustomScopeExample {
      */
     @Service.Singleton
     record MyService(Supplier<MyScopedService> contract) {
-    }
-
-    public static void main(String[] args) {
-        var myService = Services.get(MyService.class);
-
-        var scopes = Services.get(Scopes.class);
-        try (var ignored = scopes.createScope(MyScope.TYPE, "id", Map.of())) {
-            System.out.println(myService.contract.get().sayHello());
-        }
     }
 }

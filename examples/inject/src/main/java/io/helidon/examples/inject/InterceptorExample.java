@@ -35,6 +35,26 @@ class InterceptorExample {
     private InterceptorExample() {
     }
 
+    public static void main(String[] args) {
+        var myService = Services.get(MyConcreteService.class);
+        var myIFaceContract = Services.get(MyContract.class);
+        var myAbstractClassContract = Services.get(MyAbstractClassContract.class);
+        var myIFaceProvidedContract = Services.get(MyOtherContract.class);
+        var myAbstractClassProvidedContract = Services.get(MyOtherAbstractClassContract.class);
+
+        System.out.println(myService.sayHello("Joe"));
+        System.out.println(myService.sayHello("Jack"));
+        System.out.println(myIFaceContract.sayHello("Julia"));
+        System.out.println(myIFaceContract.sayHello("Jeanne"));
+        System.out.println(myAbstractClassContract.sayHello("Jessica"));
+        System.out.println(myAbstractClassContract.sayHello("Juliet"));
+        System.out.println(myIFaceProvidedContract.sayHello("Jennifer"));
+        System.out.println(myIFaceProvidedContract.sayHello("Josephine"));
+        System.out.println(myAbstractClassProvidedContract.sayHello("Joceline"));
+        System.out.println(myAbstractClassProvidedContract.sayHello("Jacqueline"));
+        MyServiceInterceptor.INVOKED.forEach(System.out::println);
+    }
+
     /**
      * An annotation to mark methods to be intercepted.
      */
@@ -171,25 +191,5 @@ class InterceptorExample {
                 }
             };
         }
-    }
-
-    public static void main(String[] args) {
-        var myService = Services.get(MyConcreteService.class);
-        var myIFaceContract = Services.get(MyContract.class);
-        var myAbstractClassContract = Services.get(MyAbstractClassContract.class);
-        var myIFaceProvidedContract = Services.get(MyOtherContract.class);
-        var myAbstractClassProvidedContract = Services.get(MyOtherAbstractClassContract.class);
-
-        System.out.println(myService.sayHello("Joe"));
-        System.out.println(myService.sayHello("Jack"));
-        System.out.println(myIFaceContract.sayHello("Julia"));
-        System.out.println(myIFaceContract.sayHello("Jeanne"));
-        System.out.println(myAbstractClassContract.sayHello("Jessica"));
-        System.out.println(myAbstractClassContract.sayHello("Juliet"));
-        System.out.println(myIFaceProvidedContract.sayHello("Jennifer"));
-        System.out.println(myIFaceProvidedContract.sayHello("Josephine"));
-        System.out.println(myAbstractClassProvidedContract.sayHello("Joceline"));
-        System.out.println(myAbstractClassProvidedContract.sayHello("Jacqueline"));
-        MyServiceInterceptor.INVOKED.forEach(System.out::println);
     }
 }

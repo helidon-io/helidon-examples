@@ -28,6 +28,14 @@ class GenericsExample {
     private GenericsExample() {
     }
 
+    public static void main(String[] args) {
+        var myService = Services.get(MyService.class);
+
+        System.out.println(myService.blueCircle().name());
+        System.out.println(myService.greenCircle().name());
+        myService.circleNames().forEach(System.out::println);
+    }
+
     /**
      * A service to be implemented by qualified services.
      */
@@ -77,13 +85,5 @@ class GenericsExample {
                     .map(GenericsExample.Circle::name)
                     .toList();
         }
-    }
-
-    public static void main(String[] args) {
-        var myService = Services.get(MyService.class);
-
-        System.out.println(myService.blueCircle().name());
-        System.out.println(myService.greenCircle().name());
-        myService.circleNames().forEach(System.out::println);
     }
 }

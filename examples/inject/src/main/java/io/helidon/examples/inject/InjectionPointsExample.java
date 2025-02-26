@@ -32,6 +32,12 @@ class InjectionPointsExample {
     private InjectionPointsExample() {
     }
 
+    public static void main(String[] args) {
+        var greetings = Services.get(Greetings.class);
+
+        greetings.greet().forEach(System.out::println);
+    }
+
     /**
      * A service to be injected.
      */
@@ -277,11 +283,5 @@ class InjectionPointsExample {
         public String greet(String name) {
             return dependency.greet(name);
         }
-    }
-
-    public static void main(String[] args) {
-        var greetings = Services.get(Greetings.class);
-
-        greetings.greet().forEach(System.out::println);
     }
 }

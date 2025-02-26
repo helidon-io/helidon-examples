@@ -26,6 +26,14 @@ class NamedExample {
     private NamedExample() {
     }
 
+    public static void main(String[] args) {
+        var blueCircle = Services.get(BlueCircle.class);
+        var greenCircle = Services.get(GreenCircle.class);
+
+        System.out.printf("blue circle color hex-code: %s%n", blueCircle.color().hexCode());
+        System.out.printf("green circle color hex-code: %s%n", greenCircle.color().hexCode());
+    }
+
     /**
      * A service to be implemented by named services.
      */
@@ -75,13 +83,5 @@ class NamedExample {
      */
     @Service.Singleton
     record GreenCircle(@Service.Named("green") Color color) {
-    }
-
-    public static void main(String[] args) {
-        var blueCircle = Services.get(BlueCircle.class);
-        var greenCircle = Services.get(GreenCircle.class);
-
-        System.out.printf("blue circle color hex-code: %s%n", blueCircle.color().hexCode());
-        System.out.printf("green circle color hex-code: %s%n", greenCircle.color().hexCode());
     }
 }

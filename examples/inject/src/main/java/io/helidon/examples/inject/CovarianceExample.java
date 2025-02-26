@@ -28,6 +28,19 @@ class CovarianceExample {
     private CovarianceExample() {
     }
 
+    public static void main(String[] args) {
+        var shelter = Services.get(Shelter.class);
+
+        System.out.println("All pets:");
+        shelter.all.stream().map(Pet::name).forEach(System.out::println);
+
+        System.out.println("\nAll cats:");
+        shelter.cats.stream().map(Cat::name).forEach(System.out::println);
+
+        System.out.println("\nAll dogs:");
+        shelter.dogs.stream().map(Dog::name).forEach(System.out::println);
+    }
+
     sealed interface Pet permits Cat, Dog {
         default String name() {
             return getClass().getSimpleName();
@@ -58,18 +71,5 @@ class CovarianceExample {
 
     @Service.Singleton
     record Shelter(List<Pet> all, List<Cat> cats, List<Dog> dogs) {
-    }
-
-    public static void main(String[] args) {
-        var shelter = Services.get(Shelter.class);
-
-        System.out.println("All pets:");
-        shelter.all.stream().map(Pet::name).forEach(System.out::println);
-
-        System.out.println("\nAll cats:");
-        shelter.cats.stream().map(Cat::name).forEach(System.out::println);
-
-        System.out.println("\nAll dogs:");
-        shelter.dogs.stream().map(Dog::name).forEach(System.out::println);
     }
 }

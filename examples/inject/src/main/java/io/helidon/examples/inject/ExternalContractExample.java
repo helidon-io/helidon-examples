@@ -29,6 +29,11 @@ class ExternalContractExample {
     private ExternalContractExample() {
     }
 
+    public static void main(String[] args) {
+        var greeter = Services.get(RandomNameGenerator.class);
+        System.out.println(greeter.name());
+    }
+
     /**
      * An abstract class outside our control.
      */
@@ -55,10 +60,5 @@ class ExternalContractExample {
         String name() {
             return name;
         }
-    }
-
-    public static void main(String[] args) {
-        var greeter = Services.get(RandomNameGenerator.class);
-        System.out.println(greeter.name());
     }
 }

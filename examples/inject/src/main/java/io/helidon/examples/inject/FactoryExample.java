@@ -33,6 +33,16 @@ class FactoryExample {
     private FactoryExample() {
     }
 
+    public static void main(String[] args) {
+        var myService = Services.get(MyService.class);
+        var colors = Services.get(Colors.class);
+        var systemInfo = Services.get(SystemInfo.class);
+
+        System.out.printf("%s%n", myService);
+        System.out.printf("%s%n", colors);
+        System.out.printf("%s%n", systemInfo);
+    }
+
     /**
      * A service that is provided by {@link MyServiceFactory}.
      */
@@ -81,9 +91,6 @@ class FactoryExample {
     /**
      * A bulk factory that provides qualified {@link Color} instances.
      */
-    @Red
-    @Green
-    @Blue
     @Service.Singleton
     record MyBulkServiceFactory() implements Service.ServicesFactory<Color> {
 
@@ -142,15 +149,5 @@ class FactoryExample {
                     .flatMap(name -> Optional.ofNullable(System.getProperty(name)))
                     .map(value -> Service.QualifiedInstance.create(value, qualifier));
         }
-    }
-
-    public static void main(String[] args) {
-        var myService = Services.get(MyService.class);
-        var colors = Services.get(Colors.class);
-        var systemInfo = Services.get(SystemInfo.class);
-
-        System.out.printf("%s%n", myService);
-        System.out.printf("%s%n", colors);
-        System.out.printf("%s%n", systemInfo);
     }
 }

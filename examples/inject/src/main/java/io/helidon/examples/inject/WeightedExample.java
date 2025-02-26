@@ -27,6 +27,12 @@ class WeightedExample {
     private WeightedExample() {
     }
 
+    public static void main(String[] args) {
+        var color = Services.get(Color.class);
+
+        System.out.printf("color name: %s%n", color.name());
+    }
+
     /**
      * A contract to be implemented by weighted services.
      */
@@ -57,11 +63,5 @@ class WeightedExample {
         public String name() {
             return "green";
         }
-    }
-
-    public static void main(String[] args) {
-        var color = Services.get(Color.class);
-
-        System.out.printf("color name: %s%n", color.name());
     }
 }
