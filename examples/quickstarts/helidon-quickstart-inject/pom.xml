@@ -33,7 +33,7 @@
     <name>Helidon Examples Quickstart Inject (SE)</name>
 
     <properties>
-        <mainClass>io.helidon.examples.quickstart.inject.ApplicationMain</mainClass>
+        <mainClass>io.helidon.examples.quickstart.inject.Main</mainClass>
     </properties>
 
     <dependencies>
@@ -148,9 +148,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <generateMain>true</generateMain>
-                </configuration>
             </plugin>
         </plugins>
     </build>
