@@ -185,3 +185,5 @@ jobs:
           cache: maven
       - name: Maven build
         run: etc/scripts/build.sh
+        env:
+          MAVEN_ARGS: -pl '!examples/integrations/micronaut/data'
