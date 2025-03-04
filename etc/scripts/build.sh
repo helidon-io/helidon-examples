@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2022, 2024 Oracle and/or its affiliates.
+# Copyright (c) 2022, 2025 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ readonly WS_DIR
 mvn ${MAVEN_ARGS} --version
 
 # shellcheck disable=SC2086
-mvn ${MAVEN_ARGS} \
+mvn -B ${MAVEN_ARGS} \
     -f "${WS_DIR}"/pom.xml \
     -Dmaven.test.failure.ignore=true \
     clean install
