@@ -182,7 +182,6 @@ jobs:
           website: jdk.java.net
           release: ea
           version: stable
-          cache: maven
       - name: Maven build
         run: etc/scripts/build.sh
         env:
