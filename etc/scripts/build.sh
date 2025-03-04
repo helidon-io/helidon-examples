@@ -41,6 +41,7 @@ readonly SCRIPT_PATH
 WS_DIR=$(cd $(dirname -- "${SCRIPT_PATH}") ; cd ../.. ; pwd -P)
 readonly WS_DIR
 
+set -x
 # shellcheck disable=SC2086
 mvn ${MAVEN_ARGS} --version
 
