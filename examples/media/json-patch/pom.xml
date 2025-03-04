@@ -33,6 +33,7 @@
 
     <properties>
         <mainClass>io.helidon.examples.media.json.patch.Main</mainClass>
+        <version.plugin.jandex>${version.lib.jandex}</version.plugin.jandex>
     </properties>
 
     <dependencies>
@@ -89,6 +90,7 @@
             <plugin>
                 <groupId>io.smallrye</groupId>
                 <artifactId>jandex-maven-plugin</artifactId>
+                <version>${version.plugin.jandex}</version>
                 <executions>
                     <execution>
                         <id>make-index</id>
