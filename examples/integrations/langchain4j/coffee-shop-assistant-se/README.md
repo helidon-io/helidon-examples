@@ -2,6 +2,8 @@
 
 This is a **demo application** showcasing the **Helidon SE integration with LangChain4J**. It demonstrates how to build an **AI-powered coffee shop assistant** using **Helidon Inject**, OpenAI models, and embedding storage.
 
+NOTE: LangChain4J integration is a preview feature. The APIs shown here are subject to change. These APIs will be finalized in a future release of Helidon.
+
 ## **Features**
 
 - Integration with **OpenAI chat models**.

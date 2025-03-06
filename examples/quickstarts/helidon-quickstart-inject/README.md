@@ -2,6 +2,8 @@
 
 This project implements a simple Hello World REST service using Helidon SE with injection support.
 
+NOTE: Injection is a preview feature. The APIs shown here are subject to change. These APIs will be finalized in a future release of Helidon.
+
 ## Build and run
 
 ```shell
