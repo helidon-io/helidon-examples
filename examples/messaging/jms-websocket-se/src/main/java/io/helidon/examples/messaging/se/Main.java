@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import java.util.logging.LogManager;
 
 import io.helidon.config.Config;
 import io.helidon.webserver.WebServer;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 import io.helidon.webserver.websocket.WsRouting;
 
 /**
@@ -62,11 +62,11 @@ public final class Main {
         SendingService sendingService = new SendingService(config);
 
         WebServer server = WebServer.builder()
+                .addFeature(StaticContentFeature.builder()
+                                    .addClasspath(cl -> cl.location("WEB")
+                                            .welcome("index.html"))
+                                    .build())
                 .routing(routing -> routing
-                        // register static content support (on "/")
-                        .register(StaticContentService.builder("/WEB")
-                                .welcomeFileName("index.html")
-                                .build())
                         // register rest endpoint for sending to Jms
                         .register("/rest/messages", sendingService))
                 .addRouting(WsRouting.builder()

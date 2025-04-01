@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package io.helidon.examples.webserver.sse;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRules;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 
 /**
  * This application provides a simple service with a UI to exercise Server Sent Events (SSE).
@@ -38,6 +38,10 @@ class Main {
         LogConfig.configureRuntime();
 
         WebServer server = WebServer.builder()
+                .addFeature(StaticContentFeature.builder()
+                                    .addClasspath(cl -> cl.location("WEB")
+                                            .welcome("index.html"))
+                                    .build())
                 .routing(Main::routing)
                 .port(8080)
                 .build()
@@ -52,9 +56,6 @@ class Main {
      * @param rules routing rules
      */
     static void routing(HttpRules rules) {
-        rules.register("/", StaticContentService.builder("WEB")
-                        .welcomeFileName("index.html")
-                        .build())
-                .register("/api", new SseService());
+        rules.register("/api", new SseService());
     }
 }

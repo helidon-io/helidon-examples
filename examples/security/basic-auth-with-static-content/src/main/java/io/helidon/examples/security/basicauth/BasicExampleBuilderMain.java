@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import io.helidon.security.providers.httpauth.SecureUserStore;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.security.SecurityFeature;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 
 /**
  * Example using {@link io.helidon.common.Builder} approach instead of configuration based approach.
@@ -100,10 +100,14 @@ public final class BasicExampleBuilderMain {
                                     .security(buildSecurity())
                                     .defaults(SecurityFeature.authenticate())
                                     .build())
+                .addFeature(StaticContentFeature.builder()
+                                    .addClasspath(cl -> cl.location("WEB")
+                                            .context("/static")
+                                            .welcome("index.html"))
+                                    .build())
                 .routing(routing -> routing
                 // must be configured first, to protect endpoints
                 .any("/static[/{*}]", SecurityFeature.rolesAllowed("user"))
-                .register("/static", StaticContentService.create("/WEB"))
                 .get("/noRoles", SecurityFeature.enforce())
                 .get("/user[/{*}]", SecurityFeature.rolesAllowed("user"))
                 .get("/admin", SecurityFeature.rolesAllowed("admin"))

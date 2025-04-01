@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2018, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import io.helidon.security.SecurityContext;
 import io.helidon.security.Subject;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 
 import static io.helidon.config.ConfigSources.classpath;
 import static io.helidon.config.ConfigSources.file;
@@ -69,6 +69,10 @@ public final class GoogleConfigMain {
     static void setup(WebServerConfig.Builder server) {
         Config config = buildConfig();
         server.config(config.get("server"))
+                .addFeature(StaticContentFeature.builder()
+                                    .addClasspath(cl -> cl.location("WEB")
+                                            .welcome("index.html"))
+                                    .build())
                 .routing(routing -> routing
                         .get("/rest/profile", (req, res) -> {
                             Optional<SecurityContext> securityContext = req.context().get(SecurityContext.class);
@@ -77,8 +81,7 @@ public final class GoogleConfigMain {
                                     .flatMap(SecurityContext::user)
                                     .map(Subject::toString)
                                     .orElse("Security context is null"));
-                        })
-                        .register(StaticContentService.create("/WEB")));
+                        }));
     }
 
     private static Config buildConfig() {

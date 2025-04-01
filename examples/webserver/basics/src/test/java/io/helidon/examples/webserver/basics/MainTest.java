@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import io.helidon.http.media.MediaContextConfig;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webclient.http1.Http1ClientResponse;
 import io.helidon.webserver.WebServerConfig;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 import io.helidon.webserver.testing.junit5.ServerTest;
 import io.helidon.webserver.testing.junit5.SetUpServer;
 
@@ -53,6 +54,11 @@ public class MainTest {
     static void setup(WebServerConfig.Builder server) {
         MediaContextConfig.Builder mediaContext = MediaContext.builder()
                         .mediaSupportsDiscoverServices(false);
+        server.addFeature(StaticContentFeature.builder()
+                                  .addClasspath(cl -> cl.location("static")
+                                          .context("/supports")
+                                          .welcome("index.html"))
+                                  .build());
         server.routing(routing -> {
             Main.firstRouting(routing);
             Main.mediaReader(routing, mediaContext);

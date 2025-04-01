@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import io.helidon.http.Status;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRules;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 
 /**
  * This application provides a simple service with a UI to exercise forms.
@@ -43,6 +43,11 @@ public final class Main {
         LogConfig.configureRuntime();
 
         WebServer server = WebServer.builder()
+                .addFeature(StaticContentFeature.builder()
+                                    .addClasspath(cl -> cl.location("WEB")
+                                            .context("/ui")
+                                            .welcome("index.html"))
+                                    .build())
                 .routing(Main::routing)
                 .port(8080)
                 .build()
@@ -62,9 +67,6 @@ public final class Main {
                     res.header(UI_LOCATION);
                     res.send();
                 })
-                .register("/ui", StaticContentService.builder("WEB")
-                        .welcomeFileName("index.html")
-                        .build())
                 .register("/api", new FormService());
     }
 }

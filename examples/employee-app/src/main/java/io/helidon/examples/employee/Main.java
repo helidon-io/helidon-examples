@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2019, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpRouting;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 
 /**
  * Simple Employee rest application.
@@ -64,7 +64,12 @@ public final class Main {
 
         // Get webserver config from the "server" section of application.yaml and JSON support registration
         server.config(config.get("server"))
-              .routing(r -> routing(r, config));
+                .addFeature(StaticContentFeature.builder()
+                                    .addClasspath(cl -> cl.location("public")
+                                            .welcome("index.html")
+                                            .context("/public"))
+                                    .build())
+                .routing(r -> routing(r, config));
     }
 
     /**
@@ -74,9 +79,7 @@ public final class Main {
      * @param config  configuration of this server
      */
     static void routing(HttpRouting.Builder routing, Config config) {
-        routing.register("/public", StaticContentService.builder("public")
-                                                        .welcomeFileName("index.html"))
-               .register("/employees", new EmployeeService(config));
+        routing.register("/employees", new EmployeeService(config));
     }
 
 }

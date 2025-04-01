@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2023, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ package io.helidon.examples.webserver.staticcontent;
 import io.helidon.http.Status;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webclient.http1.Http1ClientResponse;
-import io.helidon.webserver.http.HttpRouting;
+import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.testing.junit5.ServerTest;
-import io.helidon.webserver.testing.junit5.SetUpRoute;
+import io.helidon.webserver.testing.junit5.SetUpServer;
 
 import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
@@ -39,9 +39,9 @@ class MainTest {
         this.client = client;
     }
 
-    @SetUpRoute
-    static void routing(HttpRouting.Builder builder) {
-        Main.routing(builder);
+    @SetUpServer
+    static void setup(WebServerConfig.Builder builder) {
+        Main.setup(builder);
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package io.helidon.examples.messaging.se;
 import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 import io.helidon.webserver.websocket.WsRouting;
 
 /**
@@ -58,11 +58,11 @@ public final class Main {
 
         WebServer server =
                 WebServer.builder()
+                        .addFeature(StaticContentFeature.builder()
+                                            .addClasspath(cl -> cl.location("WEB")
+                                                    .welcome("index.html"))
+                                            .build())
                         .routing(r -> r
-                                // register static content support (on "/")
-                                .register(StaticContentService.builder("/WEB")
-                                        .welcomeFileName("index.html")
-                                        .build())
                                 // register rest endpoint for sending to Kafka
                                 .register("/rest/messages", sendingService))
                         // register WebSocket endpoint to push messages coming from Kafka to client

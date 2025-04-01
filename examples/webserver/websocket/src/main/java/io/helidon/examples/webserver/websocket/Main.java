@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package io.helidon.examples.webserver.websocket;
 
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 import io.helidon.webserver.websocket.WsRouting;
 
 /**
@@ -30,13 +30,14 @@ public class Main {
     }
 
     static void setup(WebServerConfig.Builder server) {
-        StaticContentService staticContent = StaticContentService.builder("/WEB")
-                                                         .welcomeFileName("index.html")
-                                                         .build();
         MessageQueueService messageQueueService = new MessageQueueService();
         server.routing(routing -> routing
-                       .register("/web", staticContent)
                        .register("/rest", messageQueueService))
+                .addFeature(StaticContentFeature.builder()
+                                    .addClasspath(cl -> cl.location("WEB")
+                                            .context("/web")
+                                            .welcome("index.html"))
+                                    .build())
                .addRouting(WsRouting.builder()
                                     .endpoint("/websocket/board", new MessageBoardEndpoint()));
     }

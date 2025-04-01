@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,9 @@ import io.helidon.http.HeaderValues;
 import io.helidon.http.Status;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
+import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpRouting;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 
 /**
  * The application main class.
@@ -46,28 +47,33 @@ public final class Main {
         // load logging configuration
         LogConfig.configureRuntime();
 
-        WebServer server = WebServer.builder()
-                .port(8080)
-                .routing(Main::routing)
-                .build()
-                .start();
+        WebServerConfig.Builder builder = WebServerConfig.builder();
+        setup(builder);
+        WebServer server = builder.build().start();
 
         System.out.println("WEB server is up! http://localhost:" + server.port() + "/greet");
+    }
+
+    static void setup(WebServerConfig.Builder builder) {
+        builder.addFeature(StaticContentFeature.builder()
+                            .addClasspath(cl -> cl.location("WEB")
+                                    .context("/ui")
+                                    .welcome("index.html"))
+                            .build())
+                .port(8080)
+                .routing(Main::routing);
     }
 
     /**
      * Updates HTTP Routing.
      */
-    static void routing(HttpRouting.Builder routing) {
+    private static void routing(HttpRouting.Builder routing) {
         routing.any("/", (req, res) -> {
                     // showing the capability to run on any path, and redirecting from root
                     res.status(Status.MOVED_PERMANENTLY_301);
                     res.headers().set(UI_REDIRECT);
                     res.send();
                 })
-                .register("/ui", CounterService::new)
-                .register("/ui", StaticContentService.builder("WEB")
-                        .welcomeFileName("index.html")
-                        .build());
+                .register("/ui", CounterService::new);
     }
 }

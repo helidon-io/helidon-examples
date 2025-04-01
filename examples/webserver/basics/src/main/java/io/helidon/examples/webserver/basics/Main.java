@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,6 @@ import io.helidon.webserver.http.HttpRouting;
 import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
-import io.helidon.webserver.staticcontent.StaticContentService;
 
 import jakarta.json.Json;
 import jakarta.json.JsonBuilderFactory;
@@ -239,8 +238,7 @@ public class Main {
      * @param mediaContext mediaContext
      */
     public static void supports(HttpRouting.Builder routing, MediaContextConfig.Builder mediaContext) {
-        routing.register("/supports", StaticContentService.create("/static"))
-                .get("/supports/hello/{what}", (req, res) ->
+        routing.get("/supports/hello/{what}", (req, res) ->
                         res.send(JSON.createObjectBuilder()
                                 .add("message", "Hello " + req.path()
                                         .pathParameters()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import io.helidon.http.Status;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 
 import static io.helidon.config.ConfigSources.classpath;
 import static io.helidon.config.ConfigSources.environmentVariables;
@@ -73,6 +73,10 @@ public final class Main {
         ConfigValue<URI> backendEndpoint = config.get("services.backend.endpoint").as(URI.class);
 
         server.config(config.get("server"))
+                .addFeature(StaticContentFeature.builder()
+                                    .addClasspath(cl -> cl.location("WEB")
+                                            .welcome("index.html"))
+                                    .build())
                 .routing(routing -> routing
                         // redirect POST / to GET /
                         .post("/", (req, res) -> {
@@ -80,8 +84,6 @@ public final class Main {
                             res.status(Status.SEE_OTHER_303);
                             res.send();
                         })
-                        // register static content support (on "/")
-                        .register(StaticContentService.builder("/WEB").welcomeFileName("index.html"))
                         // register API service (on "/api") - this path is secured (see application.yaml)
                         .register("/api", new TodoService(new BackendServiceClient(backendEndpoint::get))));
     }

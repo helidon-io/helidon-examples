@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2018, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.context.ContextFeature;
 import io.helidon.webserver.security.SecurityFeature;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 
 /**
  * Google login button example main class using builders.
@@ -76,6 +76,10 @@ public final class GoogleBuilderMain {
                 .addFeature(SecurityFeature.builder()
                                     .security(security)
                                     .build())
+                .addFeature(StaticContentFeature.builder()
+                                    .addClasspath(cl -> cl.location("WEB")
+                                            .welcome("index.html"))
+                                    .build())
                 .routing(routing -> routing
                 .get("/rest/profile", SecurityFeature.authenticate(),
                      (req, res) -> {
@@ -86,7 +90,6 @@ public final class GoogleBuilderMain {
                                     .map(Subject::toString)
                                     .orElse("Security context is null"));
                             res.next();
-                        })
-                .register(StaticContentService.create("/WEB")));
+                        }));
     }
 }

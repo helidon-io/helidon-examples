@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import io.helidon.logging.common.LogConfig;
 import io.helidon.security.SecurityContext;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 
 /**
  * Example using configuration based approach.
@@ -81,8 +81,11 @@ public final class BasicExampleConfigMain {
         Config config = Config.create();
 
         server.config(config.get("server"))
+                .addFeature(StaticContentFeature.builder()
+                                    .addClasspath(cl -> cl.location("WEB")
+                                            .welcome("index.html"))
+                                    .build())
                 .routing(routing -> routing
-                        .register("/static", StaticContentService.create("/WEB"))
                         .get("/{*}", (req, res) -> {
                             Optional<SecurityContext> securityContext = req.context().get(SecurityContext.class);
                             res.headers().contentType(HttpMediaTypes.PLAINTEXT_UTF_8);

@@ -23,7 +23,7 @@ import io.helidon.http.Status;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRules;
-import io.helidon.webserver.staticcontent.StaticContentService;
+import io.helidon.webserver.staticcontent.StaticContentFeature;
 
 /**
  * This application provides a simple file upload service with a UI to exercise multipart.
@@ -44,6 +44,11 @@ public final class Main {
         LogConfig.configureRuntime();
 
         WebServer server = WebServer.builder()
+                .addFeature(StaticContentFeature.builder()
+                                    .addClasspath(cl -> cl.location("WEB")
+                                            .context("/ui")
+                                            .welcome("index.html"))
+                                    .build())
                 .routing(Main::routing)
                 .connectionOptions(SocketOptions.builder()
                         .socketReceiveBufferSize(32 * 1024)     // can improve upload times
@@ -66,9 +71,6 @@ public final class Main {
                     res.header(UI_LOCATION);
                     res.send();
                 })
-                .register("/ui", StaticContentService.builder("WEB")
-                        .welcomeFileName("index.html")
-                        .build())
                 .register("/api", new FileService());
     }
 }
