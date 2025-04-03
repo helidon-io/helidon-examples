@@ -24,8 +24,11 @@ version = '1.0-SNAPSHOT'
 
 description = """helidon-quickstart-se"""
 
-sourceCompatibility = 21
-targetCompatibility = 21
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
@@ -54,10 +57,13 @@ dependencies {
     implementation 'io.helidon.config:helidon-config-yaml'
     implementation 'io.helidon.health:helidon-health-checks'
 
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation 'io.helidon.webserver.testing.junit5:helidon-webserver-testing-junit5'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'io.helidon.webclient:helidon-webclient'
     testImplementation 'org.hamcrest:hamcrest-all'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 }
 
 // define a custom task to copy all dependencies in the runtime classpath
