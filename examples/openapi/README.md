@@ -58,7 +58,7 @@ the default `/openapi` to `/myopenapi`.
 The [documentation for OpenAPI configuration](https://helidon.io/docs/v4/config/io_helidon_openapi_OpenApiFeature) shows all the settings available for customization.
 
 ### Customization via Code
-The `Main#setup` method in this example project initializes the Helidon webserver using the following code:
+As written, the `Main#setup` method in this example project initializes the Helidon webserver using the following code:
 ```java
 server.config(config.get("server"))
        .routing(Main::routing);
@@ -67,7 +67,7 @@ This code allows Helidon to automatically find any webserver features on the cla
 add them to the webserver, using any relevant configuration to prepare each feature.
 This includes the OpenAPI feature.
 
-Instead, your code can explicitly prepare a feature and add it to the webserver.
+However, you can explicitly prepare a feature and add it to the webserver.
 The following change customizes the endpoint that serves the OpenAPI document.
 ```java
 server.config(config.get("server"))
