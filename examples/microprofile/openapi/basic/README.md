@@ -30,4 +30,13 @@ curl -X GET http://localhost:8080/openapi
 The output describes not only then endpoints from `GreetResource` but
 also one contributed by the `SimpleAPIModelReader`.
 
+## Customizing OpenAPI Behavior
+You can customize the behavior of OpenAPI using configuration.
+
+The following example changes the endpoint that serves the OpenAPI document from
+the default `/openapi` to `/myopenapi`.
+```properties
+mp.openapi.web-context=/myopenapi
+```
+The [documentation for OpenAPI configuration](https://helidon.io/docs/v4/config/io_helidon_openapi_OpenApiFeature) shows all the settings available for customization.
 
