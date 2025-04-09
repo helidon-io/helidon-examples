@@ -33,7 +33,7 @@
 
     <properties>
         <mainClass>io.helidon.examples.coherence.Main</mainClass>
-        <version.lib.coherence>24.09.3</version.lib.coherence>
+        <version.lib.coherence>25.03</version.lib.coherence>
     </properties>
 
     <dependencyManagement>
