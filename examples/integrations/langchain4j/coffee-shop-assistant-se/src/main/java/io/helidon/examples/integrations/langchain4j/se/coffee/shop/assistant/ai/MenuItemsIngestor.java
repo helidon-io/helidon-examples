@@ -27,7 +27,7 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
-
+import dev.langchain4j.store.embedding.oracle.OracleEmbeddingStore;
 /**
  * A simple ingestor that populates the embedding store with menu items.
  *
@@ -46,17 +46,15 @@ public class MenuItemsIngestor {
     /**
      * Constructs a {@code MenuItemsIngestor} instance.
      *
-     * @param config            the application configuration
-     * @param embeddingStore    the embedding store where generated embeddings are stored
+     * @param oracleEmbeddingStore    the embedding store where generated embeddings are stored
      * @param embeddingModel    the embedding model used for generating embeddings
      * @param menuItemsService  the service for retrieving menu items from a JSON file
      */
     @Service.Inject
-    MenuItemsIngestor(Config config,
-                      @Service.Named("EmbeddingStore") EmbeddingStore<TextSegment> embeddingStore,
+    MenuItemsIngestor(OracleEmbeddingStore oracleEmbeddingStore,
                       EmbeddingModel embeddingModel,
                       MenuItemsService menuItemsService) {
-        this.embeddingStore = embeddingStore;
+        this.embeddingStore = oracleEmbeddingStore;
         this.embeddingModel = embeddingModel;
         this.menuItemsService = menuItemsService;
     }

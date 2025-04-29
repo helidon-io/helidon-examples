@@ -18,16 +18,32 @@ server:
   port: 8080
 
 langchain4j:
-  open-ai:
+  ollama:
     chat-model:
       enabled: true
-      api-key: "demo"
-      model-name: "gpt-4o-mini"
+      model-name: gemma3
+      base-url: http://localhost:11434
+  oracle:
+    embedding-store:
+      enabled: true
+      exact-search: false
+      vector-index-create-option: "CREATE_IF_NOT_EXISTS"
+      embedding-table:
+        create-option: "CREATE_IF_NOT_EXISTS"
+        name: "my-embeddings"
+        id-column: "idColumn"
+        embedding-column: "embeddingColumn"
+        text-column: "textColumn"
+        metadata-column: "metadataColumn"
   rag:
     embedding-store-content-retriever:
       enabled: true
       max-results: 10
       min-score: 0.6
-      embedding-store: "EmbeddingStore"
+      embedding-store: oracle
 app:
   menu-items: "data/menu.json"
+db:
+  userName: developer
+  password: free
+  url: jdbc:oracle:thin:@localhost:1521/ADB

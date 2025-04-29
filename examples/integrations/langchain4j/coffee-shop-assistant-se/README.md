@@ -6,11 +6,21 @@ NOTE: LangChain4J integration is a preview feature. The APIs shown here are subj
 
 ## **Features**
 
-- Integration with **OpenAI chat models**.
+- Integration with **Ollama chat models**.
 - Utilization of **embedding models**, **embedding store**, **ingestor**, and **content retriever**.
 - **Helidon Inject** for dependency injection.
 - **Embedding store initialization** from a JSON file.
+- Integration with **Oracle Embedding Store**
 - Support for **callback functions** to enhance interactions.
+
+## **Run ollama locally**
+
+Download from https://ollama.com/download/mac
+ollama run gemma3
+
+## **Run oracle locally**
+
+docker run -p 1521:1521 -e ORACLE_PASSWORD=free -e APP_USER=developer -e APP_USER_PASSWORD=free --name ADB gvenzl/oracle-free:23-slim
 
 ## **Build the Application**
 
