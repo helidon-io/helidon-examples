@@ -16,11 +16,20 @@ NOTE: LangChain4J integration is a preview feature. The APIs shown here are subj
 ## **Run ollama locally**
 
 Download from https://ollama.com/download/mac
-ollama run gemma3
 
-## **Run oracle locally**
+```shell
+ollama run qwen3 
+curl http://localhost:11434/api/generate -d '{ "model": "qwen3", "prompt": "Who are you?", "stream": false }'
+```
 
-docker run -p 1521:1521 -e ORACLE_PASSWORD=free -e APP_USER=developer -e APP_USER_PASSWORD=free --name ADB gvenzl/oracle-free:23-slim
+Didn't use gemma3 as it doesn't support Tools!!
+Didn't use llama3.3 locally as its 42GB!!
+
+## **Run Oracle 23ai locally**
+
+```shell
+docker run --name 23ai -p 1521:1521 -e ORACLE_PASSWORD=free -e APP_USER=vector -e APP_USER_PASSWORD=vector gvenzl/oracle-free:23-slim
+```
 
 ## **Build the Application**
 

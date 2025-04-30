@@ -21,29 +21,30 @@ langchain4j:
   ollama:
     chat-model:
       enabled: true
-      model-name: gemma3
+      model-name: qwen3
+      # required, even though its default
       base-url: http://localhost:11434
   oracle:
     embedding-store:
       enabled: true
+      # since we are not specifying any data-source here, Unnamed service which provides Datasource is used i.e. DataSourceFactory
       exact-search: false
-      vector-index-create-option: "CREATE_IF_NOT_EXISTS"
       embedding-table:
-        create-option: "CREATE_IF_NOT_EXISTS"
-        name: "my-embeddings"
-        id-column: "idColumn"
-        embedding-column: "embeddingColumn"
-        text-column: "textColumn"
-        metadata-column: "metadataColumn"
+        name: my_embedding_table
+        create-option: CREATE_OR_REPLACE
   rag:
     embedding-store-content-retriever:
       enabled: true
       max-results: 10
       min-score: 0.6
+      # this is how you tell our RAG integration to use oracle embedding store
       embedding-store: oracle
 app:
   menu-items: "data/menu.json"
 db:
-  userName: developer
-  password: free
-  url: jdbc:oracle:thin:@localhost:1521/ADB
+  # Using sys/system account: ORA-43853: VECTOR type cannot be used in non-automatic segment space management tablespace "SYSTEM"
+  # Using pdbadmin: doesn't have rights to create tables
+  # So we create a custom user and then create tables with pdb and not sid
+  userName: vector
+  password: vector
+  url: jdbc:oracle:thin:@localhost:1521/freepdb1

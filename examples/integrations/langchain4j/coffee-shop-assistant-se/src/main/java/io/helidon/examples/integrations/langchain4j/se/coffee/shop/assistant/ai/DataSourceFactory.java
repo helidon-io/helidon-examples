@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
-import io.helidon.config.Config;
+import io.helidon.common.config.Config;
 import io.helidon.service.registry.Service;
 
 import oracle.jdbc.pool.OracleDataSource;
