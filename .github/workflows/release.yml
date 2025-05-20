@@ -47,7 +47,7 @@ jobs:
             token: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
             fetch-depth: '0'
       - name: Set up JDK 17
-        uses: actions/setup-java@v4.1.0
+        uses: actions/setup-java@v4.7.1
         with:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
