@@ -35,7 +35,7 @@ mvn clean package
 Execute the following command to start the application:
 
 ```shell
-java -jar target/helidon-examples-integrations-langchain4j-coffee-shop-assistant-se-coherence.jar
+java -Dcoherence.wka=127.0.0.1 -jar target/helidon-examples-integrations-langchain4j-coffee-shop-assistant-se-coherence.jar
 ```
 
 Once running, you can interact with the assistant via your browser.
