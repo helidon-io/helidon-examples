@@ -107,9 +107,9 @@ public final class BasicExampleBuilderMain {
                                     .build())
                 .routing(routing -> routing
                 // must be configured first, to protect endpoints
-                .any("/static[/{*}]", SecurityFeature.rolesAllowed("user"))
+                .any("/static/*", SecurityFeature.rolesAllowed("user"))
                 .get("/noRoles", SecurityFeature.enforce())
-                .get("/user[/{*}]", SecurityFeature.rolesAllowed("user"))
+                .get("/user/*", SecurityFeature.rolesAllowed("user"))
                 .get("/admin", SecurityFeature.rolesAllowed("admin"))
                 // audit is not enabled for GET methods by default
                 .get("/deny", SecurityFeature.rolesAllowed("deny").audit())
@@ -117,7 +117,7 @@ public final class BasicExampleBuilderMain {
                 .any("/noAuthn", SecurityFeature.rolesAllowed("admin")
                         .authenticationOptional()
                         .audit())
-                .get("/{*}", (req, res) -> {
+                .get("/*", (req, res) -> {
                     Optional<SecurityContext> securityContext = req.context().get(SecurityContext.class);
                     res.headers().contentType(HttpMediaTypes.PLAINTEXT_UTF_8);
                     res.send("Hello, you are: \n" + securityContext

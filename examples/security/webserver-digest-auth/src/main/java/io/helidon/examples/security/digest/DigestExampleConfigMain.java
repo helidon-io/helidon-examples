@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2018, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ public final class DigestExampleConfigMain {
         server.config(config.get("server"))
                 .routing(routing -> routing
                 // web server does not (yet) have possibility to configure routes in config files, so explicit...
-                .get("/{*}", (req, res) -> {
+                .get("/*", (req, res) -> {
                     Optional<SecurityContext> securityContext = req.context().get(SecurityContext.class);
                     res.headers().contentType(HttpMediaTypes.PLAINTEXT_UTF_8);
                     res.send("Hello, you are: \n" + securityContext

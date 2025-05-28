@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2018, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ public final class DigestExampleBuilderMain {
                                     .build())
                 .routing(routing -> routing
                 .get("/noRoles", SecurityFeature.enforce())
-                .get("/user[/{*}]", SecurityFeature.rolesAllowed("user"))
+                .get("/user/*", SecurityFeature.rolesAllowed("user"))
                 .get("/admin", SecurityFeature.rolesAllowed("admin"))
                 // audit is not enabled for GET methods by default
                 .get("/deny", SecurityFeature.rolesAllowed("deny").audit())
@@ -113,7 +113,7 @@ public final class DigestExampleBuilderMain {
                 .any("/noAuthn", SecurityFeature.rolesAllowed("admin")
                         .authenticationOptional()
                         .audit())
-                .get("/{*}", (req, res) -> {
+                .get("/*", (req, res) -> {
                     Optional<SecurityContext> securityContext = req.context().get(SecurityContext.class);
                     res.headers().contentType(HttpMediaTypes.PLAINTEXT_UTF_8);
                     res.send("Hello, you are: \n" + securityContext

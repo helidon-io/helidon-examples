@@ -86,7 +86,7 @@ public final class BasicExampleConfigMain {
                                             .welcome("index.html"))
                                     .build())
                 .routing(routing -> routing
-                        .get("/{*}", (req, res) -> {
+                        .get("/*", (req, res) -> {
                             Optional<SecurityContext> securityContext = req.context().get(SecurityContext.class);
                             res.headers().contentType(HttpMediaTypes.PLAINTEXT_UTF_8);
                             res.send("Hello, you are: \n" + securityContext
