@@ -42,6 +42,7 @@
         <module>grpc</module>
         <module>grpc-random</module>
         <module>imperative</module>
+        <module>jsonrpc</module>
         <module>multiport</module>
         <module>mutual-tls</module>
         <module>observe</module>
