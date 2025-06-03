@@ -15,8 +15,10 @@
  */
 package io.helidon.examples.webserver.jsonrpc;
 
+import io.helidon.http.Status;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webserver.Router;
+import io.helidon.webserver.jsonrpc.JsonRpcError;
 import io.helidon.webserver.jsonrpc.JsonRpcRouting;
 import io.helidon.webserver.testing.junit5.ServerTest;
 import io.helidon.webserver.testing.junit5.SetUpRoute;
@@ -64,7 +66,7 @@ class JsonRpcTest {
         try (var res = client.post("/jsonrpc")
                 .contentType(APPLICATION_JSON)
                 .submit(JSON_RPC_START)) {
-            assertThat(res.status().code(), is(200));
+            assertThat(res.status().code(), is(Status.OK_200_CODE));
             JsonObject json = res.as(JsonObject.class).getJsonObject("result");
             assertThat(json.getString("status"), is("RUNNING"));
         }
@@ -75,7 +77,7 @@ class JsonRpcTest {
         try (var res = client.post("/jsonrpc")
                 .contentType(APPLICATION_JSON)
                 .submit(JSON_RPC_STOP)) {
-            assertThat(res.status().code(), is(200));
+            assertThat(res.status().code(), is(Status.OK_200_CODE));
             JsonObject json = res.as(JsonObject.class).getJsonObject("result");
             assertThat(json.getString("status"), is("STOPPED"));
         }
@@ -86,9 +88,9 @@ class JsonRpcTest {
         try (var res = client.post("/jsonrpc")
                 .contentType(APPLICATION_JSON)
                 .submit(JSON_RPC_START.replace("NOW", "LATER"))) {
-            assertThat(res.status().code(), is(200));
+            assertThat(res.status().code(), is(Status.OK_200_CODE));
             JsonObject json = res.as(JsonObject.class).getJsonObject("error");
-            assertThat(json.getInt("code"), is(-32600));
+            assertThat(json.getInt("code"), is(JsonRpcError.INVALID_PARAMS));
             assertThat(json.getJsonObject("data").getString("reason"), is("Bad param"));
         }
     }
@@ -98,9 +100,9 @@ class JsonRpcTest {
         try (var res = client.post("/jsonrpc")
                 .contentType(APPLICATION_JSON)
                 .submit(JSON_RPC_STOP.replace("NOW", "LATER"))) {
-            assertThat(res.status().code(), is(200));
+            assertThat(res.status().code(), is(Status.OK_200_CODE));
             JsonObject json = res.as(JsonObject.class).getJsonObject("error");
-            assertThat(json.getInt("code"), is(-32600));
+            assertThat(json.getInt("code"), is(JsonRpcError.INVALID_PARAMS));
             assertThat(json.getJsonObject("data").getString("reason"), is("Bad param"));
         }
     }

@@ -70,7 +70,7 @@ public class JsonRpcMain {
                 res.status(Status.OK_200).send();
             } else {
                 res.error(JsonRpcError.builder()
-                                  .code(-32600)
+                                  .code(JsonRpcError.INVALID_PARAMS)
                                   .data(new ErrorData("Bad param"))
                                   .build());
                 res.status(Status.OK_200).send();
@@ -85,7 +85,7 @@ public class JsonRpcMain {
                 res.status(Status.OK_200).send();
             } else {
                 res.error(JsonRpcError.builder()
-                                  .code(-32600)
+                                  .code(JsonRpcError.INVALID_PARAMS)
                                   .data(new ErrorData("Bad param"))
                                   .build());
                 res.status(Status.OK_200).send();
