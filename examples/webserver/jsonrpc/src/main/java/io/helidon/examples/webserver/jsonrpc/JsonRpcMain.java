@@ -17,16 +17,15 @@ package io.helidon.examples.webserver.jsonrpc;
 
 import java.time.Duration;
 
-import io.helidon.http.Status;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
+import io.helidon.webserver.jsonrpc.JsonRpcError;
 import io.helidon.webserver.jsonrpc.JsonRpcHandlers;
+import io.helidon.webserver.jsonrpc.JsonRpcRequest;
+import io.helidon.webserver.jsonrpc.JsonRpcResponse;
 import io.helidon.webserver.jsonrpc.JsonRpcRouting;
 import io.helidon.webserver.jsonrpc.JsonRpcRules;
 import io.helidon.webserver.jsonrpc.JsonRpcService;
-import io.helidon.webserver.jsonrpc.JsonRpcRequest;
-import io.helidon.webserver.jsonrpc.JsonRpcResponse;
-import io.helidon.webserver.jsonrpc.JsonRpcError;
 
 public class JsonRpcMain {
 
@@ -65,30 +64,28 @@ public class JsonRpcMain {
         void start(JsonRpcRequest req, JsonRpcResponse res) throws Exception {
             StartStopParams params = req.params().as(StartStopParams.class);
             if (params.when().equals("NOW")) {
-                res.id(req.id().orElseThrow());
                 res.result(new StartStopResult("RUNNING"));
-                res.status(Status.OK_200).send();
+                res.send();
             } else {
                 res.error(JsonRpcError.builder()
                                   .code(JsonRpcError.INVALID_PARAMS)
                                   .data(new ErrorData("Bad param"))
                                   .build());
-                res.status(Status.OK_200).send();
+                res.send();
             }
         }
 
         void stop(JsonRpcRequest req, JsonRpcResponse res) throws Exception {
             StartStopParams params = req.params().as(StartStopParams.class);
             if (params.when().equals("NOW")) {
-                res.id(req.id().orElseThrow());
                 res.result(new StartStopResult("STOPPED"));
-                res.status(Status.OK_200).send();
+                res.send();
             } else {
                 res.error(JsonRpcError.builder()
                                   .code(JsonRpcError.INVALID_PARAMS)
                                   .data(new ErrorData("Bad param"))
                                   .build());
-                res.status(Status.OK_200).send();
+                res.send();
             }
         }
 
