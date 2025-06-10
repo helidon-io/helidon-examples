@@ -24,9 +24,7 @@ import com.oracle.coherence.ai.DocumentChunk;
 import com.oracle.coherence.ai.VectorIndexExtractor;
 import com.oracle.coherence.ai.hnsw.HnswIndex;
 import com.tangosol.util.ValueExtractor;
-import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.coherence.CoherenceEmbeddingStore;
 
 /**
@@ -40,10 +38,10 @@ public class CoherenceEmbeddingStoreFactory implements Supplier<CoherenceEmbeddi
     private static final System.Logger LOGGER = System.getLogger(CoherenceEmbeddingStoreFactory.class.getName());
 
     @Service.Inject
-    Config config;
+    private Config config;
 
     @Service.Inject
-    EmbeddingModel embeddingModel;
+    private EmbeddingModel embeddingModel;
 
     @Override
     public CoherenceEmbeddingStore get() {
@@ -51,11 +49,13 @@ public class CoherenceEmbeddingStoreFactory implements Supplier<CoherenceEmbeddi
 
         builder.session(config.get("langchain4j.coherence.embedding-store.session").as(String.class).orElse(null));
         builder.name(config.get("langchain4j.coherence.embedding-store.name").as(String.class).orElse(null));
-        builder.normalizeEmbeddings(config.get("langchain4j.coherence.embedding-store.normalizeEmbeddings").as(Boolean.class).orElse(false));
+        builder.normalizeEmbeddings(config.get("langchain4j.coherence.embedding-store.normalizeEmbeddings").as(Boolean.class)
+                                            .orElse(false));
 
         VectorIndexExtractor extractor = null;
         if ("hnsw".equalsIgnoreCase(config.get("langchain4j.coherence.embedding-store.index").as(String.class).orElse(null))) {
-            Integer dimension = embeddingModel != null ? (Integer) embeddingModel.dimension() : config.get("langchain4j.coherence.embedding-store.dimension").as(Integer.class).orElse(null);
+            Integer dimension = embeddingModel != null ? (Integer) embeddingModel.dimension()
+                    : config.get("langchain4j.coherence.embedding-store.dimension").as(Integer.class).orElse(null);
             if (dimension != null) {
                 extractor = new HnswIndex<>(ValueExtractor.of(DocumentChunk::vector), dimension);
             } else {

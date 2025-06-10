@@ -27,7 +27,7 @@ import dev.langchain4j.service.SystemMessage;
  * the service registry.
  */
 @Ai.Service
-@Ai.ChatMemoryWindow(value=3,store="CoherenceChatMemoryStore")
+@Ai.ChatMemoryWindow(value = 3, store = "CoherenceChatMemoryStore")
 public interface ChatAiService {
 
     /**
