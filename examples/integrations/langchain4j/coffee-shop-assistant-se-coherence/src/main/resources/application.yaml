@@ -26,7 +26,6 @@ langchain4j:
       base-url: http://localhost:11434
   coherence:
     embedding-store:
-      enabled: true
       name: "menu"
       index: "hnsw"
       dimension: 768
@@ -35,7 +34,7 @@ langchain4j:
       enabled: true
       max-results: 10
       min-score: 0.6
-      # this is how you tell our RAG integration to use oracle embedding store
-      embedding-store: "EmbeddingStore"
+      # this is how you tell our RAG integration to use coherence embedding store
+      embedding-store: "CoherenceEmbeddingStore"
 app:
   menu-items: "data/menu.json"

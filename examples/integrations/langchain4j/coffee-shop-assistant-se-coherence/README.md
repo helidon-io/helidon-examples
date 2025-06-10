@@ -1,6 +1,6 @@
 # **Coffee Shop Assistant (Helidon SE Version)**
 
-This is a **demo application** showcasing the **Helidon SE integration with LangChain4J**. It demonstrates how to build an **AI-powered coffee shop assistant** using **Helidon Inject**, Ollama models, and Coherence embedding storage.
+This is a **demo application** showcasing the **Helidon SE integration with LangChain4J**. It demonstrates how to build an **AI-powered coffee shop assistant** using **Helidon Inject**, Ollama models, and Coherence LangChain4J integrations.
 
 NOTE: LangChain4J integration is a preview feature. The APIs shown here are subject to change. These APIs will be finalized in a future release of Helidon.
 
@@ -11,11 +11,12 @@ NOTE: LangChain4J integration is a preview feature. The APIs shown here are subj
 - **Helidon Inject** for dependency injection.
 - **Embedding store initialization** from a JSON file.
 - Integration with **Coherence Embedding Store**
+- Integration with **Coherence Chat Memory Store**
 - Support for **callback functions** to enhance interactions.
 
 ## **Run ollama locally**
 
-Download from https://ollama.com/download/mac
+Download from https://ollama.com/download
 
 ```shell
 ollama run qwen3 
