@@ -38,10 +38,12 @@ public class CoherenceEmbeddingStoreFactory implements Supplier<CoherenceEmbeddi
     private static final System.Logger LOGGER = System.getLogger(CoherenceEmbeddingStoreFactory.class.getName());
 
     @Service.Inject
-    private Config config;
+    @SuppressWarnings("checkstyle:VisibilityModifier")
+    Config config;
 
     @Service.Inject
-    private EmbeddingModel embeddingModel;
+    @SuppressWarnings("checkstyle:VisibilityModifier")
+    EmbeddingModel embeddingModel;
 
     @Override
     public CoherenceEmbeddingStore get() {
