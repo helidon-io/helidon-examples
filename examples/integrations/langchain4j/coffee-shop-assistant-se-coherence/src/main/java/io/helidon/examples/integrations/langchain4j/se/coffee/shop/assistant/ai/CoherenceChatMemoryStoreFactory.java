@@ -19,23 +19,21 @@ import java.util.function.Supplier;
 
 import io.helidon.service.registry.Service;
 
-import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.store.embedding.EmbeddingStore;
-import dev.langchain4j.store.embedding.coherence.CoherenceEmbeddingStore;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+import dev.langchain4j.store.memory.chat.coherence.CoherenceChatMemoryStore;
 
 /**
- * A factory service that provides an instance of {@link EmbeddingStore<TextSegment>}.
+ * A factory service that provides an instance of {@link dev.langchain4j.store.memory.chat.ChatMemoryStore}.
  *
- * This class implements {@link Supplier} to supply a named embedding store instance.
+ * This class implements {@link java.util.function.Supplier} to supply a named memory store instance.
  */
 @Service.Singleton
-@Service.Named("EmbeddingStore")
-public class EmbeddingStoreFactory implements Supplier<EmbeddingStore<TextSegment>> {
-    @Service.Inject
-    CoherenceEmbeddingStore coherenceEmbeddingStore;
+@Service.Named("CoherenceChatMemoryStore")
+public class CoherenceChatMemoryStoreFactory implements Supplier<ChatMemoryStore> {
 
     @Override
-    public EmbeddingStore<TextSegment> get() {
-        return coherenceEmbeddingStore;
+    public ChatMemoryStore get() {
+        CoherenceChatMemoryStore coherenceChatMemoryStore = CoherenceChatMemoryStore.create();
+        return coherenceChatMemoryStore;
     }
 }
