@@ -15,95 +15,95 @@
  */
 package io.helidon.examples.webserver.jsonrpc;
 
+import java.util.Optional;
+
 import io.helidon.http.Status;
-import io.helidon.webclient.http1.Http1Client;
-import io.helidon.webserver.Router;
-import io.helidon.webserver.jsonrpc.JsonRpcError;
+import io.helidon.jsonrpc.core.JsonRpcResult;
+import io.helidon.webclient.jsonrpc.JsonRpcClient;
+import io.helidon.webclient.jsonrpc.JsonRpcClientBatchRequest;
+import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.jsonrpc.JsonRpcRouting;
 import io.helidon.webserver.testing.junit5.ServerTest;
-import io.helidon.webserver.testing.junit5.SetUpRoute;
+import io.helidon.webserver.testing.junit5.SetUpServer;
 
-import jakarta.json.JsonObject;
+import jakarta.json.Json;
 import org.junit.jupiter.api.Test;
 
-import static io.helidon.common.media.type.MediaTypes.APPLICATION_JSON;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static io.helidon.examples.webserver.jsonrpc.JsonRpcMain.StartStopResult;
 
 @ServerTest
 class JsonRpcTest {
 
-    static final String JSON_RPC_START = """
-            {"jsonrpc": "2.0",
-                "method": "start",
-                "params": { "when" : "NOW", "duration" : "PT0S" },
-                "id": 1}
-            """;
+    private final JsonRpcClient client;
 
-    static final String JSON_RPC_STOP = """
-            {"jsonrpc": "2.0",
-                "method": "stop",
-                "params": { "when" : "NOW" },
-                "id": 2}
-            """;
-
-    private final Http1Client client;
-
-    JsonRpcTest(Http1Client client) {
+    JsonRpcTest(JsonRpcClient client) {
         this.client = client;
     }
 
-    @SetUpRoute
-    static void routing(Router.RouterBuilder<?> router) {
-        JsonRpcRouting routing = JsonRpcRouting.builder()
-                .service(new JsonRpcMain.JsonRpcService1())
+    @SetUpServer
+    static void setUpServer(WebServerConfig.Builder builder) {
+        JsonRpcRouting jsonRpcRouting = JsonRpcRouting.builder()
+                .service(new JsonRpcMain.MachineService())
                 .build();
-        router.addRouting(routing.toHttpRouting());
+        builder.routing(jsonRpcRouting);
     }
 
     @Test
     void testStart() {
-        try (var res = client.post("/jsonrpc")
-                .contentType(APPLICATION_JSON)
-                .submit(JSON_RPC_START)) {
-            assertThat(res.status().code(), is(Status.OK_200_CODE));
-            JsonObject json = res.as(JsonObject.class).getJsonObject("result");
-            assertThat(json.getString("status"), is("RUNNING"));
+        try (var res = client.rpcMethod("start")
+                .rpcId(1)
+                .param("when","NOW")
+                .param("duration", "PT0S")
+                .path("/machine")
+                .submit()) {
+            assertThat(res.status(), is(Status.OK_200));
+            assertThat(res.rpcId(), is(Optional.of(Json.createValue(1))));
+            assertThat(res.result().isPresent(), is(true));
+            StartStopResult result = res.result().get().as(StartStopResult.class);
+            assertThat(result.status(), is("RUNNING"));
         }
     }
 
     @Test
     void testStop() {
-        try (var res = client.post("/jsonrpc")
-                .contentType(APPLICATION_JSON)
-                .submit(JSON_RPC_STOP)) {
-            assertThat(res.status().code(), is(Status.OK_200_CODE));
-            JsonObject json = res.as(JsonObject.class).getJsonObject("result");
-            assertThat(json.getString("status"), is("STOPPED"));
+        try (var res = client.rpcMethod("stop")
+                .rpcId(2)
+                .param("when","NOW")
+                .path("/machine")
+                .submit()) {
+            assertThat(res.status(), is(Status.OK_200));
+            assertThat(res.rpcId(), is(Optional.of(Json.createValue(2))));
+            assertThat(res.result().isPresent(), is(true));
+            StartStopResult result = res.result().get().as(StartStopResult.class);
+            assertThat(result.status(), is("STOPPED"));
         }
     }
 
     @Test
-    void testStartError() {
-        try (var res = client.post("/jsonrpc")
-                .contentType(APPLICATION_JSON)
-                .submit(JSON_RPC_START.replace("NOW", "LATER"))) {
-            assertThat(res.status().code(), is(Status.OK_200_CODE));
-            JsonObject json = res.as(JsonObject.class).getJsonObject("error");
-            assertThat(json.getInt("code"), is(JsonRpcError.INVALID_PARAMS));
-            assertThat(json.getJsonObject("data").getString("reason"), is("Bad param"));
-        }
-    }
+    void testSimpleBatch() {
+        JsonRpcClientBatchRequest batch = client.batch("/machine");
 
-    @Test
-    void testStopError() {
-        try (var res = client.post("/jsonrpc")
-                .contentType(APPLICATION_JSON)
-                .submit(JSON_RPC_STOP.replace("NOW", "LATER"))) {
-            assertThat(res.status().code(), is(Status.OK_200_CODE));
-            JsonObject json = res.as(JsonObject.class).getJsonObject("error");
-            assertThat(json.getInt("code"), is(JsonRpcError.INVALID_PARAMS));
-            assertThat(json.getJsonObject("data").getString("reason"), is("Bad param"));
+        batch.rpcMethod("start")
+                .rpcId(1)
+                .param("when", "NOW")
+                .param("duration", "PT0S")
+                .addToBatch()
+                .rpcMethod("stop")
+                .rpcId(2)
+                .param("when","NOW")
+                .addToBatch();
+
+        try (var res = batch.submit()) {
+            assertThat(res.status(), is(Status.OK_200));
+            assertThat(res.size(), is(2));
+            Optional<JsonRpcResult> result0 = res.get(0).result();
+            assertThat(result0.isPresent(), is(true));
+            assertThat(result0.get().as(StartStopResult.class).status(), is("RUNNING"));
+            Optional<JsonRpcResult> result1 = res.get(1).result();
+            assertThat(result1.isPresent(), is(true));
+            assertThat(result1.get().as(StartStopResult.class).status(), is("STOPPED"));
         }
     }
 }

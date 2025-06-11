@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-se</artifactId>
-        <version>4.2.0-SNAPSHOT</version>
+        <version>4.3.0-SNAPSHOT</version>
         <relativePath/>
     </parent>
 
@@ -25,9 +25,12 @@
             <artifactId>helidon-webserver</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.helidon.jsonrpc</groupId>
+            <artifactId>helidon-jsonrpc-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.helidon.webserver</groupId>
-            <artifactId>helidon-webserver-json-rpc</artifactId>
-            <version>${helidon.version}</version>
+            <artifactId>helidon-webserver-jsonrpc</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.json</groupId>
@@ -62,12 +65,12 @@
         </dependency>
         <dependency>
             <groupId>io.helidon.webserver.testing.junit5</groupId>
-            <artifactId>helidon-webserver-testing-junit5</artifactId>
+            <artifactId>helidon-webserver-testing-junit5-jsonrpc</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.helidon.webclient</groupId>
-            <artifactId>helidon-webclient-http1</artifactId>
+            <artifactId>helidon-webclient-jsonrpc</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

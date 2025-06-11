@@ -19,7 +19,7 @@ import java.time.Duration;
 
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
-import io.helidon.webserver.jsonrpc.JsonRpcError;
+import io.helidon.jsonrpc.core.JsonRpcError;
 import io.helidon.webserver.jsonrpc.JsonRpcHandlers;
 import io.helidon.webserver.jsonrpc.JsonRpcRequest;
 import io.helidon.webserver.jsonrpc.JsonRpcResponse;
@@ -36,66 +36,54 @@ public class JsonRpcMain {
         LogConfig.configureRuntime();
 
         // create JSON-RPC routing
-        JsonRpcRouting routing = JsonRpcRouting.builder()
-                .service(new JsonRpcService1())
+        JsonRpcRouting jsonRpcRouting = JsonRpcRouting.builder()
+                .service(new MachineService())
                 .build();
 
-        // set up HTTP routing from JSON-RPC routing
+        // set up HTTP routing using JSON-RPC routing
         WebServer.builder()
                 .port(8080)
                 .host("127.0.0.1")
-                .addRouting(routing.toHttpRouting())
+                .routing(jsonRpcRouting)
                 .build()
                 .start();
     }
 
-    static class JsonRpcService1 implements JsonRpcService {
+    static class MachineService implements JsonRpcService {
 
         @Override
         public void routing(JsonRpcRules rules) {
-            // register a handler for each method on same path
-            rules.register("/jsonrpc",
+            rules.register("/machine",
                            JsonRpcHandlers.builder()
-                                   .method("start", this::start)
-                                   .method("stop", this::stop)
+                                   .putMethod("start", this::start)
+                                   .putMethod("stop", this::stop)
                                    .build());
         }
 
-        void start(JsonRpcRequest req, JsonRpcResponse res) throws Exception {
+        void start(JsonRpcRequest req, JsonRpcResponse res) {
             StartStopParams params = req.params().as(StartStopParams.class);
             if (params.when().equals("NOW")) {
                 res.result(new StartStopResult("RUNNING"));
-                res.send();
             } else {
-                res.error(JsonRpcError.builder()
-                                  .code(JsonRpcError.INVALID_PARAMS)
-                                  .data(new ErrorData("Bad param"))
-                                  .build());
-                res.send();
+                res.error(JsonRpcError.INVALID_PARAMS, "Bad param");
             }
+            res.send();
         }
 
-        void stop(JsonRpcRequest req, JsonRpcResponse res) throws Exception {
+        void stop(JsonRpcRequest req, JsonRpcResponse res) {
             StartStopParams params = req.params().as(StartStopParams.class);
             if (params.when().equals("NOW")) {
                 res.result(new StartStopResult("STOPPED"));
-                res.send();
             } else {
-                res.error(JsonRpcError.builder()
-                                  .code(JsonRpcError.INVALID_PARAMS)
-                                  .data(new ErrorData("Bad param"))
-                                  .build());
-                res.send();
+                res.error(JsonRpcError.INVALID_PARAMS, "Bad param");
             }
+            res.send();
         }
+    }
 
-        public record StartStopParams(String when, Duration duration) {
-        }
+    record StartStopParams(String when, Duration duration) {
+    }
 
-        public record StartStopResult(String status) {
-        }
-
-        public record ErrorData(String reason) {
-        }
+    record StartStopResult(String status) {
     }
 }
