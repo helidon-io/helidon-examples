@@ -15,12 +15,20 @@
  */
 package io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.rest;
 
+import java.util.List;
+
 import io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.ai.ChatAiService;
+import io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.ai.MetricsChatModelListener;
 import io.helidon.service.registry.Service;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
+
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
+
+import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 
 /**
  * HTTP service for interacting with the AI assistant.
@@ -32,6 +40,7 @@ import io.helidon.webserver.http.ServerResponse;
 public class ChatBotService implements HttpService {
 
     private final ChatAiService chatAiService;
+    private final ChatLanguageModel chatLanguageModel;
 
     /**
      * Constructs a {@code ChatBotService} instance.
@@ -41,6 +50,11 @@ public class ChatBotService implements HttpService {
     @Service.Inject
     public ChatBotService(ChatAiService chatAiService) {
         this.chatAiService = chatAiService;
+        this.chatLanguageModel = OpenAiChatModel.builder()
+                .apiKey("demo")
+                .modelName(GPT_4_O_MINI)
+                .listeners(List.of(new MetricsChatModelListener()))
+                .build();
     }
 
     @Override
@@ -60,7 +74,8 @@ public class ChatBotService implements HttpService {
      */
     private void chatWithAssistant(ServerRequest req, ServerResponse res) {
         var question = req.query().first("question").orElse("Hello");
-        var answer = chatAiService.chat(question);
+        System.out.println("** chatWithAssistant: Question: " + question);
+        var answer = chatLanguageModel.generate(question); //chatAiService.chat(question);
         res.send(answer);
     }
 }
