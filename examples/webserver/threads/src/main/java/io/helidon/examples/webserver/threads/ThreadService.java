@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.concurrent.RejectedExecutionException;
 import io.helidon.common.configurable.ThreadPoolSupplier;
 import io.helidon.config.Config;
 import io.helidon.http.Status;
+import io.helidon.service.registry.Services;
 import io.helidon.webclient.api.ClientResponseTyped;
 import io.helidon.webclient.api.WebClient;
 import io.helidon.webserver.http.HttpRules;
@@ -49,7 +50,7 @@ class ThreadService implements HttpService {
      */
 
     ThreadService() {
-        this(Config.global().get("app"));
+        this(Services.get(Config.class).get("app"));
     }
 
     ThreadService(Config appConfig) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2019, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import io.helidon.dbclient.DbTransaction;
 import io.helidon.http.BadRequestException;
 import io.helidon.http.NotFoundException;
 import io.helidon.http.Status;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
@@ -59,7 +60,7 @@ public class PokemonService implements HttpService {
      * Create a new Pokémon service with a DB client.
      */
     PokemonService() {
-        Config config = Config.global().get("db");
+        Config config = Services.get(Config.class).get("db");
         this.dbClient = Contexts.globalContext()
                 .get(DbClient.class)
                 .orElseGet(() -> DbClient.create(config));

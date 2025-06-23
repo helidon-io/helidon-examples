@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import io.helidon.config.Config;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
@@ -63,7 +64,7 @@ public class GenAiService implements HttpService {
     private final String embedModelId;
 
     GenAiService() {
-        Config config = Config.global();
+        Config config = Services.get(Config.class);
         // Initialize GenAI client based on OCI Auth as configured in config system
         try {
             AuthenticationDetailsProvider authProvider = new SessionTokenAuthenticationDetailsProvider(

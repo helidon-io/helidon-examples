@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package io.helidon.examples.webclient.standalone;
 
 import io.helidon.config.Config;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpRouting;
@@ -37,10 +38,6 @@ public final class ServerMain {
      * @param args starting arguments
      */
     public static void main(String[] args) {
-        // By default, this will pick up application.yaml from the classpath
-        Config config = Config.create();
-        Config.global(config);
-
         WebServerConfig.Builder builder = WebServer.builder();
         setup(builder);
         WebServer server = builder.build().start();
@@ -54,7 +51,7 @@ public final class ServerMain {
      * @param server server builder
      */
     static void setup(WebServerConfig.Builder server) {
-        Config config = Config.global();
+        Config config = Services.get(Config.class);
         server.config(config.get("server"))
               .routing(ServerMain::routing);
     }

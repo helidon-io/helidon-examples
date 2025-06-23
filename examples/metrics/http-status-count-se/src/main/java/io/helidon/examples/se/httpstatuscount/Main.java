@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package io.helidon.examples.se.httpstatuscount;
 
 import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpRouting;
@@ -54,8 +55,7 @@ public final class Main {
         LogConfig.configureRuntime();
 
         // By default, this will pick up application.yaml from the classpath
-        Config config = Config.create();
-        Config.global(config);
+        Config config = Services.get(Config.class);
 
         server.routing(Main::routing)
                 .config(config.get("server"));
