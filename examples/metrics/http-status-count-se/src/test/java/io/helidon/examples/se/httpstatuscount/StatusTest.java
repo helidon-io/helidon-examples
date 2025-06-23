@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,6 @@ public class StatusTest {
 
     @SetUpServer
     public static void setup(WebServerConfig.Builder server) {
-        Config.global(Config.create());
         server.routing(r -> {
             Main.routing(r);
             r.register("/status", new StatusService());

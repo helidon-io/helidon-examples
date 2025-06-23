@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import io.helidon.config.Config;
 import io.helidon.cors.CrossOriginConfig;
 import io.helidon.logging.common.LogConfig;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.cors.CorsSupport;
@@ -47,8 +48,7 @@ public final class Main {
         LogConfig.configureRuntime();
 
         // initialize global config from default configuration
-        Config config = Config.create();
-        Config.global(config);
+        Config config = Services.get(Config.class);
 
         // Get webserver config from the "server" section of application.yaml
         WebServerConfig.Builder builder = WebServer.builder();
@@ -73,7 +73,7 @@ public final class Main {
     }
 
     private static CorsSupport corsSupportForGreeting() {
-        Config config = Config.global();
+        Config config = Services.get(Config.class);
 
         // The default CorsSupport object (obtained using CorsSupport.create()) allows sharing for any HTTP method and with any
         // origin. Using CorsSupport.create(Config) with a missing config node yields a default CorsSupport, which might not be

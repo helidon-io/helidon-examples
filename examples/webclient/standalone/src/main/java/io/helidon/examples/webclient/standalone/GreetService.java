@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import io.helidon.config.Config;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.Status;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
@@ -56,7 +57,7 @@ public class GreetService implements HttpService {
     private final AtomicReference<String> greeting = new AtomicReference<>();
 
     GreetService() {
-        Config config = Config.global();
+        Config config = Services.get(Config.class);
         greeting.set(config.get("app.greeting").asString().orElse("Ciao"));
     }
 

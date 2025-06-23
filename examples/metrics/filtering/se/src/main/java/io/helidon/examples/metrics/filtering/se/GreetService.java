@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2021, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import io.helidon.http.Status;
 import io.helidon.metrics.api.Counter;
 import io.helidon.metrics.api.MeterRegistry;
 import io.helidon.metrics.api.Timer;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
@@ -64,7 +65,7 @@ public class GreetService implements HttpService {
     private final Counter personalizedGreetingsCounter;
 
     GreetService(MeterRegistry meterRegistry) {
-        Config config = Config.global();
+        Config config = Services.get(Config.class);
         greeting.set(config.get("app.greeting").asString().orElse("Ciao"));
         timerForGets = meterRegistry.getOrCreate(Timer.builder(TIMER_FOR_GETS));
         personalizedGreetingsCounter = meterRegistry.getOrCreate(Counter.builder(COUNTER_FOR_PERSONALIZED_GREETINGS));

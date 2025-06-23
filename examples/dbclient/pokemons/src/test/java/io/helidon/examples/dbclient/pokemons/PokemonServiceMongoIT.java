@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.Map;
 import io.helidon.config.Config;
 import io.helidon.config.ConfigSources;
 
+import io.helidon.service.registry.Services;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.MongoDBContainer;
@@ -38,7 +39,7 @@ public class PokemonServiceMongoIT extends AbstractPokemonServiceTest {
     @BeforeAll
     static void start() {
         String url = String.format("mongodb://127.0.0.1:%s/pokemon", container.getMappedPort(27017));
-        Config.global(Config.builder()
+        Services.set(Config.class, Config.builder()
                 .addSource(ConfigSources.create(Map.of("db.connection.url", url)))
                 .addSource(classpath("application-mongo-test.yaml"))
                 .build());

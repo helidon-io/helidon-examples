@@ -18,6 +18,7 @@ package io.helidon.examples.integrations.oci.genai;
 
 import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
 
@@ -43,9 +44,8 @@ public final class OciGenAiMain {
         // load logging configuration
         LogConfig.configureRuntime();
 
-        // initialize global config from default configuration
-        Config config = Config.create();
-        Config.global(config);
+        // Get default config
+        Config config = Services.get(Config.class);
 
         // Prepare routing for the server
         WebServer server = WebServer.builder()
