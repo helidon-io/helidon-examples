@@ -63,6 +63,7 @@
         <module>webclient</module>
         <module>webserver</module>
         <module>coherence</module>
+        <module>declarative</module>
     </modules>
 
     <build>
