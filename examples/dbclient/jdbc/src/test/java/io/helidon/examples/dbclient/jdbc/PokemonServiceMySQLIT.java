@@ -21,7 +21,10 @@ import java.util.Map;
 import io.helidon.config.Config;
 import io.helidon.config.ConfigSources;
 
+import io.helidon.service.registry.GlobalServiceRegistry;
 import io.helidon.service.registry.Services;
+import io.helidon.testing.junit5.Testing;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.MySQLContainer;
@@ -30,6 +33,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static io.helidon.config.ConfigSources.classpath;
 
+@Testing.Test
 @Testcontainers(disabledWithoutDocker = true)
 class PokemonServiceMySQLIT extends AbstractPokemonServiceTest {
 
