@@ -22,6 +22,13 @@ import io.helidon.service.registry.ServiceRegistryManager;
 import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 
+/**
+ * Main class responsible for starting the service registry.
+ * <p>
+ * This class is annotated with {@link io.helidon.service.registry.Service.GenerateBinding}, which (when used in combination
+ * with Helidon Maven Plugin) generates a binding class that can be used to bootstrap Helidon without usage of reflection
+ * and classpath lookup during discovery of services.
+ */
 // annotation is required to generate application binding
 @Service.GenerateBinding
 public class Main {
