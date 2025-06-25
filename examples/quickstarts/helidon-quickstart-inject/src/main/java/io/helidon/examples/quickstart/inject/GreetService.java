@@ -19,7 +19,8 @@ package io.helidon.examples.quickstart.inject;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.helidon.common.config.Config;
+import io.helidon.common.Default;
+import io.helidon.common.config.Configuration;
 import io.helidon.http.Status;
 import io.helidon.service.registry.Service;
 import io.helidon.webserver.http.HttpRules;
@@ -44,9 +45,8 @@ import jakarta.json.JsonObject;
  * {@code curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Howdy"}' http://localhost:8080/greet/greeting}
  * <p>
  * The message is returned as a JSON object.
- * <p>
- * This service is used from {@link io.helidon.examples.quickstart.inject.StartupService} via injection.
  */
+@SuppressWarnings("deprecation")
 @Service.Singleton
 class GreetService implements HttpService {
 
@@ -58,8 +58,8 @@ class GreetService implements HttpService {
     private final AtomicReference<String> greeting = new AtomicReference<>();
 
     @Service.Inject
-    GreetService(Config config) {
-        greeting.set(config.get("app.greeting").asString().orElse("Ciao"));
+    GreetService(@Default.Value("Ciao") @Configuration.Value("app.greeting") String greeting) {
+        this.greeting.set(greeting);
     }
 
     /**

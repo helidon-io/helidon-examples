@@ -17,13 +17,11 @@
 package io.helidon.examples.quickstart.inject;
 
 import io.helidon.http.Status;
-import io.helidon.service.registry.GlobalServiceRegistry;
-import io.helidon.testing.junit5.Testing;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webclient.http1.Http1ClientResponse;
+import io.helidon.webserver.testing.junit5.ServerTest;
 
 import jakarta.json.JsonObject;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -32,24 +30,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * There is currently no test annotation available for
  */
-// this makes sure we have a service registry dedicated to this test
-// Helidon currently does not have a server test annotation that works with service registry, some steps are manual for now
-@Testing.Test
+@ServerTest
 class MainTest {
-    private static Http1Client client;
+    private final Http1Client client;
 
-    @BeforeAll
-    static void setup() {
-        // invoke post construct on startup service, to make sure the server starts
-        // if more than one service has a RunLevel, you can also lookup based on the run levels
-        // no need for @AfterAll, as the registry will be shut down thanks to the Testing.Test annotation
-        StartupService startupService = GlobalServiceRegistry.registry()
-                .get(StartupService.class);
-
-        // and create a client
-        client = Http1Client.builder()
-                .baseUri("http://localhost:" + startupService.serverPort())
-                .build();
+    MainTest(Http1Client client) {
+        this.client = client;
     }
 
     @Test

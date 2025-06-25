@@ -29,3 +29,6 @@ server:
   #      metrics:
   #      health:
   #        enabled: false
+
+declarative:
+  ignore-incubating: true
