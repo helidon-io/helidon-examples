@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2021, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package io.helidon.examples.integrations.micrometer.se;
 import io.helidon.config.Config;
 import io.helidon.integrations.micrometer.MicrometerFeature;
 import io.helidon.logging.common.LogConfig;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
 
@@ -58,8 +59,7 @@ public final class Main {
 
         // By default, this will pick up application.yaml from the classpath
         // and initialize global config
-        Config config = Config.create();
-        Config.global(config);
+        Config config = Services.get(Config.class);
 
         WebServer server = WebServer.builder()
                 .config(config.get("server"))
@@ -78,7 +78,7 @@ public final class Main {
      */
     static void setupRouting(HttpRouting.Builder routing) {
 
-        Config config = Config.global();
+        Config config = Services.get(Config.class);
 
         MicrometerFeature micrometerSupport = MicrometerFeature.create(config);
         Counter personalizedGetCounter = micrometerSupport.registry()

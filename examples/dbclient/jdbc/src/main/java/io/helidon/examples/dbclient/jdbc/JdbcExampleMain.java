@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2019, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import io.helidon.config.Config;
 import io.helidon.dbclient.DbClient;
 import io.helidon.dbclient.health.DbClientHealthCheck;
 import io.helidon.logging.common.LogConfig;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.observe.ObserveFeature;
@@ -55,7 +56,7 @@ public final class JdbcExampleMain {
 
     static WebServerConfig.Builder setupServer(WebServerConfig.Builder builder) {
         // By default, this will pick up application.yaml from the classpath
-        Config config = Config.global();
+        Config config = Services.get(Config.class);
 
         Config dbConfig = config.get("db");
         DbClient dbClient = DbClient.create(dbConfig);

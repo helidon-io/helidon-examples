@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import io.helidon.grpc.api.Grpc;
 import io.helidon.grpc.core.CollectingObserver;
 
+import com.google.protobuf.Descriptors;
 import io.grpc.stub.StreamObserver;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -31,6 +32,16 @@ import jakarta.enterprise.context.ApplicationScoped;
 @Grpc.GrpcService
 @ApplicationScoped
 public class StringService {
+
+    /**
+     * Make the proto available to Helidon for gRPC reflection.
+     *
+     * @return the proto file descriptor
+     */
+    @Grpc.Proto
+    public Descriptors.FileDescriptor proto() {
+        return Strings.getDescriptor();
+    }
 
     /**
      * Uppercase a string.

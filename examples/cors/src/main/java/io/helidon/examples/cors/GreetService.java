@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.Collections;
 
 import io.helidon.config.Config;
 import io.helidon.http.Status;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
@@ -54,7 +55,7 @@ public class GreetService implements HttpService {
     private static final JsonBuilderFactory JSON_BF = Json.createBuilderFactory(Collections.emptyMap());
 
     GreetService() {
-        Config config = Config.global();
+        Config config = Services.get(Config.class);
         this.greeting = config.get("app.greeting").asString().orElse("Ciao");
     }
 

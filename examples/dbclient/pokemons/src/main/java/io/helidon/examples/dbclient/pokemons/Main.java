@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2019, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import io.helidon.config.ConfigSources;
 import io.helidon.dbclient.DbClient;
 import io.helidon.dbclient.health.DbClientHealthCheck;
 import io.helidon.logging.common.LogConfig;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpRouting;
@@ -70,9 +71,8 @@ public final class Main {
         // load logging configuration
         LogConfig.configureRuntime();
 
-        // By default, this will pick up application.yaml from the classpath
         Config config = mongo ? Config.create(ConfigSources.classpath(MONGO_CFG)) : Config.create();
-        Config.global(config);
+        Services.set(Config.class, config);
 
         WebServer server = setupServer(WebServer.builder())
                 .build()
@@ -83,7 +83,7 @@ public final class Main {
 
     static WebServerConfig.Builder setupServer(WebServerConfig.Builder builder) {
 
-        Config config = Config.global();
+        Config config = Services.get(Config.class);
         // Client services are added through a service loader - see mongoDB example for explicit services
         DbClient dbClient = DbClient.create(config.get("db"));
         Contexts.globalContext().register(dbClient);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.concurrent.Semaphore;
 
 import io.helidon.config.Config;
 import io.helidon.faulttolerance.Bulkhead;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
@@ -33,7 +34,7 @@ class SleepService  implements HttpService {
     private static Bulkhead rateLimitBulkhead;
 
     SleepService() {
-        this(Config.global().get("app"));
+        this(Services.get(Config.class).get("app"));
     }
 
     private SleepService(Config appConfig) {

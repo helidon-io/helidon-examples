@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package io.helidon.examples.webserver.grpc;
 
 import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.grpc.GrpcRouting;
 import io.helidon.webserver.observe.ObserveFeature;
@@ -37,8 +38,7 @@ class GrpcMain {
         LogConfig.configureRuntime();
 
         // initialize global config from default configuration
-        Config config = Config.create();
-        Config.global(config);
+        Config config = Services.get(Config.class);
         Config serverConfig = config.get("server");
 
         // create a health check to verify gRPC endpoint

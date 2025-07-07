@@ -18,6 +18,7 @@ package io.helidon.examples.webserver.sdp;
 
 import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
 
@@ -41,8 +42,7 @@ public class Main {
         LogConfig.configureRuntime();
 
         // initialize global config from default configuration
-        Config config = Config.create();
-        Config.global(config);
+        Config config = Services.get(Config.class);
 
         WebServer server = WebServer.builder()
                 .config(config.get("server"))
