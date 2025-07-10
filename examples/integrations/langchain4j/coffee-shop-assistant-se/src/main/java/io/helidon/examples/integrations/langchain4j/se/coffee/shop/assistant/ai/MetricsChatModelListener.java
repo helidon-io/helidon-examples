@@ -68,13 +68,11 @@ public class MetricsChatModelListener implements ChatModelListener {
                 .scope(DistributionSummary.Scope.VENDOR)
                 .baseUnit(DistributionSummary.BaseUnits.SECONDS)
                 .description("GenAI operation duration");
-        System.out.println(" ** MetricsChatModelListener initialized ** ");
     }
 
     @Override
     public void onRequest(ChatModelRequestContext chatModelRequestContext) {
         chatModelRequestContext.attributes().put(GEN_AI_CLIENT_OPERATION_START_TIME, System.nanoTime());
-        System.out.println("** onRequest: Started timer clientOperationDuration ***");
     }
 
     @Override
@@ -90,7 +88,6 @@ public class MetricsChatModelListener implements ChatModelListener {
                 .addTag(Tag.create("gen_ai.request.model", chatModelRequest.model()))
                 .addTag(Tag.create("gen_ai.token.type", "input"));
         this.clientTokenUsage = this.meterRegistry.getOrCreate(inputClientTokenUsageBuilder);
-        System.out.println("** onResponse: Recording inputTokenCount ***");
         this.clientTokenUsage.record(chatModelResponse.tokenUsage().inputTokenCount());
 
         DistributionSummary.Builder outputClientTokenUsageBuilder = this.clientTokenUsageBuilder
@@ -98,7 +95,6 @@ public class MetricsChatModelListener implements ChatModelListener {
                 .addTag(Tag.create("gen_ai.response.model", chatModelResponse.model()))
                 .addTag(Tag.create("gen_ai.token.type", "output"));
         this.clientTokenUsage = this.meterRegistry.getOrCreate(outputClientTokenUsageBuilder);
-        System.out.println("** onResponse: Recording outputTokenCount ***");
         this.clientTokenUsage.record(chatModelResponse.tokenUsage().outputTokenCount());
 
         DistributionSummary.Builder responseClientOperationDurationBuilder = this.clientOperationDurationBuilder
@@ -106,7 +102,6 @@ public class MetricsChatModelListener implements ChatModelListener {
                 .addTag(Tag.create("gen_ai.request.model", chatModelRequest.model()))
                 .addTag(Tag.create("gen_ai.response.model", chatModelResponse.model()));
         this.clientOperationDuration = this.meterRegistry.getOrCreate(responseClientOperationDurationBuilder);
-        System.out.println("** onResponse: Recording clientOperationDuration ***");
         this.clientOperationDuration.record(TimeUnit.SECONDS.convert(endTime - startTime, TimeUnit.NANOSECONDS));
     }
 
@@ -125,7 +120,6 @@ public class MetricsChatModelListener implements ChatModelListener {
                 .addTag(Tag.create("gen_ai.request.model", chatModelRequest.model()))
                 .addTag(Tag.create("error.type", sb));
         this.clientOperationDuration = this.meterRegistry.getOrCreate(errorClientOperationDurationBuilder);
-        System.out.println("** onError: Recording clientOperationDuration ***");
         this.clientOperationDuration.record(TimeUnit.SECONDS.convert(endTime - startTime, TimeUnit.NANOSECONDS));
     }
 }

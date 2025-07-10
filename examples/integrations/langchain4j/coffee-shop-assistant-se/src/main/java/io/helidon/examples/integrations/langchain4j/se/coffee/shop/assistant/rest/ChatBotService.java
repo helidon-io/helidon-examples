@@ -74,7 +74,6 @@ public class ChatBotService implements HttpService {
      */
     private void chatWithAssistant(ServerRequest req, ServerResponse res) {
         var question = req.query().first("question").orElse("Hello");
-        System.out.println("** chatWithAssistant: Question: " + question);
         var answer = chatLanguageModel.generate(question); //chatAiService.chat(question);
         res.send(answer);
     }
