@@ -21,17 +21,17 @@ import io.helidon.http.Status;
 import io.helidon.jsonrpc.core.JsonRpcResult;
 import io.helidon.webclient.jsonrpc.JsonRpcClient;
 import io.helidon.webclient.jsonrpc.JsonRpcClientBatchRequest;
-import io.helidon.webserver.WebServerConfig;
+import io.helidon.webserver.http.HttpRouting;
 import io.helidon.webserver.jsonrpc.JsonRpcRouting;
 import io.helidon.webserver.testing.junit5.ServerTest;
-import io.helidon.webserver.testing.junit5.SetUpServer;
+import io.helidon.webserver.testing.junit5.SetUpRoute;
 
 import jakarta.json.Json;
 import org.junit.jupiter.api.Test;
 
+import static io.helidon.examples.webserver.jsonrpc.JsonRpcMain.StartStopResult;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static io.helidon.examples.webserver.jsonrpc.JsonRpcMain.StartStopResult;
 
 @ServerTest
 class JsonRpcTest {
@@ -42,12 +42,12 @@ class JsonRpcTest {
         this.client = client;
     }
 
-    @SetUpServer
-    static void setUpServer(WebServerConfig.Builder builder) {
+    @SetUpRoute
+    static void routing(HttpRouting.Builder builder) {
         JsonRpcRouting jsonRpcRouting = JsonRpcRouting.builder()
                 .service(new JsonRpcMain.MachineService())
                 .build();
-        builder.routing(jsonRpcRouting);
+        builder.register("/rpc", jsonRpcRouting);
     }
 
     @Test
@@ -56,7 +56,7 @@ class JsonRpcTest {
                 .rpcId(1)
                 .param("when","NOW")
                 .param("duration", "PT0S")
-                .path("/machine")
+                .path("/rpc/machine")
                 .submit()) {
             assertThat(res.status(), is(Status.OK_200));
             assertThat(res.rpcId(), is(Optional.of(Json.createValue(1))));
@@ -71,7 +71,7 @@ class JsonRpcTest {
         try (var res = client.rpcMethod("stop")
                 .rpcId(2)
                 .param("when","NOW")
-                .path("/machine")
+                .path("/rpc/machine")
                 .submit()) {
             assertThat(res.status(), is(Status.OK_200));
             assertThat(res.rpcId(), is(Optional.of(Json.createValue(2))));
@@ -83,7 +83,7 @@ class JsonRpcTest {
 
     @Test
     void testSimpleBatch() {
-        JsonRpcClientBatchRequest batch = client.batch("/machine");
+        JsonRpcClientBatchRequest batch = client.batch("/rpc/machine");
 
         batch.rpcMethod("start")
                 .rpcId(1)

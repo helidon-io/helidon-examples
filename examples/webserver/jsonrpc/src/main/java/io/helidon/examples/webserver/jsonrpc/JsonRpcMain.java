@@ -17,9 +17,9 @@ package io.helidon.examples.webserver.jsonrpc;
 
 import java.time.Duration;
 
+import io.helidon.jsonrpc.core.JsonRpcError;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
-import io.helidon.jsonrpc.core.JsonRpcError;
 import io.helidon.webserver.jsonrpc.JsonRpcHandlers;
 import io.helidon.webserver.jsonrpc.JsonRpcRequest;
 import io.helidon.webserver.jsonrpc.JsonRpcResponse;
@@ -44,7 +44,7 @@ public class JsonRpcMain {
         WebServer.builder()
                 .port(8080)
                 .host("127.0.0.1")
-                .routing(jsonRpcRouting)
+                .routing(r -> r.register("/rpc", jsonRpcRouting))
                 .build()
                 .start();
     }
@@ -81,9 +81,9 @@ public class JsonRpcMain {
         }
     }
 
-    record StartStopParams(String when, Duration duration) {
+    public record StartStopParams(String when, Duration duration) {
     }
 
-    record StartStopResult(String status) {
+    public record StartStopResult(String status) {
     }
 }
