@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2025 Oracle and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.ai;
 
 import java.util.concurrent.TimeUnit;
@@ -25,25 +40,31 @@ public class MetricsChatModelListener implements ChatModelListener {
     private static final String GEN_AI_CLIENT_TOKEN_USAGE_METRICS_NAME = "gen_ai.client.token.usage";
     private static final String GEN_AI_CLIENT_OPERATION_DURATION_METRICS_NAME = "gen_ai.client.operation.duration";
 
-    private MeterRegistry meterRegistry;
+    private final MeterRegistry meterRegistry;
     private DistributionSummary clientTokenUsage;
-    private DistributionSummary.Builder clientTokenUsageBuilder;
+    private final DistributionSummary.Builder clientTokenUsageBuilder;
     private DistributionSummary clientOperationDuration;
-    private DistributionSummary.Builder clientOperationDurationBuilder;
+    private final DistributionSummary.Builder clientOperationDurationBuilder;
 
+    /**
+     * Constructs a {@code MetricsChatModelListener} instance.
+     */
     public MetricsChatModelListener() {
         this.meterRegistry = Metrics.globalRegistry();
 
         DistributionStatisticsConfig.Builder clientTokenUsageStatisticsConfigBuilder = DistributionStatisticsConfig.builder()
                 .buckets(1, 4, 16, 64, 256, 1024, 4096, 16384, 65536, 262144, 1048576, 4194304, 16777216, 67108864);
-        this.clientTokenUsageBuilder = DistributionSummary.builder(GEN_AI_CLIENT_TOKEN_USAGE_METRICS_NAME, clientTokenUsageStatisticsConfigBuilder)
+        this.clientTokenUsageBuilder = DistributionSummary.builder(GEN_AI_CLIENT_TOKEN_USAGE_METRICS_NAME,
+                                                                   clientTokenUsageStatisticsConfigBuilder)
                 .scope(DistributionSummary.Scope.VENDOR)
                 .baseUnit("token")
                 .description("Measures number of input and output tokens used");
 
-        DistributionStatisticsConfig.Builder clientOperationDurationStatisticsConfigBuilder = DistributionStatisticsConfig.builder()
+        DistributionStatisticsConfig.Builder clientOperationDurationStatisticsConfigBuilder =
+                DistributionStatisticsConfig.builder()
                 .buckets(0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 1.28, 2.56, 5.12, 10.24, 20.48, 40.96, 81.92);
-        this.clientOperationDurationBuilder = DistributionSummary.builder(GEN_AI_CLIENT_OPERATION_DURATION_METRICS_NAME, clientOperationDurationStatisticsConfigBuilder)
+        this.clientOperationDurationBuilder = DistributionSummary.builder(GEN_AI_CLIENT_OPERATION_DURATION_METRICS_NAME,
+                                                                          clientOperationDurationStatisticsConfigBuilder)
                 .scope(DistributionSummary.Scope.VENDOR)
                 .baseUnit(DistributionSummary.BaseUnits.SECONDS)
                 .description("GenAI operation duration");
