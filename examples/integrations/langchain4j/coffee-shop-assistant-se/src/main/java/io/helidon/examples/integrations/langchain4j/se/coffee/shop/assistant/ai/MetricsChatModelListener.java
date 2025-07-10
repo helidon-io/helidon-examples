@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.helidon.metrics.api.DistributionStatisticsConfig;
 import io.helidon.metrics.api.DistributionSummary;
+import io.helidon.metrics.api.Meter;
 import io.helidon.metrics.api.MeterRegistry;
 import io.helidon.metrics.api.Metrics;
 import io.helidon.metrics.api.Tag;
@@ -52,21 +53,23 @@ public class MetricsChatModelListener implements ChatModelListener {
     public MetricsChatModelListener() {
         this.meterRegistry = Metrics.globalRegistry();
 
+        // Limits set based on https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/#metric-gen_aiclienttokenusage.
         DistributionStatisticsConfig.Builder clientTokenUsageStatisticsConfigBuilder = DistributionStatisticsConfig.builder()
                 .buckets(1, 4, 16, 64, 256, 1024, 4096, 16384, 65536, 262144, 1048576, 4194304, 16777216, 67108864);
         this.clientTokenUsageBuilder = DistributionSummary.builder(GEN_AI_CLIENT_TOKEN_USAGE_METRICS_NAME,
                                                                    clientTokenUsageStatisticsConfigBuilder)
-                .scope(DistributionSummary.Scope.VENDOR)
+                .scope(Meter.Scope.VENDOR)
                 .baseUnit("token")
                 .description("Measures number of input and output tokens used");
 
+        // Limits set based on https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/#metric-gen_aiclientoperationduration.
         DistributionStatisticsConfig.Builder clientOperationDurationStatisticsConfigBuilder =
                 DistributionStatisticsConfig.builder()
                 .buckets(0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 1.28, 2.56, 5.12, 10.24, 20.48, 40.96, 81.92);
         this.clientOperationDurationBuilder = DistributionSummary.builder(GEN_AI_CLIENT_OPERATION_DURATION_METRICS_NAME,
                                                                           clientOperationDurationStatisticsConfigBuilder)
-                .scope(DistributionSummary.Scope.VENDOR)
-                .baseUnit(DistributionSummary.BaseUnits.SECONDS)
+                .scope(Meter.Scope.VENDOR)
+                .baseUnit(Meter.BaseUnits.SECONDS)
                 .description("GenAI operation duration");
     }
 
