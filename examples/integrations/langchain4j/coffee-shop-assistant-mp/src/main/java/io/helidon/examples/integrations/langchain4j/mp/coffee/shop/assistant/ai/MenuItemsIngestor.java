@@ -23,7 +23,7 @@ import io.helidon.examples.integrations.langchain4j.mp.coffee.shop.assistant.dat
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.allminilml6v2q.AllMiniLmL6V2QuantizedEmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
@@ -68,12 +68,12 @@ public class MenuItemsIngestor {
     /**
      * Produces the embedding model used for generating embeddings.
      *
-     * @return a new instance of {@link AllMiniLmL6V2EmbeddingModel}
+     * @return a new instance of {@link AllMiniLmL6V2QuantizedEmbeddingModel}
      */
     @Produces
     @ApplicationScoped
     public EmbeddingModel produceEmbeddingModel() {
-        return new AllMiniLmL6V2EmbeddingModel();
+        return new AllMiniLmL6V2QuantizedEmbeddingModel();
     }
 
     /**
