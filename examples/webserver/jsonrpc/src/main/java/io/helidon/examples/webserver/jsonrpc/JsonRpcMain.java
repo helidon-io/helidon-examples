@@ -27,11 +27,19 @@ import io.helidon.webserver.jsonrpc.JsonRpcRouting;
 import io.helidon.webserver.jsonrpc.JsonRpcRules;
 import io.helidon.webserver.jsonrpc.JsonRpcService;
 
+/**
+ * The JSON-RPC example main class.
+ */
 public class JsonRpcMain {
 
     private JsonRpcMain() {
     }
 
+    /**
+     * Entry point to application.
+     *
+     * @param args CLI args
+     */
     public static void main(String[] args) {
         LogConfig.configureRuntime();
 
@@ -81,9 +89,20 @@ public class JsonRpcMain {
         }
     }
 
+    /**
+     * A record representing the start/stop params.
+     *
+     * @param when time to start machine
+     * @param duration for how long
+     */
     public record StartStopParams(String when, Duration duration) {
     }
 
+    /**
+     * A record representing the start/stop result.
+     *
+     * @param status status of operation
+     */
     public record StartStopResult(String status) {
     }
 }
