@@ -18,3 +18,14 @@ mvn package
 ```shell
 java -jar target/helidon-examples-webserver-jsonrpc.jar
 ```
+
+## Exercise the application
+
+```shell
+curl -X POST \
+     -H 'Content-Type: application/json' \
+     -d '{ "jsonrpc": "2.0", "id": 1, "method": "start", "params" : { "when": "NOW", "duration": "PT0S" } }' \
+     http://localhost:8080/rpc/machine
+      
+#Output: {"jsonrpc":"2.0","id":1,"result":{"status":"RUNNING"}}
+```

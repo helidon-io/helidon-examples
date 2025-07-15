@@ -60,13 +60,12 @@
             <artifactId>helidon-http-media-jsonp</artifactId>
         </dependency>
         <dependency>
-            <artifactId>helidon-logging-jul</artifactId>
-            <groupId>io.helidon.logging</groupId>
+            <groupId>org.eclipse</groupId>
+            <artifactId>yasson</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.common.features</groupId>
-            <artifactId>helidon-common-features-api</artifactId>
-            <optional>true</optional>
+            <artifactId>helidon-logging-jul</artifactId>
+            <groupId>io.helidon.logging</groupId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -86,11 +85,6 @@
         <dependency>
             <groupId>io.helidon.webclient</groupId>
             <artifactId>helidon-webclient-jsonrpc</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse</groupId>
-            <artifactId>yasson</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
