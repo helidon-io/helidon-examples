@@ -17,7 +17,7 @@ package io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.ai
 
 import java.util.logging.Logger;
 
-import io.helidon.common.config.Config;
+import io.helidon.config.Config;
 import io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.data.MenuItem;
 import io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.data.MenuItemsService;
 import io.helidon.service.registry.Service;
