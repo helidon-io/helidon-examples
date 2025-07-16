@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2023, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,7 @@ public final class ImperativeMain {
      * @param args ignored
      */
     public static void main(String[] args) {
-        Config config = Config.create();
-        Config.global(config);
+        Config config = Config.global();
 
         WebServer server = WebServer.create(ws -> ws.config(config.get("server"))
                         .routing(ImperativeMain::routing))

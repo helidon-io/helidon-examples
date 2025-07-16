@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,8 +47,7 @@ public final class Main {
         LogConfig.configureRuntime();
 
         // initialize global config from default configuration
-        Config config = Config.create();
-        Config.global(config);
+        Config config = Config.global();
 
         // Get webserver config from the "server" section of application.yaml
         WebServerConfig.Builder builder = WebServer.builder();

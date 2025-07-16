@@ -41,8 +41,7 @@ public class Main {
         LogConfig.configureRuntime();
 
         // initialize global config from default configuration
-        Config config = Config.create();
-        Config.global(config);
+        Config config = Config.global();
 
         WebServer server = WebServer.builder()
                 .config(config.get("server"))

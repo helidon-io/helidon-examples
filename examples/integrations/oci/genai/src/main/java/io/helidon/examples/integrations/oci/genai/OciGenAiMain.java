@@ -44,8 +44,7 @@ public final class OciGenAiMain {
         LogConfig.configureRuntime();
 
         // initialize global config from default configuration
-        Config config = Config.create();
-        Config.global(config);
+        Config config = Config.global();
 
         // Prepare routing for the server
         WebServer server = WebServer.builder()
