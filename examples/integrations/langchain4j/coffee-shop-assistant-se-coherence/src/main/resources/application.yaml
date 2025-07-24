@@ -27,6 +27,7 @@ langchain4j:
       api-key: "demo"
   coherence:
     embedding-store:
+      enabled: true
       name: "menu"
       index: "hnsw"
       dimension: 768
