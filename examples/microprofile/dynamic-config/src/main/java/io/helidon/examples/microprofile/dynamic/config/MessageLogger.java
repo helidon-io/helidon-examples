@@ -19,12 +19,20 @@ package io.helidon.examples.microprofile.dynamic.config;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.context.Initialized;
-import jakarta.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-// This class is an ApplicationScoped CDI bean
+/**
+ * The MessageLogger class is an ApplicationScoped CDI bean that logs a startup message to the console.
+ * It observes the initialization of the ApplicationScoped context and prints a message with instructions
+ * on how to run the application with different configuration options.
+ * @author [Dasarathi Rout]
+ */
 @ApplicationScoped
 public class MessageLogger {
+    /**
+     * Observes the initialization of the ApplicationScoped context and logs a startup message to the console.
+     *
+     * @param init the initialization event
+     */
     public void onStartup(@Observes @Initialized(ApplicationScoped.class) Object init) {
         System.out.println("**********************************************************************************************************************************************");
         System.out.println("*   Ex1 : java -jar target/helidon-examples-microprofile-dynamic-config.jar                                                                  *");
@@ -34,3 +42,4 @@ public class MessageLogger {
         System.out.println("**********************************************************************************************************************************************");
     }
 }
+

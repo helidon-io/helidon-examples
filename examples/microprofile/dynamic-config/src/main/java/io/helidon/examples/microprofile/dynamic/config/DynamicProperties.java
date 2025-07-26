@@ -23,24 +23,51 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * The DynamicProperties class provides access to application properties and configuration.
+ * It injects properties from application configuration or Java VM command arguments.
+ *  @author [Dasarathi Rout]
+ */
 @ApplicationScoped
 public class DynamicProperties {
-    @Inject //From application props config or java vm command arguments
+
+    /**
+     * The application startup message injected from configuration.
+     */
+    @Inject
     @ConfigProperty(name = "app.startup.message")
     private volatile String appStartupMessage;
 
+    /**
+     * The configuration instance injected for accessing other properties.
+     */
     @Inject
     private Config config;
 
+    /**
+     * The current message, initialized with a default value.
+     */
     private final AtomicReference<String> currentMessage;
+
+    /**
+     * Constructs a new DynamicProperties instance, initializing the current message.
+     */
     public DynamicProperties(){
         this.currentMessage = new AtomicReference<>("Default Properties (Before Config Loaded)");
     }
 
+    /**
+     * Returns the application startup message.
+     * @return the application startup message
+     */
     public String getAppStartupMessage(){
         return this.appStartupMessage;
     }
 
+    /**
+     * Returns the application log level.
+     * @return the application log level as a string
+     */
     public String getAppLogLevel(){
         return config.getValue("app.log.level", String.class);
     }

@@ -24,29 +24,40 @@ import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonBuilderFactory;
 import jakarta.json.JsonObject;
-import jakarta.validation.constraints.Email;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+/**
+ * Provides a REST endpoint for retrieving dynamic configuration properties.
+ *
+ * @author [Dasarathi Rout]
+ */
 @Path("/dynamic")
 @ApplicationScoped
 public class DynamicConfigEndpoint {
     private static final Logger LOGGER = Logger.getLogger(DynamicConfigEndpoint.class.getName());
     private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
 
+    /**
+     * Injected instance of {@link DynamicProperties} to access dynamic configuration properties.
+     */
     @Inject
     DynamicProperties dynamicProperties;
 
+    /**
+     * Retrieves the current dynamic configuration properties.
+     *
+     * @return a JSON object containing the startup message and application log level.
+     */
     @Path("/config")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getMessage(@PathParam("email") @Email String email) {
-        return JSON.createObjectBuilder().
-                add("startupMessage", dynamicProperties.getAppStartupMessage()).
-                        add("appLogLevel", dynamicProperties.getAppLogLevel())
+    public JsonObject getConfig() {
+        return JSON.createObjectBuilder()
+                .add("startupMessage", dynamicProperties.getAppStartupMessage())
+                .add("appLogLevel", dynamicProperties.getAppLogLevel())
                 .build();
     }
 }
