@@ -53,7 +53,11 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>3.13.1</version>
+        </dependency>
         <dependency>
             <groupId>io.helidon.microprofile.testing</groupId>
             <artifactId>helidon-microprofile-testing-junit5</artifactId>

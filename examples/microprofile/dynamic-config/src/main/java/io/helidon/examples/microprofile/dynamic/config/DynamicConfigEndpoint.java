@@ -24,6 +24,7 @@ import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonBuilderFactory;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -40,9 +41,6 @@ public class DynamicConfigEndpoint {
     private static final Logger LOGGER = Logger.getLogger(DynamicConfigEndpoint.class.getName());
     private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
 
-    /**
-     * Injected instance of {@link DynamicProperties} to access dynamic configuration properties.
-     */
     @Inject
     DynamicProperties dynamicProperties;
 
@@ -54,10 +52,13 @@ public class DynamicConfigEndpoint {
     @Path("/config")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getConfig() {
+    public JsonObject getConfig() throws Exception {
         return JSON.createObjectBuilder()
                 .add("startupMessage", dynamicProperties.getAppStartupMessage())
                 .add("appLogLevel", dynamicProperties.getAppLogLevel())
+                .add("appOptionalMessage", dynamicProperties.getOptionalMessage())
+                .add("getDefaultMessage", dynamicProperties.getDefaultMessage())
+                .add("getUrlConfigSources",dynamicProperties.getUrlConfigSources().toString())
                 .build();
     }
 }

@@ -31,12 +31,12 @@ java -jar target/helidon-examples-microprofile-dynamic-config.jar
 
 ```shell
 curl --silent -X GET http://localhost:8080/dynamic/config | jq .
-
-{
-  "startupMessage": "MP Message from application config props.",
-  "appLogLevel": "WARN"
-}
 ```
+Response:
+> {
+>   "startupMessage": "MP Message from application config props.",
+>   "appLogLevel": "WARN"
+> }
 
 ---
 
@@ -49,13 +49,13 @@ java -jar -Dapp.startup.message='Override Message From Terminal' target/helidon-
 
 ```shell
 curl --silent -X GET http://localhost:8080/dynamic/config | jq .
-
-curl --silent -X GET http://localhost:8080/dynamic/config | jq .
-{
-    "startupMessage": "Override Message From Terminal"
-    "appLogLevel": "WARN"
-｝
 ```
+Response:
+>
+> {
+>    "startupMessage": "Override Message From Terminal"
+>    "appLogLevel": "WARN"
+> ｝
 
 ---
 
@@ -77,8 +77,46 @@ java -jar target/helidon-examples-microprofile-dynamic-config.jar
 
 ```shell
 curl --silent -X GET http://localhost:8080/dynamic/config | jq .
-{
-    "startupMessage": "Env Vars Startup Message" ,
-    "appLogLevel": "TRACE"
-}
 ```
+Response:
+> {
+>   "startupMessage": "Env Vars Startup Message" ,
+>   "appLogLevel": "TRACE"
+> }
+
+---
+
+### Example-4 Setting with URL Prop Config
+For example enabled mock server at http://localhost:9192/api/mp/properties/dyanmic.configs,
+which returns json response with multiple key value pairs.
+```shell
+curl --silent -X GET http://localhost:9192/api/mp/properties/dyanmic.configs
+```
+Response:
+> {
+>   'MP_URL_KEY1': 'MP_URL_PROPS_VALUE1',
+>   'MP_URL_KEY2': 'MP_URL_PROPS_VALUE2'
+> }
+
+Start example with env var defined 
+```shell
+mvn package
+export APP_LOG_LEVEL=TRACE
+export APP_STARTUP_MESSAGE='Env Vars Startup Message'
+java -jar target/helidon-examples-microprofile-dynamic-config.jar
+```
+#### Exercise the Example-4 application
+
+```shell
+ curl --silent -X GET http://localhost:8080/dynamic/config | jq . 
+ ```
+Response:
+>
+> {
+>   "startupMessage": "MP Message from application config props.",
+>   "appLogLevel": "WARN",
+>   "appOptionalMessage": "Hello, Here's Application Optional Message",
+>   "getDefaultMessage": "Hello, Here's Application Default Message",
+>   "getUrlConfigSources": "{'MP_URL_KEY1'='MP_URL_PROPS_VALUE1', 'MP_URL_KEY2'='MP_URL_PROPS_VALUE2',}"
+> }
+>

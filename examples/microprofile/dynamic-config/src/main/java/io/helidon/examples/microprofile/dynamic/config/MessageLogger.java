@@ -16,9 +16,14 @@
 
 package io.helidon.examples.microprofile.dynamic.config;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.context.Initialized;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 
 /**
  * The MessageLogger class is an ApplicationScoped CDI bean that logs a startup message to the console.
@@ -39,6 +44,7 @@ public class MessageLogger {
         System.out.println("*   Ex2 : java -jar -Dapp.startup.message='Override Message From Terminal' target/helidon-examples-microprofile-dynamic-config.jar           *");
         System.out.println("*   Ex3 : export=APP_STARTUP_MESSAGE='Override Message From Env Vars'; java -jar target/helidon-examples-microprofile-dynamic-config.jar     *");
         System.out.println("*   REST Endpoint: http://localhost:8080/dynamic/config                                                                                      *");
+        System.out.println("*   Config Source Url: http://localhost:9192/api/mp/properties/dyanmic.configs                                                               *");
         System.out.println("**********************************************************************************************************************************************");
     }
 }
