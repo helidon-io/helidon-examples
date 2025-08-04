@@ -47,5 +47,4 @@ mvn ${MAVEN_ARGS} --version
 # shellcheck disable=SC2086
 mvn -B ${MAVEN_ARGS} \
     -f "${WS_DIR}"/pom.xml \
-    -Dmaven.test.failure.ignore=true \
-    clean package
+    clean install
