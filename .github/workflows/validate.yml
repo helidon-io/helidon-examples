@@ -197,4 +197,4 @@ jobs:
       - name: Maven build
         run: etc/scripts/build.sh
         env:
-          MAVEN_ARGS: -pl !examples/integrations/micronaut/data
+          MAVEN_ARGS: -pl !examples/integrations/micronaut/data,!examples/integrations/microstream/greetings-se,!examples/integrations/microstream/greetings-mp
