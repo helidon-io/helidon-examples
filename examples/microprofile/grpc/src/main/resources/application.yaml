@@ -30,13 +30,12 @@ server:
           resource-path: "server.p12"
   features:
     grpc-reflection:
-      enabled: true
+      enabled: false
 
 grpc:
   client:
     channels:
       - name: "string-channel"
-        port: 0
         tls:
           trust:
             keystore:

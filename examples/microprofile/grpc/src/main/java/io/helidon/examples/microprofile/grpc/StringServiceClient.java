@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package io.helidon.examples.microprofile.grpc;
 
 import java.util.stream.Stream;
 
+import io.helidon.examples.microprofile.grpc.Strings.StringMessage;
 import io.helidon.grpc.api.Grpc;
 
 import io.grpc.stub.StreamObserver;
@@ -36,7 +37,7 @@ public interface StringServiceClient {
      * @return string message
      */
     @Grpc.Unary("Upper")
-    Strings.StringMessage upper(Strings.StringMessage request);
+    StringMessage upper(StringMessage request);
 
     /**
      * Lowercase a string.
@@ -45,7 +46,7 @@ public interface StringServiceClient {
      * @return string message
      */
     @Grpc.Unary("Lower")
-    Strings.StringMessage lower(Strings.StringMessage request);
+    StringMessage lower(StringMessage request);
 
     /**
      * Split a string using space delimiters.
@@ -54,7 +55,7 @@ public interface StringServiceClient {
      * @return stream of string messages
      */
     @Grpc.ServerStreaming("Split")
-    Stream<Strings.StringMessage> split(Strings.StringMessage request);
+    Stream<StringMessage> split(StringMessage request);
 
     /**
      * Join a stream of messages using spaces.
@@ -63,6 +64,6 @@ public interface StringServiceClient {
      * @return single message as a stream
      */
     @Grpc.ClientStreaming("Join")
-    StreamObserver<Strings.StringMessage> join(StreamObserver<Strings.StringMessage> observer);
+    StreamObserver<StringMessage> join(StreamObserver<StringMessage> observer);
 }
 

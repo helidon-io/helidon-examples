@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import io.helidon.grpc.api.Grpc;
 import io.helidon.microprofile.grpc.client.GrpcConfigurablePort;
 import io.helidon.microprofile.testing.junit5.HelidonTest;
+import io.helidon.examples.microprofile.grpc.Strings.StringMessage;
 
 import io.grpc.stub.StreamObserver;
 import jakarta.inject.Inject;
@@ -55,33 +56,33 @@ class StringServiceTest {
 
     @Test
     void testUnaryUpper() {
-        Strings.StringMessage res = client.upper(newMessage("hello"));
+        StringMessage res = client.upper(newStringMessage("hello"));
         assertThat(res.getText(), is("HELLO"));
     }
 
     @Test
     void testUnaryLower() {
-        Strings.StringMessage res = client.lower(newMessage("HELLO"));
+        StringMessage res = client.lower(newStringMessage("HELLO"));
         assertThat(res.getText(), is("hello"));
     }
 
     @Test
     void testServerStreamingSplit() {
-        Stream<Strings.StringMessage> stream = client.split(newMessage("hello world"));
-        List<Strings.StringMessage> value = stream.toList();
+        Stream<StringMessage> stream = client.split(newStringMessage("hello world"));
+        List<StringMessage> value = stream.toList();
         assertThat(value, hasSize(2));
-        assertThat(value, contains(newMessage("hello"), newMessage("world")));
+        assertThat(value, contains(newStringMessage("hello"), newStringMessage("world")));
     }
 
     @Test
     void testClientStreamingJoin() throws InterruptedException {
-        ListObserver<Strings.StringMessage> response = new ListObserver<>();
-        StreamObserver<Strings.StringMessage> request = client.join(response);
-        request.onNext(newMessage("hello"));
-        request.onNext(newMessage("world"));
+        ListObserver<StringMessage> response = new ListObserver<>();
+        StreamObserver<StringMessage> request = client.join(response);
+        request.onNext(newStringMessage("hello"));
+        request.onNext(newStringMessage("world"));
         request.onCompleted();
-        List<Strings.StringMessage> value = response.value();
-        assertThat(value.getFirst(), is(newMessage("hello world")));
+        List<StringMessage> value = response.value();
+        assertThat(value.getFirst(), is(newStringMessage("hello world")));
     }
 
     /**
@@ -90,8 +91,8 @@ class StringServiceTest {
      * @param data the string
      * @return the string message
      */
-    Strings.StringMessage newMessage(String data) {
-        return Strings.StringMessage.newBuilder().setText(data).build();
+    StringMessage newStringMessage(String data) {
+        return StringMessage.newBuilder().setText(data).build();
     }
 
     /**

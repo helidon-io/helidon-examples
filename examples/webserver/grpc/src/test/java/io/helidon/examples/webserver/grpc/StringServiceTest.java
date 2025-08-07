@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import io.helidon.webserver.WebServer;
 import io.helidon.webserver.grpc.GrpcRouting;
 import io.helidon.webserver.testing.junit5.ServerTest;
 import io.helidon.webserver.testing.junit5.SetUpRoute;
+import io.helidon.examples.webserver.grpc.Strings.StringMessage;
 
 import io.grpc.Channel;
 import io.grpc.stub.StreamObserver;
@@ -77,7 +78,7 @@ class StringServiceTest {
     void testUnaryUpper() {
         GrpcClient grpcClient = webClient.client(GrpcClient.PROTOCOL);
         StringServiceGrpc.StringServiceBlockingStub service = StringServiceGrpc.newBlockingStub(grpcClient.channel());
-        Strings.StringMessage res = service.upper(newStringMessage("hello"));
+        StringMessage res = service.upper(newStringMessage("hello"));
         assertThat(res.getText(), is("HELLO"));
     }
 
@@ -85,7 +86,7 @@ class StringServiceTest {
     void testUnaryLower() {
         GrpcClient grpcClient = webClient.client(GrpcClient.PROTOCOL);
         StringServiceGrpc.StringServiceBlockingStub service = StringServiceGrpc.newBlockingStub(grpcClient.channel());
-        Strings.StringMessage res = service.lower(newStringMessage("HELLO"));
+        StringMessage res = service.lower(newStringMessage("HELLO"));
         assertThat(res.getText(), is("hello"));
     }
 
@@ -93,7 +94,7 @@ class StringServiceTest {
     void testServerStreamingSplit() {
         GrpcClient grpcClient = webClient.client(GrpcClient.PROTOCOL);
         StringServiceGrpc.StringServiceBlockingStub service = StringServiceGrpc.newBlockingStub(grpcClient.channel());
-        Iterator<Strings.StringMessage> res = service.split(newStringMessage("hello world"));
+        Iterator<StringMessage> res = service.split(newStringMessage("hello world"));
         assertThat(res.next().getText(), is("hello"));
         assertThat(res.next().getText(), is("world"));
         assertThat(res.hasNext(), is(false));
@@ -103,12 +104,12 @@ class StringServiceTest {
     void testClientStreamingJoin() throws ExecutionException, InterruptedException, TimeoutException {
         GrpcClient grpcClient = webClient.client(GrpcClient.PROTOCOL);
         StringServiceGrpc.StringServiceStub service = StringServiceGrpc.newStub(grpcClient.channel());
-        CompletableFuture<Strings.StringMessage> future = new CompletableFuture<>();
-        StreamObserver<Strings.StringMessage> req = service.join(singleStreamObserver(future));
+        CompletableFuture<StringMessage> future = new CompletableFuture<>();
+        StreamObserver<StringMessage> req = service.join(singleStreamObserver(future));
         req.onNext(newStringMessage("hello"));
         req.onNext(newStringMessage("world"));
         req.onCompleted();
-        Strings.StringMessage res = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        StringMessage res = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         assertThat(res.getText(), is("hello world"));
     }
 
@@ -116,12 +117,12 @@ class StringServiceTest {
     void testBidirectionalEcho() throws ExecutionException, InterruptedException, TimeoutException {
         GrpcClient grpcClient = webClient.client(GrpcClient.PROTOCOL);
         StringServiceGrpc.StringServiceStub service = StringServiceGrpc.newStub(grpcClient.channel());
-        CompletableFuture<Iterator<Strings.StringMessage>> future = new CompletableFuture<>();
-        StreamObserver<Strings.StringMessage> req = service.echo(multiStreamObserver(future));
+        CompletableFuture<Iterator<StringMessage>> future = new CompletableFuture<>();
+        StreamObserver<StringMessage> req = service.echo(multiStreamObserver(future));
         req.onNext(newStringMessage("hello"));
         req.onNext(newStringMessage("world"));
         req.onCompleted();
-        Iterator<Strings.StringMessage> res = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        Iterator<StringMessage> res = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         assertThat(res.next().getText(), is("hello"));
         assertThat(res.next().getText(), is("world"));
         assertThat(res.hasNext(), is(false));
@@ -132,7 +133,7 @@ class StringServiceTest {
         GrpcClient grpcClient = webClient.client(GrpcClient.PROTOCOL);
         Channel channel = grpcClient.channel(new StringServiceInterceptor());
         StringServiceGrpc.StringServiceBlockingStub service = StringServiceGrpc.newBlockingStub(channel);
-        Strings.StringMessage res = service.upper(newStringMessage("hello"));
+        StringMessage res = service.upper(newStringMessage("hello"));
         assertThat(res.getText(), is("[[HELLO]]"));
     }
 
@@ -149,8 +150,8 @@ class StringServiceTest {
         }
     }
 
-    static Strings.StringMessage newStringMessage(String data) {
-        return Strings.StringMessage.newBuilder().setText(data).build();
+    static StringMessage newStringMessage(String data) {
+        return StringMessage.newBuilder().setText(data).build();
     }
 
     static <ReqT> StreamObserver<ReqT> singleStreamObserver(CompletableFuture<ReqT> future) {

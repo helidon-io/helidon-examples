@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ class StringService implements GrpcService {
 
     private void split(StringMessage request, StreamObserver<StringMessage> observer) {
         String[] parts = request.getText().split(" ");
-        stream(observer, Stream.of(parts).map(this::response));
+        stream(observer, Stream.of(parts).map(this::newStringMessage));
     }
 
     private StreamObserver<StringMessage> join(StreamObserver<StringMessage> observer) {
@@ -70,7 +70,7 @@ class StringService implements GrpcService {
                 Collectors.joining(" "),
                 observer,
                 StringMessage::getText,
-                this::response);
+                this::newStringMessage);
     }
 
     private StreamObserver<Strings.StringMessage> echo(StreamObserver<Strings.StringMessage> observer) {
@@ -92,7 +92,7 @@ class StringService implements GrpcService {
         };
     }
 
-    private StringMessage response(String text) {
+    private StringMessage newStringMessage(String text) {
         return StringMessage.newBuilder().setText(text).build();
     }
 }

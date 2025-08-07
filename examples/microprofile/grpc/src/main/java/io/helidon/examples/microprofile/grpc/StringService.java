@@ -19,6 +19,7 @@ package io.helidon.examples.microprofile.grpc;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.helidon.examples.microprofile.grpc.Strings.StringMessage;
 import io.helidon.grpc.api.Grpc;
 import io.helidon.grpc.core.CollectingObserver;
 
@@ -50,8 +51,8 @@ public class StringService {
      * @return string message
      */
     @Grpc.Unary("Upper")
-    public Strings.StringMessage upper(Strings.StringMessage request) {
-        return newMessage(request.getText().toUpperCase());
+    public StringMessage upper(StringMessage request) {
+        return newStringMessage(request.getText().toUpperCase());
     }
 
     /**
@@ -61,8 +62,8 @@ public class StringService {
      * @return string message
      */
     @Grpc.Unary("Lower")
-    public Strings.StringMessage lower(Strings.StringMessage request) {
-        return newMessage(request.getText().toLowerCase());
+    public StringMessage lower(StringMessage request) {
+        return newStringMessage(request.getText().toLowerCase());
     }
 
     /**
@@ -72,9 +73,9 @@ public class StringService {
      * @return stream of string messages
      */
     @Grpc.ServerStreaming("Split")
-    public Stream<Strings.StringMessage> split(Strings.StringMessage request) {
+    public Stream<StringMessage> split(StringMessage request) {
         String[] parts = request.getText().split(" ");
-        return Stream.of(parts).map(this::newMessage);
+        return Stream.of(parts).map(this::newStringMessage);
     }
 
     /**
@@ -84,16 +85,16 @@ public class StringService {
      * @return single message as a stream
      */
     @Grpc.ClientStreaming("Join")
-    public StreamObserver<Strings.StringMessage> join(StreamObserver<Strings.StringMessage> observer) {
+    public StreamObserver<StringMessage> join(StreamObserver<StringMessage> observer) {
         return CollectingObserver.create(
                 Collectors.joining(" "),
                 observer,
-                Strings.StringMessage::getText,
-                this::newMessage);
+                StringMessage::getText,
+                this::newStringMessage);
     }
 
-    private Strings.StringMessage newMessage(String text) {
-        return Strings.StringMessage.newBuilder().setText(text).build();
+    private StringMessage newStringMessage(String text) {
+        return StringMessage.newBuilder().setText(text).build();
     }
 }
 
