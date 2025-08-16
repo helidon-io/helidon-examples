@@ -34,6 +34,7 @@
 
     <modules>
         <module>coherence</module>
+        <module>dynamic-config</module>
         <module>graphql</module>
         <module>hello-world-implicit</module>
         <module>hello-world-explicit</module>
