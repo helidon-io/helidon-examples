@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.helidon.common.Default;
-import io.helidon.common.config.Configuration;
+import io.helidon.config.Configuration;
 import io.helidon.http.Status;
 import io.helidon.service.registry.Service;
 import io.helidon.webserver.http.HttpRules;
