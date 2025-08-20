@@ -25,7 +25,7 @@ import io.helidon.service.registry.Service;
 class ScheduledTasks {
     private final AtomicInteger counter = new AtomicInteger(0);
 
-    @Scheduling.Cron(value = "0/5 * * * * ?", configKey = "app.scheduling.refresh-task")
+    @Scheduling.Cron(value = "${app.scheduling.refresh-task.expression:0/5 * * * * ?}")
     void refreshTask() {
         counter.incrementAndGet();
     }
