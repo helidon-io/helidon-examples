@@ -19,8 +19,8 @@ package io.helidon.examples.declarative.server;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.helidon.common.Default;
-import io.helidon.common.config.Configuration;
 import io.helidon.common.media.type.MediaTypes;
+import io.helidon.config.Configuration;
 import io.helidon.http.Http;
 import io.helidon.http.Status;
 import io.helidon.service.registry.Service;
