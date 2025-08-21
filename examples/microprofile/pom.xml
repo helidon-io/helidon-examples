@@ -56,5 +56,6 @@
         <module>grpc</module>
         <module>threads</module>
         <module>json-patch</module>
+        <module>data</module>
     </modules>
 </project>
