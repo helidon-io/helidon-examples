@@ -173,8 +173,11 @@ To generate the fat jar:
 
 ```shell
 mvn package -Pfat-jar
-```shell
+```
+
 This will create `target/helidon-examples-packaging-fat.jar` which can be run with:
+
 ```shell
 java -jar target/helidon-examples-packaging-fat.jar
 ```
+
