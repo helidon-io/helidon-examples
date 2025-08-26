@@ -64,3 +64,31 @@ Here are some example queries you can try:
 - **"Can I order a coffee and a cookie?"**  
   - *Expected Response:*  
   *"Your order for a coffee and a chocolate chip cookie has been saved. The total is $5.00. Would you like anything else?"*
+
+## Try metrics
+
+Helidon provides `MetricsChatModelListener` which generates metrics that follow the [Semantic Conventions for GenAI Metrics](https://opentelemetr.io/docs/specs/semconv/gen-ai/gen-ai-metrics). This is done out-of-box for Chat API calls. To view the captured metrics use following: 
+
+```shell
+# Prometheus Format
+curl -s -X GET http://localhost:8080/observe/metrics
+...
+# HELP gen_ai_client_token_usage_token Measures number of input and output tokens used
+# TYPE gen_ai_client_token_usage_token histogram
+gen_ai_client_token_usage_token{gen_ai_operation_name="chat",gen_ai_request_model="gpt-4o-mini",gen_ai_response_model="gpt-4o-mini-2024-07-18",gen_ai_token_type="output",scope="vendor",quantile="0.5",} 71.0
+...
+gen_ai_client_token_usage_token{gen_ai_operation_name="chat",gen_ai_request_model="gpt-4o-mini",gen_ai_response_model="gpt-4o-mini-2024-07-18",gen_ai_token_type="input",scope="vendor",quantile="0.5",} 156.0
+...
+# HELP gen_ai_client_token_usage_token_max Measures number of input and output tokens used
+# TYPE gen_ai_client_token_usage_token_max gauge
+gen_ai_client_token_usage_token_max{gen_ai_operation_name="chat",gen_ai_request_model="gpt-4o-mini",gen_ai_response_model="gpt-4o-mini-2024-07-18",gen_ai_token_type="output",scope="vendor",} 71.0
+gen_ai_client_token_usage_token_max{gen_ai_operation_name="chat",gen_ai_request_model="gpt-4o-mini",gen_ai_response_model="gpt-4o-mini-2024-07-18",gen_ai_token_type="input",scope="vendor",} 156.0
+....
+# HELP gen_ai_client_operation_duration_seconds_max GenAI operation duration
+# TYPE gen_ai_client_operation_duration_seconds_max gauge
+gen_ai_client_operation_duration_seconds_max{error_type="",gen_ai_operation_name="chat",gen_ai_request_model="gpt-4o-mini",gen_ai_response_model="gpt-4o-mini-2024-07-18",scope="vendor",} 2.0
+# HELP gen_ai_client_operation_duration_seconds GenAI operation duration
+# TYPE gen_ai_client_operation_duration_seconds histogram
+gen_ai_client_operation_duration_seconds{error_type="",gen_ai_operation_name="chat",gen_ai_request_model="gpt-4o-mini",gen_ai_response_model="gpt-4o-mini-2024-07-18",scope="vendor",quantile="0.5",} 2.0
+...
+```

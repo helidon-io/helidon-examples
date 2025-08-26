@@ -30,6 +30,7 @@ langchain4j:
       enabled: true
       max-results: 10
       min-score: 0.6
-      embedding-store: "EmbeddingStore"
+      embedding-store:
+        service-registry.named: "EmbeddingStore"
 app:
   menu-items: "data/menu.json"
