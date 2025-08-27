@@ -67,7 +67,7 @@ Here are some example queries you can try:
 
 ## Try metrics
 
-Helidon provides `MetricsChatModelListener` which generates metrics that follow the [Semantic Conventions for GenAI Metrics](https://opentelemetr.io/docs/specs/semconv/gen-ai/gen-ai-metrics). This is done out-of-box for Chat API calls. To view the captured metrics use following:
+Helidon provides `MetricsChatModelListener` which generates metrics that follow the [OpenTelemetry Semantic Conventions for GenAI Metrics v1.36.0](https://github.com/open-telemetry/semantic-conventions/blob/v1.36.0/docs/gen-ai/gen-ai-metrics.md). This is done out-of-box for Chat API calls. To view the captured metrics use following:
 
 ```shell
 # Prometheus Format
