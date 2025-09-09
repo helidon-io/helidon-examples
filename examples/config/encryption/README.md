@@ -1,13 +1,13 @@
 # Storing Encrypted Values in Helidon Config
 
-This examples uses the `helidon-config-encryption` module to encrypt
+This example uses the `helidon-config-encryption` module to encrypt
 a value so that it can be stored and retrieved from `application.yaml`.
 It uses AES/GCM symmetric key encryption.
 
 ## Build and Run 
 
 ```bash
-mvn package
+mvn clean package
 java -jar target/helidon-examples-config-encryption.jar
 ```
 
