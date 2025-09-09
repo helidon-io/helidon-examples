@@ -15,8 +15,8 @@
  */
 package io.helidon.examples.config;
 
-import io.helidon.logging.common.LogConfig;
 import io.helidon.config.Config;
+import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
 
@@ -36,7 +36,6 @@ public class Main {
      * @param args command line arguments.
      */
     public static void main(String[] args) {
-        
         // load logging configuration
         LogConfig.configureRuntime();
 
