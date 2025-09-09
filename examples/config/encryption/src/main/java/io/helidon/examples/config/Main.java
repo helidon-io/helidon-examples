@@ -16,9 +16,6 @@
 package io.helidon.examples.config;
 
 import io.helidon.config.Config;
-import io.helidon.logging.common.LogConfig;
-import io.helidon.webserver.WebServer;
-import io.helidon.webserver.http.HttpRouting;
 
 /**
  * The application main class.
@@ -36,28 +33,10 @@ public class Main {
      * @param args command line arguments.
      */
     public static void main(String[] args) {
-        // load logging configuration
-        LogConfig.configureRuntime();
-
         // initialize config from default configuration
         Config config = Config.global();
 
-        WebServer server = WebServer.builder()
-                .config(config.get("server"))
-                .routing(Main::routing)
-                .build()
-                .start();
-
-        System.out.println("WEB server is up! http://localhost:" + server.port() + "/simple-greet");
-
         System.out.println("SECURE_CONFIG_AES_MASTER_PWD=" + System.getenv("SECURE_CONFIG_AES_MASTER_PWD"));
         System.out.println("SECRET!!! secret-key=" + config.get("secret-key").asString().get());
-    }
-
-    /**
-     * Updates HTTP Routing.
-     */
-    static void routing(HttpRouting.Builder routing) {
-        routing.get("/simple-greet", (req, res) -> res.send("Hello World!"));
     }
 }
