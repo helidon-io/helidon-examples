@@ -16,6 +16,7 @@
 
 plugins {
     id 'java'
+    id 'org.kordamp.gradle.jandex' version '2.0.0'
     id 'application'
     id("org.graalvm.buildtools.native") version "0.11.0"
 }
@@ -23,7 +24,7 @@ plugins {
 group = 'io.helidon.examples'
 version = '1.0-SNAPSHOT'
 
-description = """helidon-quickstart-se"""
+description = """helidon-quickstart-mp"""
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -36,37 +37,36 @@ tasks.withType(JavaCompile) {
 
 ext {
     helidonversion = '4.2.6'
-    mainClass='io.helidon.examples.quickstart.se.Main'
-}
-
-test {
-    useJUnitPlatform()
+    mainClass='io.helidon.microprofile.cdi.Main'
 }
 
 repositories {
     mavenCentral()
     mavenLocal()
+    gradlePluginPortal()
 }
 
 dependencies {
     // import Helidon BOM
     implementation enforcedPlatform("io.helidon:helidon-dependencies:${project.helidonversion}")
-    implementation 'io.helidon.webserver:helidon-webserver'
-    implementation 'io.helidon.http.media:helidon-http-media-jsonp'
-    implementation 'io.helidon.webserver.observe:helidon-webserver-observe-health'
-    implementation 'io.helidon.webserver.observe:helidon-webserver-observe-metrics'
-    implementation 'io.helidon.config:helidon-config-yaml'
-    implementation 'io.helidon.health:helidon-health-checks'
-    runtimeOnly 'io.helidon.logging:helidon-logging-jul'
+    implementation 'io.helidon.microprofile.bundles:helidon-microprofile'
+    implementation 'org.glassfish.jersey.media:jersey-media-json-binding'
 
-    testImplementation 'io.helidon.webserver.testing.junit5:helidon-webserver-testing-junit5'
+    runtimeOnly 'io.smallrye:jandex'
+    runtimeOnly 'jakarta.activation:jakarta.activation-api'
+
+    testImplementation 'io.helidon.microprofile.testing:helidon-microprofile-testing-junit5'
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'io.helidon.webclient:helidon-webclient'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'org.hamcrest:hamcrest-all'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     nativeImageClasspath "io.helidon.integrations.graal:helidon-graal-native-image-extension"
+    nativeImageClasspath "io.helidon.integrations.graal:helidon-mp-graal-native-image-extension"
+}
+
+test {
+    useJUnitPlatform()
 }
 
 // define a custom task to copy all dependencies in the runtime classpath
@@ -87,7 +87,7 @@ assemble.dependsOn copyLibs
 jar {
   archiveFileName = "${project.name}.jar"
   manifest {
-    attributes ('Main-Class': "${project.mainClass}",
+    attributes ('Main-Class': "${project.mainClass}" ,
                 'Class-Path': configurations.runtimeClasspath.files.collect { "libs/$it.name" }.join(' ')
                )
   }
@@ -97,3 +97,18 @@ application {
     mainClass = "${project.mainClass}"
 }
 
+// This is a work-around for running unit tests.
+// Gradle places resource files under ${buildDir}/resources. In order for
+// beans.xml to get picked up by CDI it must be co-located with the classes.
+// So we move it before running tests.
+// In either case it ends up AOK in the final jar artifact
+task moveBeansXML {
+    doLast {
+        ant.move file: "${buildDir}/resources/main/META-INF/beans.xml",
+                 todir: "${buildDir}/classes/java/main/META-INF"
+    }
+}
+compileTestJava.dependsOn "jandex"
+jar.dependsOn "jandex"
+test.dependsOn moveBeansXML
+run.dependsOn moveBeansXML
