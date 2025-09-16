@@ -25,91 +25,60 @@
         <version>4.3.0-SNAPSHOT</version>
         <relativePath/>
     </parent>
-
     <artifactId>helidon-examples-dbclient-mongodb</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Helidon Examples DB Client MongoDB</name>
+    <name>Helidon Examples DbClient MongoDB</name>
 
     <properties>
-        <mainClass>io.helidon.examples.dbclient.mongo.MongoDbExampleMain</mainClass>
+        <mainClass>io.helidon.examples.dbclient.mongodb.Main</mainClass>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>io.helidon.common</groupId>
-            <artifactId>helidon-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.common</groupId>
-            <artifactId>helidon-common-mapper</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.dbclient</groupId>
-            <artifactId>helidon-dbclient-mongodb</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.dbclient</groupId>
-            <artifactId>helidon-dbclient-tracing</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.dbclient</groupId>
-            <artifactId>helidon-dbclient-metrics</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.dbclient</groupId>
-            <artifactId>helidon-dbclient-health</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.dbclient</groupId>
-            <artifactId>helidon-dbclient-jsonp</artifactId>
-        </dependency>
         <dependency>
             <groupId>io.helidon.webserver</groupId>
             <artifactId>helidon-webserver</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.webserver.observe</groupId>
-            <artifactId>helidon-webserver-observe</artifactId>
+            <groupId>io.helidon.http.media</groupId>
+            <artifactId>helidon-http-media-jsonp</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.webserver.observe</groupId>
-            <artifactId>helidon-webserver-observe-tracing</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.metrics</groupId>
-            <artifactId>helidon-metrics-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.webserver.observe</groupId>
-            <artifactId>helidon-webserver-observe-metrics</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.metrics</groupId>
-            <artifactId>helidon-metrics-system-meters</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.tracing</groupId>
-            <artifactId>helidon-tracing</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.tracing.providers</groupId>
-            <artifactId>helidon-tracing-providers-zipkin</artifactId>
+            <groupId>io.helidon.config</groupId>
+            <artifactId>helidon-config</artifactId>
         </dependency>
         <dependency>
             <groupId>io.helidon.config</groupId>
             <artifactId>helidon-config-yaml</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.examples.dbclient</groupId>
-            <artifactId>helidon-examples-dbclient-common</artifactId>
-            <version>${project.version}</version>
+            <groupId>io.helidon.dbclient</groupId>
+            <artifactId>helidon-dbclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.dbclient</groupId>
+            <artifactId>helidon-dbclient-mongodb</artifactId>
         </dependency>
         <dependency>
             <groupId>io.helidon.logging</groupId>
-            <artifactId>helidon-logging-jul</artifactId>
-            <scope>runtime</scope>
+            <artifactId>helidon-logging-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
@@ -117,13 +86,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>mongodb</artifactId>
+            <groupId>io.helidon.webserver.testing.junit5</groupId>
+            <artifactId>helidon-webserver-testing-junit5</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.helidon.webserver.testing.junit5</groupId>
-            <artifactId>helidon-webserver-testing-junit5</artifactId>
+            <groupId>io.helidon.webclient</groupId>
+            <artifactId>helidon-webclient</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

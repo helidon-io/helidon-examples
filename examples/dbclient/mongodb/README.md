@@ -1,7 +1,6 @@
-# Helidon DB Client mongoDB Example
+# Helidon Examples DbClient MongoDB
 
-This example shows how to run Helidon DB over mongoDB.
-
+This project implements a simple CRUD service using Helidon SE and Helidon DbClient.
 
 ## Build
 
@@ -9,41 +8,65 @@ This example shows how to run Helidon DB over mongoDB.
 mvn package
 ```
 
-## Run
-
-This example requires a mongoDB database, start it using docker:
-
+Build the Docker image:
 ```shell
-docker run --rm --name mongo -p 27017:27017 mongo
+docker build etc/docker -t mongodb
 ```
 
-Then run the application:
+## Run
 
+Start the database:
+```shell
+docker run -d \
+    --name mongodb \
+    -e MONGO_DB=db1 \
+    -e MONGO_USER=user \
+    -e MONGO_PASSWORD=mongo123 \
+    -p 27017:27017 \
+    mongodb
+```
+
+Or, if the container already exists:
+```shell
+docker start mongodb
+```
+
+Start the application:
 ```shell
 java -jar target/helidon-examples-dbclient-mongodb.jar
 ```
 
- 
-## Exercise
+### Exercise the application
 
-The application has the following endpoints:
+```shell
+# create two pokemons
+curl -X POST -d '{"name": "Pikachu", "type": "Electric"}' -H "Content-Type: application/json" http://localhost:8080/pokemon
+curl -X POST -d '{"name": "Raticate", "type": "Normal"}' -H "Content-Type: application/json" http://localhost:8080/pokemon
 
-- http://localhost:8079/db - the main business endpoint (see `curl` commands below)
-- http://localhost:8079/metrics - the metrics endpoint (query adds application metrics)
-- http://localhost:8079/health - has a custom database health check
+# list all pokemons
+curl -X GET http://localhost:8080/pokemon
 
-Application also connects to zipkin on default address.
-The query operation adds database trace.
+# update
+curl -X PUT -d '{"type": "Ice"}' -H "Content-Type: application/json" http://localhost:8080/pokemon/Raticate
 
-`curl` commands:
+# get a pokemon
+curl -X GET http://localhost:8080/pokemon/Raticate
 
-- `curl http://localhost:8079/db` - list all Pokemon in the database
-- `curl -i -X PUT -H 'Content-type: application/json' -d '{"name":"Squirtle","type":"water"}' http://localhost:8079/db` - add a new pokemon
-- `curl http://localhost:8079/db/Squirtle` - get a single pokemon
-- `curl -i -X DELETE http://localhost:8079/db/Squirtle` - delete a single pokemon
-- `curl -i -X DELETE http://localhost:8079/db` - delete all pokemon
+# delete a pokemon
+curl -X DELETE http://localhost:8080/pokemon/Raticate
 
-The application also supports update and delete - see `PokemonService.java` for bound endpoints.
+# delete all pokemons
+curl -X DELETE http://localhost:8080/pokemon
+
+# verify all deleted
+curl -X GET http://localhost:8080/pokemon
+```
+
+## Stop
+
+```shell
+docker stop mongodb
+```
 
 ---
 
