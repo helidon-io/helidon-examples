@@ -1,0 +1,37 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: helidon-examples-telemetry-se-config
+  labels:
+    app: helidon-examples-telemetry-se-config
+spec:
+  type: ClusterIP
+  selector:
+    app: helidon-examples-telemetry-se-config
+  ports:
+    - name: tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: helidon-examples-telemetry-se-config
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helidon-examples-telemetry-se-config
+  template:
+    metadata:
+      labels:
+        app: helidon-examples-telemetry-se-config
+        version: v1
+    spec:
+      containers:
+      - name: helidon-examples-telemetry-se-config
+        image: helidon-examples-telemetry-se-config
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080

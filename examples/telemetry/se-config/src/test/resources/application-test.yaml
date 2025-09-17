@@ -1,0 +1,13 @@
+telemetry:
+  service: "otel-config-example"
+  signals:
+    tracing:
+      attributes:
+        strings:
+          x: "x-value"
+        longs:
+          y: 9
+      processors:
+        - type: simple
+      exporters:
+        - type: logging_otlp

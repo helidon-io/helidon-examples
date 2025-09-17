@@ -64,6 +64,7 @@
         <module>webserver</module>
         <module>coherence</module>
         <module>declarative</module>
+        <module>telemetry</module>
     </modules>
 
     <build>

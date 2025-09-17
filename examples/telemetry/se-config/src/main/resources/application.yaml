@@ -1,0 +1,16 @@
+server:
+  port: 8080
+  host: 0.0.0.0
+app:
+    greeting: "Hello"
+telemetry:
+  service: "otel-config-example"
+  signals:
+    tracing:
+      attributes:
+        strings:
+          x: "x-value"
+        longs:
+          y: 9
+      processors:
+        - type: simple
