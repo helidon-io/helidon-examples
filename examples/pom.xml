@@ -43,7 +43,6 @@
         <module>config</module>
         <module>cors</module>
         <module>dbclient</module>
-        <module>employee-app</module>
         <module>graphql</module>
         <module>health</module>
         <module>inject</module>

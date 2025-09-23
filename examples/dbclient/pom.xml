@@ -33,6 +33,7 @@
         <module>h2</module>
         <module>mysql</module>
         <module>oracle</module>
+        <module>oracle-ucp</module>
         <module>postgres</module>
         <module>mongodb</module>
         <module>health</module>
