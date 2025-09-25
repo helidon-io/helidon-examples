@@ -33,10 +33,16 @@
 
     <containerDescriptorHandlers>
         <containerDescriptorHandler>
-            <handlerName>helidon</handlerName>
+            <handlerName>metaInf-services</handlerName>
         </containerDescriptorHandler>
         <containerDescriptorHandler>
-            <handlerName>metaInf-services</handlerName>
+            <!-- Merge Helidon's meta-data manifest file. -->
+            <!-- Not strictly required, but more correct and efficient -->
+            <handlerName>file-aggregator</handlerName>
+            <configuration>
+                <filePattern>META-INF/helidon/manifest</filePattern>
+                <outputPath>META-INF/helidon/manifest</outputPath>
+            </configuration>
         </containerDescriptorHandler>
     </containerDescriptorHandlers>
 

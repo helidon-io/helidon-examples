@@ -160,14 +160,10 @@ That said, it is possible to create a fat Jar for your Helidon application.
 
 #### Fat Jar Distribution
 
-This example uses the `maven-assembly-plugin` with the `helidon-assembly-extension` to create a fat jar. 
-Specifically see:
+This example uses the `maven-assembly-plugin` to create a fat jar. Specifically see:
 
 1. The `fat-jar` profile in the [pom.xml](./pom.xml) to configure the plugin.
 2. The assembly descriptor in [fat-assembly.xml](./src/main/assembly/fat-assembly.xml). 
-
-Note that the plugin and descriptor use the `helidon-assembly-extension` which handles merging
-of Helidon json metadata that resides in Helidon jar files.
 
 To generate the fat jar:
 

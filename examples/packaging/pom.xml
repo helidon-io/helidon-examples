@@ -30,7 +30,6 @@
 
     <properties>
         <mainClass>io.helidon.examples.packaging.Main</mainClass>
-        <helidon.build-tools.version>4.0.20</helidon.build-tools.version>
     </properties>
 
     <dependencies>
@@ -109,13 +108,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>io.helidon.build-tools</groupId>
-                                <artifactId>helidon-assembly-extension</artifactId>
-                                <version>${helidon.build-tools.version}</version>
-                            </dependency>
-                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
