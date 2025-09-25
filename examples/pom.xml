@@ -56,6 +56,7 @@
         <module>microprofile</module>
         <module>openapi</module>
         <module>openapi-tools</module>
+        <module>packaging</module>
         <module>quickstarts</module>
         <module>security</module>
         <module>todo-app</module>
