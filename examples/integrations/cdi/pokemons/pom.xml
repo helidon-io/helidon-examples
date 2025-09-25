@@ -32,6 +32,10 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples CDI Extensions Pokemons JPA</name>
 
+    <properties>
+        <version.lib.hibernate>6.6.23.Final</version.lib.hibernate>
+    </properties>
+
     <dependencies>
         <!-- Compile-scoped dependencies. -->
         <dependency>
