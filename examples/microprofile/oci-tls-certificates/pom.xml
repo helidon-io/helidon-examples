@@ -28,7 +28,7 @@
     <groupId>io.helidon.examples.microprofile</groupId>
     <artifactId>helidon-examples-microprofile-oci-tls-certificates</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Helidon Microprofile Examples TLS Manager and OCI Certificates Service Integration</name>
+    <name>Helidon Examples MicroProfile TLS Manager and OCI Certificates Service Integration</name>
 
     <description>
         Microprofile example that configures TLS via a Manager and OCI Certificates Service integration with cert rotation

@@ -27,6 +27,7 @@
     <groupId>io.helidon.examples.packaging</groupId>
     <artifactId>helidon-examples-packaging</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>Helidon Examples Packaging</name>
 
     <properties>
         <mainClass>io.helidon.examples.packaging.Main</mainClass>
