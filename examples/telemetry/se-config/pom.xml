@@ -29,6 +29,7 @@
     <groupId>io.helidon.examples.telemetry</groupId>
     <artifactId>helidon-examples-telemetry-se-config</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>Helidon Examples Telemetry Configuration</name>
 
     <properties>
         <mainClass>io.helidon.examples.telemetry.se.otelconfig.Main</mainClass>

@@ -45,10 +45,6 @@ public class Main {
         // initialize config from default configuration
         Config config = Services.get(Config.class);
 
-        // Fetch the OpenTelemetry instance from the service registry to make sure it is initialized
-        // and assigned as the global OpenTelemetry object early during start-up.
-        //        Services.get(OpenTelemetry.class);
-
         WebServer server = WebServer.builder()
                 .config(config.get("server"))
                 .routing(Main::routing)
