@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.helidon.examples.telemetry.se.otelconfig;
+package io.helidon.examples.telemetry.otelconfig;
 
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;

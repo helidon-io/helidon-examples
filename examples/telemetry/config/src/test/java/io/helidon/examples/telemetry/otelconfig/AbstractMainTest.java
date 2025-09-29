@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.helidon.examples.telemetry.se.otelconfig;
+package io.helidon.examples.telemetry.otelconfig;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ abstract class AbstractMainTest {
 
     @SetUpRoute
     static void routing(HttpRouting.Builder builder) {
-        io.helidon.examples.telemetry.se.otelconfig.Main.routing(builder);
+        Main.routing(builder);
     }
 
     @Test

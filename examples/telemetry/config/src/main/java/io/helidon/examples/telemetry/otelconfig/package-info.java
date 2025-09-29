@@ -17,4 +17,4 @@
 /**
  * Telemetry configuration example.
  */
-package io.helidon.examples.telemetry.se.otelconfig;
+package io.helidon.examples.telemetry.otelconfig;

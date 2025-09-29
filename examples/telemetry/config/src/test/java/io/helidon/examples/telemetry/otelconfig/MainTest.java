@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.helidon.examples.telemetry.se.otelconfig;
+package io.helidon.examples.telemetry.otelconfig;
 
 import io.helidon.webserver.testing.junit5.DirectClient;
 import io.helidon.webserver.testing.junit5.RoutingTest;

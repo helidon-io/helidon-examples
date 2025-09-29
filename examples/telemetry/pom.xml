@@ -33,6 +33,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>se-config</module>
+        <module>config</module>
     </modules>
 </project>

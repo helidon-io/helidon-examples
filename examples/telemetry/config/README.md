@@ -20,7 +20,7 @@ Look at the `src/main/resources/application.yaml` file. It contains configuratio
 With JDK21
 ```bash
 mvn package
-java -jar target/helidon-examples-telemetry-se-config.jar
+java -jar target/helidon-examples-telemetry-config.jar
 ```
 
 ## Exercise the application
