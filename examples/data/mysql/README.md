@@ -20,7 +20,7 @@ configuration using the following Docker command:
 ```shell
 docker run --name mysql \
        -p 3306:3306 \
-       -e MYSQL_DATABASE='pets' \
+       -e MYSQL_DATABASE='pokemons' \
        -e MYSQL_RANDOM_ROOT_PASSWORD='yes' \
        -e MYSQL_USER='user' \
        -e MYSQL_PASSWORD='changeit' \

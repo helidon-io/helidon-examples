@@ -48,18 +48,6 @@ public class Pokemon {
      * @param name the name of the pokémon
      * @param type the type of the pokémon
      */
-    public Pokemon(int id, String name, Type type) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-    }
-
-    /**
-     * Constructs a new {@link Pokemon} instance with the specified values.
-     *
-     * @param name the name of the pokémon
-     * @param type the type of the pokémon
-     */
     public Pokemon(String name, Type type) {
         this.id = null;
         this.name = name;
@@ -78,7 +66,7 @@ public class Pokemon {
      *
      * @return the id of the pokémon
      */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -87,7 +75,7 @@ public class Pokemon {
      *
      * @param id the new id of the pokémon
      */
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

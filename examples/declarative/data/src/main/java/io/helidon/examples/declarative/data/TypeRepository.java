@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.examples.data.oracle;
+package io.helidon.examples.declarative.data;
 
 import io.helidon.data.Data;
 

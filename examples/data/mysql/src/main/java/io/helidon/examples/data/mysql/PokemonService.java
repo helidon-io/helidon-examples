@@ -68,7 +68,8 @@ class PokemonService implements HttpService {
                               .collect(Collector.of(Json::createArrayBuilder,
                                                     JsonArrayBuilder::add,
                                                     JsonArrayBuilder::add,
-                                                    JsonArrayBuilder::build)));    }
+                                                    JsonArrayBuilder::build)));
+    }
 
     private void pokemon(ServerRequest request, ServerResponse response) {
         String name = request.path().pathParameters().get("name");

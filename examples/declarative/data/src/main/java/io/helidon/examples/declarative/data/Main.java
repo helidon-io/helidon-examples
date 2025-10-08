@@ -23,7 +23,7 @@ import io.helidon.webserver.WebServer;
 
 /**
  * The Main class serves as the entry point for the application.
- * It demonstrates the usage of Helidon Data in an SE imperative application.
+ * It demonstrates the usage of Helidon Data in an SE declarative application.
  */
 @Service.GenerateBinding
 public class Main {
@@ -42,15 +42,10 @@ public class Main {
      * @param args command-line arguments passed to the application
      */
     public static void main(String... args) {
-
-        // load logging configuration
         LogConfig.configureRuntime();
-
         ServiceRegistryManager.start(ApplicationBinding.create());
-
         WebServer webServer = Services.get(WebServer.class);
         System.out.println("Server started on: http://localhost:" + webServer.port());
-
     }
 
 }
