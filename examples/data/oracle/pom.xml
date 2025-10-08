@@ -28,16 +28,16 @@
     </parent>
 
     <groupId>io.helidon.examples.data</groupId>
-    <artifactId>helidon-examples-data-mysql</artifactId>
+    <artifactId>helidon-examples-data-oracle</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Helidon Examples Data MySQ</name>
+    <name>Helidon Examples Data Oracle</name>
 
     <description>
-        The example shows how to use Helidon Data with MySQL.
+        The example shows how to use Helidon Data with Oracle DB.
     </description>
 
     <properties>
-        <mainClass>io.helidon.examples.data.mysql.Main</mainClass>
+        <mainClass>io.helidon.examples.data.oracle.Main</mainClass>
     </properties>
 
     <dependencies>
@@ -81,8 +81,8 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
+            <groupId>io.helidon.data.sql.datasource</groupId>
+            <artifactId>helidon-data-sql-datasource-ucp</artifactId>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.examples.data.mysql;
+package io.helidon.examples.data.oracle;
 
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;

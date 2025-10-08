@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.examples.data.mysql;
+package io.helidon.examples.data.oracle;
 
 import java.util.Optional;
 import java.util.stream.Stream;

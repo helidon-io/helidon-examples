@@ -2,7 +2,7 @@ Helidon Data SE Imperative Example
 ----
 
 This example demonstrates a Java SE imperative application that utilizes Helidon Data, WebServer,
-and a MySQL database.
+and an Oracle database with UCP DataSource.
 
 There are 2 repository interfaces in the example:
 
@@ -10,21 +10,18 @@ There are 2 repository interfaces in the example:
 - `TypeRepository`
 
 > **NOTE:** Database table `POKEMON` is initialized with ID auto increment to supply primary key values
->           by the database. MySQL database default String comparisons are case-insensitive.
+>           by the database.
 
 ## Start the Database
 
-To run the application, a MySQL database is required. You can start the database with the necessary
+To run the application, an Oracle database is required. You can start the database with the necessary
 configuration using the following Docker command:
 
 ```shell
-docker run --name mysql \
-       -p 3306:3306 \
-       -e MYSQL_DATABASE='pets' \
-       -e MYSQL_RANDOM_ROOT_PASSWORD='yes' \
-       -e MYSQL_USER='user' \
-       -e MYSQL_PASSWORD='changeit' \
-       -d mysql
+docker run --name oracle \
+       -p 1521:1521 \
+       -e ORACLE_PWD='changeit' \
+       -d container-registry.oracle.com/database/express
 ```
 
 ### Database Schema and Content
@@ -44,7 +41,7 @@ mvn package
 2. Run the application:
 
 ```shell
-java -jar target/helidon-examples-data-mysql.jar
+java -jar target/helidon-examples-data-oracle.jar
 ```
 
 > **NOTE:** The default username and password from this example should never be used in a production environment!

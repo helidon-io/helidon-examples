@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.examples.data.mysql;
-
 /**
- * A pokémon data transfer object.
+ * This package contains the main application classes for demonstrating the usage of Helidon Data
+ * with an Oracle database.
  * <p>
- * Used to map HTTP request pokémon data. ID column has {@link jakarta.persistence.GenerationType#IDENTITY}
- * strategy for generated values, so it's not required in {@code POST} request.
+ * The application provides REST services for managing pokémon data.
+ * <p>
+ * The main entry point for the application is the {@link io.helidon.examples.data.oracle.Main} class.
  *
- * @param name the name of the pokémon
- * @param type the type of the pokémon
+ * @see io.helidon.examples.data.oracle.PokemonService
+ * @see io.helidon.examples.data.oracle.PokemonRepository
+ * @see io.helidon.examples.data.oracle.TypeRepository
  */
-public record PokemonDto(String name, String type) {
-}
+package io.helidon.examples.data.oracle;

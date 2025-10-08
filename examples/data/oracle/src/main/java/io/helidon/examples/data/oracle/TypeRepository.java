@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.examples.data.mysql;
+package io.helidon.examples.data.oracle;
 
 import io.helidon.data.Data;
 
@@ -27,7 +27,7 @@ import io.helidon.data.Data;
  * @see Type
  */
 @Data.Repository
-public interface TypeRepository extends Data.GenericRepository <Type, Integer> {
+public interface TypeRepository extends Data.GenericRepository <Type, Integer>{
 
     /**
      * Retrieves a {@link Type} entity by its name.
