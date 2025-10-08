@@ -4,8 +4,6 @@ Helidon Data SE Declarative Example
 This example demonstrates a Java SE declarative application that utilizes Helidon Data, WebServer,
 and a MySQL database.
 
-There are 3 repository interfaces in the example:
-
 There are 2 repository interfaces in the example:
 
 - `PokemonRepository`
@@ -32,8 +30,8 @@ docker run --name mysql \
 ### Database Schema and Content
 
 The application's Jakarta Persistence API implementation automatically creates the database schema
-using the `resources/init.sql` script. The schema consists of three main entities: `Pet`, `Owner`
-and `Breed`. The initialization script populates the database with a basic set of records.
+using the `resources/init.sql` script. The schema consists of two main entities: `Pokemon` and `Type`.
+The initialization script populates the database with a basic set of records.
 
 ## Build and Run
 

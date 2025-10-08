@@ -1,20 +1,13 @@
 Helidon Data MP Example
 ----
 
-This example demonstrates a Java MP application that utilizes Helidon Data, WebServer, Hikari
+This example demonstrates a Java MicroProfile application that utilizes Helidon Data, WebServer, Hikari
 connection pool DataSource and MySQL database.
 
-There are 3 repository interfaces in the example:
+There are 2 repository interfaces in the example:
 
-- `OwnerRepository`
-- `BreedRepository`
-- `PetRepository`
-
-All methods in `OwnerRepository` are defined as methods with queries defined by the @Data.Query
-annotation. There is no specific limitation on the names of those methods.
-
-All methods in `BreedRepository` and `PetRepository` are defined as methods with queries defined
-by the method name. Method names must follow the _Query by Method Name_ grammar.
+- `PokemonRepository`
+- `TypeRepository`
 
 > **NOTE:** Database tables are initialized with ID auto increment to supply primary key values
 >           by the database. MySQL database default String comparisons are case-insensitive.
@@ -27,7 +20,7 @@ configuration using the following Docker command:
 ```shell
 docker run --name mysql \
        -p 3306:3306 \
-       -e MYSQL_DATABASE='pets' \
+       -e MYSQL_DATABASE='pokemons' \
        -e MYSQL_RANDOM_ROOT_PASSWORD='yes' \
        -e MYSQL_USER='user' \
        -e MYSQL_PASSWORD='changeit' \
@@ -36,10 +29,9 @@ docker run --name mysql \
 
 ### Database Schema and Content
 
-The application's Jakarta Persistence API implementation automatically drops and creates the database
-schema using the `resources/drop.sql` and `resources/init.sql` scripts. The schema consists of three
-main entities: `Pet`, `Owner` and `Breed`. The initialization script populates the database with a basic
-set of records.
+The application's Jakarta Persistence API implementation automatically creates the database schema
+using the `resources/init.sql` script. The schema consists of two main entities: `Pokemon` and `Type`.
+The initialization script populates the database with a basic set of records.
 
 ## Build and Run
 
@@ -59,97 +51,29 @@ java -jar target/helidon-examples-microprofile-data.jar
 
 ## Test Example
 
-The application provides the following endpoints:
-- http://localhost:8080/pet - Pet entity endpoint
-- http://localhost:8080/owner - Owner entity endpoint
-- http://localhost:8080/breed - Breed entity endpoint
+The application provides `http://localhost:8080/pokemon` endpoint.
 
-### Pet Endpoint
-
-**Retrieve Pet entity endpoint information:**
+**List all pokémons:**
 ```shell
-curl http://localhost:8080/pet
+curl http://localhost:8080/pokemon/all
 ```
 
-**List all pets:**
+**List all normal type pokémons:**
 ```shell
-curl http://localhost:8080/pet/all
+curl http://localhost:8080/pokemon/type/Normal
 ```
 
-**List all pets as pages:**
+**Retrieve a pokémon by name (`Meowth`):**
 ```shell
-curl http://localhost:8080/pet/all/0
-curl http://localhost:8080/pet/all/1
-curl http://localhost:8080/pet/all/2
+curl http://localhost:8080/pokemon/get/Meowth
 ```
 
-The last page will be empty with the initial set of `Pet` records. Additional records would fill it.
-
-**List all dogs:**
+**Insert new pokémon:**
 ```shell
-curl http://localhost:8080/pet/breed/Dog
+curl -i -X POST -H 'Content-type: application/json' -d '{"name":"Charmander","type":"Fire"}' http://localhost:8080/pokemon
 ```
 
-**Retrieve a Pet by name (`Max`):**
+**Delete existing pokémon by ID (`20`):**
 ```shell
-curl http://localhost:8080/pet/get/Max
-```
-
-**Insert new pet:**
-```shell
-curl -i -X POST -H 'Content-type: application/json' -d '{"name":"Ken","weight":3.5,"birth":"2023-05-10","owner":"Betty","breed":"Dog"}' http://localhost:8080/pet
-```
-
-**Delete existing pet by ID (`20`):**
-```shell
-curl -i -X DELETE http://localhost:8080/pet/20
-```
-
-### Owner Endpoint
-
-**Retrieve Owner entity endpoint information:**
-```shell
-curl http://localhost:8080/owner
-```
-
-**List all owners:**
-```shell
-curl http://localhost:8080/owner/all
-```
-
-**List all names of owners who own a cat:**
-```shell
-curl http://localhost:8080/owner/names/Cat
-```
-
-**Insert new owner:**
-```shell
-curl -i -X POST http://localhost:8080/owner/Alice
-```
-
-**Delete existing owner by ID (`10`):**
-```shell
-curl -i -X DELETE http://localhost:8080/owner/10
-```
-
-### Breed Endpoint
-
-**Retrieve Breed entity endpoint information:**
-```shell
-curl http://localhost:8080/breed
-```
-
-**List all breeds:**
-```shell
-curl http://localhost:8080/breed/all
-```
-
-**Insert new breed:**
-```shell
-curl -i -X POST http://localhost:8080/breed/Hamster
-```
-
-**Delete existing breed by ID (`10`):**
-```shell
-curl -i -X DELETE http://localhost:8080/breed/10
+curl -i -X DELETE http://localhost:8080/pokemon/20
 ```

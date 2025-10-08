@@ -28,7 +28,7 @@ data:
         provider.hikari:
           username: "user"
           password: "changeit"
-          url: "jdbc:mysql://localhost:3306/pets"
+          url: "jdbc:mysql://localhost:3306/pokemons"
           jdbc-driver-class-name: "com.mysql.cj.jdbc.Driver"
   persistence-units:
     jakarta:

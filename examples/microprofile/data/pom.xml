@@ -67,7 +67,6 @@
             <artifactId>helidon-logging-jul</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <!-- TODO: Replace with helidon support -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>

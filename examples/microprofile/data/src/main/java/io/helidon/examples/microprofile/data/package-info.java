@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
- * This package contains the main application classes for demonstrating the usage of Helidon Data
- * in a Java MP application.
+ * This package contains an application classes for demonstrating the usage of Helidon Data
+ * in a Java MicroProfile application.
  * <p>
- * The application provides REST services for managing pet, owner, and breed data.
+ * The application provides REST services for managing pokémon data.
  *
- * @see io.helidon.examples.microprofile.data.service
+ * @see io.helidon.examples.microprofile.data.PokemonService
+ * @see io.helidon.examples.microprofile.data.PokemonRepository
+ * @see io.helidon.examples.microprofile.data.TypeRepository
  */
 package io.helidon.examples.microprofile.data;

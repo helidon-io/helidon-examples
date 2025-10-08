@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * This package contains the main application classes for demonstrating the usage of Helidon Data
+ * This package contains an application classes for demonstrating the usage of Helidon Data
  * with a MySQL database.
  * <p>
  * The application provides REST services for managing pokémon data.

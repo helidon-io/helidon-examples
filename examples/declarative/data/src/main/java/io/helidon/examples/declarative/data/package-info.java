@@ -15,14 +15,15 @@
  */
 
 /**
- * This package contains the main application classes for demonstrating the usage of Helidon Data
+ * This package contains an application classes for demonstrating the usage of Helidon Data
  * in a Java SE declarative application.
  * <p>
- * The application provides REST services for managing pet, owner, and breed data.
+ * The application provides REST services for managing pokémon data.
  * <p>
  * The main entry point for the application is the {@link io.helidon.examples.declarative.data.Main} class.
  *
- * @see io.helidon.examples.declarative.data.Main
- * @see io.helidon.examples.declarative.data.service
+ * @see io.helidon.examples.declarative.data.PokemonService
+ * @see io.helidon.examples.declarative.data.PokemonRepository
+ * @see io.helidon.examples.declarative.data.TypeRepository
  */
 package io.helidon.examples.declarative.data;
