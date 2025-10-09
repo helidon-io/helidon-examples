@@ -33,7 +33,7 @@
     <name>Helidon Examples Declarative Data</name>
 
     <description>
-        The example shows how to use Helidon Data in SE Declarative application.
+        The example shows how to use Helidon Data in Helidon SE Declarative.
     </description>
 
     <properties>
