@@ -34,6 +34,7 @@ data:
     jakarta:
       - data-source: "example"
         init-script: "init.sql"
-        drop-script: "drop.sql"
         properties:
+          eclipselink.target-database: "MySQL"
+          eclipselink.target-server: "None"
           jakarta.persistence.schema-generation.database.action: "drop-and-create"

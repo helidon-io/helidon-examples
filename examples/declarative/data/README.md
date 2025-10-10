@@ -1,8 +1,8 @@
 Helidon Data SE Declarative Example
 ----
 
-This example demonstrates a Java SE declarative application that utilizes Helidon Data, WebServer,
-and a MySQL database.
+This example demonstrates a Java SE declarative application that utilizes Helidon Data, EclipseLink,
+WebServer, Hikari connection pool DataSource and MySQL database.
 
 There are 2 repository interfaces in the example:
 

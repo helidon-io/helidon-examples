@@ -1,8 +1,8 @@
 Helidon Data MP Example
 ----
 
-This example demonstrates a Java MicroProfile application that utilizes Helidon Data, WebServer, Hikari
-connection pool DataSource and MySQL database.
+This example demonstrates a Java MicroProfile application that utilizes Helidon Data, EclipseLink,
+WebServer, Hikari connection pool DataSource and MySQL database.
 
 There are 2 repository interfaces in the example:
 

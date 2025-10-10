@@ -15,13 +15,17 @@
 #
 
 data:
-  persistence-units:
-    jakarta:
-      - connection:
+  sources:
+    sql:
+      - name: "example"
+        provider.hikari:
           username: "user"
           password: "changeit"
           url: "jdbc:mysql://localhost:3306/pokemons"
           jdbc-driver-class-name: "com.mysql.cj.jdbc.Driver"
+  persistence-units:
+    jakarta:
+      - data-source: "example"
         init-script: "init.sql"
         properties:
           eclipselink.target-database: "MySQL"
