@@ -1,110 +1,60 @@
-🚀 Helidon WebServer – Basic Example
+##WebServer Basic Example
 
-This example demonstrates the simplest possible Helidon SE WebServer application.
-It shows how to start a server, define basic routing, handle HTTP requests, and return responses.
+This example demonstrates a minimal Helidon WebServer application that starts an HTTP server and exposes simple routes.
 
-This is a good starting point for understanding how Helidon SE applications are structured.
+##Project Structure
 
-📂 Project Structure
-basic/
+```
+webserver-basic/
+ ├── src
+ │   └── main
+ │       └── java
+ │           └── io/helidon/examples/webserver/basic/
+ │               ├── Main.java
+ │               └── GreetService.java
  ├── pom.xml
- └── src 
-     ├── main
-     │   ├── java/io/helidon/examples/webserver/basic/BasicMain.java
-     │   └── resources/logging.properties
-     └── test
-         └── java/io/helidon/examples/webserver/basic/
-             ├── AbstractBasicRoutingTest.java
-             ├── BasicRoutingIT.java
-             └── BasicRoutingTest.java
+ └── README.md
 
-🧠 What This Example Shows
-✔ Start a WebServer
+```
+##Build
 
-The example configures and starts a Helidon SE WebServer on a selected port.
+Use Maven to compile the project:
 
-✔ Define Basic Routing
+mvn clean install
 
-It demonstrates simple routing, including:
+Run
 
-Returning plain text responses
+Start the WebServer using:
 
-Handling HTTP GET endpoints
-
-Using routing builders
-
-✔ Logging Configuration
-
-logging.properties shows how Helidon configures Java Util Logging (JUL).
-
-✔ Tests Included
-
-The example contains:
-
-Unit tests
-
-Integration tests (running an actual WebServer instance)
-
-These tests help verify routing behavior automatically.
-
-▶️ How to Run
-Using Maven
-
-From the basic directory:
-
-mvn package
-java -jar target/basic.jar
+java -jar target/webserver-basic.jar
 
 
-Server starts on the default port (usually 8080).
+The server will start on the default port (8080) unless configured otherwise.
 
-You will see output like:
+Exercise the Application
 
-WEB server started at http://localhost:8080
+After the application is running, you can call the available endpoints:
 
-🔗 Example Endpoints
+Root endpoint
+curl -X GET http://localhost:8080
 
-Once the server is running, try:
+Greet endpoint
+curl -X GET http://localhost:8080/greet
 
-GET /greet
-curl http://localhost:8080/greet
-
-
-Response:
-
-Hello World!
+Personalized greeting
+curl -X GET http://localhost:8080/greet/{name}
 
 
-If routing includes path parameters, you may also test:
+This will return:
+{"message": "Hello {name}!"}
 
-GET /greet/{name}
-curl http://localhost:8080/greet/Naveen
+Update the greeting
+curl -X PUT -H "Content-Type: application/json" \
+    -d '{"greeting": "Hola"}' \
+    http://localhost:8080/greet/greeting
 
+##Notes
 
-Example response:
+This example follows the standard Helidon project layout.
 
-Hello Naveen!
-
-🧪 Run Tests
-mvn test
-
-
-This executes both:
-
-Unit tests
-
-Integration tests (start WebServer and verify responses)
-
-📘 Useful to Learn
-
-This example helps new users understand:
-
-How to create a minimal Helidon SE service
-
-How routing works
-
-How requests and responses are handled
-
-How Helidon SE applications are structured
-
-How to write integration tests for WebServer applications
+For more advanced server features, refer to other examples in the repository.
