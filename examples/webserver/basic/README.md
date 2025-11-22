@@ -14,44 +14,53 @@ webserver-basic/
  │               └── GreetService.java
  ├── pom.xml
  └── README.md
-
 ```
 ##Build
-
 Use Maven to compile the project:
 
+```shell
 mvn clean install
+```
 
-Run
-
+##Run
 Start the WebServer using:
-
+```shell
 java -jar target/webserver-basic.jar
-
+```
 
 The server will start on the default port (8080) unless configured otherwise.
 
-Exercise the Application
-
+##Exercise the Application
 After the application is running, you can call the available endpoints:
 
 Root endpoint
+```shell
 curl -X GET http://localhost:8080
+```
 
 Greet endpoint
+```shell
 curl -X GET http://localhost:8080/greet
+```
 
 Personalized greeting
+```shell
 curl -X GET http://localhost:8080/greet/{name}
-
+```
 
 This will return:
-{"message": "Hello {name}!"}
+```json
+{
+    "message": "Hello {name}!"
+}
+```
 
 Update the greeting
+```shell
 curl -X PUT -H "Content-Type: application/json" \
     -d '{"greeting": "Hola"}' \
     http://localhost:8080/greet/greeting
+```
 
 ##Notes
 
