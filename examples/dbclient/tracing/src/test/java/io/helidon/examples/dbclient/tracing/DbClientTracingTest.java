@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.Optional;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.config.Config;
 import io.helidon.config.ConfigSources;
+import io.helidon.webclient.api.ClientResponseTyped;
 import io.helidon.webclient.api.Proxy;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webserver.WebServerConfig;
@@ -57,7 +58,7 @@ class DbClientTracingTest {
     private static final GenericContainer<?> CONTAINER = new GenericContainer<>(IMAGE)
             .withExposedPorts(14250, 16686)
             .waitingFor(Wait.forListeningPorts(14250, 16686)
-                    .withStartupTimeout(Duration.ofMinutes(2)));
+                                .withStartupTimeout(Duration.ofMinutes(2)));
 
     private final Http1Client jaegerClient = Http1Client.builder()
             .baseUri(jaegerUrl())
@@ -118,27 +119,41 @@ class DbClientTracingTest {
             assertThat(rsp.status().code(), is(404));
         }
 
-        try (var rsp = jaegerClient.get("/api/traces")
+        try {
+            checkTraces();
+        } catch (Throwable t) {
+            try {
+                Thread.sleep(Duration.ofSeconds(2).toMillis());
+                checkTraces();
+            } catch (Throwable tx) {
+                // ignore the second run, just throw the first failure if fails again
+                throw t;
+            }
+        }
+    }
+
+    private void checkTraces() {
+        // there is a delay between the requests and the time Jaeger collects all the traces, let's retry once
+        ClientResponseTyped<JsonObject> response = jaegerClient.get("/api/traces")
                 .accept(MediaTypes.APPLICATION_JSON)
                 .queryParam("service", "helidon-examples-dbclient-tracing")
-                .request()) {
+                .request(JsonObject.class);
 
-            assertThat(rsp.status().code(), is(200));
-            JsonObject jsonObject = rsp.as(JsonObject.class);
+        assertThat(response.status().code(), is(200));
+        JsonObject jsonObject = response.entity();
 
-            List<JsonValue> tags = Optional.ofNullable(jsonObject.getJsonArray("data")).stream()
-                    .flatMap(Collection::stream)
-                    .map(JsonValue::asJsonObject)
-                    .flatMap(it -> Optional.ofNullable(it.getJsonArray("spans")).stream())
-                    .flatMap(Collection::stream)
-                    .map(JsonValue::asJsonObject)
-                    .flatMap(it -> Optional.ofNullable(it.getJsonArray("tags")).stream())
-                    .flatMap(Collection::stream)
-                    .toList();
+        List<JsonValue> tags = Optional.ofNullable(jsonObject.getJsonArray("data")).stream()
+                .flatMap(Collection::stream)
+                .map(JsonValue::asJsonObject)
+                .flatMap(it -> Optional.ofNullable(it.getJsonArray("spans")).stream())
+                .flatMap(Collection::stream)
+                .map(JsonValue::asJsonObject)
+                .flatMap(it -> Optional.ofNullable(it.getJsonArray("tags")).stream())
+                .flatMap(Collection::stream)
+                .toList();
 
-            assertThat(tags, hasItem(allOf(
-                    hasEntry("key", Json.createValue("component")),
-                    hasEntry("value", Json.createValue("dbclient")))));
-        }
+        assertThat(tags, hasItem(allOf(
+                hasEntry("key", Json.createValue("component")),
+                hasEntry("value", Json.createValue("dbclient")))));
     }
 }
