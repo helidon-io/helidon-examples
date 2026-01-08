@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
 
@@ -65,7 +66,10 @@ abstract class AbstractMainTest {
 
 
         try (JsonLogConverter converter = JsonLogConverter.create()) {
-            ClientResponseTyped<String> response = client.get("/greeting/Joe").request(String.class);
+            ClientResponseTyped<String> response = client.get("/greet/Joe").request(String.class);
+
+            assertThat(response.status(), is(Status.OK_200));
+            assertThat(response.entity(), containsString("Hello Joe!"));
 
             List<JsonLogConverter.LogResourceScopeSpans> scopeSpans = converter.resourceSpans(2);
 
