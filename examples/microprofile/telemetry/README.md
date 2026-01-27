@@ -11,26 +11,19 @@ java -jar greeting/target/helidon-examples-microprofile-telemetry-greeting.jar
 
 Run Jaeger tracer. If you prefer to use Docker, run in terminal:
 ```shell
-docker run -d --name jaeger \
-  -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
-  -e COLLECTOR_OTLP_ENABLED=true \
-  -p 6831:6831/udp \
-  -p 6832:6832/udp \
-  -p 5778:5778 \
+docker run -d --rm --name jaeger \
   -p 16686:16686 \
   -p 4317:4317 \
   -p 4318:4318 \
-  -p 14250:14250 \
-  -p 14268:14268 \
-  -p 14269:14269 \
+  -p 5778:5778 \
   -p 9411:9411 \
-  jaegertracing/all-in-one:1.50
+  cr.jaegertracing.io/jaegertracing/jaeger:2.14.0
 ```
 
 If you have Jaeger all-in-one installed, use this command:
 
 ```shell
-jaeger-all-in-one --collector.zipkin.host-port=9411   --collector.otlp.enabled=true
+jaeger
 ```
 
 Run the Secondary service:
