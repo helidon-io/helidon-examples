@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2018, 2024 Oracle and/or its affiliates.
+# Copyright (c) 2018, 2026 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -83,5 +83,5 @@ echo "Building Helidon version ${HELIDON_VERSION} from Helidon repo branch ${HEL
 mvn ${MAVEN_ARGS} -T8 \
   -f helidon/pom.xml \
   -DskipTests \
-  -Dmaven.test.skip=true \
+  -Dmaven.test.skip=false \
   install
