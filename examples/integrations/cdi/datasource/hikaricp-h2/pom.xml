@@ -24,7 +24,7 @@
     <parent>
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-mp</artifactId>
-        <version>4.3.3</version>
+        <version>4.3.4</version>
         <relativePath/>
     </parent>
     <groupId>io.helidon.examples.integrations.cdi.datasource</groupId>
