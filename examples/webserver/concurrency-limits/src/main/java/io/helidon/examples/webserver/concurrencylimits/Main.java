@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,12 +54,15 @@ public class Main {
                 .config(config.get("server"))
                 .routing(Main::fixedRouting)
                 .routing("aimd", Main::aimdRouting)
+                .routing("throughput", Main::throughputRouting)
                 .buildPrototype();
 
         WebServer webserver = webserverConfig.build().start();
 
         LOGGER.log(System.Logger.Level.INFO, "WEB server is up! http://localhost:" + webserver.port() + "/fixed/sleep"
-                + " " + "http://localhost:" + webserver.port("aimd") + "/aimd/sleep");
+                + " " + "http://localhost:" + webserver.port("aimd") + "/aimd/sleep"
+                + " " + "http://localhost:" + webserver.port("throughput") + "/throughput/sleep"
+                );
     }
 
     /**
@@ -71,5 +74,9 @@ public class Main {
 
     static void aimdRouting(HttpRouting.Builder routing) {
         routing.register("/aimd", new SleepService());
+    }
+
+    static void throughputRouting(HttpRouting.Builder routing) {
+        routing.register("/throughput", new SleepService());
     }
 }
