@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@
  * <p>
  * The main entry point for the application is the {@link io.helidon.examples.declarative.data.Main} class.
  *
- * @see io.helidon.examples.declarative.data.PokemonService
- * @see io.helidon.examples.declarative.data.PokemonRepository
- * @see io.helidon.examples.declarative.data.TypeRepository
+ * @see io.helidon.examples.declarative.data.PokemonEndpoint
+ * @see io.helidon.examples.declarative.data.model.PokemonRepository
+ * @see io.helidon.examples.declarative.data.model.TypeRepository
  */
 package io.helidon.examples.declarative.data;

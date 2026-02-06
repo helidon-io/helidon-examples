@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,27 @@
  */
 package io.helidon.examples.declarative.data;
 
+import java.util.Optional;
+
+import io.helidon.examples.declarative.data.model.Pokemon;
+import io.helidon.json.binding.Json;
+
 /**
  * A pokémon DAO object.
  * <p>
- * Used to map HTTP request pet data. ID column has {@link jakarta.persistence.GenerationType#IDENTITY}
- * strategy for generated values, so it's not required.
+ * Used to map HTTP request Pokemon data.
  *
+ * @param id   id of the Pokemon, may be empty when creating a new one
  * @param name the name of the pokémon
  * @param type the name of the pokémon type
  */
-public record PokemonDto(String name,
+@Json.Entity
+public record PokemonDto(Optional<Integer> id,
+                         String name,
                          String type) {
+
+    // separation of data layer from API layer
+    static PokemonDto create(Pokemon pokemon) {
+        return new PokemonDto(Optional.of(pokemon.getId()), pokemon.getName(), pokemon.getType().getName());
+    }
 }
