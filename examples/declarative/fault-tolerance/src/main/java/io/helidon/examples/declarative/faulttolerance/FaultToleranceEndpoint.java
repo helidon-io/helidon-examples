@@ -28,10 +28,10 @@ import io.helidon.webserver.http.RestServer;
 @RestServer.Endpoint // webserver declarative endpoint
 @Http.Path("/ft") // path to serve this endpoint on
 @Service.Singleton // service registry scope (must be singleton)
-class FaltToleranceEndpoint {
+class FaultToleranceEndpoint {
     private final AtomicInteger retryCount = new AtomicInteger();
 
-    FaltToleranceEndpoint() {
+    FaultToleranceEndpoint() {
     }
 
     @Http.GET
