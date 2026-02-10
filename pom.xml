@@ -92,6 +92,7 @@
 
     <modules>
         <module>examples</module>
+        <module>examples/json</module>
     </modules>
 
     <build>

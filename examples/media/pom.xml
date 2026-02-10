@@ -39,5 +39,6 @@
         <module>form</module>
         <module>multipart</module>
         <module>json-patch</module>
+        <module>json-binding</module>
     </modules>
 </project>
