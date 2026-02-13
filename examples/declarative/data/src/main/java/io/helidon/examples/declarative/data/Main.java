@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package io.helidon.examples.declarative.data;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.service.registry.Service;
 import io.helidon.service.registry.ServiceRegistryManager;
-import io.helidon.service.registry.Services;
-import io.helidon.webserver.WebServer;
 
 /**
  * The Main class serves as the entry point for the application.
@@ -44,8 +42,6 @@ public class Main {
     public static void main(String... args) {
         LogConfig.configureRuntime();
         ServiceRegistryManager.start(ApplicationBinding.create());
-        WebServer webServer = Services.get(WebServer.class);
-        System.out.println("Server started on: http://localhost:" + webServer.port());
     }
 
 }

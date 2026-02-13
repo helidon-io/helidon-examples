@@ -10,7 +10,7 @@ There are 2 repository interfaces in the example:
 - `TypeRepository`
 
 > **NOTE:** Database tables are initialized with ID auto increment to supply primary key values
->           by the database. MySQL database default String comparisons are case-insensitive.
+> by the database. MySQL database default String comparisons are case-insensitive.
 
 ## Start the Database
 
@@ -54,26 +54,31 @@ java -jar target/helidon-examples-declarative-data.jar
 The application provides `http://localhost:8080/pokemon` endpoint.
 
 **List all pokémons:**
+
 ```shell
 curl http://localhost:8080/pokemon/all
 ```
 
 **List all normal type pokémons:**
+
 ```shell
 curl http://localhost:8080/pokemon/type/Normal
 ```
 
 **Retrieve a pokémon by name (`Meowth`):**
+
 ```shell
 curl http://localhost:8080/pokemon/get/Meowth
 ```
 
 **Insert new pokémon:**
+
 ```shell
 curl -i -X POST -H 'Content-type: application/json' -d '{"name":"Charmander","type":"Fire"}' http://localhost:8080/pokemon
 ```
 
 **Delete existing pokémon by ID (`20`):**
+
 ```shell
 curl -i -X DELETE http://localhost:8080/pokemon/20
 ```
