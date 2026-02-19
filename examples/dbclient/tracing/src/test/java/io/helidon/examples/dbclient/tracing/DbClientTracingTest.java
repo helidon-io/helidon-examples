@@ -52,13 +52,12 @@ import static org.hamcrest.Matchers.is;
 class DbClientTracingTest {
 
     private static final DockerImageName IMAGE = DockerImageName.parse("cr.jaegertracing.io/jaegertracing/jaeger:2.10.0");
-    private static final int SPAN_DATA_PORT = 4317;
 
     @Container
     @SuppressWarnings("resource")
     private static final GenericContainer<?> CONTAINER = new GenericContainer<>(IMAGE)
-            .withExposedPorts(SPAN_DATA_PORT, 16686)
-            .waitingFor(Wait.forListeningPorts(SPAN_DATA_PORT, 16686)
+            .withExposedPorts(14250, 16686)
+            .waitingFor(Wait.forListeningPorts(14250, 16686)
                                 .withStartupTimeout(Duration.ofMinutes(2)));
 
     private final Http1Client jaegerClient = Http1Client.builder()
@@ -71,7 +70,7 @@ class DbClientTracingTest {
     }
 
     static int tracingPort() {
-        return CONTAINER.getMappedPort(SPAN_DATA_PORT);
+        return CONTAINER.getMappedPort(14250);
     }
 
     @SetUpServer
