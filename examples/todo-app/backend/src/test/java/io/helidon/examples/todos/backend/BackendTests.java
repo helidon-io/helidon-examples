@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2021, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,97 +17,94 @@
 package io.helidon.examples.todos.backend;
 
 import java.util.Base64;
-import java.util.Properties;
+import java.util.Map;
 
 import io.helidon.config.mp.MpConfigSources;
-import io.helidon.config.yaml.mp.YamlMpConfigSource;
 import io.helidon.http.HeaderNames;
-import io.helidon.microprofile.testing.junit5.Configuration;
+import io.helidon.microprofile.security.SecurityCdiExtension;
+import io.helidon.microprofile.testing.AddBean;
+import io.helidon.microprofile.testing.AddConfigBlock;
+import io.helidon.microprofile.testing.AddConfigSource;
+import io.helidon.microprofile.testing.AddExtension;
+import io.helidon.microprofile.testing.AddJaxRs;
+import io.helidon.microprofile.testing.DisableDiscovery;
 import io.helidon.microprofile.testing.junit5.HelidonTest;
+import io.helidon.microprofile.tracing.TracingCdiExtension;
 
 import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.Session;
-import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
-import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
-import org.junit.jupiter.api.AfterAll;
+import org.eclipse.microprofile.config.spi.ConfigSource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.OS;
-import org.testcontainers.containers.CassandraContainer;
+import org.testcontainers.cassandra.CassandraContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 @HelidonTest
-@Configuration(useExisting = true)
-@EnabledOnOs(OS.LINUX) // due to usage of docker with testcontainers, only Linux is enabled by default
+@DisableDiscovery
+@AddJaxRs
+@AddExtension(TracingCdiExtension.class)
+@AddExtension(SecurityCdiExtension.class)
+@AddBean(DbService.class)
+@AddBean(JaxRsBackendResource.class)
+@AddConfigBlock("""
+        tracing.enabled: false
+        security.provider-policy.type=FIRST
+        security.providers.0.google-login.enabled=false
+        security.providers.2.http-signatures.enabled=false
+        security.providers.3.http-basic-auth.realm=helidon
+        security.providers.3.http-basic-auth.users.0.login=john
+        security.providers.3.http-basic-auth.users.0.password=todo123
+        """)
 class BackendTests {
-    @Container
-    static final CassandraContainer<?> CASSANDRA_CONTAINER = new CassandraContainer<>("cassandra:3.11.2")
-            .withReuse(true);
 
-    @Inject
-    private WebTarget webTarget;
+    @Container
+    static final CassandraContainer CONTAINER = new CassandraContainer("cassandra:3.11.2");
+
+    @AddConfigSource
+    static ConfigSource config() {
+        return MpConfigSources.create(Map.of("cassandra.port", String.valueOf(CONTAINER.getMappedPort(9042))));
+    }
 
     @BeforeAll
     static void init() {
-        Properties cassandraProperties = initCassandra();
-
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        ConfigProviderResolver configResolver = ConfigProviderResolver.instance();
-
-        org.eclipse.microprofile.config.Config mpConfig = configResolver.getBuilder()
-                .withSources(YamlMpConfigSource.create(cl.getResource("test-application.yaml")),
-                             MpConfigSources.create(cassandraProperties))
-                .build();
-
-        configResolver.registerConfig(mpConfig, null);
-    }
-
-    @AfterAll
-    static void stopServer() {
-    }
-
-    private static Properties initCassandra() {
-        String host = CASSANDRA_CONTAINER.getHost();
-        Integer port = CASSANDRA_CONTAINER.getMappedPort(CassandraContainer.CQL_PORT);
-
-        Properties prop = new Properties();
-        prop.put("cassandra.port", String.valueOf(port));
-        prop.put("cassandra.servers.host.host", host);
-
-        Cluster cluster = Cluster.builder()
+        try (var cluster = Cluster.builder()
                 .withoutMetrics()
-                .addContactPoint(host)
-                .withPort(port)
+                .withPort(CONTAINER.getMappedPort(9042))
+                .addContactPoint("localhost")
                 .build();
-
-        Session session = cluster.newSession();
-        session.execute("CREATE KEYSPACE backend WITH REPLICATION = {'class' : 'SimpleStrategy', 'replication_factor' : 1};");
-        session.execute(
-                "CREATE TABLE backend.backend (id ascii, user ascii, message ascii, completed Boolean, created timestamp, "
-                        + "PRIMARY KEY (id));");
-        session.execute("select * from backend.backend;");
-
-        session.close();
-        cluster.close();
-
-        return prop;
+                var session = cluster.newSession()) {
+            session.execute("""
+                    CREATE KEYSPACE backend WITH REPLICATION = {
+                        'class' : 'SimpleStrategy',
+                        'replication_factor' : 1
+                    };
+                    """);
+            session.execute("""
+                    CREATE TABLE backend.backend (
+                        id ascii,
+                        user ascii,
+                        message ascii,
+                        completed Boolean,
+                        created timestamp,
+                        PRIMARY KEY (id)
+                    );
+                    """);
+        }
     }
 
     @Test
-    void testTodoScenario() {
-        String basicAuth = "Basic " + Base64.getEncoder().encodeToString("john:changeit".getBytes());
+    void testTodoScenario(WebTarget webTarget) {
+        String basicAuth = "Basic " + Base64.getEncoder().encodeToString("john:todo123".getBytes());
         JsonObject todo = Json.createObjectBuilder()
                 .add("title", "todo title")
                 .build();
@@ -159,5 +156,4 @@ class BackendTests {
 
         assertThat("There should be no todos on server", jsonValues.size(), is(0));
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2017, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,6 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.opentracing.Traced;
@@ -58,28 +57,30 @@ public class JaxRsBackendResource {
 
     private final DbService backendService;
     private final Tracer tracer;
+    private final SecurityContext context;
 
     /**
      * Create new {@code JaxRsBackendResource} instance.
      * @param dbs the database service facade to use
+     * @param context security context
      * @param tracer tracer to use
      */
     @Inject
-    public JaxRsBackendResource(DbService dbs, Tracer tracer) {
+    public JaxRsBackendResource(DbService dbs, Tracer tracer, SecurityContext context) {
         this.backendService = dbs;
         this.tracer = tracer;
+        this.context = context;
     }
 
     /**
      * Retrieve all TODO entries.
      *
-     * @param context security context to map the user
      * @return the response with the retrieved entries as entity
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Traced(operationName = "jaxrs:list")
-    public Response list(@Context SecurityContext context) {
+    public Response list() {
         JsonArrayBuilder builder = JSON.createArrayBuilder();
         backendService.list(tracer.activeSpan().context(), getUserId(context))
                       .forEach(data -> builder.add(data.forRest()));
@@ -89,13 +90,12 @@ public class JaxRsBackendResource {
     /**
      * Get the TODO entry identified by the given ID.
      * @param id the ID of the entry to retrieve
-     * @param context security context to map the user
      * @return the response with the retrieved entry as entity
      */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") String id, @Context SecurityContext context) {
+    public Response get(@PathParam("id") String id) {
         return backendService
                 .get(tracer.activeSpan().context(), id, getUserId(context))
                 .map(Todo::forRest)
@@ -107,13 +107,12 @@ public class JaxRsBackendResource {
     /**
      * Delete the TODO entry identified by the given ID.
      * @param id the id of the entry to delete
-     * @param context security context to map the user
      * @return the response with the deleted entry as entity
      */
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("id") String id, @Context SecurityContext context) {
+    public Response delete(@PathParam("id") String id) {
         return backendService
                 .delete(tracer.activeSpan().context(), id, getUserId(context))
                 .map(Todo::forRest)
@@ -125,13 +124,12 @@ public class JaxRsBackendResource {
     /**
      * Create a new TODO entry.
      * @param jsonObject the value of the new entry
-     * @param context security context to map the user
      * @return the response ({@code 200} status if successful
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createIt(JsonObject jsonObject, @Context SecurityContext context) {
+    public Response createIt(JsonObject jsonObject) {
         String newId = UUID.randomUUID().toString();
         String userId = getUserId(context);
         Todo newBackend = Todo.newTodoFromRest(jsonObject, userId, newId);
@@ -145,14 +143,13 @@ public class JaxRsBackendResource {
      * Update the TODO entry identified by the given ID.
      * @param id the ID of the entry to update
      * @param jsonObject the updated value of the entry
-     * @param context security context to map the user
      * @return the response with the updated entry as entity
      */
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("id") String id, JsonObject jsonObject, @Context SecurityContext context) {
+    public Response update(@PathParam("id") String id, JsonObject jsonObject) {
         return backendService
                 .update(tracer.activeSpan().context(), Todo.fromRest(jsonObject, getUserId(context), id))
                 .map(Todo::forRest)

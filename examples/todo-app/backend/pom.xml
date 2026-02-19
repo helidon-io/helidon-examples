@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2018, 2025 Oracle and/or its affiliates.
+    Copyright (c) 2018, 2026 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -43,8 +43,6 @@
         <version.datastax.driver>4.9.0</version.datastax.driver>
         <version.codahale.metrics.core>3.0.2</version.codahale.metrics.core>
         <version.snakeyaml.override>1.32</version.snakeyaml.override>
-        <version.testcontainers>1.19.1</version.testcontainers>
-        <version.testcontainers.cassandra>1.19.1</version.testcontainers.cassandra>
     </properties>
 
     <dependencyManagement>
@@ -64,13 +62,6 @@
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
                 <version>${version.snakeyaml.override}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers-bom</artifactId>
-                <version>${version.testcontainers}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -102,12 +93,19 @@
         </dependency>
         <dependency>
             <groupId>io.helidon.tracing.providers</groupId>
-            <artifactId>helidon-tracing-providers-zipkin</artifactId>
+            <artifactId>helidon-tracing-providers-opentelemetry</artifactId>
         </dependency>
         <dependency>
             <groupId>io.helidon.logging</groupId>
-            <artifactId>helidon-logging-jul</artifactId>
-            <scope>runtime</scope>
+            <artifactId>helidon-logging-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
         </dependency>
         <dependency>
             <groupId>com.datastax.cassandra</groupId>
@@ -123,6 +121,7 @@
             <artifactId>helidon-microprofile-testing-junit5</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>com.datastax.oss</groupId>
             <artifactId>java-driver-core</artifactId>
@@ -149,7 +148,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>cassandra</artifactId>
-            <version>${version.testcontainers.cassandra}</version>
+            <version>${version.lib.testcontainers}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

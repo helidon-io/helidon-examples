@@ -49,7 +49,7 @@
         </dependency>
         <dependency>
             <groupId>io.helidon.tracing.providers</groupId>
-            <artifactId>helidon-tracing-providers-jaeger</artifactId>
+            <artifactId>helidon-tracing-providers-opentelemetry</artifactId>
         </dependency>
         <dependency>
             <groupId>io.helidon.tracing</groupId>
@@ -85,7 +85,15 @@
         </dependency>
         <dependency>
             <groupId>io.helidon.logging</groupId>
-            <artifactId>helidon-logging-jul</artifactId>
+            <artifactId>helidon-logging-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
         </dependency>
         <dependency>
             <groupId>io.helidon.integrations.db</groupId>
