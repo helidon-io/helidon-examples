@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #
-# Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+# Copyright (c) 2020, 2026 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ die() { cat "${RESULT_FILE}" ; echo "Dependency report in ${WS_DIR}/target" ; ec
 # Setting NVD_API_KEY is not required but improves behavior of NVD API throttling
 
 # shellcheck disable=SC2086
-mvn ${MAVEN_ARGS} \
+mvn ${MVN_ARGS} \
   -f "${WS_DIR}"/pom.xml \
   -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN org.owasp:dependency-check-maven:aggregate \
   -Dtop.parent.basedir="${WS_DIR}" \

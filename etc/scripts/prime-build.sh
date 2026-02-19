@@ -75,12 +75,12 @@ if [ "${HELIDON_VERSION}" != "${HELIDON_VERSION_IN_REPO}" ]; then
 fi
 
 # shellcheck disable=SC2086
-mvn ${MAVEN_ARGS} --version
+mvn ${MVN_ARGS} --version
 
 echo "Building Helidon version ${HELIDON_VERSION} from Helidon repo branch ${HELIDON_BRANCH}"
 
 # shellcheck disable=SC2086
-mvn ${MAVEN_ARGS} -T8 \
+mvn ${MVN_ARGS} -T8 \
   -f helidon/pom.xml \
   -DskipTests \
   -Dmaven.test.skip=false \

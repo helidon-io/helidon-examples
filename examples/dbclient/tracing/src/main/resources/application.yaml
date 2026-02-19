@@ -20,8 +20,6 @@ server:
 
 tracing:
   service: helidon-examples-dbclient-tracing
-  path: /api/traces
-  port: 14250
 
 db:
   source: jdbc

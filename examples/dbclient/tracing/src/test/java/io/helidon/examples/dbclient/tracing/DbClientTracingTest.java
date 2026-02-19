@@ -56,8 +56,8 @@ class DbClientTracingTest {
     @Container
     @SuppressWarnings("resource")
     private static final GenericContainer<?> CONTAINER = new GenericContainer<>(IMAGE)
-            .withExposedPorts(14250, 16686)
-            .waitingFor(Wait.forListeningPorts(14250, 16686)
+            .withExposedPorts(4317, 16686)
+            .waitingFor(Wait.forListeningPorts(4317, 16686)
                                 .withStartupTimeout(Duration.ofMinutes(2)));
 
     private final Http1Client jaegerClient = Http1Client.builder()
@@ -70,7 +70,7 @@ class DbClientTracingTest {
     }
 
     static int tracingPort() {
-        return CONTAINER.getMappedPort(14250);
+        return CONTAINER.getMappedPort(4317);
     }
 
     @SetUpServer

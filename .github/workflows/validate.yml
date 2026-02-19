@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024, 2025 Oracle and/or its affiliates.
+# Copyright (c) 2024, 2026 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ name: "Validate"
 on:
   pull_request:
   push:
-    branches-ignore: [ 'dev-*.x', 'release-*' ]
+    branches-ignore: [ 'release-*' ]
     tags-ignore: [ '**' ]
   workflow_call:
 
@@ -30,7 +30,7 @@ env:
   JAVA_VERSION: '21'
   JAVA_DISTRO: 'oracle'
   HELIDON_PIPELINES: 'true'
-  MAVEN_ARGS: |
+  MVN_ARGS: |
     -B -fae -e
     -Dmaven.wagon.httpconnectionManager.ttlSeconds=60
     -Dmaven.wagon.http.retryHandler.count=3
@@ -135,7 +135,12 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
       - name: Spotbugs
-        run: etc/scripts/spotbugs.sh
+        run: |
+          mvn ${MVN_ARGS} \
+            -DskipTests \
+            -Dmaven.test.skip=true \
+            -Pspotbugs \
+            verify
   build:
     needs: prime-build
     timeout-minutes: 20
@@ -165,7 +170,17 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
       - name: Maven build
-        run: etc/scripts/build.sh
+        run: |
+          mvn ${MVN_ARGS} \
+              clean install
+      - name: Archive test results
+        uses: actions/upload-artifact@v4
+        with:
+          if-no-files-found: 'ignore'
+          name: test-results
+          path: |
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
   build-latest-java:
     needs: prime-build
     timeout-minutes: 20
@@ -195,6 +210,18 @@ jobs:
           release: ea
           version: stable
       - name: Maven build
-        run: etc/scripts/build.sh
-        env:
-          MAVEN_ARGS: -pl !examples/integrations/micronaut/data,!examples/integrations/microstream/greetings-se,!examples/integrations/microstream/greetings-mp
+        run: |
+          mvn ${MVN_ARGS} \
+              -Dcache.enabled=true \
+              -DreactorRule=latest-java \
+              -DmoduleSet=all \
+              -Dsurefire.reportNameSuffix=latest-java \
+              clean install
+      - name: Archive test results
+        uses: actions/upload-artifact@v4
+        with:
+          if-no-files-found: 'ignore'
+          name: test-results-latest-java
+          path: |
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
