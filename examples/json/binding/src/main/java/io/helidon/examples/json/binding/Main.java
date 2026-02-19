@@ -18,8 +18,19 @@ package io.helidon.examples.json.binding;
 
 import io.helidon.json.binding.JsonBinding;
 
+/**
+ * The application main class.
+ */
 public class Main {
 
+    private Main() {
+    }
+
+    /**
+     * Application main entry point.
+     *
+     * @param args command line arguments.
+     */
     public static void main(String[] args) {
         JsonBinding jsonBinding = JsonBinding.create();
         Person person = new Person("John", "Brown", 35);
