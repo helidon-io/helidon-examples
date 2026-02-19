@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2018, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import io.helidon.http.Status;
 import io.helidon.metrics.api.Counter;
 import io.helidon.metrics.api.Meter;
 import io.helidon.metrics.api.MeterRegistry;
-import io.helidon.metrics.api.Metrics;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
@@ -56,12 +56,14 @@ public final class TodoService implements HttpService {
      * @param bsc the {@code BackendServiceClient} to use
      */
     TodoService(BackendServiceClient bsc) {
-        MeterRegistry registry = Metrics.globalRegistry();
+        MeterRegistry registry = Services.get(MeterRegistry.class);
 
         this.bsc = bsc;
         this.createCounter = registry.getOrCreate(Counter.builder("created"));
         this.updateCounter = registry.getOrCreate(Counter.builder("updates"));
-        this.deleteCounter = registry.getOrCreate(counterMetadata("deletes", "Number of deleted todos"));
+        this.deleteCounter = registry.getOrCreate(Counter.builder("deletes")
+                .description("Number of deleted todos")
+                .baseUnit(Meter.BaseUnits.NONE));
     }
 
     @Override
@@ -71,12 +73,6 @@ public final class TodoService implements HttpService {
                 .put("/todo/{id}", this::update)
                 .get("/todo", this::list)
                 .post("/todo", this::create);
-    }
-
-    private Counter.Builder counterMetadata(String name, String description) {
-        return Counter.builder(name)
-                .description(description)
-                .baseUnit(Meter.BaseUnits.NONE);
     }
 
     /**

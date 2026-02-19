@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2017, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package io.helidon.examples.todos.backend;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -65,25 +64,24 @@ public class DbService {
      * @param config the configuration root
      */
     @Inject
+    @SuppressWarnings("resource")
     public DbService(Config config) {
-        Cluster.Builder clusterBuilder = Cluster.builder()
-                .withoutMetrics();
-
-        Config cConfig = config.get("cassandra");
-        cConfig.get("servers").asList(Config.class).stream()
-                .flatMap(Collection::stream)
-                .map(server -> server.get("host").asString().get())
-                .forEach(clusterBuilder::addContactPoints);
-        cConfig.get("port").asInt().ifPresent(clusterBuilder::withPort);
-
-        Cluster cluster = clusterBuilder.build();
+        var cluster = cluster(config.get("cassandra"));
         session = cluster.connect("backend");
-
         listStatement = session.prepare(LIST_QUERY);
         getStatement = session.prepare(GET_QUERY);
         insertStatement = session.prepare(INSERT_QUERY);
         updateStatement = session.prepare(UPDATE_QUERY);
         deleteStatement = session.prepare(DELETE_QUERY);
+    }
+
+    private static Cluster cluster(Config config) {
+        var builder = Cluster.builder().withoutMetrics();
+        for (var server : config.get("servers").asNodeList().orElseGet(List::of)) {
+            server.get("host").asString().ifPresent(builder::addContactPoint);
+        }
+        config.get("port").asInt().ifPresent(builder::withPort);
+        return builder.build();
     }
 
     /**
