@@ -24,18 +24,11 @@ server:
     # THIS MUST NOT BE USED IN PRODUCTION!
     # exception message will be sent back over the network - this may give potential attackers information about your application
     include-entity: true
-
-security:
-  providers:
-    - abac:
-    - http-basic-auth:
-        users:
-          - login: "john"
-            password: "changeit"
-            roles: ["admin"]
-          - login: "jack"
-            password: "changeit"
-            roles: ["user"]
+  features:
+    observe:
+      observers:
+        health:
+          details: true
 
 # Ignore this feature's warning
 declarative:

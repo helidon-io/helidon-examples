@@ -42,5 +42,6 @@
         <module>validation</module>
         <module>data</module>
         <module>security</module>
+        <module>health</module>
     </modules>
 </project>
