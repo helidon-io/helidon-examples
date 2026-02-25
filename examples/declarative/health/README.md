@@ -16,7 +16,7 @@ mvn clean package
 Run from command line:
 
 ```shell
-java -jar target/helidon-examples-declarative-webserver-hello-world.jar
+java -jar target/helidon-examples-declarative-health.jar
 ```
 
 Expected output should be similar to the following:
@@ -44,7 +44,7 @@ mvn clean package -Pnative-image
 Run from command line:
 
 ```shell
-./target/helidon-examples-declarative-webserver-hello-world 
+./target/helidon-examples-declarative-health 
 ```
 
 Expected output should be the same as when starting regular Java
@@ -134,3 +134,30 @@ Content-Type: text/plain
 
 Ahoj World
 ```
+
+## Health endpoint
+
+To get health status, use the following command:
+
+```shell
+curl -i http://localhost:8080/observe/health
+```
+
+Expected output:
+
+```
+HTTP/1.1 200 OK
+Date: Wed, 25 Feb 2026 16:37:35 +0100
+Cache-Control: no-cache
+Cache-Control: no-store
+Cache-Control: must-revalidate
+Cache-Control: no-transform
+Connection: keep-alive
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+
+{"status":"UP","checks":[{"name":"greeting","status":"UP"}]}
+```
+
+Note that if we did not allow health details in `application.yaml`, the status would be `204 No-Content` instead.

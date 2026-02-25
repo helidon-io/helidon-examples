@@ -16,7 +16,7 @@ mvn clean package
 Run from command line:
 
 ```shell
-java -jar target/helidon-examples-declarative-webserver-hello-world.jar
+java -jar target/helidon-examples-declarative-security.jar
 ```
 
 Expected output should be similar to the following:
@@ -44,7 +44,7 @@ mvn clean package -Pnative-image
 Run from command line:
 
 ```shell
-./target/helidon-examples-declarative-webserver-hello-world 
+./target/helidon-examples-declarative-security 
 ```
 
 Expected output should be the same as when starting regular Java
@@ -143,7 +143,6 @@ Content-Type: text/plain
 Security did not allow this request to proceed%  
 ```
 
-
 Command (correct role):
 
 ```shell
@@ -158,8 +157,6 @@ Date: Tue, 24 Feb 2026 15:55:30 +0100
 Connection: keep-alive
 Content-Length: 0
 ```
-
-
 
 And the next call to greet (i.e. the fist command) should provide:
 

@@ -1,7 +1,7 @@
 Declarative Server Example
 ---
 
-This example shows how to use Helidon declarative to create an HTTP server "Hello World" endpoint.
+This example shows how to use Helidon declarative to protect a few endpoints with Cross-Origin Resource Sharing (CORS).
 
 The example can be built using GraalVM native image as well.
 
@@ -16,7 +16,7 @@ mvn clean package
 Run from command line:
 
 ```shell
-java -jar target/helidon-examples-declarative-webserver-hello-world.jar
+java -jar target/helidon-examples-declarative-cors.jar
 ```
 
 Expected output should be similar to the following:
@@ -44,7 +44,7 @@ mvn clean package -Pnative-image
 Run from command line:
 
 ```shell
-./target/helidon-examples-declarative-webserver-hello-world 
+./target/helidon-examples-declarative-cors 
 ```
 
 Expected output should be the same as when starting regular Java
@@ -132,4 +132,47 @@ Content-Length: 10
 Content-Type: text/plain
 
 Ahoj World
+```
+
+# Validating CORS
+
+There are two CORS protected endpoints: `/observe/health/*` (via `application.yaml`), and `/hello/*` (via annotations
+on `HelloWorldEndpoint` class).
+
+To check that CORS works as expected, we can execute a "pre-flight" request (normally done by the browser):
+
+```shell
+curl -i -X OPTIONS -H "Origin: http://www.example.com" -H "Access-Control-Request-Method: POST" -i http://localhost:8080/hello
+```
+
+Expected output:
+
+```
+HTTP/1.1 200 OK
+Date: Wed, 25 Feb 2026 16:33:04 +0100
+Access-Control-Allow-Methods: POST
+Access-Control-Allow-Origin: http://www.example.com
+Access-Control-Max-Age: 60
+Connection: keep-alive
+Content-Length: 0
+Vary: Origin
+```
+
+As we can see, the request is allowed for the specified origin and method, and uses our custom `Max-Age` of 60 seconds.
+
+
+Now we try another request to the `health` endpoint with an invalid origin:
+
+```shell
+curl -i -X OPTIONS -H "Origin: http://www.examples.com" -H "Access-Control-Request-Method: GET" -i http://localhost:8080/observe/health
+```
+
+We get a forbidden response, informing the browser that this origin is not allowed to invoke this request (the origin has
+plural `examples` instead of the allowed singular `example`:
+
+```
+HTTP/1.1 403 Forbidden
+Date: Wed, 25 Feb 2026 16:34:42 +0100
+Connection: keep-alive
+Content-Length: 0
 ```

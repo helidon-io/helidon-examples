@@ -79,8 +79,10 @@ class DeclarativeSecurityTest {
                     .requestEntity(String.class);
             assertThat(entity, is("Hola World"));
         } finally {
+            // make sure we reset to original greeting even if the above assertion fail
             client.post("/hello")
                     .contentType(MediaTypes.TEXT_PLAIN)
+                    .header(HeaderNames.AUTHORIZATION, "basic " + basicAuth("john"))
                     .submit("Hello")
                     .close();
         }
