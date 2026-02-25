@@ -43,5 +43,6 @@
         <module>data</module>
         <module>security</module>
         <module>health</module>
+        <module>cors</module>
     </modules>
 </project>
