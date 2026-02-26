@@ -41,5 +41,8 @@
         <module>metrics</module>
         <module>validation</module>
         <module>data</module>
+        <module>security</module>
+        <module>health</module>
+        <module>cors</module>
     </modules>
 </project>
