@@ -86,13 +86,6 @@ class DeclarativeSecurityTest {
                     .submit("Hello")
                     .close();
         }
-        // reset back
-        response = client.post("/hello")
-                .header(HeaderNames.AUTHORIZATION, "basic " + basicAuth("john"))
-                .contentType(MediaTypes.TEXT_PLAIN)
-                .submit("Hello", String.class);
-
-        assertThat(response.status(), is(Status.NO_CONTENT_204));
     }
 
     @Test

@@ -52,7 +52,9 @@
         <dependency>
             <groupId>io.helidon.data.sql.datasource</groupId>
             <artifactId>helidon-data-sql-datasource-hikari</artifactId>
-            <scope>runtime</scope>
+            <!--
+             this dependency cannot be runtime, as the generated application binding needs it
+            -->
         </dependency>
         <dependency>
             <groupId>io.helidon.data.jakarta.persistence</groupId>
