@@ -44,5 +44,6 @@
         <module>security</module>
         <module>health</module>
         <module>cors</module>
+        <module>websocket</module>
     </modules>
 </project>
