@@ -49,9 +49,9 @@ features:
           location: "WEB"
 ```
 
-The `welcom` defines a welcome file the static content looks for if a directory is requested.
+The `welcome` defines a welcome file the static content looks for if a directory is requested.
 
-We can configure multiple instances of classpath (or file) static content; each should at lea st have the `context` (where it will be exposed over HTTP), and `location` (where is the directory on the classpath). 
+We can configure multiple instances of classpath (or file) static content; each should at least have the `context` (where it will be exposed over HTTP), and `location` (where is the directory on the classpath). 
 
 # Implementations details
 

@@ -3,7 +3,7 @@
 <html>
 <!--
 
-    Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+    Copyright (c) 2020, 2026 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
                document.getElementById("title").innerHTML = "WebSocket is supported by your Browser!";
                ws = new WebSocket("ws://localhost:8080/websocket/board");
                ws.onopen = function() {
-                  document.getElementById("result").innerHTML += "<p>WebSocket openned</p>";
+                  document.getElementById("result").innerHTML += "<p>WebSocket opened</p>";
                };
                ws.onmessage = function (evt) { 
                   var received_msg = evt.data;

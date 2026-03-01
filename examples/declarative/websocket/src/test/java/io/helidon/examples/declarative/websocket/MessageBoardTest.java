@@ -81,7 +81,7 @@ class MessageBoardTest {
 
         // Wait until all messages are received
         assertThat("Message latch should have counted down to 0",
-                   messageLatch.await(1000, TimeUnit.SECONDS),
+                   messageLatch.await(20, TimeUnit.SECONDS),
                    is(true));
     }
 }
