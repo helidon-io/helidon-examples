@@ -37,7 +37,7 @@ Hello Joe!
 
 ## Use the telemetry back-end to view tracing information
 Use a browser to access the back-end UI and view the spans and metrics. For example, with Signoz:
-1. Access `http://localhost:9090`.
+1. Access `http://localhost:9090` (assuming you modified the default configuration to _not_ use port 8080).
 2. View tracing spans. 
    
    Click the "Open Traces Explorer" link or hover over the left-hand column of icons and click Traces. The available traces should appear. Click on one to see its details.
