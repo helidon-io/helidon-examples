@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ class MessageBoardTest {
 
         // Wait until all messages are received
         assertThat("Message latch should have counted down to 0",
-                   messageLatch.await(1000, TimeUnit.SECONDS),
+                   messageLatch.await(20, TimeUnit.SECONDS),
                    is(true));
     }
 }

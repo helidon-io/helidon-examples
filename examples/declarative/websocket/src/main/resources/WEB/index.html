@@ -3,7 +3,7 @@
 <html>
 <!--
 
-    Copyright (c) 2020, 2026 Oracle and/or its affiliates.
+    Copyright (c) 2026 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
          function webSocketTest() {
             if ("WebSocket" in window) {
                document.getElementById("title").innerHTML = "WebSocket is supported by your Browser!";
-               ws = new WebSocket("ws://localhost:8080/websocket/board");
+               ws = new WebSocket("ws://localhost:8080/websocket");
                ws.onopen = function() {
                   document.getElementById("result").innerHTML += "<p>WebSocket opened</p>";
                };
@@ -46,7 +46,7 @@
          }
          function sendMessageRest(message){
               var xhttp = new XMLHttpRequest();
-              xhttp.open("POST", "/rest/board", true);
+              xhttp.open("POST", "/rest", true);
               xhttp.setRequestHeader("Content-type", "text/plain");
               xhttp.send(message);
               document.getElementById("result").innerHTML += "<p>Message sent to Rest: " + escapeHtml(message) + "</p>";
