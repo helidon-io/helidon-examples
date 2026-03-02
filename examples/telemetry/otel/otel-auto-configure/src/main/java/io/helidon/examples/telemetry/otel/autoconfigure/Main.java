@@ -17,7 +17,6 @@
 package io.helidon.examples.telemetry.otel.autoconfigure;
 
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -33,8 +32,6 @@ import io.opentelemetry.api.metrics.Meter;
 import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.propagation.TextMapPropagator;
 import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk;
-import io.opentelemetry.sdk.autoconfigure.spi.ConfigProperties;
-import io.opentelemetry.sdk.resources.Resource;
 
 /**
  * Helidon SE example application to illustrate direct use of the OpenTelemetry APIs.
