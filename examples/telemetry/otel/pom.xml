@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2025 Oracle and/or its affiliates.
+    Copyright (c) 2026 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -22,17 +22,16 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.helidon.examples</groupId>
-        <artifactId>helidon-examples-project</artifactId>
+        <groupId>io.helidon.examples.telemetry</groupId>
+        <artifactId>helidon-examples-telemetry-project</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <groupId>io.helidon.examples.telemetry</groupId>
-    <artifactId>helidon-examples-telemetry-project</artifactId>
-    <name>Helidon Examples Telemetry</name>
+    <groupId>io.helidon.examples.telemetry.otel</groupId>
+    <artifactId>helidon-examples-telemetry-otel-project</artifactId>
+    <name>Helidon OpenTelemetry Examples</name>
     <packaging>pom</packaging>
 
     <modules>
-        <module>config</module>
-        <module>otel</module>
+        <module>otel-auto-configure</module>
     </modules>
 </project>
