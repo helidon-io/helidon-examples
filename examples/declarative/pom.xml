@@ -45,5 +45,6 @@
         <module>health</module>
         <module>cors</module>
         <module>websocket</module>
+        <module>webclient</module>
     </modules>
 </project>
