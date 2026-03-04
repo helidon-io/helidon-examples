@@ -51,7 +51,7 @@ The client endpoint can be injected with qualifier `@RestClient.Client`.
 
 This examples obtains the instance programmatically in the test class, to validate everything works.
 
-Note that for testing, we use a "known" configuration key in `applicaton-text.yaml` to override the client endpoint. 
+Note that for testing, we use a "known" configuration key in `applicaton-test.yaml` to override the client endpoint. 
 The key is `test.server.port`, and it will contain the port of the `@default` socket of the WebServer (as we use random
 socket for testing).
 

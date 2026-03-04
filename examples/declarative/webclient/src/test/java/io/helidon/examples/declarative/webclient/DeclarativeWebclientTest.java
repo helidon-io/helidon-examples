@@ -16,8 +16,6 @@
 
 package io.helidon.examples.declarative.webclient;
 
-import io.helidon.service.registry.Lookup;
-import io.helidon.service.registry.Qualifier;
 import io.helidon.service.registry.ServiceRegistry;
 import io.helidon.webclient.api.RestClient;
 import io.helidon.webserver.testing.junit5.ServerTest;
@@ -32,11 +30,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class DeclarativeWebclientTest {
     private final HelloWorldClientEndpoint client;
 
-    public DeclarativeWebclientTest(ServiceRegistry registry) {
-        this.client = registry.get(Lookup.builder()
-                                           .addContract(HelloWorldClientEndpoint.class)
-                                           .addQualifier(Qualifier.create(RestClient.Client.class))
-                                           .build());
+    public DeclarativeWebclientTest(ServiceRegistry registry, @RestClient.Client HelloWorldClientEndpoint client) {
+        this.client = client;
     }
 
     @Test
