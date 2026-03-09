@@ -27,7 +27,6 @@ import dev.langchain4j.service.SystemMessage;
  * the service registry.
  */
 @Ai.Service
-@Ai.ChatMemoryWindow(10)
 public interface ChatAiService {
 
     /**

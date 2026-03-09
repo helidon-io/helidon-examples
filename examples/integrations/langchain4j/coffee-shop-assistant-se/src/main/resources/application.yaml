@@ -18,6 +18,23 @@ server:
   port: 8080
 
 langchain4j:
+  providers:
+    open-ai:
+      # Lc4j demo key needs to be routed over lc4j proxy
+      base-url: "http://langchain4j.dev/demo/openai/v1"
+      api-key: "demo"
+  models:
+    chat-model:
+      provider: open-ai
+      model-name: "gpt-4o-mini"
+  content-retrievers:
+    embedding-store-content-retriever:
+      provider: lc4j-content-retriever
+      max-results: 10
+      min-score: 0.6
+      embedding-store: "EmbeddingStore"
+
+
   open-ai:
     chat-model:
       enabled: true
@@ -32,5 +49,6 @@ langchain4j:
       min-score: 0.6
       embedding-store:
         service-registry.named: "EmbeddingStore"
+
 app:
   menu-items: "data/menu.json"
