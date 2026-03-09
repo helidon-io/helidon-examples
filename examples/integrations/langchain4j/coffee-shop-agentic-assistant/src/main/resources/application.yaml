@@ -66,3 +66,6 @@ langchain4j:
 
 app:
   menu-items: "data/menu.json"
+  forbidden-phrases:
+    - "instant coffee"
+    - "decaf"

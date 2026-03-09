@@ -14,6 +14,7 @@ It combines multi-agent orchestration with RAG over a coffee menu ingested at st
 - Menu expert and order expert agents
 - Order tool callback (`saveOrder`)
 - RAG ingestion from `data/menu.json` into in-memory embedding store (same ingestion approach as `coffee-shop-assistant-se`)
+- LangChain4j input guardrail from config (`app.forbidden-phrases`)
 - Web UI and REST endpoint (`POST /chat`)
 
 ## Build

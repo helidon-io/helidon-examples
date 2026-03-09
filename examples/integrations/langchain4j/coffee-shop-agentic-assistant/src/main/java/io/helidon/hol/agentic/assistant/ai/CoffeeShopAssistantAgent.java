@@ -16,12 +16,14 @@
 package io.helidon.hol.agentic.assistant.ai;
 
 import io.helidon.hol.agentic.assistant.dto.ExpertMessage;
+import io.helidon.hol.agentic.assistant.guardrail.InputPromptGuardrail;
 import io.helidon.integrations.langchain4j.Ai;
 
 import dev.langchain4j.agentic.declarative.Output;
 import dev.langchain4j.agentic.declarative.SequenceAgent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.V;
+import dev.langchain4j.service.guardrail.InputGuardrails;
 
 @Ai.Agent("coffee-shop-agentic-assistant")
 public interface CoffeeShopAssistantAgent {
@@ -40,6 +42,7 @@ public interface CoffeeShopAssistantAgent {
             Use this conversation summary to maintain context:
             {{previousSummary}}
             """)
+    @InputGuardrails(InputPromptGuardrail.class)
     ExpertMessage chat(@V("question") String question, @V("previousSummary") String previousConversationSummary);
 
     @Output
