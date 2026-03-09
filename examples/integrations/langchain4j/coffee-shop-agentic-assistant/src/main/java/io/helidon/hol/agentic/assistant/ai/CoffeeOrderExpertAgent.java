@@ -22,12 +22,21 @@ import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 
+/**
+ * Agent responsible for coffee order workflows.
+ */
 @Ai.Agent("coffee-order-expert")
 @Ai.ChatModel("expensive-model")
 @Ai.ContentRetriever("menu-content-retriever")
 @Ai.Tools(OrderService.class)
 public interface CoffeeOrderExpertAgent {
 
+    /**
+     * Processes an order-related request.
+     *
+     * @param question user request
+     * @return order response
+     */
     @UserMessage("""
             You are Frank, a coffee shop server helping with orders.
             Use retrieved menu context for available items and prices.

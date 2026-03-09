@@ -21,11 +21,20 @@ import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 
+/**
+ * Agent answering coffee menu questions using retrieved menu content.
+ */
 @Ai.Agent("coffee-menu-expert")
 @Ai.ChatModel("expensive-model")
 @Ai.ContentRetriever("menu-content-retriever")
 public interface CoffeeMenuExpertAgent {
 
+    /**
+     * Answers a menu-related question.
+     *
+     * @param question user request
+     * @return menu response
+     */
     @UserMessage("""
             You are Frank, a coffee shop server and menu expert.
             Use retrieved menu context to answer menu questions accurately.

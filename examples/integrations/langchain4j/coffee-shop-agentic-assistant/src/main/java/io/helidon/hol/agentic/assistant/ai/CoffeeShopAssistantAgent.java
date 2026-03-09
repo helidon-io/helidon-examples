@@ -25,9 +25,19 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.V;
 import dev.langchain4j.service.guardrail.InputGuardrails;
 
+/**
+ * Top-level sequence agent coordinating classifier, router, and summarizer agents.
+ */
 @Ai.Agent("coffee-shop-agentic-assistant")
 public interface CoffeeShopAssistantAgent {
 
+    /**
+     * Handles a single coffee-shop conversation turn.
+     *
+     * @param question user question
+     * @param previousConversationSummary prior conversation summary
+     * @return assistant response and updated summary
+     */
     @SequenceAgent(outputKey = "jsonResponse", subAgents = {
             RequestTypeClassifierAgent.class,
             RequestRouterAgent.class,
@@ -45,6 +55,13 @@ public interface CoffeeShopAssistantAgent {
     @InputGuardrails(InputPromptGuardrail.class)
     ExpertMessage chat(@V("question") String question, @V("previousSummary") String previousConversationSummary);
 
+    /**
+     * Creates the final response object from workflow outputs.
+     *
+     * @param lastResponse last expert response
+     * @param nextSummary updated conversation summary
+     * @return response payload
+     */
     @Output
     static ExpertMessage createResponse(@V("lastResponse") String lastResponse, @V("nextSummary") String nextSummary) {
         return new ExpertMessage(lastResponse, nextSummary);

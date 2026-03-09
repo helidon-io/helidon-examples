@@ -22,10 +22,21 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 
+/**
+ * Agent summarizing the conversation state between turns.
+ */
 @Ai.Agent("summarizer")
 @Ai.ChatModel("cheap-model")
 public interface SummarizerAgent {
 
+    /**
+     * Produces the next conversation summary.
+     *
+     * @param previousSummary previous summary
+     * @param question last user question
+     * @param lastResponse last assistant response
+     * @return updated summary
+     */
     @SystemMessage("""
         You summarize a coffee-shop assistant conversation.
         Keep factual summary and try to preserve as much information as possible.

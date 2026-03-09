@@ -22,8 +22,20 @@ import io.helidon.service.registry.Service;
 import io.helidon.service.registry.ServiceRegistryManager;
 import io.helidon.service.registry.Services;
 
+/**
+ * Main entry point for the coffee-shop agentic assistant application.
+ */
 @Service.GenerateBinding
 public class ApplicationMain {
+    private ApplicationMain() {
+        throw new UnsupportedOperationException("No instances");
+    }
+
+    /**
+     * Starts the coffee-shop agentic assistant application.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         LogConfig.configureRuntime();
 

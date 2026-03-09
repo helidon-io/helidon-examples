@@ -24,11 +24,23 @@ import dev.langchain4j.service.V;
 
 import static java.lang.System.Logger.Level.INFO;
 
+/**
+ * Conditional router selecting the appropriate expert agent for the current request.
+ */
 @Ai.Agent("request-router")
 public interface RequestRouterAgent {
 
+    /**
+     * Logger used to trace which expert is activated.
+     */
     System.Logger LOGGER = System.getLogger(RequestRouterAgent.class.getName());
 
+    /**
+     * Routes the user question to one of the expert agents.
+     *
+     * @param question user request
+     * @return expert response
+     */
     @ConditionalAgent(subAgents = {
             CoffeeMenuExpertAgent.class,
             CoffeeOrderExpertAgent.class,
@@ -36,6 +48,12 @@ public interface RequestRouterAgent {
     })
     String route(@V("question") String question);
 
+    /**
+     * Activates the menu expert for menu questions.
+     *
+     * @param requestType classified request type
+     * @return {@code true} when menu expert should handle the request
+     */
     @ActivationCondition(CoffeeMenuExpertAgent.class)
     static boolean activateMenuExpert(@V("requestType") CoffeeRequestType requestType) {
         if (requestType == CoffeeRequestType.MENU) {
@@ -45,6 +63,12 @@ public interface RequestRouterAgent {
         return false;
     }
 
+    /**
+     * Activates the order expert for order questions.
+     *
+     * @param requestType classified request type
+     * @return {@code true} when order expert should handle the request
+     */
     @ActivationCondition(CoffeeOrderExpertAgent.class)
     static boolean activateOrderExpert(@V("requestType") CoffeeRequestType requestType) {
         if (requestType == CoffeeRequestType.ORDER) {
@@ -54,6 +78,12 @@ public interface RequestRouterAgent {
         return false;
     }
 
+    /**
+     * Activates the off-topic expert for unsupported questions.
+     *
+     * @param requestType classified request type
+     * @return {@code true} when off-topic expert should handle the request
+     */
     @ActivationCondition(OffTopicExpertAgent.class)
     static boolean activateOffTopicExpert(@V("requestType") CoffeeRequestType requestType) {
         if (requestType == CoffeeRequestType.OFF_TOPIC) {

@@ -22,10 +22,19 @@ import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 
+/**
+ * Agent classifying a user request into the coffee-shop workflow categories.
+ */
 @Ai.Agent("request-type-classifier")
 @Ai.ChatModel("cheap-model")
 public interface RequestTypeClassifierAgent {
 
+    /**
+     * Classifies the user request.
+     *
+     * @param question user request
+     * @return classified request type
+     */
     @UserMessage("""
             Analyze the user request and classify it into one of these categories:
             - MENU: questions about menu items, ingredients, pricing, recommendations, dietary options, availability

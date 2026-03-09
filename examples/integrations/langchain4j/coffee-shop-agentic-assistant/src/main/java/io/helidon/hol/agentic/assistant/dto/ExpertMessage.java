@@ -18,5 +18,11 @@ package io.helidon.hol.agentic.assistant.dto;
 
 import io.helidon.json.binding.Json;
 
+/**
+ * Response payload containing assistant message and conversation summary.
+ *
+ * @param message assistant message
+ * @param summary updated conversation summary
+ */
 @Json.Entity
 public record ExpertMessage(String message, String summary) { }

@@ -41,6 +41,11 @@ public class MenuItemsService {
                 .orElseThrow(() -> new IllegalStateException(CONFIG_KEY + " is required for menu ingestion"));
     }
 
+    /**
+     * Loads all configured menu items from JSON.
+     *
+     * @return menu items
+     */
     public List<MenuItem> getMenuItems() {
         var objectMapper = new ObjectMapper();
         try {

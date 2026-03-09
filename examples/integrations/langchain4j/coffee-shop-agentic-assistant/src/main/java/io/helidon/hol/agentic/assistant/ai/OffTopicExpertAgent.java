@@ -21,10 +21,19 @@ import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 
+/**
+ * Agent handling requests outside the supported coffee-shop scope.
+ */
 @Ai.Agent("coffee-off-topic-expert")
 @Ai.ChatModel("cheap-model")
 public interface OffTopicExpertAgent {
 
+    /**
+     * Responds to an off-topic request.
+     *
+     * @param question user request
+     * @return off-topic response
+     */
     @UserMessage("""
             You are Frank, a coffee shop assistant.
             If the request is not related to coffee menu or ordering, politely decline and invite

@@ -31,6 +31,12 @@ import dev.langchain4j.agent.tool.Tool;
 public class OrderService {
     private static final Logger LOGGER = Logger.getLogger(OrderService.class.getName());
 
+    /**
+     * Saves the provided order and returns its generated identifier.
+     *
+     * @param orderItems ordered item to price mapping
+     * @return generated order identifier
+     */
     @Tool("Saves a coffee order represented by item name to item price map and returns order ID.")
     public String saveOrder(Map<String, BigDecimal> orderItems) {
         StringBuilder msg = new StringBuilder("\n** New Coffee Order **\n");

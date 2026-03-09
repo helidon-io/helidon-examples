@@ -13,22 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.hol.agentic.assistant.dto;
 
 /**
- * High-level user intent for coffee shop conversations.
+ * DTOs exchanged across the coffee-shop assistant workflow and REST layer.
  */
-public enum CoffeeRequestType {
-    /**
-     * Menu-related question.
-     */
-    MENU,
-    /**
-     * Order-related question.
-     */
-    ORDER,
-    /**
-     * Unsupported or unrelated question.
-     */
-    OFF_TOPIC
-}
+package io.helidon.hol.agentic.assistant.dto;
