@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import jakarta.json.JsonObject;
-
 import io.helidon.http.sse.SseEvent;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webclient.sse.SseSource;
@@ -29,8 +27,11 @@ import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.testing.junit5.ServerTest;
 import io.helidon.webserver.testing.junit5.SetUpRoute;
 
-import org.junit.jupiter.api.Test;
+import jakarta.json.JsonObject;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
+import static io.helidon.http.HeaderNames.ACCEPT_ENCODING;
 import static io.helidon.http.HeaderValues.ACCEPT_EVENT_STREAM;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -50,11 +51,14 @@ class SseServiceTest {
         rules.register(new SseService());
     }
 
-    @Test
-    void testSseText() throws InterruptedException {
+    @ParameterizedTest
+    @ValueSource(strings = { "identity", "gzip", "deflate" })
+    void testSseText(String encoding) throws InterruptedException {
         try (var response = client.get("/sse_text")
                 .queryParam("count", "3")
-                .header(ACCEPT_EVENT_STREAM).request()) {
+                .header(ACCEPT_EVENT_STREAM)
+                .header(ACCEPT_ENCODING, encoding)
+                .request()) {
             var latch = new CountDownLatch(3);
             var events = new ArrayList<SseEvent>();
             response.source(SseSource.TYPE, event -> {
@@ -72,11 +76,14 @@ class SseServiceTest {
         }
     }
 
-    @Test
-    void testSseJson() throws InterruptedException {
+    @ParameterizedTest
+    @ValueSource(strings = { "identity", "gzip", "deflate" })
+    void testSseJson(String encoding) throws InterruptedException {
         try (var response = client.get("/sse_json")
                 .queryParam("count", "3")
-                .header(ACCEPT_EVENT_STREAM).request()) {
+                .header(ACCEPT_EVENT_STREAM)
+                .header(ACCEPT_ENCODING, encoding)
+                .request()) {
             var latch = new CountDownLatch(3);
             var events = new ArrayList<JsonObject>();
             response.source(SseSource.TYPE, event -> {
