@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2025, 2026 Oracle and/or its affiliates.
+    Copyright (c) 2026 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -23,22 +23,22 @@
     <parent>
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-se</artifactId>
-        <version>4.4.0-SNAPSHOT</version>
+        <version>4.4.0-M2</version>
         <relativePath/>
     </parent>
 
     <groupId>io.helidon.examples.integrations.langchain4j</groupId>
-    <artifactId>helidon-examples-integrations-langchain4j-coffee-shop-assistant-se</artifactId>
+    <artifactId>helidon-examples-integrations-langchain4j-coffee-shop-agentic-assistant</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
-    <name>Helidon Examples Integration LangChain4j Coffee Shop Assistant SE</name>
+    <name>Helidon Examples Integration LangChain4j Coffee Shop Agentic Assistant</name>
 
     <description>
-        Basic illustration of LangChain4j integration in Helidon SE
+        Agentic coffee shop assistant based on LangChain4j integration in Helidon SE
     </description>
 
     <properties>
-        <mainClass>io.helidon.examples.integrations.langchain4j.se.coffee.shop.assistant.ApplicationMain</mainClass>
+        <mainClass>io.helidon.hol.agentic.assistant.ApplicationMain</mainClass>
     </properties>
 
     <dependencies>
@@ -51,29 +51,33 @@
             <artifactId>helidon-integrations-langchain4j-providers-open-ai</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.webserver</groupId>
-            <artifactId>helidon-webserver</artifactId>
+            <groupId>io.helidon.integrations.langchain4j.providers</groupId>
+            <artifactId>helidon-integrations-langchain4j-providers-lc4j-in-process</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.http.media</groupId>
-            <artifactId>helidon-http-media-jsonb</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.config</groupId>
-            <artifactId>helidon-config-yaml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.webserver.observe</groupId>
-            <artifactId>helidon-webserver-observe-metrics</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.metrics</groupId>
-            <artifactId>helidon-metrics-system-meters</artifactId>
-            <scope>runtime</scope>
+            <groupId>io.helidon.integrations.langchain4j.providers</groupId>
+            <artifactId>helidon-integrations-langchain4j-providers-mock</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-embeddings-all-minilm-l6-v2-q</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.webserver</groupId>
+            <artifactId>helidon-webserver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.webserver</groupId>
+            <artifactId>helidon-webserver-static-content</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.http.media</groupId>
+            <artifactId>helidon-http-media-json-binding</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.config</groupId>
+            <artifactId>helidon-config-yaml</artifactId>
         </dependency>
         <dependency>
             <groupId>io.helidon.logging</groupId>
@@ -86,8 +90,13 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>io.helidon.webserver.testing.junit5</groupId>
-            <artifactId>helidon-webserver-testing-junit5</artifactId>
+            <groupId>io.helidon.testing</groupId>
+            <artifactId>helidon-testing-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.testing</groupId>
+            <artifactId>helidon-testing</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -119,22 +128,28 @@
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>io.helidon.codegen</groupId>
-                            <artifactId>helidon-codegen-apt</artifactId>
-                            <version>${helidon.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.helidon.integrations.langchain4j</groupId>
-                            <artifactId>helidon-integrations-langchain4j-codegen</artifactId>
-                            <version>${helidon.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.helidon.service</groupId>
-                            <artifactId>helidon-service-codegen</artifactId>
+                            <groupId>io.helidon.bundles</groupId>
+                            <artifactId>helidon-bundles-apt</artifactId>
                             <version>${helidon.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                    <source>21</source>
+                    <target>21</target>
+                    <release>21</release>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.helidon.service</groupId>
+                <artifactId>helidon-service-maven-plugin</artifactId>
+                <version>${helidon.version}</version>
+                <executions>
+                    <execution>
+                        <id>create-application</id>
+                        <goals>
+                            <goal>create-application</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
