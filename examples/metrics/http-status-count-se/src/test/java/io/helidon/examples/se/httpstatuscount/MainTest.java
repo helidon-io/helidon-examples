@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class MainTest {
     }
 
     @Test
-    public void testMicroprofileMetrics() {
+    public void testMetricsOutput() {
         try (Http1ClientResponse response = client.get("/simple-greet/greet-count").request()) {
             assertThat(response.as(String.class), containsString("Hello World!"));
         }
