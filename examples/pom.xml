@@ -48,7 +48,6 @@
         <module>health</module>
         <module>inject</module>
         <module>integrations</module>
-        <module>jbatch</module>
         <module>logging</module>
         <module>media</module>
         <module>messaging</module>
@@ -58,14 +57,12 @@
         <module>packaging</module>
         <module>quickstarts</module>
         <module>security</module>
-        <module>todo-app</module>
         <module>translator-app</module>
         <module>webclient</module>
         <module>webserver</module>
         <module>coherence</module>
         <module>telemetry</module>
         <module>declarative</module>
-        <module>microprofile</module>
     </modules>
 
     <build>

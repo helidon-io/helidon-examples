@@ -32,7 +32,7 @@ Each example has a `README` that you will follow. To build most examples
 just `cd` to the directory and run `mvn package`:
 
 ```shell
-cd examples/microprofile/hello-world-explicit
+cd examples/quickstarts/helidon-quickstart-se
 mvn package
 ```
 

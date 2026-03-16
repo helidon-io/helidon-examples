@@ -32,8 +32,6 @@
 
     <modules>
         <module>helidon-quickstart-se</module>
-        <module>helidon-quickstart-mp</module>
-        <module>helidon-standalone-quickstart-mp</module>
         <module>helidon-standalone-quickstart-se</module>
         <module>helidon-quickstart-inject</module>
     </modules>

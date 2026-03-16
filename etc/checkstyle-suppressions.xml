@@ -47,6 +47,4 @@
               files="examples/data/"/>
     <suppress checks="MethodName"
               files="examples/declarative/data/"/>
-    <suppress checks="MethodName"
-              files="examples/microprofile/data/"/>
 </suppressions>
