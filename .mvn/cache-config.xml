@@ -30,17 +30,4 @@
             <exclude>*@copy-libs</exclude>
         </executionsExcludes>
     </lifecycleConfig>
-    <reactorRules>
-        <reactorRule name="latest-java">
-            <moduleSets>
-                <moduleSet name="all">
-                    <excludes>
-                        <exclude>examples/integrations/micronaut/**</exclude>
-                        <exclude>examples/integrations/microstream/**</exclude>
-                    </excludes>
-                    <include>**/*</include>
-                </moduleSet>
-            </moduleSets>
-        </reactorRule>
-    </reactorRules>
 </cacheConfig>

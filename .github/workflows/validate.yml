@@ -213,7 +213,6 @@ jobs:
         run: |
           mvn ${MVN_ARGS} \
               -Dcache.enabled=true \
-              -DreactorRule=latest-java \
               -DmoduleSet=all \
               -Dsurefire.reportNameSuffix=latest-java \
               clean install
