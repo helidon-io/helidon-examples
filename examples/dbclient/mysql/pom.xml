@@ -64,10 +64,6 @@
             <artifactId>helidon-dbclient-hikari</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.integrations.db</groupId>
-            <artifactId>helidon-integrations-db-mysql</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
         </dependency>

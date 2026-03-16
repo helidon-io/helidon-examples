@@ -60,8 +60,9 @@
             <artifactId>helidon-dbclient-hikari</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.integrations.db</groupId>
-            <artifactId>ojdbc</artifactId>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc17-production</artifactId>
+            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>jakarta.json</groupId>

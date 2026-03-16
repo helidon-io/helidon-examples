@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2017, 2024 Oracle and/or its affiliates.
+    Copyright (c) 2017, 2026 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -42,7 +42,6 @@
         <module>outbound-override</module>
         <module>programmatic</module>
         <module>spi-examples</module>
-        <module>vaults</module>
         <module>webserver-digest-auth</module>
         <module>webserver-signatures</module>
     </modules>

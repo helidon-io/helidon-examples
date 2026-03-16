@@ -2,29 +2,6 @@
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 <!-- For information see https://jeremylong.github.io/DependencyCheck/general/suppression.html -->
 
-<!-- This CVE is against the etcd server. We use the Java client
--->
-<suppress>
-   <notes><![CDATA[
-   file name: etcd4j-2.17.0.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.mousio/etcd4j@.*$</packageUrl>
-   <cpe>cpe:/a:etcd:etcd</cpe>
-</suppress>
-
-
-<!-- This CVE is against Neo4j through 3.4.18. We use Neo4j 4.x
-     Helidon's Neo4j integration triggered a false positive due to it's 
-     version being < 3.4.18
--->
-<suppress>
-   <notes><![CDATA[
-   file name: io.helidon.integrations.neo4j:helidon-integrations-neo4j:2.4.0-SNAPSHOT
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/io\.helidon\.integrations\.neo4j/helidon\-integrations\-neo4j@.*$</packageUrl>
-   <cve>CVE-2021-34371</cve>
-</suppress>
-
 <!-- False positive.
      This CVE is against the H2 web admin console which we do not use
 -->
@@ -50,16 +27,6 @@
    <vulnerabilityName>CVE-2021-0341</vulnerabilityName>
 </suppress>
 
-<!-- False Positive. This CVE is against graphql-java, not the microprofile-graphql-api
--->
-<suppress>
-   <notes><![CDATA[
-   file name: microprofile-graphql-api-2.0.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.eclipse\.microprofile\.graphql/microprofile\-graphql\-api@.*$</packageUrl>
-   <cve>CVE-2022-37734</cve>
-</suppress>
-
 <!-- False Positive. This CVE is against graphql-java, not graphql-java-dataloader
      See https://github.com/jeremylong/DependencyCheck/issues/5641
 -->
@@ -69,26 +36,6 @@
    ]]></notes>
    <packageUrl regex="true">^pkg:maven/com\.graphql\-java/java\-dataloader@.*$</packageUrl>
    <cve>CVE-2023-28867</cve>
-</suppress>
-
-<!-- False Postive. This CVE is against the kafka server. This is the kafka client
--->
-<suppress>
-   <notes><![CDATA[
-   file name: kafka-clients-2.8.1.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.apache\.kafka/kafka\-clients@.*$</packageUrl>
-   <cve>CVE-2022-34917</cve>
-</suppress>
-
-<!-- False Positive. CVE-2023-25194 is against Kafka Connect, not the client -->
-<!-- See https://github.com/jeremylong/DependencyCheck/issues/5469 -->
-<suppress>
-   <notes><![CDATA[
-   file name: kafka-clients-2.8.1.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.apache\.kafka/kafka\-clients@.*$</packageUrl>
-   <cve>CVE-2023-25194</cve>
 </suppress>
 
 <!-- False Positive. This CVE is against H2 1.x.

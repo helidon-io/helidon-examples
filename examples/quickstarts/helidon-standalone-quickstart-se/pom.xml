@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2019, 2025 Oracle and/or its affiliates.
+    Copyright (c) 2019, 2026 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -236,60 +236,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>native-image</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.graalvm.buildtools</groupId>
-                        <artifactId>native-maven-plugin</artifactId>
-                        <version>${version.plugin.nativeimage}</version>
-                        <executions>
-                            <execution>
-                                <id>resource-config</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>generateResourceConfig</goal>
-                                </goals>
-                                <configuration>
-                                    <!-- generate records for all module's resources -->
-                                    <isDetectionEnabled>true</isDetectionEnabled>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>build-native-image</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>compile-no-fork</goal>
-                                </goals>
-                                <configuration>
-                                    <!-- generate an argument file for native image - great for troubleshooting -->
-                                    <useArgFile>true</useArgFile>
-                                    <!-- this needs to be defined to have a single set of jars on classpath,
-                                    default approach would add classpath of module (from maven) and from jar (manifest) -->
-                                    <classesDirectory>${project.build.outputDirectory}</classesDirectory>
-                                    <imageName>${project.build.finalName}</imageName>
-                                    <fallback>false</fallback>
-                                    <metadataRepository>
-                                        <enabled>false</enabled>
-                                    </metadataRepository>
-                                    <buildArgs>
-                                        <!-- Some native image features use the svm dependencies which require additional exports -->
-                                        <arg>--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.configure=ALL-UNNAMED</arg>
-                                    </buildArgs>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>io.helidon.integrations.graal</groupId>
-                    <artifactId>helidon-graal-native-image-extension</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
         <profile>
             <id>jlink-image</id>
             <build>
