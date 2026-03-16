@@ -49,10 +49,8 @@
         <module>inject</module>
         <module>logging</module>
         <module>media</module>
-        <module>messaging</module>
         <module>metrics</module>
         <module>openapi</module>
-        <module>openapi-tools</module>
         <module>packaging</module>
         <module>quickstarts</module>
         <module>security</module>

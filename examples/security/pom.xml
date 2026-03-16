@@ -38,7 +38,6 @@
 
     <modules>
         <module>basic-auth-with-static-content</module>
-        <module>google-login</module>
         <module>outbound-override</module>
         <module>programmatic</module>
         <module>spi-examples</module>

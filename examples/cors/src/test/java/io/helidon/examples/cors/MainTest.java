@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,15 @@
 
 package io.helidon.examples.cors;
 
-import java.util.List;
-import java.util.Optional;
-
 import io.helidon.common.media.type.MediaTypes;
-import io.helidon.config.Config;
-import io.helidon.cors.CrossOriginConfig;
 import io.helidon.http.Headers;
 import io.helidon.http.WritableHeaders;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webclient.http1.Http1ClientRequest;
 import io.helidon.webclient.http1.Http1ClientResponse;
-import io.helidon.webserver.WebServerConfig;
+import io.helidon.webserver.http.HttpRouting;
 import io.helidon.webserver.testing.junit5.ServerTest;
-import io.helidon.webserver.testing.junit5.SetUpServer;
+import io.helidon.webserver.testing.junit5.SetUpRoute;
 
 import jakarta.json.JsonObject;
 import org.junit.jupiter.api.MethodOrderer;
@@ -37,17 +32,16 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import static io.helidon.common.testing.http.junit5.HttpHeaderMatcher.hasHeader;
+import static io.helidon.common.testing.http.junit5.HttpHeaderMatcher.hasHeaderValue;
 import static io.helidon.http.HeaderNames.ACCESS_CONTROL_ALLOW_METHODS;
 import static io.helidon.http.HeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN;
 import static io.helidon.http.HeaderNames.ACCESS_CONTROL_REQUEST_METHOD;
 import static io.helidon.http.HeaderNames.HOST;
 import static io.helidon.http.HeaderNames.ORIGIN;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsEmptyCollection.empty;
 
 @SuppressWarnings("HttpUrlsUsage")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -60,9 +54,9 @@ public class MainTest {
         this.client = client;
     }
 
-    @SetUpServer
-    public static void setup(WebServerConfig.Builder server) {
-        server.routing(Main::routing);
+    @SetUpRoute
+    public static void setup(HttpRouting.Builder routing) {
+        Main.routing(routing);
     }
 
     @Order(1) // Make sure this runs before the greeting message changes so responses are deterministic.
@@ -130,10 +124,7 @@ public class MainTest {
             String payload = GreetingMessage.fromRest(response.entity().as(JsonObject.class)).getMessage();
             assertThat(payload, containsString("Hola World"));
             Headers responseHeaders = response.headers();
-            Optional<String> allowOrigin = responseHeaders.value(ACCESS_CONTROL_ALLOW_ORIGIN);
-            assertThat("Expected CORS header " + CrossOriginConfig.ACCESS_CONTROL_ALLOW_ORIGIN + " is absent",
-                    allowOrigin.isPresent(), is(true));
-            assertThat(allowOrigin.get(), is("*"));
+            assertThat(responseHeaders, hasHeaderValue(ACCESS_CONTROL_ALLOW_ORIGIN, is("http://foo.com")));
         }
     }
 
@@ -149,17 +140,9 @@ public class MainTest {
                         .set(HOST, "here.com")
                         .set(ACCESS_CONTROL_REQUEST_METHOD, "PUT"))
                 .request()) {
-            response.headers().forEach(preFlightHeaders::add);
-            List<String> allowMethods = preFlightHeaders.values(ACCESS_CONTROL_ALLOW_METHODS);
-            assertThat("pre-flight response does not include " + CrossOriginConfig.ACCESS_CONTROL_ALLOW_METHODS,
-                    allowMethods, not(empty()));
-            assertThat(allowMethods, hasItem("PUT"));
-            List<String> allowOrigins = preFlightHeaders.values(ACCESS_CONTROL_ALLOW_ORIGIN);
-            assertThat("pre-flight response does not include " + CrossOriginConfig.ACCESS_CONTROL_ALLOW_ORIGIN,
-                    allowOrigins, not(empty()));
-            assertThat("Header " + CrossOriginConfig.ACCESS_CONTROL_ALLOW_ORIGIN
-                       + " should contain '*' but does not; " + allowOrigins,
-                    allowOrigins, hasItem("http://foo.com"));
+
+            assertThat(response.headers(), hasHeader(ACCESS_CONTROL_ALLOW_METHODS, "PUT", "DELETE", "GET"));
+            assertThat(response.headers(), hasHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "http://foo.com"));
         }
 
         // Send the follow-up request.
@@ -173,12 +156,8 @@ public class MainTest {
                 }).submit(payload.forRest())) {
 
             assertThat(response.status().code(), is(204));
-            List<String> allowOrigins = preFlightHeaders.values(ACCESS_CONTROL_ALLOW_ORIGIN);
-            assertThat("Expected CORS header " + CrossOriginConfig.ACCESS_CONTROL_ALLOW_ORIGIN + " has no value(s)",
-                    allowOrigins, not(empty()));
-            assertThat("Header " + CrossOriginConfig.ACCESS_CONTROL_ALLOW_ORIGIN
-                       + " should contain '*' but does not; " + allowOrigins,
-                    allowOrigins, hasItem("http://foo.com"));
+
+            assertThat(response.headers(), hasHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "http://foo.com"));
         }
     }
 
@@ -194,11 +173,8 @@ public class MainTest {
             assertThat("HTTP response", response.status().code(), is(200));
             String payload = GreetingMessage.fromRest(response.entity().as(JsonObject.class)).getMessage();
             assertThat(payload, containsString("Cheers Maria"));
-            Headers responseHeaders = response.headers();
-            Optional<String> allowOrigin = responseHeaders.value(ACCESS_CONTROL_ALLOW_ORIGIN);
-            assertThat("Expected CORS header " + CrossOriginConfig.ACCESS_CONTROL_ALLOW_ORIGIN + " is absent",
-                    allowOrigin.isPresent(), is(true));
-            assertThat(allowOrigin.get(), is("*"));
+
+            assertThat(response.headers(), hasHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "http://foo.com"));
         }
     }
 
@@ -215,8 +191,7 @@ public class MainTest {
         GreetingMessage payload = new GreetingMessage("Ahoy");
         try (Http1ClientResponse response = request.submit(payload.forRest())) {
             // Result depends on whether we are using overrides or not.
-            boolean isOverriding = Config.create().get("cors").exists();
-            assertThat("HTTP response3", response.status().code(), is(isOverriding ? 204 : 403));
+            assertThat("HTTP response3", response.status().code(), is(403));
         }
     }
 }
