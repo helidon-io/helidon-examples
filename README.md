@@ -1,21 +1,20 @@
-
 # Helidon Examples
 
-Examples for Helidon 4.
+Examples for Helidon 27.
 
 ## How to Run
 
 To build and run Helidon 4 examples you need:
 
-* Java 21 or later
-* Maven 3.6.1 or later
+* Java 25 or later
+* Maven 3.8.* or later
 
 Then:
 
 ```
 git clone https://github.com/helidon-io/helidon-examples.git
 cd helidon-examples
-git checkout helidon-4.x
+git checkout helidon-27.x
 mvn clean install
 ```
 
@@ -30,16 +29,16 @@ mvn clean install
 |-------|------------|------------------|-----------------------------------------------------|
 | N.N.N | Customers  | Release workflow | Released examples for a specific version of Helidon |
 
-To checkout examples for the most recent release of Helidon 4:
+To checkout examples for the most recent release of Helidon 27:
 
 ```
-git checkout helidon-4.x
+git checkout helidon-27.x
 ```
 
 To checkout examples for a specific release of Helidon:
 
 ```
-git checkout tags/4.1.0
+git checkout tags/27.0.0
 ```
 
 ## Documentation
@@ -68,3 +67,12 @@ Released under [Apache License 2.0](./LICENSE.txt).
 
 Developers choosing to distribute a binary implementation of this project are responsible for obtaining and providing all required licenses and copyright notices for the third-party code used in order to ensure compliance with their respective open source licenses.
 
+## Changes since 4.x
+
+Helidon is now separated into multiple repositories, and examples in this repo are only for modules in Helidon "core":
+
+(some of these repositories will be made public later):
+
+- Helidon "core": https://github.com/helidon-io/helidon - core features of Helidon, Helidon SE and Helidon Declarative
+- Helidon Extensions: https://github.com/helidon-io/helidon-extensions - set of extensions for Helidon "core", includes examples
+- Helidon MicroProfile: https://github.com/helidon-io/helidon-microprofile - MicroProfile implementations, includes examples
