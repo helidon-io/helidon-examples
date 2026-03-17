@@ -19,7 +19,7 @@ git checkout tags/4.1.0
 ```
 
 Our examples are Maven projects and can be built and run with
-Java 21 or newer -- so make sure you have those:
+Java 26 or newer -- so make sure you have those:
 
 ```shell
 java -version

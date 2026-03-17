@@ -6,7 +6,7 @@ Examples for Helidon 27.
 
 To build and run Helidon 4 examples you need:
 
-* Java 25 or later
+* Java 26 or later
 * Maven 3.8.* or later
 
 Then:

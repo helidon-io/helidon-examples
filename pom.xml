@@ -58,7 +58,7 @@
     </scm>
 
     <properties>
-        <version.java>21</version.java>
+        <version.java>26</version.java>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <helidon.version>27.0.0-SNAPSHOT</helidon.version>

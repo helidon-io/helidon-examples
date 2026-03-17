@@ -21,7 +21,7 @@ For convenience, this example includes a utility method which makes the Helidon 
 
 ## Build and run
 
-With JDK21
+With JDK26
 ```bash
 mvn package
 java -jar target/helidon-examples-telemetry-otel-autoconfigure.jar
@@ -44,5 +44,4 @@ Use a browser to access the back-end UI and view the spans and metrics. For exam
 3. View metrics.
    
    Hover over the left-hand column again and click Metrics. Click the Explorer link near the upper left. In the query field enter `example.greet.personalized` and then click the "Run Query" button near the upper right. By default the metrics data is updated once a minute (so be patient!).
-
 
