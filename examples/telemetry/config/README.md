@@ -17,7 +17,7 @@ Look at the `src/main/resources/application.yaml` file. It contains configuratio
 
 ## Build and run
 
-With JDK21
+With JDK26
 ```bash
 mvn package
 java -jar target/helidon-examples-telemetry-config.jar
@@ -56,4 +56,3 @@ Use a browser to access the back-end UI and view the spans. For example, with Ja
 4. Click on one of the traces.
 5. The back-end shows two or more spans, depending on which trace you clicked. ![Example GET trace](images/get-trace.png "GET trace")
 6. Click on any of the spans. ![Example GET span](images/get-span.png "GET span") Note that the "Process" tags include values for `x` and `y` from the `attributes` settings in the `application.yaml` config file.
-

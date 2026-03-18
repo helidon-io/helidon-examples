@@ -27,7 +27,7 @@ on:
   workflow_call:
 
 env:
-  JAVA_VERSION: '21'
+  JAVA_VERSION: '26'
   JAVA_DISTRO: 'oracle'
   HELIDON_PIPELINES: 'true'
   MVN_ARGS: |
