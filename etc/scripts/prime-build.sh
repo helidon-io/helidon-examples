@@ -47,7 +47,7 @@ version() {
   awk 'BEGIN {FS="[<>]"} ; /<helidon.version>/ {print $3; exit 0}' "${1}"
 }
 
-readonly HELIDON_BRANCH="main"
+readonly HELIDON_BRANCH="helidon-4.x"
 
 HELIDON_VERSION=$(version "${WS_DIR}/pom.xml")
 readonly HELIDON_VERSION
