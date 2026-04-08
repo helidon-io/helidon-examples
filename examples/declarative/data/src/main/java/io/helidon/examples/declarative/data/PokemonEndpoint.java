@@ -18,6 +18,7 @@ package io.helidon.examples.declarative.data;
 import java.util.List;
 import java.util.Optional;
 
+import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.examples.declarative.data.model.Pokemon;
 import io.helidon.examples.declarative.data.model.PokemonRepository;
@@ -28,7 +29,7 @@ import io.helidon.service.registry.Service;
 import io.helidon.transaction.Tx;
 import io.helidon.webserver.http.RestServer;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings(Api.SUPPRESS_INCUBATING) // Helidon declarative is an incubating feature
 @Http.Path("/pokemon")
 @Service.Singleton
 @RestServer.Endpoint

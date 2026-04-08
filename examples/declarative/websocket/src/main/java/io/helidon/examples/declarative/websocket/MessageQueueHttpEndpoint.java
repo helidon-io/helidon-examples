@@ -16,6 +16,7 @@
 
 package io.helidon.examples.declarative.websocket;
 
+import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.http.Http;
 import io.helidon.http.Status;
@@ -25,6 +26,7 @@ import io.helidon.webserver.http.RestServer;
 @Http.Path("/rest")
 @Service.Singleton
 @RestServer.Endpoint
+@SuppressWarnings(Api.SUPPRESS_INCUBATING)
 class MessageQueueHttpEndpoint {
     private static final System.Logger LOGGER = System.getLogger(MessageQueueHttpEndpoint.class.getName());
 

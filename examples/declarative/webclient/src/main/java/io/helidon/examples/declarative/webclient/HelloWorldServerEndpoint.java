@@ -28,7 +28,6 @@ import io.helidon.webserver.http.RestServer;
 /**
  * Server side implementation of the {@link io.helidon.examples.declarative.webclient.HelloWorldApi}.
  */
-@SuppressWarnings("deprecation")
 @RestServer.Endpoint // webserver declarative endpoint
 @Service.Singleton // service registry scope (must be singleton)
 class HelloWorldServerEndpoint implements HelloWorldApi {

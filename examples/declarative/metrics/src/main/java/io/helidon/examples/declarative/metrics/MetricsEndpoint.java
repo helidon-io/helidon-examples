@@ -19,6 +19,7 @@ package io.helidon.examples.declarative.metrics;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.http.Http;
 import io.helidon.metrics.api.Meter;
@@ -26,7 +27,7 @@ import io.helidon.metrics.api.Metrics;
 import io.helidon.service.registry.Service;
 import io.helidon.webserver.http.RestServer;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings(Api.SUPPRESS_INCUBATING) // Helidon declarative is an incubating feature
 @RestServer.Endpoint // webserver declarative endpoint
 @Http.Path("/hello") // path to serve this endpoint on
 @Service.Singleton // service registry scope (must be singleton)

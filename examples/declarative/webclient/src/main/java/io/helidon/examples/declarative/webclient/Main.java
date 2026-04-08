@@ -54,7 +54,7 @@ public class Main {
         // uses the generated application binding to start the application (this will be resolved after first build)
         // ApplicationBinding is generated to `target/generated-sources/annotations` directory, together with other generated
         // files that are used by Helidon Declarative
-        var registryManager = ServiceRegistryManager.start(ApplicationBinding.create());
+        ServiceRegistryManager registryManager = ServiceRegistryManager.start(ApplicationBinding.create());
         var registry = registryManager.registry();
 
         // access the WebServer service in service registry to get the bound port to print endpoint (optional)

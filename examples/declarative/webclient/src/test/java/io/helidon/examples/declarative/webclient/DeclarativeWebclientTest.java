@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-@SuppressWarnings("deprecation")
 @ServerTest
 public class DeclarativeWebclientTest {
     private final HelloWorldClientEndpoint client;

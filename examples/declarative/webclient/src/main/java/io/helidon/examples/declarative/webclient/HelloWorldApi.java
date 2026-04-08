@@ -23,7 +23,6 @@ import io.helidon.http.Http;
  * API used by both server and client.
  * This API should only use annotations from {@code io.helidon.http.Http} class.
  */
-@SuppressWarnings("deprecation")
 @Http.Path("/hello") // path this endpoint is served on
 interface HelloWorldApi {
     @Http.GET
