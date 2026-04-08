@@ -98,6 +98,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <compilerArgument>-Ahelidon.api.incubating=ignore</compilerArgument>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>io.helidon.bundles</groupId>

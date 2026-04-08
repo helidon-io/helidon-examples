@@ -18,13 +18,14 @@ package io.helidon.examples.declarative.faulttolerance;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.faulttolerance.Ft;
 import io.helidon.http.Http;
 import io.helidon.service.registry.Service;
 import io.helidon.webserver.http.RestServer;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings(Api.SUPPRESS_INCUBATING)
 @RestServer.Endpoint // webserver declarative endpoint
 @Http.Path("/ft") // path to serve this endpoint on
 @Service.Singleton // service registry scope (must be singleton)

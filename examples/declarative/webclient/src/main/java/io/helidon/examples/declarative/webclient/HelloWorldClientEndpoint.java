@@ -21,7 +21,6 @@ import io.helidon.webclient.api.RestClient;
 /**
  * Client side interface to generate the typed webclient.
  */
-@SuppressWarnings("deprecation")
 @RestClient.Endpoint("${app.client.endpoint:http://localhost:8080}")
 interface HelloWorldClientEndpoint extends HelloWorldApi {
 }

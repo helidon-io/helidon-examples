@@ -18,6 +18,7 @@ package io.helidon.examples.declarative.websocket;
 
 import java.util.Locale;
 
+import io.helidon.common.Api;
 import io.helidon.http.Http;
 import io.helidon.service.registry.Service;
 import io.helidon.webserver.websocket.WebSocketServer;
@@ -27,6 +28,7 @@ import io.helidon.websocket.WsSession;
 @WebSocketServer.Endpoint
 @Http.Path("/websocket")
 @Service.Singleton
+@SuppressWarnings(Api.SUPPRESS_INCUBATING)
 class MessageBoardWsEndpoint {
     private static final System.Logger LOGGER = System.getLogger(MessageBoardWsEndpoint.class.getName());
 

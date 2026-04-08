@@ -18,13 +18,14 @@ package io.helidon.examples.declarative.validation;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.http.Http;
 import io.helidon.service.registry.Service;
 import io.helidon.validation.Validation;
 import io.helidon.webserver.http.RestServer;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings(Api.SUPPRESS_INCUBATING) // Helidon declarative is an incubating feature
 @RestServer.Endpoint // webserver declarative endpoint
 @Http.Path("/validate") // path to serve this endpoint on
 @Service.Singleton // service registry scope (must be singleton)
