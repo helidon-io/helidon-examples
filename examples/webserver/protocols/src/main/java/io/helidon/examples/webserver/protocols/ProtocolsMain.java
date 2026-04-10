@@ -24,7 +24,6 @@ import io.helidon.common.pki.Keys;
 import io.helidon.common.socket.SocketOptions;
 import io.helidon.common.tls.Tls;
 import io.helidon.examples.grpc.strings.Strings;
-import io.helidon.grpc.core.ResponseHelper;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.grpc.GrpcRouting;
@@ -36,6 +35,7 @@ import io.helidon.websocket.WsSession;
 
 import io.grpc.stub.StreamObserver;
 
+import static io.helidon.grpc.core.ResponseHelper.complete;
 import static io.helidon.http.Method.GET;
 
 /**
@@ -91,7 +91,7 @@ public class ProtocolsMain {
     private static void grpcUpper(Strings.StringMessage request, StreamObserver<Strings.StringMessage> observer) {
         String requestText = request.getText();
         System.out.println("grpc request: " + requestText);
-        ResponseHelper.complete(observer, Strings.StringMessage.newBuilder()
+        complete(observer, Strings.StringMessage.newBuilder()
                 .setText(requestText.toUpperCase(Locale.ROOT))
                 .build());
     }
