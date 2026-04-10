@@ -58,6 +58,7 @@ class SseServiceTest {
                 .queryParam("count", "3")
                 .header(ACCEPT_EVENT_STREAM)
                 .header(ACCEPT_ENCODING, encoding)
+                .keepAlive(false)       // avoids race of connection reuse vs close
                 .request()) {
             var latch = new CountDownLatch(3);
             var events = new ArrayList<SseEvent>();
@@ -83,6 +84,7 @@ class SseServiceTest {
                 .queryParam("count", "3")
                 .header(ACCEPT_EVENT_STREAM)
                 .header(ACCEPT_ENCODING, encoding)
+                .keepAlive(false)       // avoids race of connection reuse vs close
                 .request()) {
             var latch = new CountDownLatch(3);
             var events = new ArrayList<JsonObject>();
