@@ -16,25 +16,22 @@
 
 package io.helidon.security.examples.spi;
 
-import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import io.helidon.common.types.TypeName;
 import io.helidon.config.Config;
 import io.helidon.security.AuthenticationResponse;
 import io.helidon.security.EndpointConfig;
 import io.helidon.security.Principal;
 import io.helidon.security.ProviderRequest;
 import io.helidon.security.Role;
-import io.helidon.security.SecurityLevel;
 import io.helidon.security.Subject;
 import io.helidon.security.spi.AuthenticationProvider;
 
@@ -43,6 +40,8 @@ import io.helidon.security.spi.AuthenticationProvider;
  * This is a full-blown example of a provider that requires additional configuration on a resource.
  */
 public class AtnProviderImpl implements AuthenticationProvider {
+    private static final TypeName ATN_ANNOTATION = TypeName.create(AtnAnnot.class);
+
     @Override
     public AuthenticationResponse authenticate(ProviderRequest providerRequest) {
 
@@ -82,19 +81,18 @@ public class AtnProviderImpl implements AuthenticationProvider {
         }
 
         // 3) annotations on target
-        List<AtnAnnot> annots = new ArrayList<>();
-        for (SecurityLevel securityLevel : epConfig.securityLevels()) {
-            annots.addAll(securityLevel.combineAnnotations(AtnAnnot.class, EndpointConfig.AnnotationScope.values()));
-        }
-        if (annots.isEmpty()) {
-            return null;
-        } else {
-            return AtnObject.from(annots.get(0));
-        }
+        return epConfig.securityLevels()
+                .stream()
+                .flatMap(securityLevel -> securityLevel.combineAnnotations(ATN_ANNOTATION,
+                                                                           EndpointConfig.AnnotationScope.values())
+                        .stream())
+                .findFirst()
+                .map(AtnObject::from)
+                .orElse(null);
     }
 
     @Override
-    public Collection<Class<? extends Annotation>> supportedAnnotations() {
+    public Collection<Class<? extends java.lang.annotation.Annotation>> supportedAnnotations() {
         return Set.of(AtnAnnot.class);
     }
 
@@ -141,10 +139,10 @@ public class AtnProviderImpl implements AuthenticationProvider {
             return result;
         }
 
-        static AtnObject from(AtnAnnot annot) {
+        static AtnObject from(io.helidon.common.types.Annotation annot) {
             AtnObject result = new AtnObject();
-            result.setValue(annot.value());
-            result.setSize(annot.size());
+            result.setValue(annot.stringValue().orElseThrow());
+            result.setSize(annot.intValue("size").orElse(4));
             return result;
         }
 
