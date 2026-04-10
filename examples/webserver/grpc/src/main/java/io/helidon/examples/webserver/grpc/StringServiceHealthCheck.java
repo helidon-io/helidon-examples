@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package io.helidon.examples.webserver.grpc;
 
+import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +25,7 @@ import io.helidon.config.Config;
 import io.helidon.health.HealthCheck;
 import io.helidon.health.HealthCheckResponse;
 import io.helidon.health.HealthCheckType;
-import io.helidon.scheduling.Scheduling;
+import io.helidon.scheduling.FixedRate;
 import io.helidon.webclient.api.WebClient;
 import io.helidon.webclient.grpc.GrpcClient;
 
@@ -64,10 +65,9 @@ class StringServiceHealthCheck implements HealthCheck {
     public HealthCheckResponse call() {
         if (latch == null) {
             latch = new CountDownLatch(1);
-            Scheduling.fixedRate()          // task to check for readiness
-                    .delay(1)
-                    .initialDelay(0)
-                    .timeUnit(TimeUnit.MINUTES)
+            FixedRate.builder()             // task to check for readiness
+                    .delayBy(Duration.ZERO)
+                    .interval(Duration.ofMinutes(1))
                     .task(i -> checkReadiness())
                     .build();
         }
