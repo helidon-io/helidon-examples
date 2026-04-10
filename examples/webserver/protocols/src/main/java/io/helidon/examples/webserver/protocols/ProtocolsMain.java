@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import io.helidon.common.configurable.Resource;
 import io.helidon.common.pki.Keys;
+import io.helidon.common.socket.SocketOptions;
 import io.helidon.common.tls.Tls;
 import io.helidon.examples.grpc.strings.Strings;
 import io.helidon.logging.common.LogConfig;
@@ -34,8 +35,8 @@ import io.helidon.websocket.WsSession;
 
 import io.grpc.stub.StreamObserver;
 
+import static io.helidon.grpc.core.ResponseHelper.complete;
 import static io.helidon.http.Method.GET;
-import static io.helidon.webserver.grpc.ResponseHelper.complete;
 
 /**
  * Example showing supported protocols.
@@ -68,7 +69,8 @@ public class ProtocolsMain {
                            builder -> builder.port(8081)
                                    .host("127.0.0.1")
                                    .tls(tls)
-                                   .receiveBufferSize(4096)
+                                   .connectionOptions(SocketOptions.builder()
+                                                              .socketReceiveBufferSize(4096))
                                    .backlog(8192)
                 )
                 .routing(router -> router
