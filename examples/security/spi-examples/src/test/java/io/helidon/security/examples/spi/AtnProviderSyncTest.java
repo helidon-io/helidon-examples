@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2018, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import io.helidon.common.types.TypeName;
 import io.helidon.config.Config;
 import io.helidon.config.ConfigSources;
 import io.helidon.security.AuthenticationResponse;
@@ -95,8 +96,9 @@ public class AtnProviderSyncTest {
 
         SecurityEnvironment se = SecurityEnvironment.create();
 
-        SecurityLevel level = SecurityLevel.create("mock")
-                .withClassAnnotations(Map.of(AtnProviderImpl.AtnAnnot.class, List.of(annot)))
+        SecurityLevel level = SecurityLevel.builder()
+                .type(TypeName.create("mock"))
+                .addClassAnnotation(annot)
                 .build();
 
         EndpointConfig ep = EndpointConfig.builder()
