@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package io.helidon.examples.webserver.tracing;
 
+import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.tracing.Span;
 import io.helidon.tracing.Tracer;
@@ -47,7 +48,8 @@ public class TracingMain {
     public static void main(String[] args) {
         LogConfig.configureRuntime();
 
-        Tracer tracer = TracerBuilder.create("helidon")
+        Config config = Config.global();
+        Tracer tracer = TracerBuilder.create(config.get("tracing"))
                 .build();
 
         WebServer.builder()
