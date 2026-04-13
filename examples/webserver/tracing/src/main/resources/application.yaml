@@ -16,6 +16,6 @@
 
 tracing:
   service: "helidon-server"
-  sampler-type: "const"
+  sampler-type: "constant"
   sampler-param: 1
   exporter-type: grpc
