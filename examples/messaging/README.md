@@ -8,14 +8,14 @@
 To make examples easily runnable, 
 small, pocket size and pre-configured testing Kafka server Docker image is available. 
 
-* To run it locally: `./kafkaRun.sh`
-  * Pre-configured topics:
-    * `messaging-test-topic-1`
-    * `messaging-test-topic-2`
-  * Stop it with `Ctrl+c`
+* To run it locally: `docker compose -f ./docker/kafka/docker-compose.yaml up -d`
   
-* Send messages manually with: `./kafkaProduce.sh [topic-name]`
-* Consume messages manually with: `./kafkaConsume.sh [topic-name]`
+* Send messages manually with: 
+`docker exec -it kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test-topic-1`
+* Consume messages manually with: 
+`docker exec -it kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-topic-1`
+
+* Stop kafka with `docker compose -f ./docker/kafka/docker-compose.yaml down`
 
 ### Test JMS server
 * Start ActiveMQ server locally: 
