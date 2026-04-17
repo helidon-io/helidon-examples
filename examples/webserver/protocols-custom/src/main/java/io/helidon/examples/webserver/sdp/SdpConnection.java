@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package io.helidon.examples.webserver.sdp;
 
 import java.time.Duration;
-import java.util.Optional;
 
 import io.helidon.common.buffers.BufferData;
 import io.helidon.common.buffers.DataReader;
@@ -71,11 +70,12 @@ public class SdpConnection implements ServerConnection {
     }
 
     @Override
-    public void handle(Limit limit) throws InterruptedException {
+    public void handle(Limit limit) {
 
         // Limit is used to limit concurrency.
-        Optional<LimitAlgorithm.Token> token = limit.tryAcquire();
-        if (token.isEmpty()) {
+        var outcome = limit.tryAcquireOutcome(true);
+
+        if (!(outcome instanceof LimitAlgorithm.Outcome.Accepted accepted)) {
             throw RequestException.builder()
                     .setKeepAlive(false)
                     .status(Status.SERVICE_UNAVAILABLE_503)
@@ -84,7 +84,7 @@ public class SdpConnection implements ServerConnection {
                     .build();
         }
 
-        LimitAlgorithm.Token permit = token.get();
+        LimitAlgorithm.Token permit = accepted.token();
         myThread = Thread.currentThread();
         lastReadTimeMs = System.currentTimeMillis();
 
