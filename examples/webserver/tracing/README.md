@@ -13,10 +13,9 @@ Run Jaeger with OTLP enabled so the example can export spans using the default O
 
 ```bash
 docker run -d --rm --name helidon-examples-jaeger \
-  -e COLLECTOR_OTLP_ENABLED=true \
   -p 16686:16686 \
   -p 4317:4317 \
-  jaegertracing/all-in-one:1.50
+  cr.jaegertracing.io/jaegertracing/jaeger:2.17.0
 ```
 
 ## View the tracing configuration

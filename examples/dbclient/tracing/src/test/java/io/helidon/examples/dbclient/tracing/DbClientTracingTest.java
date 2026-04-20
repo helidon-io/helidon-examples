@@ -51,7 +51,7 @@ import static org.hamcrest.Matchers.is;
 @ServerTest
 class DbClientTracingTest {
 
-    private static final DockerImageName IMAGE = DockerImageName.parse("cr.jaegertracing.io/jaegertracing/jaeger:2.10.0");
+    private static final DockerImageName IMAGE = DockerImageName.parse("cr.jaegertracing.io/jaegertracing/jaeger:2.17.0");
 
     @Container
     @SuppressWarnings("resource")

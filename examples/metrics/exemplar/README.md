@@ -3,14 +3,14 @@
 This project implements a simple Hello World REST service using Helidon SE and demonstrates the 
 optional metrics exemplar support.
 
-## Start Zipkin (optional)
-If you do not start Zipkin, the example app will still function correctly but it will log a warning 
-when it cannot contact the Zipkin server to report the tracing spans. Even so, the metrics output 
+## Start Jaeger (optional)
+If you do not start Jaeger, the example app will still function correctly but it will log a warning
+when it cannot contact the OpenTelemetry OTLP endpoint on the Jaeger server to report tracing spans. Even so, the metrics output
 will contain valid exemplars.
 
 With Docker:
 ```shell
-docker run --name zipkin -d -p 9411:9411 openzipkin/zipkin
+docker run --rm --name jaeger -d -p 16686:16686 -p 4317:4317 cr.jaegertracing.io/jaegertracing/jaeger:2.17.0
 ```
 
 ## Build and run
@@ -61,7 +61,7 @@ because the `max` value has to come from at least one sample.
 In contrast, Helidon calculates the `mean` value from possibly multiple samples. The exemplar for 
 `mean` is a sample with value as close as that of other samples to the mean. 
 
-## Browse the Zipkin traces
-If you started the Zipkin server, visit `http://localhost:9411` and click `Run Query` to see all 
-the spans your Helidon application reported to Zipkin.
-You can compare the trace IDs in the Zipkin display to those in the metrics output.
+## Browse the Jaeger traces
+If you started the Jaeger server, visit `http://localhost:16686`, select the `hello-world` service,
+and run a search to see the spans your Helidon application reported using OpenTelemetry OTLP.
+You can compare the trace IDs in the Jaeger display to those in the metrics output.
