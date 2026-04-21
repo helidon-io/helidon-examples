@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018, 2024 Oracle and/or its affiliates.
+# Copyright (c) 2018, 2026 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ WORKDIR /helidon
 COPY --from=build /helidon/target/helidon-examples-translator-frontend.jar ./
 COPY --from=build /helidon/target/libs ./libs
 
-ENV tracing.host="zipkin"
+ENV tracing.host="jaeger"
 ENV backend.host="helidon-examples-translator-backend"
 
 CMD ["java", "-jar", "helidon-examples-translator-frontend.jar"]

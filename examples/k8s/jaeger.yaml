@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019, 2024 Oracle and/or its affiliates.
+# Copyright (c) 2019, 2026 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,57 +17,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zipkin
+  name: jaeger
   labels:
-    app: zipkin
+    app: jaeger
 spec:
   selector:
     matchLabels:
-      app: zipkin
+      app: jaeger
   replicas: 1
   template:
     metadata:
       labels:
-        app: zipkin
+        app: jaeger
     spec:
       containers:
-        - name: zipkin
-          image: openzipkin/zipkin:2
-          imagePullPolicy: Always
+        - name: jaeger
+          image: cr.jaegertracing.io/jaegertracing/jaeger:2.17.0
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 9411
+            - containerPort: 4317
+              name: otlp-grpc
+            - containerPort: 16686
+              name: ui
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: zipkin
+  name: jaeger
   labels:
-    app: zipkin
+    app: jaeger
 spec:
   type: ClusterIP
   selector:
-    app: zipkin
+    app: jaeger
   ports:
-  - port: 9411
-    targetPort: 9411
-    name: http
-
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: zipkin-ingress
-spec:
-  rules:
-    - host: localhost
-      http:
-        paths:
-          - path: /zipkin
-            pathType: Prefix
-            backend:
-              service:
-                name: zipkin
-                port:
-                  number: 9411
+  - port: 4317
+    targetPort: 4317
+    name: otlp-grpc
+  - port: 16686
+    targetPort: 16686
+    name: ui

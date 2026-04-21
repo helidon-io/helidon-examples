@@ -16,7 +16,7 @@ docker run -d \
   --name jaeger \
   -p 4317:4317 \
   -p 16686:16686 \
-  cr.jaegertracing.io/jaegertracing/jaeger:2.10.0
+  cr.jaegertracing.io/jaegertracing/jaeger:2.17.0
 ```
 
 Or, if the container already exists:
