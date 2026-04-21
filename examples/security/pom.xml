@@ -41,7 +41,6 @@
         <module>outbound-override</module>
         <module>programmatic</module>
         <module>spi-examples</module>
-        <module>webserver-digest-auth</module>
         <module>webserver-signatures</module>
     </modules>
 </project>
