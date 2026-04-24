@@ -46,7 +46,7 @@
             <artifactId>parsson</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.config</groupId>
+            <groupId>io.helidon.config.metadata</groupId>
             <artifactId>helidon-config-metadata</artifactId>
         </dependency>
     </dependencies>
