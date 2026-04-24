@@ -26,7 +26,7 @@
     <name>Helidon Examples Standalone Quickstart MP</name>
 
     <properties>
-        <helidon.version>4.4.1-SNAPSHOT</helidon.version>
+        <helidon.version>4.5.0-SNAPSHOT</helidon.version>
         <mainClass>io.helidon.Main</mainClass>
 
         <maven.compiler.source>21</maven.compiler.source>
@@ -48,8 +48,8 @@
         <version.plugin.nativeimage>0.10.2</version.plugin.nativeimage>
         <version.plugin.os>1.5.0.Final</version.plugin.os>
         <version.plugin.protobuf>0.5.1</version.plugin.protobuf>
-        <version.plugin.resources>2.7</version.plugin.resources>
-        <version.plugin.surefire>3.0.0-M5</version.plugin.surefire>
+        <version.plugin.resources>3.3.1</version.plugin.resources>
+        <version.plugin.surefire>3.1.0</version.plugin.surefire>
     </properties>
 
     <dependencyManagement>
