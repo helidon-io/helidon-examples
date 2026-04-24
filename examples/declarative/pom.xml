@@ -39,6 +39,7 @@
         <module>scheduling</module>
         <module>fault-tolerance</module>
         <module>metrics</module>
+        <module>tracing</module>
         <module>validation</module>
         <module>data</module>
         <module>security</module>
