@@ -50,6 +50,11 @@ The configuration uses environment variables so you can point the same applicati
   * public data key: `https://<apm-data-upload-endpoint>/20200101/opentelemetry/public/v1/traces`
 * `APM_DATA_KEY` is the matching Oracle APM data key value.
 
+Using environment variables keeps the Oracle APM data key out of the config file.
+If you do need to store sensitive values in configuration, Helidon SE also supports
+secure config using the `helidon-config-encryption` module and encrypted values
+such as `${GCM=...}`.
+
 ## Build and run
 
 With JDK 21:
@@ -91,7 +96,9 @@ After sending a few requests, open Oracle APM and look for traces from service `
 
 Each HTTP request should create a trace for this service. In the trace details you should also see the resource attributes configured in `application.yaml`, including `deployment.environment=example` and `telemetry.backend=oracle-apm`.
 
-For more detail on the Oracle APM endpoint and data key requirements, see the
-[Oracle APM documentation for ingesting OpenTelemetry data](https://docs.oracle.com/en-us/iaas/application-performance-monitoring/doc/configure-open-source-tracing-systems.html)
-and the
-[Helidon documentation for OpenTelemetry configuration](https://helidon.io/docs/latest/se/telemetry/open-telemetry).
+## References
+
+* [Oracle APM documentation for ingesting OpenTelemetry data](https://docs.oracle.com/en-us/iaas/application-performance-monitoring/doc/configure-open-source-tracing-systems.html)
+* [Helidon documentation for OpenTelemetry configuration](https://helidon.io/docs/latest/se/telemetry/open-telemetry)
+* [Helidon SE secure configuration documentation](https://helidon.io/docs/latest/se/security/tools)
+* [Helidon config encryption example](../../config/encryption/README.md)
