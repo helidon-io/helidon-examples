@@ -31,5 +31,6 @@ telemetry:
       processors:
         - type: simple
       exporters:
-        - type: zipkin
-          endpoint: "http://localhost:9411/api/v2/spans"
+        - type: otlp
+          protocol: http/proto
+          endpoint: "http://localhost:9411/v1/traces"

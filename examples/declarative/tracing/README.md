@@ -2,16 +2,16 @@
 
 This example shows how to use Helidon Declarative tracing annotations together with the Helidon `telemetry`
 configuration. The application uses the OpenTelemetry-based Helidon telemetry integration and exports spans directly to
-Zipkin.
+Zipkin using OTLP.
 
 ## Start Zipkin
 
-Run Zipkin so the example can export spans to `http://localhost:9411/api/v2/spans`.
+Run Zipkin so the example can export spans using OTLP.
 
 ```bash
 docker run -d --rm --name helidon-examples-zipkin \
   -p 9411:9411 \
-  openzipkin/zipkin:3.5.1
+  ghcr.io/openzipkin-contrib/zipkin-otel
 ```
 
 ## View the telemetry configuration
@@ -23,7 +23,8 @@ The important settings are:
 * `telemetry.service` sets the service name shown in Zipkin to `helidon-examples-declarative-tracing`.
 * `telemetry.signals.tracing.processors` uses the `simple` processor so spans are exported immediately while you exercise
   the example.
-* `telemetry.signals.tracing.exporters` selects the `zipkin` exporter and points it at the default Zipkin v2 HTTP API.
+* `telemetry.signals.tracing.exporters` selects the `otlp` exporter using the `http/proto` protocol and the Zipkin OTLP
+  HTTP endpoint at `http://localhost:9411/v1/traces`.
 
 The endpoint methods are annotated with `@Tracing.Traced`, and selected request values are added to spans using
 `@Tracing.ParamTag`.
