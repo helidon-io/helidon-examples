@@ -32,6 +32,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>apm</module>
         <module>config</module>
         <module>otel</module>
     </modules>
