@@ -21,10 +21,11 @@ import io.helidon.http.Status;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webserver.testing.junit5.ServerTest;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -32,9 +33,10 @@ import org.testcontainers.utility.DockerImageName;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
-@Disabled("Missing a way to use the test container created port. Helidon team is working on this.")
 @Testcontainers(disabledWithoutDocker = true)
+@ExtendWith(DeclarativeDataTest.ContainerJdbcConfig.class)
 @ServerTest
 public class DeclarativeDataTest {
     private static final boolean IS_ARM = System.getProperty("os.arch", "amd64").equals("aarch64");
@@ -47,17 +49,12 @@ public class DeclarativeDataTest {
                     .asCompatibleSubstituteFor("mysql");
 
     @SuppressWarnings("resource")
+    @Container
     static final MySQLContainer<?> CONTAINER = new MySQLContainer<>(IS_ARM ? ARM_IMAGE : X86_IMAGE)
             .withUsername("user")
-            .withPassword("changeIt")
+            .withPassword("changeit")
             .withNetworkAliases("mysql")
             .withDatabaseName("db1");
-
-    static {
-        CONTAINER.start();
-        // override configuration value to use the container's port
-        System.setProperty("data.url", CONTAINER.getJdbcUrl());
-    }
 
     private final Http1Client client;
 
@@ -65,52 +62,48 @@ public class DeclarativeDataTest {
         this.client = client;
     }
 
-    @AfterAll
-    static void stopContainer() {
-        CONTAINER.stop();
-    }
-
     @Test
-    void testHelloWorld() {
-        var response = client.get("/hello")
-                .accept(MediaTypes.TEXT_PLAIN)
+    void testListPokemon() {
+        var response = client.get("/pokemon/all")
+                .accept(MediaTypes.APPLICATION_JSON)
                 .request(String.class);
 
         assertThat(response.status(), is(Status.OK_200));
-        String entity = response.entity();
-        assertThat(entity, is("Hello World"));
+        assertThat(response.entity(), containsString("\"name\":\"Pikachu\""));
     }
 
     @Test
-    void testHelloNamed() {
-        var response = client.get("/hello/Test")
-                .accept(MediaTypes.TEXT_PLAIN)
+    void testFindPokemon() {
+        var response = client.get("/pokemon/get/Pikachu")
+                .accept(MediaTypes.APPLICATION_JSON)
                 .request(String.class);
 
         assertThat(response.status(), is(Status.OK_200));
-        String entity = response.entity();
-        assertThat(entity, is("Hello Test"));
+        assertThat(response.entity(), containsString("\"type\":\"Electric\""));
     }
 
     @Test
-    void testUpdateGreeting() {
-        var response = client.post("/hello")
-                .contentType(MediaTypes.TEXT_PLAIN)
-                .submit("Hola");
+    void testListPokemonByType() {
+        var response = client.get("/pokemon/type/Electric")
+                .accept(MediaTypes.APPLICATION_JSON)
+                .request(String.class);
 
-        assertThat(response.status(), is(Status.NO_CONTENT_204));
-        response.close();
+        assertThat(response.status(), is(Status.OK_200));
+        assertThat(response.entity(), containsString("\"name\":\"Raichu\""));
+    }
 
-        try {
-            var entity = client.get("/hello")
-                    .accept(MediaTypes.TEXT_PLAIN)
-                    .requestEntity(String.class);
-            assertThat(entity, is("Hola World"));
-        } finally {
-            client.post("/hello")
-                    .contentType(MediaTypes.TEXT_PLAIN)
-                    .submit("Hello")
-                    .close();
+    static final class ContainerJdbcConfig implements BeforeAllCallback, AfterAllCallback {
+        @Override
+        public void beforeAll(ExtensionContext context) {
+            var jdbcUrl = CONTAINER.getJdbcUrl();
+            System.setProperty("data.url", jdbcUrl);
+            System.setProperty("data.sources.sql.0.provider.hikari.url", jdbcUrl);
+        }
+
+        @Override
+        public void afterAll(ExtensionContext context) {
+            System.clearProperty("data.url");
+            System.clearProperty("data.sources.sql.0.provider.hikari.url");
         }
     }
 }

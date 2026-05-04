@@ -66,10 +66,6 @@
             <artifactId>helidon-tracing-providers-opentelemetry</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.webserver.observe</groupId>
-            <artifactId>helidon-webserver-observe-telemetry-tracing</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.opentelemetry</groupId>
             <artifactId>opentelemetry-exporter-otlp</artifactId>
             <scope>runtime</scope>
@@ -121,6 +117,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <compilerArgs combine.children="append">
+                        <arg>-Ahelidon.api.preview=ignore</arg>
+                    </compilerArgs>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>io.helidon.bundles</groupId>

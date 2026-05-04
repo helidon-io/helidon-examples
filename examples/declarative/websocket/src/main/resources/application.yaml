@@ -23,8 +23,3 @@ server:
       classpath:
         - context: "web"
           location: "WEB"
-
-
-# Ignore this feature's warning
-declarative:
-  ignore-incubating: true
