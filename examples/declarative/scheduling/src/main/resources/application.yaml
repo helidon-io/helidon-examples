@@ -18,6 +18,3 @@ app:
   scheduling:
     refresh-task:
       expression: "0/2 * * * * ?"
-
-declarative:
-  ignore-incubating: true

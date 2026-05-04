@@ -18,7 +18,6 @@ package io.helidon.examples.declarative.security;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.helidon.common.Default;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.config.Configuration;
 import io.helidon.http.Http;
@@ -36,7 +35,7 @@ class HelloWorldEndpoint {
     private final AtomicReference<String> greeting = new AtomicReference<>();
 
     @Service.Inject
-    HelloWorldEndpoint(@Default.Value("Ciao") @Configuration.Value("app.greeting") String greeting) {
+    HelloWorldEndpoint(@Configuration.Value("${app.greeting:Ciao}") String greeting) {
         this.greeting.set(greeting);
     }
 

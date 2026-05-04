@@ -61,7 +61,7 @@ class DeclarativeTracingTest {
             Map<String, JsonLogConverter.LogSpan> spansByName = spans.stream()
                     .collect(Collectors.toMap(JsonLogConverter.LogSpan::name, span -> span));
 
-            JsonLogConverter.LogSpan httpRequest = spansByName.get("GET");
+            JsonLogConverter.LogSpan httpRequest = spansByName.get("HTTP Request");
             JsonLogConverter.LogSpan contentWrite = spansByName.get("content-write");
             JsonLogConverter.LogSpan greetName = spansByName.get("greet-name");
 
