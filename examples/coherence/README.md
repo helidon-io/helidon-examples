@@ -2,6 +2,14 @@
 
 Sample Helidon SE applications that uses Coherence CE as a cache for application data.
 
+The example sets Coherence WKA to `127.0.0.1` in `Main.java` and `MainTest.java`
+to force a local unicast cluster. Remove the following line from both files if
+you need Coherence to form a multicast cluster:
+
+```java
+System.setProperty("coherence.wka", "127.0.0.1");
+```
+
 ## Build and run
 
 ```shell
