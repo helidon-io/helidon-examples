@@ -45,6 +45,9 @@ public class Main {
         // initialize global config from default configuration
         Config config = Config.create();
 
+        // set coherence WKA to force unicast cluster
+        // because cluster startup will fail when multicast is disabled.
+        System.setProperty("coherence.wka", "127.0.0.1");
         Coherence coherence = Coherence.clusterMember();
         coherence.startAndWait();
 
