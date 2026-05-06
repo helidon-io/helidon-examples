@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,9 @@ public class MainTest {
 
     @SetUpRoute
     static void setUp(HttpRouting.Builder builder) {
+        // set coherence WKA to force unicast cluster
+        // because cluster startup will fail when multicast is disabled.
+        System.setProperty("coherence.wka", "127.0.0.1");
         Main.routing(builder);
     }
 
