@@ -23,8 +23,8 @@ import io.helidon.service.registry.Service.Singleton;
 import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider;
 import com.oracle.bmc.database.Database;
 
-import static java.util.Objects.requireNonNull;
 import static com.oracle.bmc.database.DatabaseClient.builder;
+import static java.util.Objects.requireNonNull;
 
 @Singleton
 final class DatabaseFactory implements Supplier<Database> {
