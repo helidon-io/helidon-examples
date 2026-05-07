@@ -24,7 +24,6 @@ import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider;
 import com.oracle.bmc.database.Database;
 
 import static java.util.Objects.requireNonNull;
-
 import static com.oracle.bmc.database.DatabaseClient.builder;
 
 @Singleton
