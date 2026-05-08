@@ -48,17 +48,17 @@ The example consists of these parts and components:
    Helidon](https://helidon.io/docs/latest/se/integrations/oci#_configuring_authentication), configured appropriately to
    connect to your tenancy.
 
-## System Properties
+## Environment Variables
 
-This example is designed so that you can run it by supplying your personal Oracle Cloud-related information as system
-properties.  That way you don't have to edit `src/main/resources/application.yaml` (though you may if you wish). You'll
-need to define the following properties:
+This example is designed so that you can run it by supplying your personal Oracle Cloud-related information as environment
+variable. That way you don't have to edit `src/main/resources/application.yaml` (though you may if you wish). You'll
+need to define the following environment variables:
 
-1. **`compartment-ocid`**: You'll set this property to the value of your compartment's OCID. You can find its OCID in the
+1. **`COMPARTMENT_OCID`**: You'll set this variable to the value of your compartment's OCID. You can find its OCID in the
    OCI console. (This is needed by the OCI Vault and Secrets Management APIs.)
-2. **`database-ocid`**: You'll set this property to the value of your Oracle Autonomous AI Database Serverless instance's
+2. **`DATABASE_OCID`**: You'll set this variable to the value of your Oracle Autonomous AI Database Serverless instance's
    OCID. You can find its OCID in the OCI console.
-3. **`vault-ocid`**: You'll set this property to the value of your vault's OCID. You can find its OCID in the OCI console.
+3. **`VAULT_OCID`**: You'll set this variable to the value of your vault's OCID. You can find its OCID in the OCI console.
 
 See also:
 
@@ -71,19 +71,13 @@ See also:
 To build the example:
 
 ```shell
-mvn -Dcompartment-ocid='...' \
-    -Ddatabase-ocid='...' \
-    -Dvault-ocid='...' \
-    package
+mvn package
 ```
 
-To run the built example:
+To run the built example (remember to set the required environment variables first; see above):
 
 ```shell
-java -Dcompartment-ocid='...' \
-     -Ddatabase-ocid='...' \
-     -Dvault-ocid='...' \
-     -jar ./target/helidon-examples-integrations-oci-adbs.jar
+java -jar ./target/helidon-examples-integrations-oci-adbs.jar
 ```
 
 The program will run. The first acquisition of a connection will take some time as the wallet is automatically
@@ -93,4 +87,4 @@ If successful, the program will print the results of `SELECT`ing "`Hello, world!
 Database Serverless instance running in the Oracle Cloud.
 
 If there is a failure, begin by ensuring that you have created the necessary Oracle Cloud resources, and supplied the
-proper Oracle Cloud information as detailed above, normally as `-D` system properties.
+proper Oracle Cloud information as detailed above.

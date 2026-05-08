@@ -26,7 +26,7 @@ sources:
 
         #
         # This YAML subsection configures Helidon's support for Oracle Cloud's Secrets Management Service ("Vault"). See
-        # https://helidon.io/docs/v4/apidocs/io.helidon.integrations.oci.secrets.configsource/io/helidon/integrations/oci/secrets/configsource/OciSecretsConfigSourceProvider.html
+        # https://helidon.io/docs/latest/apidocs/io.helidon.integrations.oci.secrets.configsource/io/helidon/integrations/oci/secrets/configsource/OciSecretsConfigSourceProvider.html
         # for more information.
         #
         # For more on meta-configuration in general, see https://helidon.io/docs/latest/se/config/config-profiles. This
@@ -41,8 +41,26 @@ sources:
         # accept-pattern (see above).
         lazy: false
 
-        # The compartment OCID housing a vault.
-        compartment-ocid: "${compartment-ocid}"
+        # The compartment OCID housing a vault. Here, the compartment-ocid meta-configuration property is set to the
+        # value of the first of these that is found:
+        #
+        # 1. an environment variable named, exactly, compartment.ocid
+        # 2. an environment variable named, exactly, COMPARTMENT_OCID
+        # 3. a system property named, exactly, compartment.ocid
+        #
+        # Because this is meta-configuration, only environment variables and system properties are used for token
+        # substitution.  See https://helidon.io/docs/latest/se/config/advanced-configuration#_advanced_config_sources
+        # for more details, particularly about how environment variables are mapped to Helidon Config keys.
+        compartment-ocid: "${compartment.ocid}"
 
-        # A Vault OCID.
-        vault-ocid: "${vault-ocid}"
+        # A Vault OCID. Here, the vault-ocid meta-configuration property is set to the
+        # value of the first of these that is found:
+        #
+        # 1. an environment variable named, exactly, vault.ocid
+        # 2. an environment variable named, exactly, VAULT_OCID
+        # 3. a system property named, exactly, vault.ocid
+        #
+        # Because this is meta-configuration, only environment variables and system properties are used for token
+        # substitution. See https://helidon.io/docs/latest/se/config/advanced-configuration#_advanced_config_sources for
+        # more details, particularly about how environment variables are mapped to Helidon Config keys.
+        vault-ocid: "${vault.ocid}"

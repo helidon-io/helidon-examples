@@ -65,16 +65,16 @@ final class ConnectivityTest {
         // https://docs.junit.org/5.12.2/api/org.junit.jupiter.api/org/junit/jupiter/api/Assumptions.html for more about
         // JUnit assumptions.
 
-        // Make sure the compartment-ocid property was set, usually as a System property.
-        String compartmentOcid = config.get("compartment-ocid").asString().orElse(null);
+        // Make sure the compartment.ocid property was set, usually as a System property.
+        String compartmentOcid = config.get("compartment.ocid").asString().orElse(null);
         assumeTrue(compartmentOcid != null && !compartmentOcid.isBlank());
 
-        // Make sure the database-ocid property was set, usually as a System property.
-        String databaseOcid = config.get("database-ocid").asString().orElse(null);
+        // Make sure the database.ocid property was set, usually as a System property.
+        String databaseOcid = config.get("database.ocid").asString().orElse(null);
         assumeTrue(databaseOcid != null && !databaseOcid.isBlank());
 
-        // Make sure the vault-ocid property was set, usually as a System property.
-        String vaultOcid = config.get("vault-ocid").asString().orElse(null);
+        // Make sure the vault.ocid property was set, usually as a System property.
+        String vaultOcid = config.get("vault.ocid").asString().orElse(null);
         assumeTrue(vaultOcid != null && !vaultOcid.isBlank());
 
         // If the assumptions above passed, continue to run the test. Otherwise execution will effectively stop here.

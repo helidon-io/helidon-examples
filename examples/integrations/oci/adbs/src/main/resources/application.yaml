@@ -38,7 +38,7 @@ data:
             # If the URL is a valid Oracle Autonomous AI Database Serverless OCID, and the connection-factory-class-name
             # is set to io.helidon.examples.integrations.oci.adbs.AdbsDataSource (as it is above), then connectivity
             # to the database, including mTLS with an Oracle wallet, will happen automatically.
-            url: "${database-ocid}"
+            url: "${database.ocid}"
 
             # Here we set the username and password properties to Helidon Config configuration substitutions. The
             # referenced keys should be Secret Management Service secret names.
