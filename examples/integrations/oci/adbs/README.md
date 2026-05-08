@@ -83,7 +83,7 @@ To run the built example:
 java -Dcompartment-ocid='...' \
      -Ddatabase-ocid='...' \
      -Dvault-ocid='...' \
-     -jar ./target/helidon-examples/integrations-oci-adbs.jar
+     -jar ./target/helidon-examples-integrations-oci-adbs.jar
 ```
 
 The program will run. The first acquisition of a connection will take some time as the wallet is automatically
