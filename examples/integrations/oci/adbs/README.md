@@ -50,9 +50,11 @@ The example consists of these parts and components:
 
 ## Environment Variables
 
-This example is designed so that you can run it by supplying your personal Oracle Cloud-related information as environment
-variable. That way you don't have to edit `src/main/resources/application.yaml` (though you may if you wish). You'll
-need to define the following environment variables:
+This example is designed so that you can run it by supplying your personal Oracle Cloud-related information as
+environment variables. That way you don't have to edit `src/main/resources/application.yaml` or
+`src/main/resources/meta-config.yaml`, since environment variables have a higher precedence in this example (though you
+may if you wish). You'll need to define the following environment variables in the environment where you will run the
+example:
 
 1. **`COMPARTMENT_OCID`**: You'll set this variable to the value of your compartment's OCID. You can find its OCID in the
    OCI console. (This is needed by the OCI Vault and Secrets Management APIs.)
