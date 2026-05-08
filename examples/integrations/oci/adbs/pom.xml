@@ -35,11 +35,29 @@
     <description>An example showing itegration with Oracle Autonomous AI Database Serverless instances running in Oracle Cloud.</description>
 
     <properties>
-        <compartment-ocid/>
-        <database-ocid/>
+
+        <!--
+            See ./README.md. Set COMPARTMENT_OCID, DATABASE_OCID, and VAULT_OCID in your environment. These Maven
+            property stanzas ensure they are propagated at test time as equivalent system properties as well.
+        -->
+        <compartment.ocid>${env.COMPARTMENT_OCID}</compartment.ocid>
+        <database.ocid>${env.DATABASE_OCID}</database.ocid>
+        <vault.ocid>${env.VAULT_OCID}</vault.ocid>
+        
+        <!--
+            The parent pom.xml (see https://github.com/helidon-io/helidon/blob/helidon-4.x/applications/se/pom.xml#L47)
+            sets a configuration profile of "test", which changes how Helidon meta-configuration is resolved (see
+            https://helidon.io/docs/latest/se/config/config-profiles#Profile-File for more information). Because this
+            project is an example, we want to use the same meta-configuration at test time that the example will use at
+            runtime. This property setting accomplishes that goal.
+        -->
         <io.helidon.config.meta-config>meta-config.yaml</io.helidon.config.meta-config>
+
+        <!--
+            The main class the example's built jar file will use when run from the command line.
+        -->
         <mainClass>io.helidon.examples.integrations.oci.adbs.Main</mainClass>
-        <vault-ocid/>
+
     </properties>
 
     <dependencies>
@@ -212,10 +230,14 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <systemPropertyVariables>
-                        <compartment-ocid>${compartment-ocid}</compartment-ocid>
-                        <database-ocid>${database-ocid}</database-ocid>
+                        <!--
+                            Ensure certain Maven user properties are passed to tests as System properties, following
+                            normal Maven conventions.
+                        -->
                         <io.helidon.config.meta-config>${io.helidon.config.meta-config}</io.helidon.config.meta-config>
-                        <vault-ocid>${vault-ocid}</vault-ocid>
+                        <compartment.ocid>${compartment.ocid}</compartment.ocid>
+                        <database.ocid>${database.ocid}</database.ocid>
+                        <vault.ocid>${vault.ocid}</vault.ocid>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
