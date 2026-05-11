@@ -1,0 +1,66 @@
+#
+# Copyright (c) 2026 Oracle and/or its affiliates.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+sources:
+  - type: 'environment-variables'
+  - type: 'system-properties'
+  - type: 'classpath'
+    properties:
+        optional: true
+        resource: 'application.yaml'
+  - type: 'oci-secrets'
+    properties:
+        optional: true
+
+        #
+        # This YAML subsection configures Helidon's support for Oracle Cloud's Secrets Management Service ("Vault"). See
+        # https://helidon.io/docs/latest/apidocs/io.helidon.integrations.oci.secrets.configsource/io/helidon/integrations/oci/secrets/configsource/OciSecretsConfigSourceProvider.html
+        # for more information.
+        #
+        # For more on meta-configuration in general, see https://helidon.io/docs/latest/se/config/config-profiles. This
+        # file, meta-config.yaml, is default meta-configuration.
+        #
+
+        # Only relevant when lazy is true; this regular expression governs what properties will be sought lazily in a
+        # vault. Ignored otherwise. Commented out here, since lazy is false by default.
+        # accept-pattern: '^adbs\.example\..*$'
+
+        # Usually false. When false, vault secrets are loaded once, eagerly. When true, you should define an
+        # accept-pattern (see above).
+        lazy: false
+
+        # The compartment OCID housing a vault. Here, the compartment-ocid meta-configuration property is set to the
+        # value of the first of these that is found:
+        #
+        # 1. an environment variable named, exactly, compartment.ocid
+        # 2. an environment variable named, exactly, COMPARTMENT_OCID
+        # 3. a system property named, exactly, compartment.ocid
+        #
+        # Because this is meta-configuration, only environment variables and system properties are used for token
+        # substitution.  See https://helidon.io/docs/latest/se/config/advanced-configuration#_advanced_config_sources
+        # for more details, particularly about how environment variables are mapped to Helidon Config keys.
+        compartment-ocid: "${compartment.ocid}"
+
+        # A Vault OCID. Here, the vault-ocid meta-configuration property is set to the
+        # value of the first of these that is found:
+        #
+        # 1. an environment variable named, exactly, vault.ocid
+        # 2. an environment variable named, exactly, VAULT_OCID
+        # 3. a system property named, exactly, vault.ocid
+        #
+        # Because this is meta-configuration, only environment variables and system properties are used for token
+        # substitution. See https://helidon.io/docs/latest/se/config/advanced-configuration#_advanced_config_sources for
+        # more details, particularly about how environment variables are mapped to Helidon Config keys.
+        vault-ocid: "${vault.ocid}"

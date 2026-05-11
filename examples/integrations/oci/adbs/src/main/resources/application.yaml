@@ -1,0 +1,47 @@
+#
+# Copyright (c) 2026 Oracle and/or its affiliates.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+data:
+  sources:
+    sql:
+      - name: "example"
+        provider:
+          ucp:
+
+            # This configuration is for Helidon Data's named data source support. For more, see
+            # https://helidon.io/docs/latest/se/data#_helidon_config. In this YAML subsection, we are configuring
+            # Oracle's Universal Connection Pool (UCP) by way of Helidon Data's support for it.
+
+            # The "connection factory class name": the name of a class, usually a DataSource subtype, and usually an
+            # OracleDataSource subtype, that vends physical database connections. The
+            # io.helidon.examples.integrations.oci.adbs.AdbsDataSource is an OracleDataSource that also handles wallet
+            # management transparently. See
+            # https://docs.oracle.com/en/database/oracle/oracle-database/26/jjuar/oracle/ucp/jdbc/PoolDataSource.html#setConnectionFactoryClassName(java.lang.String)
+            connection-factory-class-name: "io.helidon.examples.integrations.oci.adbs.AdbsDataSource"
+
+            # Needed for this example because downloading the wallet the first time can be slow. See
+            # https://docs.oracle.com/en/database/oracle/oracle-database/26/jjuar/oracle/ucp/jdbc/PoolDataSource.html#setCreateConnectionInBorrowThread(boolean)
+            create-connection-in-borrow-thread: true
+
+            # If the URL is a valid Oracle Autonomous AI Database Serverless OCID, and the connection-factory-class-name
+            # is set to io.helidon.examples.integrations.oci.adbs.AdbsDataSource (as it is above), then connectivity
+            # to the database, including mTLS with an Oracle wallet, will happen automatically.
+            url: "${database.ocid}"
+
+            # Here we set the username and password properties to Helidon Config configuration substitutions. The
+            # referenced keys should be Secret Management Service secret names.
+            # See also: ./meta-config.yaml.
+            username: "${adbs.example.database.user}"
+            password: "${adbs.example.database.password}"
