@@ -3,7 +3,10 @@
 This example shows how to use the JSON-RPC SE API. The main class `JsonRpcMain`
 creates a routing object for JSON-RPC and a couple of methods on a _machine_
 resource. The single test class in the project uses the JSON-RPC client API
-to test the application.
+to test the application. Request and response records use Helidon JSON binding.
+Custom types used with Helidon JSON binding must be annotated with
+`@Json.Entity`; this example configures the Helidon annotation processor in
+`pom.xml`.
 
 For more information about the protocol see the [JSON-RPC Specification](https://www.jsonrpc.org/specification).
 

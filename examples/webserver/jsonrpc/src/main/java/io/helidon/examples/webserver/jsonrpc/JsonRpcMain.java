@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package io.helidon.examples.webserver.jsonrpc;
 
 import java.time.Duration;
 
+import io.helidon.json.binding.Json;
 import io.helidon.jsonrpc.core.JsonRpcError;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
@@ -95,6 +96,7 @@ public class JsonRpcMain {
      * @param when time to start machine
      * @param duration for how long
      */
+    @Json.Entity
     public record StartStopParams(String when, Duration duration) {
     }
 
@@ -103,6 +105,7 @@ public class JsonRpcMain {
      *
      * @param status status of operation
      */
+    @Json.Entity
     public record StartStopResult(String status) {
     }
 }
