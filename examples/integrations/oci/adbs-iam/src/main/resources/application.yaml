@@ -1,0 +1,91 @@
+#
+# Copyright (c) 2026 Oracle and/or its affiliates.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+data:
+  sources:
+    sql:
+      - name: "example"
+        provider:
+          ucp:
+
+            # This configuration is for Helidon Data's named data source support. For more, see
+            # https://helidon.io/docs/latest/se/data#_helidon_config. In this YAML subsection, we are configuring
+            # Oracle's Universal Connection Pool (UCP) by way of Helidon Data's support for it.
+
+            # The "connection factory class name": the name of a class, usually a DataSource subtype, and almost always
+            # an oracle.jdbc.datasource.impl.OracleDataSource subtype, that vends physical database connections. See
+            # https://docs.oracle.com/en/database/oracle/oracle-database/26/jjuar/oracle/ucp/jdbc/PoolDataSource.html#setConnectionFactoryClassName(java.lang.String).
+            # This should be "oracle.jdbc.datasource.impl.OracleDataSource" in almost all cases. See
+            # https://docs.oracle.com/en/database/oracle/oracle-database/26/jajdb/oracle/jdbc/datasource/impl/OracleDataSource.html.
+            connection-factory-class-name: "oracle.jdbc.datasource.impl.OracleDataSource"
+
+            # "Connection properties" to be supplied. See
+            # https://docs.oracle.com/en/database/oracle/oracle-database/26/jjuar/oracle/ucp/jdbc/PoolDataSource.html#setConnectionProperties(java.util.Properties).
+            connection-properties:
+
+              # This connection property is defined by
+              # https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#access-token-provider.
+              #
+              # This property is defined by Oracle JDBC Providers for OCI, not by Helidon.
+              "oracle.jdbc.provider.accessToken": "ojdbc-provider-oci-token"
+
+              # See https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#caching-mechanism.
+              #
+              # This property is defined by Oracle JDBC Providers for OCI, not by Helidon. The configuration properties
+              # (${compartment.ocid}, ${database.ocid}) are resolved by Helidon Config.
+              "oracle.jdbc.provider.accessToken.scope": "urn:oracle:db::id::${compartment.ocid}::${database.ocid}"
+
+              # This connection property is defined by
+              # https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#database-connection-string-provider.
+              #
+              # This property is defined by Oracle JDBC Providers for OCI, not by Helidon.
+              "oracle.jdbc.provider.connectionString": "ojdbc-provider-oci-database-connection-string"
+
+              # See
+              # https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#database-connection-string-provider.
+              #
+              # This property is defined by Oracle JDBC Providers for OCI, not by Helidon.
+              "oracle.jdbc.provider.connectionString.consumerGroup": "MEDIUM"
+
+              # See
+              # https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#database-connection-string-provider.
+              # This connection property is set to the value of the database.ocid Helidon Config property. Because of
+              # the rules of Helidon Config, an environment variable named DATABASE_OCID will also supply the value of
+              # this configuration property. (See
+              # https://helidon.io/docs/latest/se/config/advanced-configuration#_environment_variables_config_source.)
+              #
+              # This property is defined by Oracle JDBC Providers for OCI, not by Helidon.
+              "oracle.jdbc.provider.connectionString.ocid": "${database.ocid}"
+
+              # See https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#common-parameters-for-resource-providers.
+              # See also https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#configuring-authentication-1.
+              #
+              # Valid values are:
+              #
+              # * auto-detect (the default)
+              # * config-file
+              # * cloud-shell
+              # * resource-principal
+              # * instance-principal
+              # * interactive (not recommended except in development)
+              #
+              # This property is defined by Oracle JDBC Providers for OCI, not by Helidon.
+              "oracle.jdbc.provider.connectionString.authenticationMethod": "auto-detect"
+
+            # See
+            # https://github.com/oracle/ojdbc-extensions/blob/main/ojdbc-provider-samples/src/main/java/oracle/jdbc/provider/oci/configuration/resource/SimpleDatabaseConnectionStringProviderExample.java
+            # The proper connection string is retrieved automatically, so all that needs to be specified here is
+            # "jdbc:oracle:thin:@".
+            url: "jdbc:oracle:thin:@"
