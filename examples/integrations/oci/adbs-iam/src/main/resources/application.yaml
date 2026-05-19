@@ -42,9 +42,12 @@ data:
               "oracle.jdbc.provider.accessToken": "ojdbc-provider-oci-token"
 
               # See https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#caching-mechanism.
+              # See https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#configuring-a-scope.
               #
-              # This property is defined by Oracle JDBC Providers for OCI, not by Helidon. The configuration properties
-              # (${compartment.ocid}, ${database.ocid}) are resolved by Helidon Config.
+              # This property is defined by Oracle JDBC Providers for OCI, not by Helidon.
+              # The configuration properties (${compartment.ocid}, ${database.ocid}) are resolved by Helidon Config.
+              # See https://helidon.io/docs/latest/se/config/advanced-configuration#_tokens.
+              # See https://helidon.io/docs/latest/se/config/advanced-configuration#_environment_variables_config_source.
               "oracle.jdbc.provider.accessToken.scope": "urn:oracle:db::id::${compartment.ocid}::${database.ocid}"
 
               # This connection property is defined by
@@ -70,9 +73,10 @@ data:
               "oracle.jdbc.provider.connectionString.ocid": "${database.ocid}"
 
               # See https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#common-parameters-for-resource-providers.
-              # See also https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#configuring-authentication-1.
+              # See https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#configuring-authentication-1.
               #
-              # Valid values are:
+              # Valid values are the following (see
+              # https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#configuring-authentication-1):
               #
               # * auto-detect (the default)
               # * config-file
