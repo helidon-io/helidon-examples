@@ -17,7 +17,7 @@ The example consists of these parts and components:
   Provider](https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#oracle-jdbc-providers-for-oci)
   project. From that project:
     * Usage, via configuration, of the [Access Token
-      {rovider](https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#access-token-provider)
+      {provider](https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#access-token-provider)
     * Usage, via configuration, of the [Database Connection String
       Provider](https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#database-connection-string-provider)
 
