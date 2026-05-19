@@ -17,9 +17,9 @@
 /**
  * Contains classes and interfaces related to demonstrating Helidon's ability to access an <a
  * href="https://docs.oracle.com/en-us/iaas/autonomous-database-serverless/index.html">Oracle Autonomous AI Database
- * Serverless</a> instance running in the <a href="https://cloud.oracle.com/">Oracle Cloud</a>, using {@linkplain
- * com.oracle.bmc.identity.dataplane.Dataplane#generateScopedAccessToken(com.oracle.bmc.identitydataplane.requests.GenerateScopedAccessTokenRequest)
- * token-based authentication}.
+ * Serverless</a> instance running in the <a href="https://cloud.oracle.com/">Oracle Cloud</a>, using <a
+ * href="https://github.com/oracle/ojdbc-extensions/tree/main/ojdbc-provider-oci#access-token-provider"> token-based
+ * authentication</a>.
  *
  * @see io.helidon.examples.integrations.oci.adbs.iam.Main
  */
