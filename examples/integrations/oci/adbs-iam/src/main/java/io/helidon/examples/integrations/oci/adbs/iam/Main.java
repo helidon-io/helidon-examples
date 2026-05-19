@@ -34,6 +34,10 @@ import static io.helidon.logging.common.LogConfig.configureRuntime;
  */
 public final class Main {
 
+    private Main() {
+        super();
+    }
+
     /**
      * Runs this example.
      *
