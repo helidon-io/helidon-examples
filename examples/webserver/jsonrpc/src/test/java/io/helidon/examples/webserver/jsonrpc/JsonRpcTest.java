@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import io.helidon.webserver.jsonrpc.JsonRpcRouting;
 import io.helidon.webserver.testing.junit5.ServerTest;
 import io.helidon.webserver.testing.junit5.SetUpRoute;
 
-import jakarta.json.Json;
 import org.junit.jupiter.api.Test;
 
 import static io.helidon.examples.webserver.jsonrpc.JsonRpcMain.StartStopResult;
@@ -59,7 +58,7 @@ class JsonRpcTest {
                 .path("/rpc/machine")
                 .submit()) {
             assertThat(res.status(), is(Status.OK_200));
-            assertThat(res.rpcId(), is(Optional.of(Json.createValue(1))));
+            assertThat(res.rpcId().map(value -> value.asNumber().intValue()), is(Optional.of(1)));
             assertThat(res.result().isPresent(), is(true));
             StartStopResult result = res.result().get().as(StartStopResult.class);
             assertThat(result.status(), is("RUNNING"));
@@ -74,7 +73,7 @@ class JsonRpcTest {
                 .path("/rpc/machine")
                 .submit()) {
             assertThat(res.status(), is(Status.OK_200));
-            assertThat(res.rpcId(), is(Optional.of(Json.createValue(2))));
+            assertThat(res.rpcId().map(value -> value.asNumber().intValue()), is(Optional.of(2)));
             assertThat(res.result().isPresent(), is(true));
             StartStopResult result = res.result().get().as(StartStopResult.class);
             assertThat(result.status(), is("STOPPED"));
