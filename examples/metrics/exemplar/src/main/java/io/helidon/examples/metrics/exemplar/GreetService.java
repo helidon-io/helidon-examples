@@ -69,10 +69,12 @@ public class GreetService implements HttpService {
         Config config = Services.get(Config.class);
         greeting.set(config.get("app.greeting").asString().orElse("Ciao"));
 
-        MeterRegistry meterRegistry = MetricsFactory.getInstance().globalRegistry();
-        timerForGets = meterRegistry.getOrCreate(Timer.builder(TIMER_FOR_GETS)
+        MetricsFactory metricsFactory = Services.get(MetricsFactory.class);
+        MeterRegistry meterRegistry = Services.get(MeterRegistry.class);
+        timerForGets = meterRegistry.getOrCreate(metricsFactory.timerBuilder(TIMER_FOR_GETS)
                                                          .baseUnit(Meter.BaseUnits.NANOSECONDS));
-        personalizedGreetingsCounter = meterRegistry.getOrCreate(Counter.builder(COUNTER_FOR_PERSONALIZED_GREETINGS));
+        personalizedGreetingsCounter = meterRegistry.getOrCreate(
+                metricsFactory.counterBuilder(COUNTER_FOR_PERSONALIZED_GREETINGS));
     }
 
     /**

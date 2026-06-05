@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,7 @@ import io.helidon.config.Config;
 import io.helidon.http.Status;
 import io.helidon.metrics.api.Counter;
 import io.helidon.metrics.api.MeterRegistry;
-import io.helidon.metrics.api.Metrics;
-import io.helidon.metrics.api.Tag;
+import io.helidon.metrics.api.MetricsFactory;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webclient.http1.Http1ClientResponse;
 import io.helidon.webserver.WebServerConfig;
@@ -46,9 +45,13 @@ public class StatusTest {
 
     private final Counter[] STATUS_COUNTERS = new Counter[6];
     private final Http1Client client;
+    private final MetricsFactory metricsFactory;
+    private final MeterRegistry meterRegistry;
 
-    public StatusTest(Http1Client client) {
+    public StatusTest(Http1Client client, MetricsFactory metricsFactory, MeterRegistry meterRegistry) {
         this.client = client;
+        this.metricsFactory = metricsFactory;
+        this.meterRegistry = meterRegistry;
     }
 
     @SetUpServer
@@ -61,10 +64,10 @@ public class StatusTest {
 
     @BeforeEach
     void findStatusMetrics() {
-        MeterRegistry meterRegistry = Metrics.globalRegistry();
         for (int i = 1; i < STATUS_COUNTERS.length; i++) {
-            STATUS_COUNTERS[i] = meterRegistry.getOrCreate(Counter.builder(STATUS_COUNTER_NAME)
-                                                                    .tags(Set.of(Tag.create(STATUS_TAG_NAME, i + "xx"))));
+            STATUS_COUNTERS[i] = meterRegistry.getOrCreate(
+                    metricsFactory.counterBuilder(STATUS_COUNTER_NAME)
+                            .tags(Set.of(metricsFactory.tagCreate(STATUS_TAG_NAME, i + "xx"))));
         }
     }
 

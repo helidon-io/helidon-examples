@@ -84,7 +84,7 @@ public final class Main {
                 .scoping(ScopingConfig.builder()
                                  .putScope(Meter.Scope.APPLICATION, scopeConfig));
 
-        MeterRegistry meterRegistry = MetricsFactory.getInstance(config).globalRegistry(metricsConfigBuilder.build());
+        MeterRegistry meterRegistry = Services.get(MetricsFactory.class).globalRegistry(metricsConfigBuilder.build());
 
         MetricsObserver metrics = MetricsObserver.builder()
                 .meterRegistry(meterRegistry)
