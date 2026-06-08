@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import io.helidon.config.Config;
 import io.helidon.metrics.api.Counter;
 import io.helidon.metrics.api.MeterRegistry;
-import io.helidon.metrics.api.Metrics;
+import io.helidon.metrics.api.MetricsFactory;
 import io.helidon.service.registry.Services;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
@@ -45,8 +45,9 @@ public class SimpleGreetService implements HttpService {
     private static final Logger LOGGER = Logger.getLogger(SimpleGreetService.class.getName());
     private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
 
-    private final MeterRegistry registry = Metrics.globalRegistry();
-    private final Counter accessCtr = registry.getOrCreate(Counter.builder("accessctr"));
+    private final MetricsFactory metricsFactory = Services.get(MetricsFactory.class);
+    private final MeterRegistry registry = Services.get(MeterRegistry.class);
+    private final Counter accessCtr = registry.getOrCreate(metricsFactory.counterBuilder("accessctr"));
 
     private final String greeting;
 

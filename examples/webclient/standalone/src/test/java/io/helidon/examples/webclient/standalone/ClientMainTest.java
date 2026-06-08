@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 import io.helidon.config.Config;
 import io.helidon.metrics.api.Counter;
 import io.helidon.metrics.api.MeterRegistry;
-import io.helidon.metrics.api.Metrics;
+import io.helidon.metrics.api.MetricsFactory;
 import io.helidon.webserver.testing.junit5.ServerTest;
 import io.helidon.webserver.testing.junit5.SetUpServer;
 import io.helidon.webclient.api.WebClient;
@@ -48,13 +48,15 @@ import static org.hamcrest.Matchers.is;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClientMainTest {
 
-    private static final MeterRegistry METRIC_REGISTRY = Metrics.globalRegistry();
-
     private final WebServer server;
+    private final MetricsFactory metricsFactory;
+    private final MeterRegistry metricRegistry;
     private final Path testFile;
 
-    public ClientMainTest(WebServer server) {
+    public ClientMainTest(WebServer server, MetricsFactory metricsFactory, MeterRegistry metricRegistry) {
         this.server = server;
+        this.metricsFactory = metricsFactory;
+        this.metricRegistry = metricRegistry;
         server.context().register(server);
         this.testFile = Paths.get("test.txt");
     }
@@ -99,7 +101,7 @@ public class ClientMainTest {
     @Order(3)
     public void testMetricsExample() {
         String counterName = "example.metric.GET.localhost";
-        Counter counter = METRIC_REGISTRY.getOrCreate(Counter.builder(counterName));
+        Counter counter = metricRegistry.getOrCreate(metricsFactory.counterBuilder(counterName));
         assertThat("Counter " + counterName + " has not been 0", counter.count(), is(0L));
         ClientMain.clientMetricsExample("http://localhost:" + server.port() + "/greet", Config.create());
         assertThat("Counter " + counterName + " " + "has not been 1", counter.count(), is(1L));

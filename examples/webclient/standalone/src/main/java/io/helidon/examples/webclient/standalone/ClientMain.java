@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,8 @@ import io.helidon.http.Method;
 import io.helidon.http.Status;
 import io.helidon.metrics.api.Counter;
 import io.helidon.metrics.api.MeterRegistry;
-import io.helidon.metrics.api.Metrics;
+import io.helidon.metrics.api.MetricsFactory;
+import io.helidon.service.registry.Services;
 import io.helidon.webclient.api.HttpClientResponse;
 import io.helidon.webclient.api.WebClient;
 import io.helidon.webclient.metrics.WebClientMetrics;
@@ -45,7 +46,6 @@ import jakarta.json.JsonObject;
  */
 public class ClientMain {
 
-    private static final MeterRegistry METER_REGISTRY = Metrics.globalRegistry();
     private static final JsonBuilderFactory JSON_BUILDER = Json.createBuilderFactory(Map.of());
     private static final JsonObject JSON_NEW_GREETING;
 
@@ -150,7 +150,9 @@ public class ClientMain {
     static String clientMetricsExample(String url, Config config) {
         //This part here is only for verification purposes, it is not needed to be done for actual usage.
         String counterName = "example.metric.GET.localhost";
-        Counter counter = METER_REGISTRY.getOrCreate(Counter.builder(counterName));
+        MetricsFactory metricsFactory = Services.get(MetricsFactory.class);
+        MeterRegistry meterRegistry = Services.get(MeterRegistry.class);
+        Counter counter = meterRegistry.getOrCreate(metricsFactory.counterBuilder(counterName));
         System.out.println(counterName + ": " + counter.count());
 
         //Creates new metric which will count all GET requests and has format of example.metric.GET.<host-name>

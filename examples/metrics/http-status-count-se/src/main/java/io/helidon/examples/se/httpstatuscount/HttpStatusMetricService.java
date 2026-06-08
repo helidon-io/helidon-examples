@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.helidon.metrics.api.Counter;
 import io.helidon.metrics.api.MeterRegistry;
-import io.helidon.metrics.api.Metrics;
-import io.helidon.metrics.api.Tag;
+import io.helidon.metrics.api.MetricsFactory;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
@@ -53,14 +53,16 @@ public class HttpStatusMetricService implements HttpService {
     }
 
     private HttpStatusMetricService() {
-        MeterRegistry registry = Metrics.globalRegistry();
+        MetricsFactory metricsFactory = Services.get(MetricsFactory.class);
+        MeterRegistry registry = Services.get(MeterRegistry.class);
 
         // Declare the counters and keep references to them.
         for (int i = 1; i < responseCounters.length; i++) {
 
-            responseCounters[i] = registry.getOrCreate(Counter.builder(STATUS_COUNTER_NAME)
-                                                               .tags(Set.of(Tag.create(STATUS_TAG_NAME, i + "xx")))
-                                                               .description(COUNTER_DESCR));
+            responseCounters[i] = registry.getOrCreate(
+                    metricsFactory.counterBuilder(STATUS_COUNTER_NAME)
+                            .tags(Set.of(metricsFactory.tagCreate(STATUS_TAG_NAME, i + "xx")))
+                            .description(COUNTER_DESCR));
         }
     }
 
