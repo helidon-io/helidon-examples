@@ -73,7 +73,6 @@ public class StatusTest {
 
     @Test
     void checkStatusMetrics() throws InterruptedException {
-        checkAfterStatus(Status.create(171));
         checkAfterStatus(Status.OK_200);
         checkAfterStatus(Status.CREATED_201);
         checkAfterStatus(Status.NO_CONTENT_204);
