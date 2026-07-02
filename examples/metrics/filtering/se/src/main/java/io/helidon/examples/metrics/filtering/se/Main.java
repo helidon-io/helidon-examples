@@ -77,18 +77,20 @@ public final class Main {
                 .exclude(Pattern.compile(GreetService.TIMER_FOR_GETS))
                 .build();
 
-        MetricsConfig initialMetricsConfig = config.get(MetricsConfig.METRICS_CONFIG_KEY)
-                .as(MetricsConfig::create)
-                .orElseGet(MetricsConfig::create);
-        MetricsConfig.Builder metricsConfigBuilder = MetricsConfig.builder(initialMetricsConfig)
+        MetricsFactory metricsFactory = Services.get(MetricsFactory.class);
+        // This global registry initialization can be removed once custom registries own their publishers.
+        Services.get(MeterRegistry.class);
+        MetricsConfig metricsConfig = MetricsConfig.builder(metricsFactory.metricsConfig())
                 .scoping(ScopingConfig.builder()
-                                 .putScope(Meter.Scope.APPLICATION, scopeConfig));
+                                 .putScope(Meter.Scope.APPLICATION, scopeConfig))
+                .warnOnMultipleRegistries(false)
+                .build();
 
-        MeterRegistry meterRegistry = Services.get(MetricsFactory.class).globalRegistry(metricsConfigBuilder.build());
+        MeterRegistry meterRegistry = metricsFactory.createMeterRegistry(metricsConfig);
 
         MetricsObserver metrics = MetricsObserver.builder()
                 .meterRegistry(meterRegistry)
-                .metricsConfig(metricsConfigBuilder)
+                .metricsConfig(metricsConfig)
                 .build();
 
         server.featuresDiscoverServices(false)
