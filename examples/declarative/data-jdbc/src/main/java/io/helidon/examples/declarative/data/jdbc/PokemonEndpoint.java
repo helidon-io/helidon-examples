@@ -100,6 +100,22 @@ class PokemonEndpoint {
     }
 
     /**
+     * Looks up a Pokemon by type and name using positional SQL parameters.
+     *
+     * @param type type name
+     * @param name Pokemon name
+     * @return matching Pokemon, if present
+     */
+    @Http.GET
+    @Http.Path("/search/{type}/{name}")
+    @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
+    Optional<PokemonDto> pokemonByTypeAndName(@Http.PathParam("type") String type,
+                                              @Http.PathParam("name") String name) {
+        return pokemonRepository.findByTypeAndName(type, name)
+                .map(PokemonDto::create);
+    }
+
+    /**
      * Adds a Pokémon and returns its generated identifier.
      *
      * @param pokemonDto requested Pokémon
