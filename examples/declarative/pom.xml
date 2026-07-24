@@ -42,6 +42,7 @@
         <module>tracing</module>
         <module>validation</module>
         <module>data</module>
+        <module>data-jdbc</module>
         <module>security</module>
         <module>health</module>
         <module>cors</module>
