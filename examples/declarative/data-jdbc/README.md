@@ -10,7 +10,7 @@ Repository methods declare SQL with `@Jdbc.Statement` and select query or update
 The sample validates:
 
 - generated JDBC repository implementations for list, optional, insert, and delete operations;
-- named SQL parameter binding;
+- named SQL parameter binding and positional binding in repository parameter declaration order;
 - generated mapping of a flat `Type` record;
 - marker form `@Jdbc.RowMapper` selection by the exact `JdbcClient.RowMapper<Pokemon>` service contract;
 - Service Registry injection of the matching mapper into the generated repository;
@@ -71,6 +71,15 @@ Retrieve `Meowth` by name:
 ```shell
 curl http://localhost:8080/pokemon/get/Meowth
 ```
+
+Retrieve `Meowth` by type and name:
+
+```shell
+curl http://localhost:8080/pokemon/search/Normal/Meowth
+```
+
+The search endpoint uses two positional `?` markers. The repository binds the `typeName` argument to position `1` and
+the `name` argument to position `2`.
 
 Insert a Pokemon and return its generated identifier:
 
