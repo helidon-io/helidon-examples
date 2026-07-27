@@ -30,9 +30,9 @@ import io.helidon.transaction.Tx;
 import io.helidon.webserver.http.RestServer;
 
 /**
- * Exposes the Pokemon operations through JDBC repositories.
+ * Exposes Pokémon operations backed by JDBC repositories.
  */
-@SuppressWarnings(Api.SUPPRESS_INCUBATING) // Helidon declarative is an incubating feature
+@SuppressWarnings(Api.SUPPRESS_INCUBATING) // Helidon Declarative is an incubating feature.
 @Http.Path("/pokemon")
 @Service.Singleton
 @RestServer.Endpoint
@@ -42,10 +42,10 @@ class PokemonEndpoint {
     private final TypeRepository typeRepository;
 
     /**
-     * Creates the endpoint with its generated JDBC repositories.
+     * Creates the endpoint with its JDBC repositories.
      *
-     * @param pokemonRepository Pokémon repository
-     * @param typeRepository Pokémon type repository
+     * @param pokemonRepository provides Pokémon data
+     * @param typeRepository provides Pokémon type data
      */
     @Service.Inject
     PokemonEndpoint(PokemonRepository pokemonRepository,
@@ -79,7 +79,23 @@ class PokemonEndpoint {
     @Http.Path("/type/{name}")
     @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
     List<PokemonDto> type(@Http.PathParam("name") String name) {
-        return pokemonRepository.listByType_Name(name)
+        return pokemonRepository.listByTypeName(name)
+                .stream()
+                .map(PokemonDto::create)
+                .toList();
+    }
+
+    /**
+     * Lists Pokémon whose name or type matches one term.
+     *
+     * @param term Pokémon or type name
+     * @return matching Pokémon
+     */
+    @Http.GET
+    @Http.Path("/search/{term}")
+    @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
+    List<PokemonDto> search(@Http.PathParam("term") String term) {
+        return pokemonRepository.listByNameOrType(term)
                 .stream()
                 .map(PokemonDto::create)
                 .toList();
@@ -100,11 +116,25 @@ class PokemonEndpoint {
     }
 
     /**
-     * Looks up a Pokemon by type and name using positional SQL parameters.
+     * Looks up a Pokémon with the alternate row mapper selected explicitly.
+     *
+     * @param name Pokémon name
+     * @return Pokémon mapped by the alternate mapper, if present
+     */
+    @Http.GET
+    @Http.Path("/explicit-mapper/{name}")
+    @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
+    Optional<PokemonDto> pokemonWithExplicitMapper(@Http.PathParam("name") String name) {
+        return pokemonRepository.findByNameWithAlternateMapper(name)
+                .map(PokemonDto::create);
+    }
+
+    /**
+     * Looks up a Pokémon by type and name using positional SQL parameters.
      *
      * @param type type name
-     * @param name Pokemon name
-     * @return matching Pokemon, if present
+     * @param name Pokémon name
+     * @return matching Pokémon, if present
      */
     @Http.GET
     @Http.Path("/search/{type}/{name}")
@@ -113,6 +143,18 @@ class PokemonEndpoint {
                                               @Http.PathParam("name") String name) {
         return pokemonRepository.findByTypeAndName(type, name)
                 .map(PokemonDto::create);
+    }
+
+    /**
+     * Counts all Pokémon.
+     *
+     * @return number of Pokémon rows
+     */
+    @Http.GET
+    @Http.Path("/count")
+    @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
+    long count() {
+        return pokemonRepository.count();
     }
 
     /**
@@ -129,7 +171,7 @@ class PokemonEndpoint {
     }
 
     /**
-     * Resolves the type and performs the insert on one local JDBC transaction.
+     * Resolves the type and inserts the Pokémon in one local JDBC transaction.
      *
      * @param pokemonDto requested Pokémon
      * @return inserted Pokémon
