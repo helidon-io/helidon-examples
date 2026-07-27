@@ -19,7 +19,7 @@ import io.helidon.data.Data;
 import io.helidon.data.jdbc.Jdbc;
 
 /**
- * Declarative JDBC repository for Pokémon types.
+ * Defines the declarative JDBC query for Pokémon types.
  */
 @Data.Repository
 @Data.Provider("jdbc")

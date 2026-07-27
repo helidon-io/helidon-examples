@@ -15,29 +15,27 @@
  */
 package io.helidon.examples.declarative.data.jdbc.model;
 
+import io.helidon.common.Weight;
+import io.helidon.common.Weighted;
 import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.service.registry.Service;
 
 /**
- * Maps one joined Pokémon and type row to the nested {@link Pokemon} model.
+ * Maps joined Pokémon and type rows to the nested {@link Pokemon} model.
  * <p>
- * Repository methods select this mapper by its exact {@code JdbcClient.RowMapper<Pokemon>} service contract using the
- * {@code @Jdbc.RowMapper} marker annotation. The generated repository receives this singleton from the
- * Service Registry.
+ * Its higher weight makes it the default when a repository uses {@code @Jdbc.RowMapper} without a mapper class.
  */
 @Service.Singleton
+@Weight(Weighted.DEFAULT_WEIGHT + 10)
 public final class PokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
 
-    /**
-     * Creates the stateless mapper service.
-     */
     public PokemonRowMapper() {
     }
 
     /**
      * Maps the current row to a Pokémon.
      *
-     * @param row current callback-scoped row
+     * @param row row from the query result
      * @return mapped Pokémon
      */
     @Override
