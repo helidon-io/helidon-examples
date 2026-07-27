@@ -21,19 +21,21 @@ import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.service.registry.Service;
 
 /**
- * Maps joined Pokémon and type rows to the nested {@link Pokemon} model.
+ * Maps joined rows with a recognizable alternate Pokémon name.
  * <p>
- * Its higher weight makes it the default when a repository uses {@code @Jdbc.RowMapper} without a mapper class.
+ * Its lower weight makes {@link PokemonRowMapper} the default mapper for the marker annotation. Repository methods can
+ * select this mapper directly when they need the alternate result.
  */
 @Service.Singleton
-@Weight(Weighted.DEFAULT_WEIGHT + 10)
-public final class PokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
+@Weight(Weighted.DEFAULT_WEIGHT - 10)
+public final class PokemonAlternateRowMapper implements JdbcClient.RowMapper<Pokemon> {
+    private static final String NAME_PREFIX = "LOW-WEIGHT EXPLICIT: ";
 
-    public PokemonRowMapper() {
+    public PokemonAlternateRowMapper() {
     }
 
     /**
-     * Maps the current row to a Pokémon.
+     * Maps the current row with a name that identifies this mapper.
      *
      * @param row row from the query result
      * @return mapped Pokémon
@@ -43,7 +45,7 @@ public final class PokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
         Type type = new Type(row.required("typeId", Integer.class),
                              row.required("typeName", String.class));
         return new Pokemon(row.required("id", Integer.class),
-                           row.required("name", String.class),
+                           NAME_PREFIX + row.required("name", String.class),
                            type);
     }
 }

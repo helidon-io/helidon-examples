@@ -33,9 +33,9 @@ public record PokemonDto(Optional<Integer> id,
                          String type) {
 
     /**
-     * Keeps the JDBC model separate from the representation sent over HTTP.
+     * Converts a database record to its HTTP representation.
      *
-     * @param pokemon database projection
+     * @param pokemon database record
      * @return HTTP representation
      */
     static PokemonDto create(Pokemon pokemon) {
