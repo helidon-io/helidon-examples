@@ -22,16 +22,16 @@
                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.helidon.examples.declarative</groupId>
-        <artifactId>helidon-examples-declarative-project</artifactId>
+        <groupId>io.helidon.examples.imperative</groupId>
+        <artifactId>helidon-examples-imperative-project</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>helidon-examples-declarative-data-jdbc-project</artifactId>
+    <artifactId>helidon-examples-imperative-data-jdbc-project</artifactId>
 
     <packaging>pom</packaging>
-    <name>Helidon Examples Declarative Data JDBC Project</name>
-    <description>Declarative examples for Helidon Data JDBC</description>
+    <name>Helidon Examples Imperative Data JDBC Project</name>
+    <description>Imperative examples for Helidon Data JDBC</description>
 
     <modules>
         <module>h2</module>
