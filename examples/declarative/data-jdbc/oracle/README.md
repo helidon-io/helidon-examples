@@ -1,4 +1,4 @@
-# Helidon Data JDBC Declarative using H2 Database
+# Helidon Data JDBC Declarative using Oracle Database
 
 The Java application and repository sources are shared by all database variants from the sibling `common` directory.
 
@@ -28,8 +28,20 @@ The sample validates:
 `PokemonRepository` extends the ordinary `PokemonLookup` interface. The parent declares `findByName(String name)` and
 its JDBC annotations. The generated `PokemonRepository` implementation includes that inherited method.
 
-The example uses an embedded, in-memory H2 database through HikariCP. No external database installation or container is
-required.
+The example uses Oracle Database Free and HikariCP. The credentials below are intended only for local development.
+
+## Start Oracle Database
+
+Run this command from the `examples/declarative/data-jdbc/oracle` directory.
+
+```shell
+docker run --name oracle \
+       -p 1521:1521 \
+       -e ORACLE_PWD='oracle123' \
+       -d container-registry.oracle.com/database/free:latest-lite
+```
+
+Wait until `docker logs oracle` reports that the database is ready to use before starting the application.
 
 ## Build and Run
 
@@ -42,11 +54,10 @@ mvn package
 Start the packaged application:
 
 ```shell
-java -jar target/helidon-examples-declarative-data-jdbc-h2.jar
+java -jar target/helidon-examples-declarative-data-jdbc-oracle.jar
 ```
 
-At startup, the JDBC provider runs `drop.sql` followed by `init.sql`. The schema and sample data live only for the
-duration of the process. The application listens on `http://localhost:8080/pokemon`.
+The application listens on `http://localhost:8080/pokemon`.
 
 ## Try the Application
 
@@ -130,4 +141,10 @@ Delete it with:
 
 ```shell
 curl -i -X DELETE http://localhost:8080/pokemon/20
+```
+
+## Stop Oracle Database
+
+```shell
+docker stop oracle
 ```

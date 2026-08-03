@@ -1,4 +1,4 @@
-# Helidon Data JDBC Declarative using H2 Database
+# Helidon Data JDBC Declarative using PostgreSQL
 
 The Java application and repository sources are shared by all database variants from the sibling `common` directory.
 
@@ -28,8 +28,33 @@ The sample validates:
 `PokemonRepository` extends the ordinary `PokemonLookup` interface. The parent declares `findByName(String name)` and
 its JDBC annotations. The generated `PokemonRepository` implementation includes that inherited method.
 
-The example uses an embedded, in-memory H2 database through HikariCP. No external database installation or container is
-required.
+The example uses PostgreSQL and HikariCP. The credentials below are intended only for local development.
+
+## Build the PostgreSQL Image
+
+Like the DbClient PostgreSQL example, the local image installs PostgreSQL Server on Oracle Linux 9 and adds a
+standalone initialization entrypoint:
+
+```shell
+docker build etc/docker -t helidon-postgres
+```
+
+## Start PostgreSQL
+
+Run this command from the `examples/declarative/data-jdbc/postgres` directory.
+
+```shell
+docker run --name postgres \
+       -p 5432:5432 \
+       -e POSTGRES_DB='pokemons' \
+       -e POSTGRES_USER='user' \
+       -e POSTGRES_PASSWORD='pgsql123' \
+       -d helidon-postgres
+```
+
+Wait until `docker logs postgres` reports that the server is ready to accept connections before starting the application.
+The JDBC URL disables quoting of `RETURNING` identifiers so PostgreSQL can fold the shared generated-key column name
+`ID` in the same way as the unquoted schema and repository SQL.
 
 ## Build and Run
 
@@ -42,11 +67,10 @@ mvn package
 Start the packaged application:
 
 ```shell
-java -jar target/helidon-examples-declarative-data-jdbc-h2.jar
+java -jar target/helidon-examples-declarative-data-jdbc-postgres.jar
 ```
 
-At startup, the JDBC provider runs `drop.sql` followed by `init.sql`. The schema and sample data live only for the
-duration of the process. The application listens on `http://localhost:8080/pokemon`.
+The application listens on `http://localhost:8080/pokemon`.
 
 ## Try the Application
 
@@ -130,4 +154,10 @@ Delete it with:
 
 ```shell
 curl -i -X DELETE http://localhost:8080/pokemon/20
+```
+
+## Stop PostgreSQL
+
+```shell
+docker stop postgres
 ```
