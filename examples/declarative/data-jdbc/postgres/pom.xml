@@ -29,12 +29,12 @@
     </parent>
 
     <groupId>io.helidon.examples.declarative.data.jdbc</groupId>
-    <artifactId>helidon-examples-declarative-data-jdbc-mysql</artifactId>
+    <artifactId>helidon-examples-declarative-data-jdbc-postgres</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Helidon Examples Declarative Data JDBC MySQL</name>
+    <name>Helidon Examples Declarative Data JDBC PostgreSQL</name>
 
     <description>
-        Declarative Helidon Data repository example using JDBC with MySQL.
+        Declarative Helidon Data repository example using JDBC with PostgreSQL.
     </description>
 
     <properties>
@@ -82,8 +82,8 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

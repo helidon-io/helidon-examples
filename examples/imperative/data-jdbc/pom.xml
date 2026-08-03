@@ -36,5 +36,7 @@
     <modules>
         <module>h2</module>
         <module>mysql</module>
+        <module>oracle</module>
+        <module>postgres</module>
     </modules>
 </project>
