@@ -1,10 +1,10 @@
-# Helidon Data JDBC Imperative using MySQL Database
+# Helidon Data JDBC Imperative using Oracle Database
 
 The Java application sources are shared by all database variants from the sibling `common` directory.
 
-This example demonstrates direct, imperative use of the Helidon Data JDBC provider with MySQL. It is the imperative
-counterpart of `examples/declarative/data-jdbc` and uses the same Pokemon schema, SQL statements, database method names,
-row mappers, HTTP paths, and JSON representation.
+This example demonstrates direct, imperative use of the Helidon Data JDBC provider with Oracle Database. It is the
+imperative counterpart of `examples/declarative/data-jdbc` and uses the same Pokemon schema, SQL statements, database
+method names, row mappers, HTTP paths, and JSON representation.
 
 The configuration defines a HikariCP datasource and a JDBC persistence unit. The persistence unit publishes a
 `JdbcClient` through the Service Registry. `Main` obtains that client and passes it to `PokemonService`, which owns the
@@ -17,39 +17,36 @@ The sample demonstrates:
 - explicit `NULL` binding for nullable strings;
 - mapping joined rows to a `Pokemon` containing a nested `Type`;
 - selecting either the normal or alternate row mapper;
-- retrieving a MySQL-generated identifier; and
+- retrieving a database-generated identifier; and
 - looking up a type and inserting a Pokemon in one local JDBC transaction.
 
 The credentials below are intended only for local development.
 
-## Start MySQL
+## Start Oracle Database
 
 Run the following command:
 
 ```shell
-docker run --name mysql \
-       -p 3306:3306 \
-       -e MYSQL_DATABASE='pokemons' \
-       -e MYSQL_RANDOM_ROOT_PASSWORD='yes' \
-       -e MYSQL_USER='user' \
-       -e MYSQL_PASSWORD='changeit' \
-       -d container-registry.oracle.com/mysql/community-server:9.7.1
+docker run --name oracle \
+       -p 1521:1521 \
+       -e ORACLE_PWD='oracle123' \
+       -d container-registry.oracle.com/database/free:latest-lite
 ```
 
-Wait until MySQL reports that it is ready for connections:
+Wait until Oracle Database reports that it is ready to use:
 
 ```shell
-docker logs -f mysql
+docker logs -f oracle
 ```
 
 Press `Ctrl+C` to stop following the log; the container continues running in the background.
 
-The datasource settings are in `src/main/resources/application.yaml`. If MySQL runs on a different host or port, update
-`data.url`. Update the datasource username and password there if you use different credentials.
+The datasource settings are in `src/main/resources/application.yaml`. If Oracle Database runs on a different host or
+port, update `data.url`. Update the datasource username and password there if you use different credentials.
 
 ## Build and Run
 
-From `examples/imperative/data-jdbc/mysql`, build the application:
+From `examples/imperative/data-jdbc/oracle`, build the application:
 
 ```shell
 mvn package
@@ -58,7 +55,7 @@ mvn package
 Start the packaged application:
 
 ```shell
-java -jar target/helidon-examples-imperative-data-jdbc-mysql.jar
+java -jar target/helidon-examples-imperative-data-jdbc-oracle.jar
 ```
 
 At startup, the JDBC provider runs `drop.sql` followed by `init.sql`, recreating and populating the example schema. The
@@ -130,9 +127,9 @@ Delete the inserted Pokemon:
 curl -i -X DELETE http://localhost:8080/pokemon/20
 ```
 
-## Stop MySQL
+## Stop Oracle Database
 
 ```shell
-docker stop mysql
-docker rm mysql
+docker stop oracle
+docker rm oracle
 ```

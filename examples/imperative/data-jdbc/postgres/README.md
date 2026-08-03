@@ -1,8 +1,8 @@
-# Helidon Data JDBC Imperative using MySQL Database
+# Helidon Data JDBC Imperative using PostgreSQL
 
 The Java application sources are shared by all database variants from the sibling `common` directory.
 
-This example demonstrates direct, imperative use of the Helidon Data JDBC provider with MySQL. It is the imperative
+This example demonstrates direct, imperative use of the Helidon Data JDBC provider with PostgreSQL. It is the imperative
 counterpart of `examples/declarative/data-jdbc` and uses the same Pokemon schema, SQL statements, database method names,
 row mappers, HTTP paths, and JSON representation.
 
@@ -17,39 +17,50 @@ The sample demonstrates:
 - explicit `NULL` binding for nullable strings;
 - mapping joined rows to a `Pokemon` containing a nested `Type`;
 - selecting either the normal or alternate row mapper;
-- retrieving a MySQL-generated identifier; and
+- retrieving a database-generated identifier; and
 - looking up a type and inserting a Pokemon in one local JDBC transaction.
 
 The credentials below are intended only for local development.
 
-## Start MySQL
+## Build the PostgreSQL Image
+
+Like the DbClient PostgreSQL example, the local image installs PostgreSQL Server on Oracle Linux 9 and adds a
+standalone initialization entrypoint:
+
+```shell
+docker build etc/docker -t helidon-postgres
+```
+
+## Start PostgreSQL
 
 Run the following command:
 
 ```shell
-docker run --name mysql \
-       -p 3306:3306 \
-       -e MYSQL_DATABASE='pokemons' \
-       -e MYSQL_RANDOM_ROOT_PASSWORD='yes' \
-       -e MYSQL_USER='user' \
-       -e MYSQL_PASSWORD='changeit' \
-       -d container-registry.oracle.com/mysql/community-server:9.7.1
+docker run --name postgres \
+       -p 5432:5432 \
+       -e POSTGRES_DB='pokemons' \
+       -e POSTGRES_USER='user' \
+       -e POSTGRES_PASSWORD='pgsql123' \
+       -d helidon-postgres
 ```
 
-Wait until MySQL reports that it is ready for connections:
+Wait until PostgreSQL reports that it is ready to accept connections:
 
 ```shell
-docker logs -f mysql
+docker logs -f postgres
 ```
 
 Press `Ctrl+C` to stop following the log; the container continues running in the background.
 
-The datasource settings are in `src/main/resources/application.yaml`. If MySQL runs on a different host or port, update
-`data.url`. Update the datasource username and password there if you use different credentials.
+The datasource settings are in `src/main/resources/application.yaml`. If PostgreSQL runs on a different host or port,
+update `data.url`. Update the datasource username and password there if you use different credentials.
+
+The JDBC URL disables quoting of `RETURNING` identifiers so PostgreSQL folds the shared generated-key column name `ID`
+in the same way as the unquoted schema and application SQL.
 
 ## Build and Run
 
-From `examples/imperative/data-jdbc/mysql`, build the application:
+From `examples/imperative/data-jdbc/postgres`, build the application:
 
 ```shell
 mvn package
@@ -58,7 +69,7 @@ mvn package
 Start the packaged application:
 
 ```shell
-java -jar target/helidon-examples-imperative-data-jdbc-mysql.jar
+java -jar target/helidon-examples-imperative-data-jdbc-postgres.jar
 ```
 
 At startup, the JDBC provider runs `drop.sql` followed by `init.sql`, recreating and populating the example schema. The
@@ -130,9 +141,9 @@ Delete the inserted Pokemon:
 curl -i -X DELETE http://localhost:8080/pokemon/20
 ```
 
-## Stop MySQL
+## Stop PostgreSQL
 
 ```shell
-docker stop mysql
-docker rm mysql
+docker stop postgres
+docker rm postgres
 ```

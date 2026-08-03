@@ -16,7 +16,6 @@
     limitations under the License.
 
 -->
-
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://maven.apache.org/POM/4.0.0"
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -28,37 +27,23 @@
         <relativePath/>
     </parent>
 
-    <groupId>io.helidon.examples.declarative.data.jdbc</groupId>
-    <artifactId>helidon-examples-declarative-data-jdbc-mysql</artifactId>
+    <groupId>io.helidon.examples.imperative.data.jdbc</groupId>
+    <artifactId>helidon-examples-imperative-data-jdbc-postgres</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Helidon Examples Declarative Data JDBC MySQL</name>
+    <name>Helidon Examples Imperative Data JDBC PostgreSQL</name>
 
     <description>
-        Declarative Helidon Data repository example using JDBC with MySQL.
+        Imperative Helidon Data application using the JDBC provider with PostgreSQL.
     </description>
 
     <properties>
-        <mainClass>io.helidon.examples.declarative.data.jdbc.Main</mainClass>
+        <mainClass>io.helidon.examples.imperative.data.jdbc.Main</mainClass>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>io.helidon.config</groupId>
             <artifactId>helidon-config-yaml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.data</groupId>
-            <artifactId>helidon-data</artifactId>
         </dependency>
         <dependency>
             <groupId>io.helidon.data.jdbc</groupId>
@@ -82,15 +67,14 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
 
     <build>
         <sourceDirectory>${project.basedir}/../common/src/main/java</sourceDirectory>
-        <testSourceDirectory>${project.basedir}/../common/src/test/java</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -102,11 +86,6 @@
                             <artifactId>helidon-bundles-apt</artifactId>
                             <version>${helidon.version}</version>
                         </path>
-                        <path>
-                            <groupId>io.helidon.data.jdbc</groupId>
-                            <artifactId>helidon-data-jdbc-codegen</artifactId>
-                            <version>${helidon.version}</version>
-                        </path>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
@@ -116,19 +95,6 @@
                 <executions>
                     <execution>
                         <id>copy-libs</id>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>io.helidon.service</groupId>
-                <artifactId>helidon-service-maven-plugin</artifactId>
-                <version>${helidon.version}</version>
-                <executions>
-                    <execution>
-                        <id>create-application</id>
-                        <goals>
-                            <goal>create-application</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

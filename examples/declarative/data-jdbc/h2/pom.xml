@@ -89,6 +89,8 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>${project.basedir}/../common/src/main/java</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/../common/src/test/java</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
