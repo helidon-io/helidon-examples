@@ -41,6 +41,10 @@ docker logs -f oracle
 
 Press `Ctrl+C` to stop following the log; the container continues running in the background.
 
+The password used in this example is intended only for local development. Use a strong, unique password and update both
+the Docker command and `src/main/resources/application.yaml` with the new value. For production deployments, provide
+credentials through external configuration or a secrets manager instead of storing them in source control.
+
 The datasource settings are in `src/main/resources/application.yaml`. If Oracle Database runs on a different host or
 port, update `data.url`. Update the datasource username and password there if you use different credentials.
 
@@ -126,6 +130,16 @@ Delete the inserted Pokemon:
 ```shell
 curl -i -X DELETE http://localhost:8080/pokemon/20
 ```
+
+## Endpoint Validation
+
+With the application running, validate every endpoint against Oracle Database:
+
+```shell
+mvn test -Pendpoint-validation
+```
+
+Use `-Dbase-url=http://host:port` if the application does not use `http://localhost:8080`.
 
 ## Stop Oracle Database
 

@@ -53,6 +53,11 @@ docker run --name postgres \
 ```
 
 Wait until `docker logs postgres` reports that the server is ready to accept connections before starting the application.
+
+The password used in this example is intended only for local development. Use a strong, unique password and update both
+the Docker command and `src/main/resources/application.yaml` with the new value. For production deployments, provide
+credentials through external configuration or a secrets manager instead of storing them in source control.
+
 The JDBC URL disables quoting of `RETURNING` identifiers so PostgreSQL can fold the shared generated-key column name
 `ID` in the same way as the unquoted schema and repository SQL.
 
@@ -155,6 +160,16 @@ Delete it with:
 ```shell
 curl -i -X DELETE http://localhost:8080/pokemon/20
 ```
+
+## Endpoint Validation
+
+With the application running, validate every endpoint against PostgreSQL:
+
+```shell
+mvn test -Pendpoint-validation
+```
+
+Use `-Dbase-url=http://host:port` if the application does not use `http://localhost:8080`.
 
 ## Stop PostgreSQL
 
