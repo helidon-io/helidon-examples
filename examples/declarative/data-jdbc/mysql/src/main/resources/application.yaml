@@ -30,7 +30,6 @@ data:
           username: "user"
           password: "changeit"
           url: "${data.url}"
-          jdbc-driver-class-name: "com.mysql.cj.jdbc.Driver"
   persistence-units:
     jdbc:
       - data-source: "example"

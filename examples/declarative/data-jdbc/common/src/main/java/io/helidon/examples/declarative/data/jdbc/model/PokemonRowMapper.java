@@ -29,6 +29,9 @@ import io.helidon.service.registry.Service;
 @Weight(Weighted.DEFAULT_WEIGHT + 10)
 public final class PokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
 
+    /**
+     * Creates the default Pokemon row mapper.
+     */
     public PokemonRowMapper() {
     }
 
