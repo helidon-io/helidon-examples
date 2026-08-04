@@ -82,3 +82,13 @@ The H2 identity starts at `20`, so the first insert returns that identifier. Del
 ```shell
 curl -i -X DELETE http://localhost:8080/pokemon/20
 ```
+
+## Endpoint Validation
+
+With the application running, validate every endpoint against H2:
+
+```shell
+mvn test -Pendpoint-validation
+```
+
+Use `-Dbase-url=http://host:port` if the application does not use `http://localhost:8080`.
