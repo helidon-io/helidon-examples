@@ -31,6 +31,9 @@ import io.helidon.service.registry.Service;
 public final class PokemonAlternateRowMapper implements JdbcClient.RowMapper<Pokemon> {
     private static final String NAME_PREFIX = "LOW-WEIGHT EXPLICIT: ";
 
+    /**
+     * Creates the alternate Pokemon row mapper.
+     */
     public PokemonAlternateRowMapper() {
     }
 
