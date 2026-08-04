@@ -30,7 +30,6 @@ data:
           username: "system"
           password: "oracle123"
           url: "${data.url}"
-          jdbc-driver-class-name: "oracle.jdbc.OracleDriver"
   persistence-units:
     jdbc:
       - data-source: "example"
