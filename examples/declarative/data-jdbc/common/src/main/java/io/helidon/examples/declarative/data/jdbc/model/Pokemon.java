@@ -16,11 +16,11 @@
 package io.helidon.examples.declarative.data.jdbc.model;
 
 /**
- * Fully materialized Pokémon returned by the JDBC repository.
+ * Fully materialized Pokemon returned by the JDBC repository.
  *
- * @param id Pokémon identifier
- * @param name Pokémon name
- * @param type Pokémon type
+ * @param id Pokemon identifier
+ * @param name Pokemon name
+ * @param type Pokemon type
  */
 public record Pokemon(int id,
                       String name,

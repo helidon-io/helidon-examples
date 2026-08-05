@@ -15,6 +15,6 @@
  */
 
 /**
- * Record projections and declarative JDBC repositories for the Pokémon database.
+ * Record projections and declarative JDBC repositories for the Pokemon database.
  */
 package io.helidon.examples.declarative.data.jdbc.model;

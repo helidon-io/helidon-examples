@@ -21,7 +21,7 @@ import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.service.registry.Service;
 
 /**
- * Maps joined Pokémon and type rows to the nested {@link Pokemon} model.
+ * Maps joined Pokemon and type rows to the nested {@link Pokemon} model.
  * <p>
  * Its higher weight makes it the default when a repository uses {@code @Jdbc.RowMapper} without a mapper class.
  */
@@ -36,10 +36,10 @@ public final class PokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
     }
 
     /**
-     * Maps the current row to a Pokémon.
+     * Maps the current row to a Pokemon.
      *
      * @param row row from the query result
-     * @return mapped Pokémon
+     * @return mapped Pokemon
      */
     @Override
     public Pokemon map(JdbcClient.Row row) {

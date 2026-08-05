@@ -20,7 +20,7 @@ import io.helidon.service.registry.Service;
 import io.helidon.service.registry.ServiceRegistryManager;
 
 /**
- * Starts the declarative JDBC Pokémon application.
+ * Starts the declarative JDBC Pokemon application.
  */
 @Service.GenerateBinding
 public class Main {
