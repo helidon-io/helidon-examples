@@ -21,11 +21,11 @@ import io.helidon.examples.declarative.data.jdbc.model.Pokemon;
 import io.helidon.json.binding.Json;
 
 /**
- * HTTP representation of a Pokémon.
+ * HTTP representation of a Pokemon.
  *
  * @param id database identifier, empty when a client requests an insert
- * @param name Pokémon name
- * @param type Pokémon type name
+ * @param name Pokemon name
+ * @param type Pokemon type name
  */
 @Json.Entity
 public record PokemonDto(Optional<Integer> id,

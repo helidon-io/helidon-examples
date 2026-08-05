@@ -30,7 +30,7 @@ import io.helidon.transaction.Tx;
 import io.helidon.webserver.http.RestServer;
 
 /**
- * Exposes Pokémon operations backed by JDBC repositories.
+ * Exposes Pokemon operations backed by JDBC repositories.
  */
 @SuppressWarnings(Api.SUPPRESS_INCUBATING) // Helidon Declarative is an incubating feature.
 @Http.Path("/pokemon")
@@ -44,8 +44,8 @@ class PokemonEndpoint {
     /**
      * Creates the endpoint with its JDBC repositories.
      *
-     * @param pokemonRepository provides Pokémon data
-     * @param typeRepository provides Pokémon type data
+     * @param pokemonRepository provides Pokemon data
+     * @param typeRepository provides Pokemon type data
      */
     @Service.Inject
     PokemonEndpoint(PokemonRepository pokemonRepository,
@@ -55,9 +55,9 @@ class PokemonEndpoint {
     }
 
     /**
-     * Lists all Pokémon in name order.
+     * Lists all Pokemon in name order.
      *
-     * @return all Pokémon
+     * @return all Pokemon
      */
     @Http.GET
     @Http.Path("/all")
@@ -70,10 +70,10 @@ class PokemonEndpoint {
     }
 
     /**
-     * Lists Pokémon having the requested type.
+     * Lists Pokemon having the requested type.
      *
      * @param name type name
-     * @return matching Pokémon
+     * @return matching Pokemon
      */
     @Http.GET
     @Http.Path("/type/{name}")
@@ -86,10 +86,10 @@ class PokemonEndpoint {
     }
 
     /**
-     * Lists Pokémon whose name or type matches one term.
+     * Lists Pokemon whose name or type matches one term.
      *
-     * @param term Pokémon or type name
-     * @return matching Pokémon
+     * @param term Pokemon or type name
+     * @return matching Pokemon
      */
     @Http.GET
     @Http.Path("/search/{term}")
@@ -102,10 +102,10 @@ class PokemonEndpoint {
     }
 
     /**
-     * Looks up a Pokémon by name.
+     * Looks up a Pokemon by name.
      *
-     * @param name Pokémon name
-     * @return matching Pokémon, if present
+     * @param name Pokemon name
+     * @return matching Pokemon, if present
      */
     @Http.GET
     @Http.Path("/get/{name}")
@@ -116,10 +116,10 @@ class PokemonEndpoint {
     }
 
     /**
-     * Looks up a Pokémon with the alternate row mapper selected explicitly.
+     * Looks up a Pokemon with the alternate row mapper selected explicitly.
      *
-     * @param name Pokémon name
-     * @return Pokémon mapped by the alternate mapper, if present
+     * @param name Pokemon name
+     * @return Pokemon mapped by the alternate mapper, if present
      */
     @Http.GET
     @Http.Path("/explicit-mapper/{name}")
@@ -130,11 +130,11 @@ class PokemonEndpoint {
     }
 
     /**
-     * Looks up a Pokémon by type and name using positional SQL parameters.
+     * Looks up a Pokemon by type and name using positional SQL parameters.
      *
      * @param type type name
-     * @param name Pokémon name
-     * @return matching Pokémon, if present
+     * @param name Pokemon name
+     * @return matching Pokemon, if present
      */
     @Http.GET
     @Http.Path("/search/{type}/{name}")
@@ -146,9 +146,9 @@ class PokemonEndpoint {
     }
 
     /**
-     * Counts all Pokémon.
+     * Counts all Pokemon.
      *
-     * @return number of Pokémon rows
+     * @return number of Pokemon rows
      */
     @Http.GET
     @Http.Path("/count")
@@ -158,10 +158,10 @@ class PokemonEndpoint {
     }
 
     /**
-     * Adds a Pokémon and returns its generated identifier.
+     * Adds a Pokemon and returns its generated identifier.
      *
-     * @param pokemonDto requested Pokémon
-     * @return inserted Pokémon
+     * @param pokemonDto requested Pokemon
+     * @return inserted Pokemon
      */
     @Http.POST
     @Http.Consumes(MediaTypes.APPLICATION_JSON_VALUE)
@@ -171,10 +171,10 @@ class PokemonEndpoint {
     }
 
     /**
-     * Resolves the type and inserts the Pokémon in one local JDBC transaction.
+     * Resolves the type and inserts the Pokemon in one local JDBC transaction.
      *
-     * @param pokemonDto requested Pokémon
-     * @return inserted Pokémon
+     * @param pokemonDto requested Pokemon
+     * @return inserted Pokemon
      */
     @Tx.Required
     PokemonDto insertPokemon(PokemonDto pokemonDto) {
@@ -184,9 +184,9 @@ class PokemonEndpoint {
     }
 
     /**
-     * Deletes a Pokémon by identifier.
+     * Deletes a Pokemon by identifier.
      *
-     * @param id Pokémon identifier
+     * @param id Pokemon identifier
      * @return text containing the number of deleted rows
      */
     @Http.DELETE

@@ -20,15 +20,15 @@ import java.util.Optional;
 import io.helidon.data.jdbc.Jdbc;
 
 /**
- * Declares Pokémon lookups shared by JDBC repositories.
+ * Declares Pokemon lookups shared by JDBC repositories.
  */
 public interface PokemonLookup {
 
     /**
-     * Retrieves a Pokémon by name.
+     * Retrieves a Pokemon by name.
      *
-     * @param name Pokémon name
-     * @return matching Pokémon, or an empty optional when it does not exist
+     * @param name Pokemon name
+     * @return matching Pokemon, or an empty optional when it does not exist
      */
     @Jdbc.Statement("""
             SELECT p.ID AS id,

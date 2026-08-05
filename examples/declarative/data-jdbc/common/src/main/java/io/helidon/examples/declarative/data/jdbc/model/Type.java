@@ -16,7 +16,7 @@
 package io.helidon.examples.declarative.data.jdbc.model;
 
 /**
- * Pokémon type projection returned by the JDBC repository.
+ * Pokemon type projection returned by the JDBC repository.
  *
  * @param id type identifier
  * @param name type name
