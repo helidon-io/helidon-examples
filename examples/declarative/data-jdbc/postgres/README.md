@@ -91,7 +91,7 @@ List Pokemon having the `Normal` type:
 curl http://localhost:8080/pokemon/type/Normal
 ```
 
-Search for a Pokémon name or type with one repeated named parameter:
+Search for a Pokemon name or type with one repeated named parameter:
 
 ```shell
 curl http://localhost:8080/pokemon/search/Normal
@@ -133,7 +133,7 @@ curl http://localhost:8080/pokemon/search/Normal/Meowth
 The search endpoint uses two positional `?` markers. The repository binds the `typeName` argument to position `1` and
 the `name` argument to position `2`.
 
-Count all Pokémon:
+Count all Pokemon:
 
 ```shell
 curl http://localhost:8080/pokemon/count

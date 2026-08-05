@@ -21,7 +21,7 @@ import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.service.registry.Service;
 
 /**
- * Maps joined rows with a recognizable alternate Pokémon name.
+ * Maps joined rows with a recognizable alternate Pokemon name.
  * <p>
  * Its lower weight makes {@link PokemonRowMapper} the default mapper for the marker annotation. Repository methods can
  * select this mapper directly when they need the alternate result.
@@ -41,7 +41,7 @@ public final class PokemonAlternateRowMapper implements JdbcClient.RowMapper<Pok
      * Maps the current row with a name that identifies this mapper.
      *
      * @param row row from the query result
-     * @return mapped Pokémon
+     * @return mapped Pokemon
      */
     @Override
     public Pokemon map(JdbcClient.Row row) {
