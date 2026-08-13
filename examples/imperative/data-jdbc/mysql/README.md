@@ -134,16 +134,6 @@ Delete the inserted Pokemon:
 curl -i -X DELETE http://localhost:8080/pokemon/20
 ```
 
-## Endpoint Validation
-
-With the application running, validate every endpoint against MySQL:
-
-```shell
-mvn test -Pendpoint-validation
-```
-
-Use `-Dbase-url=http://host:port` if the application does not use `http://localhost:8080`.
-
 ## Stop MySQL
 
 ```shell

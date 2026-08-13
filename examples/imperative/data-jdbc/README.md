@@ -14,15 +14,17 @@ with its own JDBC dependency, datasource configuration, and instructions for pre
 | [`postgres`](postgres) | PostgreSQL |
 
 See the `README.md` in the selected database directory for database setup, application startup, and endpoint examples.
+Those READMEs identify the Docker images used by the samples. Ensure you have permission to pull each image, or use an
+image from the appropriate registry.
 The H2 variant does not require an external database and is the quickest way to run the sample.
 
 ## Shared Application
 
-The [`common`](common) directory contains the Java application and SQL scripts shared by all database variants. It is
+The [`common`](common) directory contains the Java application and SQL scripts used by all database variants. It is
 source content for the database modules and is not a standalone Maven application.
 
-Each database module compiles the sources from `common/src/main/java`. Database-specific directories keep only the files
-that vary by database, such as `application.yaml`, the JDBC driver dependency, and supporting documentation.
+Each database module compiles the application sources from `common/src/main/java`. The module owns the files that vary
+by database, such as `application.yaml`, JDBC dependencies, and supporting documentation.
 
 The shared `init.sql` uses Maven resource filtering for the generated identifier definition. H2, Oracle Database, and
 PostgreSQL use standard identity syntax. The MySQL module overrides the relevant Maven properties to generate the
@@ -46,22 +48,3 @@ mvn package
 
 The database specific README.md provides the command for starting the resulting application and any database preparation
 required before startup.
-
-## Endpoint Validation
-
-After starting one packaged application, validate its endpoints from that database directory. For example, from the
-`h2` directory:
-
-```shell
-mvn test -Pendpoint-validation
-```
-
-The test invokes the running application's HTTP endpoints and validates queries, mapping, generated keys, transactions,
-and updates against the application's configured database. It uses `http://localhost:8080` by default. Override the URL
-when the application listens elsewhere:
-
-```shell
-mvn test -Pendpoint-validation -Dbase-url=http://localhost:9080
-```
-
-Run this command from one selected database directory, not from this multi-module directory.

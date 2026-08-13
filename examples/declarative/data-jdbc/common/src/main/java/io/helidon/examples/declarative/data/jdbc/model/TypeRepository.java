@@ -22,7 +22,6 @@ import io.helidon.data.jdbc.Jdbc;
  * Defines the declarative JDBC query for Pokemon types.
  */
 @Data.Repository
-@Data.Provider("jdbc")
 public interface TypeRepository {
 
     /**
