@@ -31,5 +31,7 @@ data:
   persistence-units:
     jdbc:
       - data-source: "example"
-        drop-script: "drop.sql"
-        init-script: "init.sql"
+        drop-script:
+          resource-path: "drop.sql"
+        init-script:
+          resource-path: "init.sql"
