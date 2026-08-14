@@ -17,7 +17,6 @@
 package io.helidon.examples.declarative.cors;
 
 import java.util.List;
-import java.util.OptionalLong;
 
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.http.HeaderNames;
@@ -130,12 +129,12 @@ class DeclarativeCorsTest {
 
     @Test
     void testHealthOk() {
-        var response = client.get("/observe/health")
+        try (var response = client.get("/observe/health")
                 .accept(MediaTypes.APPLICATION_JSON)
-                .request(String.class);
-
-        assertThat(response.status(), is(Status.NO_CONTENT_204));
-        assertThat(response.headers().contentLength(), is(OptionalLong.of(0L)));
+                .request()) {
+            assertThat(response.status(), is(Status.NO_CONTENT_204));
+            assertThat(response.entity().hasEntity(), is(false));
+        }
     }
 
     @Test
