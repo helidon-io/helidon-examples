@@ -14,7 +14,6 @@ The sample demonstrates:
 
 - list, optional, scalar, insert, and delete JDBC operations;
 - positional parameter binding, including binding one value to multiple positions;
-- explicit `NULL` binding for nullable strings;
 - mapping joined rows to a `Pokemon` containing a nested `Type`;
 - selecting either the normal or alternate row mapper;
 - retrieving a database-generated identifier; and
@@ -127,7 +126,7 @@ Count all Pokemon:
 curl http://localhost:8080/pokemon/count
 ```
 
-Insert a Pokemon and return its generated identifier:
+Insert a Pokemon and return a JSON object containing its generated identifier, name, and type:
 
 ```shell
 curl -i -X POST \
@@ -137,7 +136,7 @@ curl -i -X POST \
 ```
 
 The type lookup and insert run in one local JDBC transaction. The schema starts generated identifiers at `20`, so the
-first insert into a freshly initialized database returns that ID.
+JSON object returned by the first insert into a freshly initialized database contains that ID.
 
 Delete the inserted Pokemon:
 

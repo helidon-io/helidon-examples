@@ -15,7 +15,6 @@
  */
 package io.helidon.examples.imperative.data.jdbc;
 
-import java.sql.JDBCType;
 import java.util.List;
 import java.util.Optional;
 
@@ -190,6 +189,12 @@ final class PokemonService implements HttpService {
      * Reads a Pokemon from JSON and returns the inserted representation.
      */
     private void insert(PokemonDto pokemonDto, ServerResponse response) {
+        if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
+            throw new BadRequestException("Pokemon name must not be null or blank");
+        }
+        if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
+            throw new BadRequestException("Pokemon type must not be null or blank");
+        }
         response.send(insertPokemon(pokemonDto));
     }
 
@@ -238,7 +243,7 @@ final class PokemonService implements HttpService {
      */
     List<Pokemon> listByTypeName(String typeName) {
         JdbcClient.Statement statement = jdbcClient.create(SQL_LIST_BY_TYPE_NAME);
-        bindString(statement, 1, typeName);
+        statement.bind(1, typeName);
         return statement.map(pokemonRowMapper).list();
     }
 
@@ -250,8 +255,8 @@ final class PokemonService implements HttpService {
      */
     List<Pokemon> listByNameOrType(String term) {
         JdbcClient.Statement statement = jdbcClient.create(SQL_LIST_BY_NAME_OR_TYPE);
-        bindString(statement, 1, term);
-        bindString(statement, 2, term);
+        statement.bind(1, term);
+        statement.bind(2, term);
         return statement.map(pokemonRowMapper).list();
     }
 
@@ -263,7 +268,7 @@ final class PokemonService implements HttpService {
      */
     Optional<Pokemon> findByName(String name) {
         JdbcClient.Statement statement = jdbcClient.create(SQL_FIND_BY_NAME);
-        bindString(statement, 1, name);
+        statement.bind(1, name);
         return statement.map(pokemonRowMapper).optional();
     }
 
@@ -275,7 +280,7 @@ final class PokemonService implements HttpService {
      */
     Optional<Pokemon> findByNameWithAlternateMapper(String name) {
         JdbcClient.Statement statement = jdbcClient.create(SQL_FIND_BY_NAME_WITH_ALTERNATE_MAPPER);
-        bindString(statement, 1, name);
+        statement.bind(1, name);
         return statement.map(pokemonAlternateRowMapper).optional();
     }
 
@@ -288,8 +293,8 @@ final class PokemonService implements HttpService {
      */
     Optional<Pokemon> findByTypeAndName(String typeName, String name) {
         JdbcClient.Statement statement = jdbcClient.create(SQL_FIND_BY_TYPE_AND_NAME);
-        bindString(statement, 1, typeName);
-        bindString(statement, 2, name);
+        statement.bind(1, typeName);
+        statement.bind(2, name);
         return statement.map(pokemonRowMapper).optional();
     }
 
@@ -302,7 +307,7 @@ final class PokemonService implements HttpService {
      */
     int insert(String name, int typeId) {
         JdbcClient.Statement statement = jdbcClient.create(SQL_INSERT);
-        bindString(statement, 1, name);
+        statement.bind(1, name);
         statement.bind(2, typeId);
         return statement.generatedKeys()
                 .addColumn("ID")
@@ -341,22 +346,7 @@ final class PokemonService implements HttpService {
      */
     Type getByName(String name) {
         JdbcClient.Statement statement = jdbcClient.create(SQL_GET_BY_NAME);
-        bindString(statement, 1, name);
+        statement.bind(1, name);
         return statement.map(TYPE_MAPPER).one();
-    }
-
-    /**
-     * Binds a nullable string using an explicit JDBC type for {@code null}.
-     *
-     * @param statement statement to update
-     * @param index one-based bind position
-     * @param value value to bind
-     */
-    private static void bindString(JdbcClient.Statement statement, int index, String value) {
-        if (value == null) {
-            statement.bindNull(index, JDBCType.VARCHAR);
-        } else {
-            statement.bind(index, value);
-        }
     }
 }
