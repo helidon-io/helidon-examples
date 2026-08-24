@@ -20,6 +20,7 @@ import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
+import io.helidon.webserver.http.HttpRouting;
 
 /**
  * Starts the imperative JDBC Pokemon application.
@@ -42,14 +43,18 @@ public final class Main {
     public static void main(String... args) {
         LogConfig.configureRuntime();
         Config config = Services.get(Config.class);
-        JdbcClient jdbcClient = Services.get(JdbcClient.class);
 
         WebServer server = WebServer.builder()
                 .config(config.get("server"))
-                .routing(routing -> routing.register("/pokemon", new PokemonService(jdbcClient)))
+                .routing(Main::routing)
                 .build()
                 .start();
 
         System.out.println("Server started on: http://localhost:" + server.port());
+    }
+
+    static void routing(HttpRouting.Builder routing) {
+        JdbcClient jdbcClient = Services.get(JdbcClient.class);
+        routing.register("/pokemon", new PokemonService(jdbcClient));
     }
 }

@@ -24,6 +24,7 @@ import io.helidon.examples.declarative.data.jdbc.model.Pokemon;
 import io.helidon.examples.declarative.data.jdbc.model.PokemonRepository;
 import io.helidon.examples.declarative.data.jdbc.model.Type;
 import io.helidon.examples.declarative.data.jdbc.model.TypeRepository;
+import io.helidon.http.BadRequestException;
 import io.helidon.http.Http;
 import io.helidon.service.registry.Service;
 import io.helidon.transaction.Tx;
@@ -167,6 +168,12 @@ class PokemonEndpoint {
     @Http.Consumes(MediaTypes.APPLICATION_JSON_VALUE)
     @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
     PokemonDto insert(@Http.Entity PokemonDto pokemonDto) {
+        if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
+            throw new BadRequestException("Pokemon name must not be null or blank");
+        }
+        if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
+            throw new BadRequestException("Pokemon type must not be null or blank");
+        }
         return insertPokemon(pokemonDto);
     }
 
