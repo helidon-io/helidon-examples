@@ -68,7 +68,7 @@ Count all Pokemon:
 curl http://localhost:8080/pokemon/count
 ```
 
-Insert a Pokemon and return its generated identifier:
+Insert a Pokemon and return a JSON object containing its generated identifier, name, and type:
 
 ```shell
 curl -i -X POST \
@@ -77,7 +77,8 @@ curl -i -X POST \
      http://localhost:8080/pokemon
 ```
 
-The H2 identity starts at `20`, so the first insert returns that identifier. Delete it with:
+The H2 identity starts at `20`, so the JSON object returned by the first insert contains that identifier. Delete it
+with:
 
 ```shell
 curl -i -X DELETE http://localhost:8080/pokemon/20

@@ -33,6 +33,15 @@ data:
   persistence-units:
     jdbc:
       - data-source: "example"
+        properties:
+          jdbc:
+            parameter-count-cache:
+              capacity: 128
+              max-sql-length: 2048
+            scripts:
+              max-resource-size: "1 MiB"
+              max-total-size: "2 MiB"
+              max-statements: 1000
         drop-script:
           resource-path: "drop.sql"
         init-script:

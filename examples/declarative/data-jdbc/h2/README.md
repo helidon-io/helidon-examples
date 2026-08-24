@@ -31,6 +31,10 @@ its JDBC annotations. The generated `PokemonRepository` implementation includes 
 The example uses an embedded, in-memory H2 database through HikariCP. No external database installation or container is
 required.
 
+The persistence unit configuration also demonstrates JDBC provider properties. It uses a bounded parameter count
+cache and script limits sized for this small example. Values under `properties.jdbc` configure Helidon Data JDBC only
+and are not forwarded to HikariCP, H2, or other JDBC objects.
+
 ## Build and Run
 
 Build the application from this directory:
@@ -113,7 +117,7 @@ curl http://localhost:8080/pokemon/count
 The count method uses `@Jdbc.Execution(QUERY)` because primitive `long` could otherwise mean either a scalar query or an
 update count. The list method omits `@Jdbc.Execution` to demonstrate AUTO inference from its `List<Pokemon>` result.
 
-Insert a Pokemon and return its generated identifier:
+Insert a Pokemon and return a JSON object containing its generated identifier, name, and type:
 
 ```shell
 curl -i -X POST \
@@ -125,7 +129,8 @@ curl -i -X POST \
 `@Jdbc.GeneratedKeys("ID")` selects update execution without a separate `@Jdbc.Execution(UPDATE)` annotation. Generated
 code adds the `ID` column through the staged generated-key builder before mapping the returned scalar.
 
-The schema starts generated Pokemon identifiers at `20`, so the first insert into a fresh database returns that ID.
+The schema starts generated Pokemon identifiers at `20`, so the JSON object returned by the first insert into a fresh
+database contains that ID.
 Delete it with:
 
 ```shell
