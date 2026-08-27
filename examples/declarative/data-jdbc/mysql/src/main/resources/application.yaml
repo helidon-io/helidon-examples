@@ -30,10 +30,6 @@ data:
           username: "user"
           password: "changeit"
           url: "${data.url}"
-  persistence-units:
+  clients:
     jdbc:
       - data-source: "example"
-        drop-script:
-          resource-path: "drop.sql"
-        init-script:
-          resource-path: "init.sql"

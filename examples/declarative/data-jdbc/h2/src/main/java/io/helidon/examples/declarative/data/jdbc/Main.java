@@ -41,7 +41,7 @@ public class Main {
      *
      * @param args command-line arguments supplied to the application
      */
-    public static void main(String... args) {
+    static void main(String... args) {
         LogConfig.configureRuntime();
         ServiceRegistryManager.start(ApplicationBinding.create());
     }

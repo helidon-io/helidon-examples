@@ -1,12 +1,12 @@
 # Helidon Data JDBC Imperative using MySQL Database
 
-This example demonstrates direct, imperative use of the Helidon Data JDBC provider with MySQL. It is the imperative
+This example demonstrates imperative use of the Helidon Data JDBC provider with MySQL. It is the imperative
 counterpart of `examples/declarative/data-jdbc` and uses the same Pokemon schema, SQL statements, database method names,
 row mappers, HTTP paths, and JSON representation.
 
-The configuration defines a HikariCP datasource and a JDBC persistence unit. The persistence unit publishes a
-`JdbcClient` through the Service Registry. `Main` obtains that client and passes it to `PokemonService`, which owns the
-imperative HTTP handlers and JDBC operations.
+`Main` constructs a standalone `JdbcClient` from the MySQL connection properties in `application.yaml` and passes it to
+`PokemonService`, which owns the imperative HTTP handlers and JDBC operations. MySQL Connector/J supplies the JDBC
+driver. The application does not publish this client in the Service Registry.
 
 The sample demonstrates:
 
@@ -15,7 +15,24 @@ The sample demonstrates:
 - mapping joined rows to a `Pokemon` containing a nested `Type`;
 - selecting either the normal or alternate row mapper;
 - retrieving a MySQL-generated identifier; and
-- looking up a type and inserting a Pokemon in one local JDBC transaction.
+- looking up a type and inserting a Pokemon through separate JDBC operations.
+
+## Client Construction
+
+The example uses the public builder with direct connection properties:
+
+```java
+JdbcClient jdbcClient = JdbcClient.builder()
+        .connection(connection -> connection
+                .url(url)
+                .username(username)
+                .password(password)
+                .jdbcDriverClassName("com.mysql.cj.jdbc.Driver"))
+        .build();
+```
+
+This directly constructed client is standalone. Each terminal operation owns its connection and does not participate in
+`Tx.transaction`.
 
 The credentials below are intended only for local development.
 
@@ -45,8 +62,8 @@ The password used in this example is intended only for local development. Use a 
 the Docker command and `src/main/resources/application.yaml` with the new value. For production deployments, provide
 credentials through external configuration or a secrets manager instead of storing them in source control.
 
-The datasource settings are in `src/main/resources/application.yaml`. If MySQL runs on a different host or port, update
-`data.url`. Update the datasource username and password there if you use different credentials.
+The connection settings are under `app.database` in `src/main/resources/application.yaml`. If MySQL runs on a different
+host or port, update the URL. Update the username and password there if you use different credentials.
 
 ## Build and Run
 
@@ -62,8 +79,8 @@ Start the packaged application:
 java -jar target/helidon-examples-imperative-data-jdbc-mysql.jar
 ```
 
-At startup, the JDBC provider runs `drop.sql` followed by `init.sql`, recreating and populating the example schema. The
-application listens on `http://localhost:8080/pokemon`.
+Before HTTP routing starts, the application owned `SchemaInitializer` recreates and populates the sample schema through
+the standalone `JdbcClient`. The application listens on `http://localhost:8080/pokemon`.
 
 ## Invoke the Endpoints
 
@@ -122,8 +139,8 @@ curl -i -X POST \
      http://localhost:8080/pokemon
 ```
 
-The type lookup and insert run in one local JDBC transaction. The schema starts generated identifiers at `20`, so the
-JSON object returned by the first insert into a freshly initialized database contains that ID.
+The type lookup and insert are separate JDBC operations. The schema starts generated identifiers at `20`, so the JSON
+object returned by the first insert into a freshly initialized database contains that ID.
 
 Delete the inserted Pokemon:
 

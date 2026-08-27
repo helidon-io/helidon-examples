@@ -18,7 +18,7 @@ server:
   port: 8080
   host: 0.0.0.0
 
-# Oracle Database datasource and JDBC persistence-unit configuration.
+# Oracle Database data source configuration.
 data:
   url: "jdbc:oracle:thin:@localhost:1521/FREE"
   sources:
@@ -28,10 +28,3 @@ data:
           username: "system"
           password: "oracle123"
           url: "${data.url}"
-  persistence-units:
-    jdbc:
-      - data-source: "example"
-        drop-script:
-          resource-path: "drop.sql"
-        init-script:
-          resource-path: "init.sql"

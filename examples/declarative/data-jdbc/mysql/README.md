@@ -62,6 +62,9 @@ Start the packaged application:
 java -jar target/helidon-examples-declarative-data-jdbc-mysql.jar
 ```
 
+The JDBC client configuration omits `name`, so the client uses the default name. Before the web server starts, the
+application owned `SchemaInitializer` recreates and populates the sample schema through that client.
+
 The application listens on `http://localhost:8080/pokemon`.
 
 ## Try the Application
