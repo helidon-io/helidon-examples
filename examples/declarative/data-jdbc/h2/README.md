@@ -1,7 +1,5 @@
 # Helidon Data JDBC Declarative using H2 Database
 
-The Java application and repository sources are shared by all database variants from the sibling `common` directory.
-
 This example uses Helidon Data to generate pure JDBC implementations of two declarative repository interfaces:
 
 - `PokemonRepository`
@@ -30,10 +28,6 @@ its JDBC annotations. The generated `PokemonRepository` implementation includes 
 
 The example uses an embedded, in-memory H2 database through HikariCP. No external database installation or container is
 required.
-
-The persistence unit configuration also demonstrates JDBC provider properties. It uses a bounded parameter count
-cache and script limits sized for this small example. Values under `properties.jdbc` configure Helidon Data JDBC only
-and are not forwarded to HikariCP, H2, or other JDBC objects.
 
 ## Build and Run
 

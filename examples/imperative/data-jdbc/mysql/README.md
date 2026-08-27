@@ -1,7 +1,5 @@
 # Helidon Data JDBC Imperative using MySQL Database
 
-The Java application sources are shared by all database variants from the sibling `common` directory.
-
 This example demonstrates direct, imperative use of the Helidon Data JDBC provider with MySQL. It is the imperative
 counterpart of `examples/declarative/data-jdbc` and uses the same Pokemon schema, SQL statements, database method names,
 row mappers, HTTP paths, and JSON representation.
