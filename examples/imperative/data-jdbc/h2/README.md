@@ -1,8 +1,7 @@
 # Helidon Data JDBC Imperative using H2 Database
 
-This example runs the imperative Pokemon application shared by all database variants from the sibling `common`
-directory, using an embedded, in-memory H2 database. It demonstrates direct use of `JdbcClient` for list, optional,
-scalar, generated-key, update, and transactional operations.
+This example runs an imperative Pokemon application using an embedded, in-memory H2 database. It demonstrates direct
+use of `JdbcClient` for list, optional, scalar, generated-key, update, and transactional operations.
 
 The configuration creates an H2 datasource through HikariCP and publishes a JDBC persistence-unit client through the
 Service Registry. No external database installation or container is required.
