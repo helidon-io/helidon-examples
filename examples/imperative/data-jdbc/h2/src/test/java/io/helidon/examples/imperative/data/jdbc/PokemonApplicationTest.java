@@ -20,9 +20,12 @@ import java.util.List;
 import java.util.UUID;
 
 import io.helidon.common.media.type.MediaTypes;
+import io.helidon.data.DataException;
 import io.helidon.data.NoResultException;
 import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.service.registry.Services;
+import io.helidon.transaction.Tx;
+import io.helidon.transaction.TxException;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webclient.http1.Http1ClientResponse;
 import io.helidon.webserver.http.HttpRouting;
@@ -36,14 +39,17 @@ import jakarta.json.JsonValue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Exercises the H2-backed HTTP endpoints and imperative {@link JdbcClient} operations.
+ */
 @ServerTest
 class PokemonApplicationTest {
 
-    // The endpoint /pokemon/all executes ORDER BY p.NAME
-    // So the expected entries are ordered alphabetically by Pokemon name, not id
+    // The /pokemon/all query orders by name, so this fixture follows name order rather than identifier order.
     private static final List<Pokemon> SEEDED_POKEMON = List.of(
             new Pokemon(8, "Arbok", "Poison"),
             new Pokemon(7, "Ekans", "Poison"),
@@ -66,6 +72,7 @@ class PokemonApplicationTest {
 
     @SetUpRoute
     static void routing(HttpRouting.Builder routing) {
+        // Use the application's production routing while the test extension owns the server lifecycle.
         Main.routing(routing);
     }
 
@@ -93,11 +100,13 @@ class PokemonApplicationTest {
 
     @Test
     void returnsEmptyListForUnknownType() {
+        // A list terminal represents a query with no rows as an empty JSON array.
         assertEquals(List.of(), pokemonList(get("/pokemon/type/DoesNotExist")));
     }
 
     @Test
     void returnsNotFoundForUnknownPokemon() {
+        // Helidon maps an empty Optional response to HTTP 404.
         assertNotFound("/pokemon/get/DoesNotExist");
     }
 
@@ -106,8 +115,10 @@ class PokemonApplicationTest {
         int expectedCount = count();
         PokemonService service = new PokemonService(Services.get(JdbcClient.class));
 
+        // A one() terminal rejects a query with no rows instead of returning an empty value.
         assertThrows(NoResultException.class, () -> service.getByName("DoesNotExist"));
 
+        // A successful endpoint query proves that the failed terminal released its JDBC resources.
         assertEquals(expectedCount, count());
     }
 
@@ -141,13 +152,75 @@ class PokemonApplicationTest {
 
             // Verify GET /pokemon/count reflects the inserted Pokemon.
             assertEquals(expectedCount + 1, count());
+
+            // Verify a subsequent query can observe the committed Pokemon.
+            assertEquals(inserted, pokemon(get("/pokemon/get/" + name)));
         } finally {
             if (insertedId != null) {
                 // Remove the test Pokemon after validation or if validation failed after insertion.
                 delete("/pokemon/" + insertedId);
             }
         }
+        // Cleanup must restore the committed row count for tests that share this application.
         assertEquals(expectedCount, count());
+    }
+
+    @Test
+    void rollsBackInsertWhenTransactionFails() {
+        int expectedCount = count();
+        String name = "E2E" + UUID.randomUUID().toString().replace("-", "");
+        PokemonService service = new PokemonService(Services.get(JdbcClient.class));
+
+        try {
+            TxException failure = assertThrows(TxException.class, () -> Tx.transaction(() -> {
+                var type = service.getByName("Fire");
+                // Complete an insert before deliberately failing the surrounding transaction.
+                service.insert(name, type.id());
+                throw new IllegalStateException("Deliberate rollback");
+            }));
+
+            // Reaching the deliberate failure proves that the insert itself completed successfully.
+            assertEquals("Deliberate rollback", failure.getCause().getMessage());
+            // The client must not observe the rolled-back row after the transaction completes.
+            assertTrue(service.findByName(name).isEmpty());
+            assertEquals(expectedCount, count());
+        } finally {
+            // Protect later tests from contamination if rollback behavior regresses.
+            service.findByName(name)
+                    .ifPresent(pokemon -> service.deleteById(pokemon.id()));
+        }
+    }
+
+    @Test
+    void recoversAfterDuplicateNameConstraintViolation() {
+        int expectedCount = count();
+        String name = "E2E" + UUID.randomUUID().toString().replace("-", "");
+        PokemonService service = new PokemonService(Services.get(JdbcClient.class));
+
+        try {
+            TxException failure = assertThrows(TxException.class, () -> Tx.transaction(() -> {
+                var type = service.getByName("Fire");
+                // This successful insert must be rolled back when the following insert fails.
+                service.insert(name, type.id());
+                // Pikachu is seeded, and its name is protected by a unique constraint.
+                service.insert("Pikachu", type.id());
+                return null;
+            }));
+
+            // Verify that JDBC classified and translated the real database failure.
+            DataException cause = assertInstanceOf(DataException.class, failure.getCause());
+            assertTrue(cause.getMessage().contains("integrity-constraint violation"));
+
+            // The first operation after the failure verifies that the connection and transaction state were released.
+            assertEquals(expectedCount, service.count());
+            // Neither the earlier insert nor the seeded row may change after rollback.
+            assertTrue(service.findByName(name).isEmpty());
+            assertEquals("Electric", service.findByName("Pikachu").orElseThrow().type().name());
+        } finally {
+            // Protect later tests from contamination if rollback behavior regresses.
+            service.findByName(name)
+                    .ifPresent(pokemon -> service.deleteById(pokemon.id()));
+        }
     }
 
     @Test
@@ -156,6 +229,7 @@ class PokemonApplicationTest {
         String name = "E2E" + UUID.randomUUID().toString().replace("-", "");
         Integer insertedId = null;
         try {
+            // Each delete test owns its fixture and does not depend on test execution order.
             JsonObject request = Json.createObjectBuilder()
                     .add("name", name)
                     .add("type", "Fire")
@@ -178,6 +252,7 @@ class PokemonApplicationTest {
 
     @Test
     void returnsZeroWhenDeletingUnknownId() {
+        // An update that matches no row succeeds with update count zero.
         assertEquals("Deleted: 0 values", delete("/pokemon/" + Integer.MAX_VALUE));
     }
 
@@ -258,6 +333,7 @@ class PokemonApplicationTest {
                          response.status().code(),
                          () -> "Unexpected response from " + response.lastEndpointUri());
         }
+        // Rejected input must not change committed state.
         assertEquals(expectedCount, count());
     }
 

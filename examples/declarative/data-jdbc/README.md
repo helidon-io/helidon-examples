@@ -18,23 +18,21 @@ Those READMEs identify the Docker images used by the samples. Ensure you have pe
 image from the appropriate registry.
 The H2 variant does not require an external database and is the quickest way to run the sample.
 
-## Shared Application
+## Application Layout
 
-The [`common`](common) directory contains the Java application, repository interfaces, and SQL scripts used by all
-database variants. It is source content for the database modules and is not a standalone Maven application.
-
-Each database module compiles the application sources from `common/src/main/java`. The module owns the files that vary
-by database, such as `application.yaml`, JDBC dependencies, and supporting documentation.
+Each database module is a self-contained Maven application. Its `src/main` directory contains the Java application,
+repository interfaces, SQL scripts, and database-specific configuration. JDBC dependencies and supporting documentation
+also remain with the corresponding database module.
 
 The repository interfaces intentionally omit `@Data.Provider("jdbc")`. Each database module includes JDBC as its only
 Helidon Data persistence provider code generator, so JDBC generates implementations for all repositories. Use
 `@Data.Provider("jdbc")` to select JDBC when multiple persistence provider code generators are present in the same
 compilation.
 
-The shared `init.sql` uses Maven resource filtering for the generated identifier definition. H2, Oracle Database, and
-PostgreSQL use standard identity syntax. The MySQL module overrides the relevant Maven properties to generate the
-equivalent `AUTO_INCREMENT` definition. Maven places the resulting database-specific `init.sql`, together with the
-shared `drop.sql`, in each application's JAR.
+Each module's `init.sql` uses Maven resource filtering for the generated identifier definition. H2, Oracle Database,
+and PostgreSQL use standard identity syntax. The MySQL module overrides the relevant Maven properties to generate the
+equivalent `AUTO_INCREMENT` definition. Maven places the resulting database-specific `init.sql` and `drop.sql` in each
+application's JAR.
 
 ## Build the Examples
 

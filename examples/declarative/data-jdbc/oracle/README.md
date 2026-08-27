@@ -1,7 +1,5 @@
 # Helidon Data JDBC Declarative using Oracle Database
 
-The Java application and repository sources are shared by all database variants from the sibling `common` directory.
-
 This example uses Helidon Data to generate pure JDBC implementations of two declarative repository interfaces:
 
 - `PokemonRepository`
