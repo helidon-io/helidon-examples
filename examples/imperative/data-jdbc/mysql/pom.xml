@@ -38,8 +38,6 @@
 
     <properties>
         <mainClass>io.helidon.examples.imperative.data.jdbc.Main</mainClass>
-        <pokemon.id-definition>INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY</pokemon.id-definition>
-        <pokemon.table-end>) AUTO_INCREMENT=20;</pokemon.table-end>
     </properties>
 
     <dependencies>
@@ -50,10 +48,6 @@
         <dependency>
             <groupId>io.helidon.data.jdbc</groupId>
             <artifactId>helidon-data-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.data.sql.datasource</groupId>
-            <artifactId>helidon-data-sql-datasource-hikari</artifactId>
         </dependency>
         <dependency>
             <groupId>io.helidon.webserver</groupId>

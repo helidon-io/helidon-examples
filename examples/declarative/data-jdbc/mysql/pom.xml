@@ -39,8 +39,6 @@
 
     <properties>
         <mainClass>io.helidon.examples.declarative.data.jdbc.Main</mainClass>
-        <pokemon.id-definition>INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY</pokemon.id-definition>
-        <pokemon.table-end>) AUTO_INCREMENT=20;</pokemon.table-end>
     </properties>
 
     <dependencies>

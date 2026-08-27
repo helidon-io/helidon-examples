@@ -32,7 +32,7 @@ import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 
 /**
- * Exposes Pokemon operations using imperative HTTP routing and direct {@link JdbcClient} calls.
+ * Exposes Pokemon operations using imperative HTTP routing and a registry managed {@link JdbcClient}.
  */
 final class PokemonService implements HttpService {
     private static final JdbcClient.RowMapper<Type> TYPE_MAPPER =
@@ -43,7 +43,7 @@ final class PokemonService implements HttpService {
     private final JdbcClient.RowMapper<Pokemon> pokemonAlternateRowMapper = new PokemonAlternateRowMapper();
 
     /**
-     * Creates the HTTP service with the client published by the configured JDBC persistence unit.
+     * Creates the HTTP service with the configured registry managed JDBC client.
      *
      * @param jdbcClient configured JDBC client
      */

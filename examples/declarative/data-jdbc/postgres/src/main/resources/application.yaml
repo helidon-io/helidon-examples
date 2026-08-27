@@ -23,17 +23,11 @@ declarative:
 
 data:
   url: "jdbc:postgresql://localhost:5432/pokemons?quoteReturningIdentifiers=false"
-  sources:
-    sql:
-      - name: "example"
-        provider.hikari:
+  clients:
+    jdbc:
+      - name: "pokemon"
+        connection:
+          url: "${data.url}"
           username: "user"
           password: "pgsql123"
-          url: "${data.url}"
-  persistence-units:
-    jdbc:
-      - data-source: "example"
-        drop-script:
-          resource-path: "drop.sql"
-        init-script:
-          resource-path: "init.sql"
+          jdbc-driver-class-name: "org.postgresql.Driver"

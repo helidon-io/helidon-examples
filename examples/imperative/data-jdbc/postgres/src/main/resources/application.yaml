@@ -18,7 +18,7 @@ server:
   port: 8080
   host: 0.0.0.0
 
-# PostgreSQL datasource and JDBC persistence-unit configuration.
+# PostgreSQL data source configuration.
 data:
   url: "jdbc:postgresql://localhost:5432/pokemons?quoteReturningIdentifiers=false"
   sources:
@@ -28,10 +28,3 @@ data:
           username: "user"
           password: "pgsql123"
           url: "${data.url}"
-  persistence-units:
-    jdbc:
-      - data-source: "example"
-        drop-script:
-          resource-path: "drop.sql"
-        init-script:
-          resource-path: "init.sql"
