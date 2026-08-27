@@ -18,20 +18,10 @@ server:
   port: 8080
   host: 0.0.0.0
 
-# MySQL datasource and JDBC persistence-unit configuration.
-data:
-  url: "jdbc:mysql://localhost:3306/pokemons"
-  sources:
-    sql:
-      - name: "example"
-        provider.hikari:
-          username: "user"
-          password: "changeit"
-          url: "${data.url}"
-  persistence-units:
-    jdbc:
-      - data-source: "example"
-        drop-script:
-          resource-path: "drop.sql"
-        init-script:
-          resource-path: "init.sql"
+# MySQL connection values used by the imperative client builder.
+app:
+  database:
+    url: "jdbc:mysql://localhost:3306/pokemons"
+    username: "user"
+    password: "changeit"
+    jdbc-driver-class-name: "com.mysql.cj.jdbc.Driver"

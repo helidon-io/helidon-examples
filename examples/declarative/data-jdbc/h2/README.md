@@ -43,8 +43,9 @@ Start the packaged application:
 java -jar target/helidon-examples-declarative-data-jdbc-h2.jar
 ```
 
-At startup, the JDBC provider runs `drop.sql` followed by `init.sql`. The schema and sample data live only for the
-duration of the process. The application listens on `http://localhost:8080/pokemon`.
+Before the web server starts, the application owned `SchemaInitializer` recreates and populates the sample schema
+through the Default JDBC Client. The schema and sample data live only for the duration of the process. The application
+listens on `http://localhost:8080/pokemon`.
 
 ## Try the Application
 
