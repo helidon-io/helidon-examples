@@ -22,8 +22,10 @@ import java.util.UUID;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.data.DataException;
 import io.helidon.data.NoResultException;
+import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.examples.declarative.data.jdbc.model.PokemonRepository;
 import io.helidon.examples.declarative.data.jdbc.model.TypeRepository;
+import io.helidon.service.registry.Service;
 import io.helidon.service.registry.Services;
 import io.helidon.transaction.Tx;
 import io.helidon.transaction.TxException;
@@ -35,6 +37,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -67,6 +70,15 @@ class PokemonApplicationTest {
 
     PokemonApplicationTest(Http1Client client) {
         this.client = client;
+    }
+
+    /**
+     * Recreates and seeds the H2 schema before the HTTP tests run.
+     */
+    @BeforeAll
+    static void initializeSchema() {
+        JdbcClient jdbcClient = Services.getNamed(JdbcClient.class, Service.Named.DEFAULT_NAME);
+        new SchemaInitializer(jdbcClient).initialize();
     }
 
     @Test

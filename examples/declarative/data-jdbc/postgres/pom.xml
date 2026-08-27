@@ -55,10 +55,6 @@
             <artifactId>helidon-data-jdbc</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.data.sql.datasource</groupId>
-            <artifactId>helidon-data-sql-datasource-hikari</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.helidon.webserver</groupId>
             <artifactId>helidon-webserver</artifactId>
         </dependency>

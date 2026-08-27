@@ -40,7 +40,7 @@ public final class Main {
      *
      * @param args command-line arguments supplied to the application
      */
-    public static void main(String... args) {
+    static void main(String... args) {
         LogConfig.configureRuntime();
         Config config = Services.get(Config.class);
 
@@ -54,7 +54,8 @@ public final class Main {
     }
 
     static void routing(HttpRouting.Builder routing) {
-        JdbcClient jdbcClient = Services.get(JdbcClient.class);
+        JdbcClient jdbcClient = JdbcClient.create(builder -> builder.dataSource("example"));
+        SchemaInitializer.initialize(jdbcClient);
         routing.register("/pokemon", new PokemonService(jdbcClient));
     }
 }

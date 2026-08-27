@@ -1,17 +1,17 @@
 # Helidon Data JDBC Imperative Examples
 
-These examples demonstrate direct, imperative use of the Helidon Data using JDBC. The application executes SQL for
-queries, updates, generated keys, row mapping, and transactions without generated repository implementations.
+These examples demonstrate imperative use of Helidon Data JDBC. The applications execute SQL for queries, updates,
+generated keys, row mapping, and transaction behavior without generated repository implementations.
 
 The same Pokemon application is available for several databases. Each database directory is a separate Maven application
 with its own JDBC dependency, datasource configuration, and instructions for preparing and connecting to that database.
 
-| Directory | Database |
-| --- | --- |
-| [`h2`](h2) | Embedded, in-memory H2 database |
-| [`mysql`](mysql) | MySQL |
-| [`oracle`](oracle) | Oracle Database |
-| [`postgres`](postgres) | PostgreSQL |
+| Directory | Database | JDBC client construction |
+| --- | --- | --- |
+| [`h2`](h2) | Embedded, in-memory H2 database | Programmatic registry configuration and a standalone client from an existing `DataSource` |
+| [`mysql`](mysql) | MySQL | `JdbcClient.builder()` with direct connection properties |
+| [`oracle`](oracle) | Oracle Database | `JdbcClient.create(Consumer)` with a named data source |
+| [`postgres`](postgres) | PostgreSQL | `buildPrototype()` followed by `JdbcClient.create(config)` |
 
 See the `README.md` in the selected database directory for database setup, application startup, and endpoint examples.
 Those READMEs identify the Docker images used by the samples. Ensure you have permission to pull each image, or use an
@@ -21,13 +21,19 @@ The H2 variant does not require an external database and is the quickest way to 
 ## Application Layout
 
 Each database module is a self-contained Maven application. Its `src/main` directory contains the Java application,
-SQL scripts, and database-specific configuration. JDBC dependencies and supporting documentation also remain with the
-corresponding database module.
+sample schema initialization utility, and database specific configuration. JDBC dependencies and supporting
+documentation also remain with the corresponding database module.
 
-Each module's `init.sql` uses Maven resource filtering for the generated identifier definition. H2, Oracle Database,
-and PostgreSQL use standard identity syntax. The MySQL module overrides the relevant Maven properties to generate the
-equivalent `AUTO_INCREMENT` definition. Maven places the resulting database-specific `init.sql` and `drop.sql` in each
-application's JAR.
+The H2 application contributes a `JdbcClientConfig` programmatically and obtains the resulting registry managed client.
+It also constructs a standalone setup client from the same existing `DataSource`. The other applications construct
+standalone clients through different public API forms. Each `SchemaInitializer` recreates and populates the schema as a
+convenience for running the sample, and is not intended for production schema management. In a production environment,
+create the schema and populate the required data before starting the application. Every database module supplies its
+corresponding JDBC driver. H2, Oracle Database, and PostgreSQL use standard identity syntax. MySQL uses the equivalent
+`AUTO_INCREMENT` definition.
+
+Only the registry managed H2 client participates in `Tx.transaction`. The standalone clients use an operation owned
+connection for each terminal JDBC operation.
 
 ## Build the Examples
 
