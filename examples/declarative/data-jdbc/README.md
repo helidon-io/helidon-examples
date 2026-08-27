@@ -6,12 +6,12 @@ interfaces and uses Helidon Data code generation to create their JDBC implementa
 The same Pokemon application is available for several databases. Each database directory is a separate Maven application
 with its own JDBC dependency, datasource configuration, and instructions for preparing and connecting to that database.
 
-| Directory | Database |
-| --- | --- |
-| [`h2`](h2) | Embedded, in-memory H2 database |
-| [`mysql`](mysql) | MySQL |
-| [`oracle`](oracle) | Oracle Database |
-| [`postgres`](postgres) | PostgreSQL |
+| Directory | Database | Registry managed JDBC client configuration |
+| --- | --- | --- |
+| [`h2`](h2) | Embedded, in-memory H2 database | Explicit Default JDBC Client with a named data source |
+| [`mysql`](mysql) | MySQL | Implicit Default JDBC Client with a named data source |
+| [`oracle`](oracle) | Oracle Database | Explicit Default JDBC Client with a named data source |
+| [`postgres`](postgres) | PostgreSQL | Named `pokemon` client with inline connection properties |
 
 See the `README.md` in the selected database directory for database setup, application startup, and endpoint examples.
 Those READMEs identify the Docker images used by the samples. Ensure you have permission to pull each image, or use an
@@ -21,18 +21,21 @@ The H2 variant does not require an external database and is the quickest way to 
 ## Application Layout
 
 Each database module is a self-contained Maven application. Its `src/main` directory contains the Java application,
-repository interfaces, SQL scripts, and database-specific configuration. JDBC dependencies and supporting documentation
-also remain with the corresponding database module.
+repository interfaces, sample schema initialization utility, and database specific configuration. JDBC dependencies
+and supporting documentation also remain with the corresponding database module.
 
-The repository interfaces intentionally omit `@Data.Provider("jdbc")`. Each database module includes JDBC as its only
-Helidon Data persistence provider code generator, so JDBC generates implementations for all repositories. Use
-`@Data.Provider("jdbc")` to select JDBC when multiple persistence provider code generators are present in the same
-compilation.
+The repository interfaces do not require `@Data.Provider("jdbc")` because `helidon-data-jdbc-codegen` is the only
+Helidon Data provider on the annotation processor path. The annotation is needed to select JDBC when the annotation
+processor path contains more than one Helidon Data provider.
 
-Each module's `init.sql` uses Maven resource filtering for the generated identifier definition. H2, Oracle Database,
-and PostgreSQL use standard identity syntax. The MySQL module overrides the relevant Maven properties to generate the
-equivalent `AUTO_INCREMENT` definition. Maven places the resulting database-specific `init.sql` and `drop.sql` in each
-application's JAR.
+Each module configures a client under `data.clients.jdbc`. H2 and Oracle Database name the Default JDBC Client
+explicitly. MySQL omits the name and uses the default value. PostgreSQL configures a client named `pokemon` and selects
+it with `@Data.PersistenceUnit("pokemon")`. PostgreSQL places its connection properties directly in the JDBC client
+configuration. The other modules reference a named HikariCP data source. Each `SchemaInitializer` recreates and
+populates the schema as a convenience for running the sample, and is not intended for production schema management. In
+a production environment, create the schema and populate the required data before starting the application. Every
+database module supplies its corresponding JDBC driver. H2, Oracle Database, and PostgreSQL use standard identity
+syntax. MySQL uses the equivalent `AUTO_INCREMENT` definition.
 
 ## Build the Examples
 

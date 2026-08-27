@@ -26,7 +26,9 @@ The sample validates:
 `PokemonRepository` extends the ordinary `PokemonLookup` interface. The parent declares `findByName(String name)` and
 its JDBC annotations. The generated `PokemonRepository` implementation includes that inherited method.
 
-The example uses PostgreSQL and HikariCP. The credentials below are intended only for local development.
+The example uses the PostgreSQL JDBC driver. The named JDBC client contains its connection properties directly, so
+this variant does not configure a separate SQL data source. The credentials below are intended only for local
+development.
 
 ## Build the PostgreSQL Image
 
@@ -72,6 +74,10 @@ Start the packaged application:
 ```shell
 java -jar target/helidon-examples-declarative-data-jdbc-postgres.jar
 ```
+
+The registry managed JDBC client is named `pokemon` and uses the inline connection from `data.clients.jdbc`. Both
+repository interfaces select it with `@Data.PersistenceUnit("pokemon")`. Before the web server starts, the application
+owned `SchemaInitializer` recreates and populates the sample schema through the same named client and PostgreSQL driver.
 
 The application listens on `http://localhost:8080/pokemon`.
 

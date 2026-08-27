@@ -1,12 +1,12 @@
 # Helidon Data JDBC Imperative using Oracle Database
 
-This example demonstrates direct, imperative use of the Helidon Data JDBC provider with Oracle Database. It is the
+This example demonstrates imperative use of the Helidon Data JDBC provider with Oracle Database. It is the
 imperative counterpart of `examples/declarative/data-jdbc` and uses the same Pokemon schema, SQL statements, database
 method names, row mappers, HTTP paths, and JSON representation.
 
-The configuration defines a HikariCP datasource and a JDBC persistence unit. The persistence unit publishes a
-`JdbcClient` through the Service Registry. `Main` obtains that client and passes it to `PokemonService`, which owns the
-imperative HTTP handlers and JDBC operations.
+The configuration defines a HikariCP data source named `example`. `Main` passes that name to
+`JdbcClient.create(Consumer)` and receives a standalone client. The Oracle JDBC driver serves the configured data source.
+The application does not publish the client in the Service Registry.
 
 The sample demonstrates:
 
@@ -15,7 +15,18 @@ The sample demonstrates:
 - mapping joined rows to a `Pokemon` containing a nested `Type`;
 - selecting either the normal or alternate row mapper;
 - retrieving a database-generated identifier; and
-- looking up a type and inserting a Pokemon in one local JDBC transaction.
+- looking up a type and inserting a Pokemon through separate JDBC operations.
+
+## Client Construction
+
+The consumer overload updates a new builder and creates the client:
+
+```java
+JdbcClient jdbcClient = JdbcClient.create(builder -> builder.dataSource("example"));
+```
+
+Resolving the named data source uses the Service Registry, but the directly created client remains standalone. Its JDBC
+operations do not participate in `Tx.transaction`.
 
 The credentials below are intended only for local development.
 
@@ -59,8 +70,8 @@ Start the packaged application:
 java -jar target/helidon-examples-imperative-data-jdbc-oracle.jar
 ```
 
-At startup, the JDBC provider runs `drop.sql` followed by `init.sql`, recreating and populating the example schema. The
-application listens on `http://localhost:8080/pokemon`.
+Before HTTP routing starts, the application owned `SchemaInitializer` recreates and populates the sample schema through
+the standalone `JdbcClient`. The application listens on `http://localhost:8080/pokemon`.
 
 ## Invoke the Endpoints
 
@@ -119,8 +130,8 @@ curl -i -X POST \
      http://localhost:8080/pokemon
 ```
 
-The type lookup and insert run in one local JDBC transaction. The schema starts generated identifiers at `20`, so the
-JSON object returned by the first insert into a freshly initialized database contains that ID.
+The type lookup and insert are separate JDBC operations. The schema starts generated identifiers at `20`, so the JSON
+object returned by the first insert into a freshly initialized database contains that ID.
 
 Delete the inserted Pokemon:
 

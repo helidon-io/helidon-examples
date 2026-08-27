@@ -24,7 +24,6 @@ import io.helidon.examples.imperative.data.jdbc.model.PokemonAlternateRowMapper;
 import io.helidon.examples.imperative.data.jdbc.model.PokemonRowMapper;
 import io.helidon.examples.imperative.data.jdbc.model.Type;
 import io.helidon.http.BadRequestException;
-import io.helidon.transaction.Tx;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
@@ -32,7 +31,7 @@ import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 
 /**
- * Exposes Pokemon operations using imperative HTTP routing and direct {@link JdbcClient} calls.
+ * Exposes Pokemon operations using imperative HTTP routing and a standalone {@link JdbcClient}.
  */
 final class PokemonService implements HttpService {
     private static final JdbcClient.RowMapper<Type> TYPE_MAPPER =
@@ -43,7 +42,7 @@ final class PokemonService implements HttpService {
     private final JdbcClient.RowMapper<Pokemon> pokemonAlternateRowMapper = new PokemonAlternateRowMapper();
 
     /**
-     * Creates the HTTP service with the client published by the configured JDBC persistence unit.
+     * Creates the HTTP service with the standalone JDBC client.
      *
      * @param jdbcClient configured JDBC client
      */
@@ -147,17 +146,15 @@ final class PokemonService implements HttpService {
     }
 
     /**
-     * Resolves the requested type and inserts the Pokemon in one local JDBC transaction.
+     * Resolves the requested type and inserts the Pokemon using separate JDBC operations.
      *
      * @param pokemonDto requested Pokemon
      * @return inserted Pokemon with its generated identifier
      */
     PokemonDto insertPokemon(PokemonDto pokemonDto) {
-        return Tx.transaction(() -> {
-            Type type = getByName(pokemonDto.type());
-            int id = insert(pokemonDto.name(), type.id());
-            return PokemonDto.create(new Pokemon(id, pokemonDto.name(), type));
-        });
+        Type type = getByName(pokemonDto.type());
+        int id = insert(pokemonDto.name(), type.id());
+        return PokemonDto.create(new Pokemon(id, pokemonDto.name(), type));
     }
 
     /**

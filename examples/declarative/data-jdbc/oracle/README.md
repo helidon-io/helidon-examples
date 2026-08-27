@@ -59,6 +59,9 @@ Start the packaged application:
 java -jar target/helidon-examples-declarative-data-jdbc-oracle.jar
 ```
 
+Before the web server starts, the application owned `SchemaInitializer` recreates and populates the sample schema
+through the Default JDBC Client.
+
 The application listens on `http://localhost:8080/pokemon`.
 
 ## Try the Application
