@@ -18,18 +18,16 @@ Those READMEs identify the Docker images used by the samples. Ensure you have pe
 image from the appropriate registry.
 The H2 variant does not require an external database and is the quickest way to run the sample.
 
-## Shared Application
+## Application Layout
 
-The [`common`](common) directory contains the Java application and SQL scripts used by all database variants. It is
-source content for the database modules and is not a standalone Maven application.
+Each database module is a self-contained Maven application. Its `src/main` directory contains the Java application,
+SQL scripts, and database-specific configuration. JDBC dependencies and supporting documentation also remain with the
+corresponding database module.
 
-Each database module compiles the application sources from `common/src/main/java`. The module owns the files that vary
-by database, such as `application.yaml`, JDBC dependencies, and supporting documentation.
-
-The shared `init.sql` uses Maven resource filtering for the generated identifier definition. H2, Oracle Database, and
-PostgreSQL use standard identity syntax. The MySQL module overrides the relevant Maven properties to generate the
-equivalent `AUTO_INCREMENT` definition. Maven places the resulting database-specific `init.sql`, together with the
-shared `drop.sql`, in each application's JAR.
+Each module's `init.sql` uses Maven resource filtering for the generated identifier definition. H2, Oracle Database,
+and PostgreSQL use standard identity syntax. The MySQL module overrides the relevant Maven properties to generate the
+equivalent `AUTO_INCREMENT` definition. Maven places the resulting database-specific `init.sql` and `drop.sql` in each
+application's JAR.
 
 ## Build the Examples
 

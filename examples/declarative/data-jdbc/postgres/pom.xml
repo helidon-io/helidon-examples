@@ -79,7 +79,6 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>${project.basedir}/../common/src/main/java</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
