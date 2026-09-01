@@ -22,7 +22,6 @@ import java.util.UUID;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.data.DataException;
 import io.helidon.data.NoResultException;
-import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.service.registry.Services;
 import io.helidon.transaction.Tx;
 import io.helidon.transaction.TxException;
@@ -44,9 +43,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Exercises the H2-backed HTTP endpoints and imperative {@link JdbcClient} operations.
+ * Exercises the H2-backed HTTP endpoints and imperative {@link io.helidon.data.jdbc.JdbcClient} operations.
  */
 @ServerTest
+@SuppressWarnings("helidon:api:preview")
 class PokemonApplicationTest {
 
     // The /pokemon/all query orders by name, so this fixture follows name order rather than identifier order.
@@ -113,7 +113,7 @@ class PokemonApplicationTest {
     @Test
     void oneThrowsForUnknownTypeAndApplicationRemainsUsable() {
         int expectedCount = count();
-        PokemonService service = new PokemonService(Services.get(JdbcClient.class));
+        PokemonService service = pokemonService();
 
         // A one() terminal rejects a query with no rows instead of returning an empty value.
         assertThrows(NoResultException.class, () -> service.getByName("DoesNotExist"));
@@ -169,7 +169,7 @@ class PokemonApplicationTest {
     void rollsBackInsertWhenTransactionFails() {
         int expectedCount = count();
         String name = "E2E" + UUID.randomUUID().toString().replace("-", "");
-        PokemonService service = new PokemonService(Services.get(JdbcClient.class));
+        PokemonService service = pokemonService();
 
         try {
             TxException failure = assertThrows(TxException.class, () -> Tx.transaction(() -> {
@@ -195,7 +195,7 @@ class PokemonApplicationTest {
     void recoversAfterDuplicateNameConstraintViolation() {
         int expectedCount = count();
         String name = "E2E" + UUID.randomUUID().toString().replace("-", "");
-        PokemonService service = new PokemonService(Services.get(JdbcClient.class));
+        PokemonService service = pokemonService();
 
         try {
             TxException failure = assertThrows(TxException.class, () -> Tx.transaction(() -> {
@@ -335,6 +335,11 @@ class PokemonApplicationTest {
         }
         // Rejected input must not change committed state.
         assertEquals(expectedCount, count());
+    }
+
+    private static PokemonService pokemonService() {
+        // Resolve the HTTP service from the registry so direct service tests cover named JdbcClient injection.
+        return Services.get(PokemonService.class);
     }
 
     private static String successful(Http1ClientResponse response) {

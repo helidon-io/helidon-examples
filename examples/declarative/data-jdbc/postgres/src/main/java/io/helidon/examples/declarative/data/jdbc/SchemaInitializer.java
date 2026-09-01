@@ -26,6 +26,7 @@ import io.helidon.service.registry.Service;
  */
 @Service.Singleton
 @Service.RunLevel(Service.RunLevel.STARTUP)
+@SuppressWarnings("helidon:api:preview")
 final class SchemaInitializer {
 
     private static final List<String> SCHEMA_STATEMENTS = List.of(

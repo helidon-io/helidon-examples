@@ -23,6 +23,7 @@ import io.helidon.data.jdbc.JdbcClient;
  * Maps joined JDBC rows with a recognizable alternate Pokemon name.
  */
 @Weight(Weighted.DEFAULT_WEIGHT - 10)
+@SuppressWarnings("helidon:api:preview")
 public final class PokemonAlternateRowMapper implements JdbcClient.RowMapper<Pokemon> {
     private static final String NAME_PREFIX = "LOW-WEIGHT EXPLICIT: ";
 
