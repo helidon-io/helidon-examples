@@ -22,6 +22,7 @@ import io.helidon.data.jdbc.JdbcClient;
 /**
  * Creates and populates the example schema before HTTP routing starts.
  */
+@SuppressWarnings("helidon:api:preview")
 final class SchemaInitializer {
 
     private static final List<String> SCHEMA_STATEMENTS = List.of(
@@ -108,4 +109,3 @@ final class SchemaInitializer {
     private record PokemonSeed(int id, String name, int typeId) {
     }
 }
-

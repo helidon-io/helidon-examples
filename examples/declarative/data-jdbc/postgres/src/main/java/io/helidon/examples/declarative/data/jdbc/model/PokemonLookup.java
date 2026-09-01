@@ -22,6 +22,7 @@ import io.helidon.data.jdbc.Jdbc;
 /**
  * Declares Pokemon lookups shared by JDBC repositories.
  */
+@SuppressWarnings("helidon:api:preview")
 public interface PokemonLookup {
 
     /**
