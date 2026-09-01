@@ -4,9 +4,9 @@ This example demonstrates imperative use of the Helidon Data JDBC provider with 
 counterpart of `examples/declarative/data-jdbc` and uses the same Pokemon schema, SQL statements, database method names,
 row mappers, HTTP paths, and JSON representation.
 
-The configuration defines a HikariCP data source named `example`. `Main` creates an immutable `JdbcClientConfig` that
-references that data source, then passes the configuration to `JdbcClient.create`. The resulting client is standalone
-and is not published in the Service Registry. The PostgreSQL JDBC driver serves the configured data source.
+The configuration defines a HikariCP data source named `example` and a registry managed JDBC client named `pokemon`.
+The Service Registry injects that client into `PokemonService`. `Main` also creates a standalone setup client from an
+immutable `JdbcClientConfig`. Both clients use the configured data source and PostgreSQL JDBC driver.
 
 The sample demonstrates:
 
@@ -15,22 +15,42 @@ The sample demonstrates:
 - mapping joined rows to a `Pokemon` containing a nested `Type`;
 - selecting either the normal or alternate row mapper;
 - retrieving a database-generated identifier; and
-- looking up a type and inserting a Pokemon through separate JDBC operations.
+- looking up a type and inserting a Pokemon in one local JDBC transaction.
 
 ## Client Construction
 
-The example prepares the immutable configuration separately from client creation:
+The application client is configured under `data.clients.jdbc`:
 
-```java
-JdbcClientConfig jdbcClientConfig = JdbcClient.builder()
-        .name("pokemon")
-        .dataSource("example")
-        .buildPrototype();
-JdbcClient jdbcClient = JdbcClient.create(jdbcClientConfig);
+```yaml
+data:
+  clients:
+    jdbc:
+      - name: "pokemon"
+        data-source: "example"
 ```
 
-The name is retained in the client configuration. It does not publish or qualify the standalone client in the Service
-Registry. Its JDBC operations do not participate in `Tx.transaction`.
+`PokemonService` selects both the JDBC provider and the named client:
+
+```java
+@Service.Inject
+PokemonService(@Data.ProviderType("jdbc")
+               @Service.Named("pokemon")
+               JdbcClient jdbcClient) {
+    this.jdbcClient = jdbcClient;
+}
+```
+
+`Main` separately prepares an immutable configuration for the standalone schema setup client:
+
+```java
+JdbcClientConfig setupClientConfig = JdbcClient.builder()
+        .dataSource("example")
+        .buildPrototype();
+JdbcClient setupClient = JdbcClient.create(setupClientConfig);
+```
+
+The setup client is not published in the Service Registry and owns a connection for each terminal operation. The named
+application client participates in `Tx.transaction`.
 
 The credentials below are intended only for local development.
 
@@ -56,13 +76,7 @@ docker run --name postgres \
        -d helidon-postgres
 ```
 
-Wait until PostgreSQL reports that it is ready to accept connections:
-
-```shell
-docker logs -f postgres
-```
-
-Press `Ctrl+C` to stop following the log; the container continues running in the background.
+Before starting the application, ensure that the PostgreSQL container is running and ready to accept connections.
 
 The password used in this example is intended only for local development. Use a strong, unique password and update both
 the Docker command and `src/main/resources/application.yaml` with the new value. For production deployments, provide
@@ -89,7 +103,8 @@ java -jar target/helidon-examples-imperative-data-jdbc-postgres.jar
 ```
 
 Before HTTP routing starts, the application owned `SchemaInitializer` recreates and populates the sample schema through
-the standalone `JdbcClient`. The application listens on `http://localhost:8080/pokemon`.
+the standalone setup client. The registry managed `pokemon` client handles application operations. The application
+listens on `http://localhost:8080/pokemon`.
 
 ## Invoke the Endpoints
 
@@ -148,8 +163,9 @@ curl -i -X POST \
      http://localhost:8080/pokemon
 ```
 
-The type lookup and insert are separate JDBC operations. The schema starts generated identifiers at `20`, so the JSON
-object returned by the first insert into a freshly initialized database contains that ID.
+The registry managed client performs the type lookup and insert in one local JDBC transaction. The schema starts
+generated identifiers at `20`, so the JSON object returned by the first insert into a freshly initialized database
+contains that ID.
 
 Delete the inserted Pokemon:
 
@@ -159,7 +175,14 @@ curl -i -X DELETE http://localhost:8080/pokemon/20
 
 ## Stop PostgreSQL
 
+To stop the PostgreSQL container:
+
 ```shell
 docker stop postgres
+```
+
+To delete the stopped container:
+
+```shell
 docker rm postgres
 ```

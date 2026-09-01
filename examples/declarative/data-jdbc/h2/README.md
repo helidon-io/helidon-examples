@@ -55,11 +55,17 @@ List all Pokemon:
 curl http://localhost:8080/pokemon/all
 ```
 
+The endpoint passes Java `null` to a nullable `String` repository parameter. The generated implementation binds typed
+SQL `NULL` at both occurrences of `:typeName`, and the SQL disables the optional type filter.
+
 List Pokemon having the `Normal` type:
 
 ```shell
 curl http://localhost:8080/pokemon/type/Normal
 ```
+
+This endpoint calls the same repository method with `"Normal"`, demonstrating its non-null binding path while applying
+the type filter.
 
 Search for a Pokemon name or type with one repeated named parameter:
 

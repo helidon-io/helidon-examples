@@ -28,6 +28,7 @@ import io.helidon.webserver.http.HttpRouting;
  */
 @SuppressWarnings("helidon:api:preview")
 public final class Main {
+    static final String POKEMON_CLIENT = "pokemon";
 
     static {
         LogConfig.initClass();
@@ -56,12 +57,11 @@ public final class Main {
     }
 
     static void routing(HttpRouting.Builder routing) {
-        JdbcClientConfig jdbcClientConfig = JdbcClient.builder()
-                .name("pokemon")
+        JdbcClientConfig setupClientConfig = JdbcClient.builder()
                 .dataSource("example")
                 .buildPrototype();
-        JdbcClient jdbcClient = JdbcClient.create(jdbcClientConfig);
-        SchemaInitializer.initialize(jdbcClient);
-        routing.register("/pokemon", new PokemonService(jdbcClient));
+        JdbcClient setupClient = JdbcClient.create(setupClientConfig);
+        SchemaInitializer.initialize(setupClient);
+        routing.register("/pokemon", Services.get(PokemonService.class));
     }
 }
