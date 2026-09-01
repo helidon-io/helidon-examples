@@ -24,6 +24,7 @@ import io.helidon.examples.imperative.data.jdbc.model.PokemonAlternateRowMapper;
 import io.helidon.examples.imperative.data.jdbc.model.PokemonRowMapper;
 import io.helidon.examples.imperative.data.jdbc.model.Type;
 import io.helidon.http.BadRequestException;
+import io.helidon.service.registry.Service;
 import io.helidon.transaction.Tx;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.HttpRules;
@@ -34,6 +35,8 @@ import io.helidon.webserver.http.ServerResponse;
 /**
  * Exposes Pokemon operations using imperative HTTP routing and a registry managed {@link JdbcClient}.
  */
+@Service.Singleton
+@SuppressWarnings("helidon:api:preview")
 final class PokemonService implements HttpService {
     private static final JdbcClient.RowMapper<Type> TYPE_MAPPER =
             row -> new Type(row.required("id", Integer.class), row.required("name", String.class));
@@ -47,7 +50,8 @@ final class PokemonService implements HttpService {
      *
      * @param jdbcClient configured JDBC client
      */
-    PokemonService(JdbcClient jdbcClient) {
+    @Service.Inject
+    PokemonService(@Service.Named(Main.POKEMON_CLIENT) JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 

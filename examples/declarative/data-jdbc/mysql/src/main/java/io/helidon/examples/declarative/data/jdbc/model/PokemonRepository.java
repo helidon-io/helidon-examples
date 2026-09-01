@@ -28,6 +28,7 @@ import io.helidon.data.jdbc.Jdbc;
  * row to a nested {@link Pokemon} model.
  */
 @Data.Repository
+@SuppressWarnings("helidon:api:preview")
 public interface PokemonRepository extends PokemonLookup {
 
     /**

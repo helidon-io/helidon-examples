@@ -49,6 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Exercises the H2-backed HTTP endpoints and generated JDBC repositories.
  */
 @ServerTest
+@SuppressWarnings("helidon:api:preview")
 class PokemonApplicationTest {
 
     // The /pokemon/all query orders by name, so this fixture follows name order rather than identifier order.
