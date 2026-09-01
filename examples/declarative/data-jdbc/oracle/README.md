@@ -39,7 +39,7 @@ docker run --name oracle \
        -d container-registry.oracle.com/database/free:latest-lite
 ```
 
-Wait until `docker logs oracle` reports that the database is ready to use before starting the application.
+Before starting the application, ensure that the Oracle Database container is running and ready to use.
 
 The password used in this example is intended only for local development. Use a strong, unique password and update both
 the Docker command and `src/main/resources/application.yaml` with the new value. For production deployments, provide
@@ -151,6 +151,14 @@ curl -i -X DELETE http://localhost:8080/pokemon/20
 
 ## Stop Oracle Database
 
+To stop the Oracle Database container:
+
 ```shell
 docker stop oracle
+```
+
+To delete the stopped container:
+
+```shell
+docker rm oracle
 ```

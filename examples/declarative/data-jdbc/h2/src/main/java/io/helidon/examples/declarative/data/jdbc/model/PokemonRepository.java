@@ -32,9 +32,13 @@ import io.helidon.data.jdbc.Jdbc;
 public interface PokemonRepository extends PokemonLookup {
 
     /**
-     * Retrieves all Pokemon ordered by name.
+     * Retrieves all Pokemon through a nullable type filter.
+     * <p>
+     * Passing {@code null} binds a typed SQL {@code NULL} at both occurrences of the named parameter and disables the
+     * filter.
      *
-     * @return all Pokemon in name order
+     * @param typeName optional type name
+     * @return matching Pokemon in name order, or all Pokemon when the type name is {@code null}
      */
     @Jdbc.Statement("""
             SELECT p.ID AS id,
@@ -43,30 +47,11 @@ public interface PokemonRepository extends PokemonLookup {
                    t.NAME AS typeName
             FROM POKEMON p
             JOIN TYPE t ON t.ID = p.TYPE_ID
+            WHERE (:typeName IS NULL OR t.NAME = :typeName)
             ORDER BY p.NAME
             """)
     @Jdbc.RowMapper
-    List<Pokemon> listOrderByName();
-
-    /**
-     * Retrieves Pokemon having the requested type name.
-     *
-     * @param typeName type name
-     * @return matching Pokemon in name order
-     */
-    @Jdbc.Statement("""
-            SELECT p.ID AS id,
-                   p.NAME AS name,
-                   p.TYPE_ID AS typeId,
-                   t.NAME AS typeName
-            FROM POKEMON p
-            JOIN TYPE t ON t.ID = p.TYPE_ID
-            WHERE t.NAME = :typeName
-            ORDER BY p.NAME
-            """)
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
-    @Jdbc.RowMapper
-    List<Pokemon> listByTypeName(String typeName);
+    List<Pokemon> listByOptionalTypeName(String typeName);
 
     /**
      * Retrieves Pokemon whose name or type matches one search term.

@@ -52,7 +52,7 @@ docker run --name postgres \
        -d helidon-postgres
 ```
 
-Wait until `docker logs postgres` reports that the server is ready to accept connections before starting the application.
+Before starting the application, ensure that the PostgreSQL container is running and ready to accept connections.
 
 The password used in this example is intended only for local development. Use a strong, unique password and update both
 the Docker command and `src/main/resources/application.yaml` with the new value. For production deployments, provide
@@ -76,7 +76,7 @@ java -jar target/helidon-examples-declarative-data-jdbc-postgres.jar
 ```
 
 The registry managed JDBC client is named `pokemon` and uses the inline connection from `data.clients.jdbc`. Both
-repository interfaces select it with `@Data.PersistenceUnit("pokemon")`. Before the web server starts, the application
+repository interfaces select it with `@Jdbc.Client("pokemon")`. Before the web server starts, the application
 owned `SchemaInitializer` recreates and populates the sample schema through the same named client and PostgreSQL driver.
 
 The application listens on `http://localhost:8080/pokemon`.
@@ -168,6 +168,14 @@ curl -i -X DELETE http://localhost:8080/pokemon/20
 
 ## Stop PostgreSQL
 
+To stop the PostgreSQL container:
+
 ```shell
 docker stop postgres
+```
+
+To delete the stopped container:
+
+```shell
+docker rm postgres
 ```
