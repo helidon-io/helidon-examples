@@ -4,7 +4,8 @@
 
 name: "Validate"
 
-on: [pull_request, workflow_call]
+on:
+  pull_request:
 
 env:
   JAVA_VERSION: '17'
@@ -17,40 +18,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  primebuild:
-    timeout-minutes: 30
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: '0'
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4.1.0
-        with:
-          distribution: ${{ env.JAVA_DISTRO }}
-          java-version: ${{ env.JAVA_VERSION }}
-          cache: maven
-      - name: Helidon Priming build
-        run: |
-          mkdir -p ~/.m2/repository/io/helidon/
-          echo "empty file" > ~/.m2/repository/io/helidon/empty.txt
-          etc/scripts/primebuild.sh
-      - name: Upload Maven Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
-          retention-days: 1
   copyright:
-    needs: primebuild
     timeout-minutes: 10
     runs-on: ubuntu-22.04
     steps:
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -63,15 +34,9 @@ jobs:
       - name: Copyright
         run: etc/scripts/copyright.sh
   checkstyle:
-    needs: primebuild
     timeout-minutes: 10
     runs-on: ubuntu-22.04
     steps:
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4.1.0
@@ -82,15 +47,9 @@ jobs:
       - name: Checkstyle
         run: etc/scripts/checkstyle.sh
   spotbugs:
-    needs: primebuild
     timeout-minutes: 10
     runs-on: ubuntu-22.04
     steps:
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4.1.0
@@ -101,18 +60,12 @@ jobs:
       - name: Spotbugs
         run: etc/scripts/spotbugs.sh
   build:
-    needs: primebuild
     timeout-minutes: 20
     strategy:
       matrix:
         os: [ ubuntu-22.04 ]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
