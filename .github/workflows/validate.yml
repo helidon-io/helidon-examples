@@ -15,16 +15,11 @@
 
 # Notes
 # - cannot run on Windows, as we use shell scripts
-# - Most jobs require a Helidon priming build to execute
 
 name: "Validate"
 
 on:
   pull_request:
-  push:
-    branches-ignore: [ 'release-*' ]
-    tags-ignore: [ '**' ]
-  workflow_call:
 
 env:
   JAVA_VERSION: '21'
@@ -40,37 +35,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prime-build:
-    timeout-minutes: 30
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Free disk space
-        shell: bash
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/share/powershell
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: '0'
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4.7.1
-        with:
-          distribution: ${{ env.JAVA_DISTRO }}
-          java-version: ${{ env.JAVA_VERSION }}
-          cache: maven
-      - name: Helidon Priming build
-        run: |
-          mkdir -p ~/.m2/repository/io/helidon/
-          echo "empty file" > ~/.m2/repository/io/helidon/empty.txt
-          etc/scripts/prime-build.sh
-      - name: Upload Maven Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
-          retention-days: 1
   copyright:
-    needs: prime-build
     timeout-minutes: 10
     runs-on: ubuntu-22.04
     steps:
@@ -86,15 +51,9 @@ jobs:
       - name: Copyright
         run: etc/scripts/copyright.sh
   checkstyle:
-    needs: prime-build
     timeout-minutes: 10
     runs-on: ubuntu-22.04
     steps:
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
@@ -116,15 +75,9 @@ jobs:
       - name: ShellCheck
         run: etc/scripts/shellcheck.sh
   spotbugs:
-    needs: prime-build
     timeout-minutes: 10
     runs-on: ubuntu-22.04
     steps:
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
@@ -142,7 +95,6 @@ jobs:
             -Pspotbugs \
             verify
   build:
-    needs: prime-build
     timeout-minutes: 20
     strategy:
       matrix:
@@ -155,11 +107,6 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/share/powershell
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
@@ -182,7 +129,6 @@ jobs:
             **/target/surefire-reports/**
             **/target/failsafe-reports/**
   build-latest-java:
-    needs: prime-build
     timeout-minutes: 20
     strategy:
       matrix:
@@ -195,11 +141,6 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/share/powershell
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
