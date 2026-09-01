@@ -34,6 +34,6 @@ mvn ${MAVEN_ARGS} --version
 
 # Build this repository
 echo "Build..."
-mvn ${MAVEN_ARGS} -f ${WS_DIR}/pom.xml \
+mvn ${MAVEN_ARGS} -B -f ${WS_DIR}/pom.xml \
     clean install -e \
     -Dmaven.test.failure.ignore=true
