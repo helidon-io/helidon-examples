@@ -18,29 +18,6 @@ git checkout helidon-27.x
 mvn clean install
 ```
 
-### How Repository is Organized
-
-| Branch      | Used By    | Modified By      | Description                                               |
-| ----------- |------------|------------------|--------------------------------------------------|
-| helidon-N.x | Customers  | Release workflow | Latest examples for major version N of Helidon   |
-| dev-N.x     | Developers | PRs              | Examples under development for major version N of Helidon |
-
-| Tags  | Used By    | Created By       | Description                                         |
-|-------|------------|------------------|-----------------------------------------------------|
-| N.N.N | Customers  | Release workflow | Released examples for a specific version of Helidon |
-
-To checkout examples for the most recent release of Helidon 27:
-
-```
-git checkout helidon-27.x
-```
-
-To checkout examples for a specific release of Helidon:
-
-```
-git checkout tags/27.0.0
-```
-
 ## Documentation
 
 Each example has a README that contains additional details for building and running the example.
