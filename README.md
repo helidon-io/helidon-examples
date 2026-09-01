@@ -18,30 +18,6 @@ cd helidon-examples
 git checkout helidon-2.x
 mvn clean install
 ```
-
-### How Repository is Organized
-
-| Branch      | Used By    | Modified By      | Description                                               |
-| ----------- |------------|------------------|--------------------------------------------------|
-| helidon-N.x | Customers  | Release workflow | Latest examples for major version N of Helidon   |
-| dev-N.x     | Developers | PRs              | Examples under development for major version N of Helidon |
-
-| Tags  | Used By    | Created By       | Description                                         |
-|-------|------------|------------------|-----------------------------------------------------|
-| N.N.N | Customers  | Release workflow | Released examples for a specific version of Helidon |
-
-To checkout examples for the most recent release of Helidon 2:
-
-```
-git checkout helidon-2.x
-```
-
-To checkout examples for a specific release of Helidon:
-
-```
-git checkout tags/2.6.7
-```
-
 ## Documentation
 
 Each example has a README that contains additional details for building and running the example.
@@ -61,8 +37,6 @@ This project welcomes contributions from the community. Before submitting a pull
 Please consult the [security guide](./SECURITY.md) for our responsible security vulnerability disclosure process
 
 ## License
-
-Copyright (c) 2017, 2024 Oracle and/or its affiliates.
 
 Released under [Apache License 2.0](./LICENSE.txt).
 
