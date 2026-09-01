@@ -50,13 +50,7 @@ docker run --name mysql \
        -d container-registry.oracle.com/mysql/community-server:9.7.1
 ```
 
-Wait until MySQL reports that it is ready for connections:
-
-```shell
-docker logs -f mysql
-```
-
-Press `Ctrl+C` to stop following the log; the container continues running in the background.
+Before starting the application, ensure that the MySQL container is running and ready for connections.
 
 The password used in this example is intended only for local development. Use a strong, unique password and update both
 the Docker command and `src/main/resources/application.yaml` with the new value. For production deployments, provide
@@ -150,7 +144,14 @@ curl -i -X DELETE http://localhost:8080/pokemon/20
 
 ## Stop MySQL
 
+To stop the MySQL container:
+
 ```shell
 docker stop mysql
+```
+
+To delete the stopped container:
+
+```shell
 docker rm mysql
 ```

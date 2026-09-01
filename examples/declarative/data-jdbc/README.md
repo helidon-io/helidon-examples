@@ -30,7 +30,7 @@ processor path contains more than one Helidon Data provider.
 
 Each module configures a client under `data.clients.jdbc`. H2 and Oracle Database name the Default JDBC Client
 explicitly. MySQL omits the name and uses the default value. PostgreSQL configures a client named `pokemon` and selects
-it with `@Data.PersistenceUnit("pokemon")`. PostgreSQL places its connection properties directly in the JDBC client
+it with `@Jdbc.Client("pokemon")`. PostgreSQL places its connection properties directly in the JDBC client
 configuration. The other modules reference a named HikariCP data source. Each `SchemaInitializer` recreates and
 populates the schema as a convenience for running the sample, and is not intended for production schema management. In
 a production environment, create the schema and populate the required data before starting the application. Every

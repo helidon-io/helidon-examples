@@ -18,6 +18,7 @@ package io.helidon.examples.imperative.data.jdbc;
 import java.util.List;
 import java.util.Optional;
 
+import io.helidon.data.Data;
 import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.examples.imperative.data.jdbc.model.Pokemon;
 import io.helidon.examples.imperative.data.jdbc.model.PokemonAlternateRowMapper;
@@ -51,7 +52,9 @@ final class PokemonService implements HttpService {
      * @param jdbcClient configured JDBC client
      */
     @Service.Inject
-    PokemonService(@Service.Named(Main.POKEMON_CLIENT) JdbcClient jdbcClient) {
+    PokemonService(@Data.ProviderType("jdbc")
+                   @Service.Named(Main.POKEMON_CLIENT)
+                   JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
@@ -74,83 +77,6 @@ final class PokemonService implements HttpService {
     }
 
     /**
-     * Returns every Pokemon ordered by name.
-     */
-    private void all(ServerRequest request, ServerResponse response) {
-        response.send(listOrderByName()
-                              .stream()
-                              .map(PokemonDto::create)
-                              .toList());
-    }
-
-    /**
-     * Returns Pokemon having the type supplied in the request path.
-     */
-    private void type(ServerRequest request, ServerResponse response) {
-        String name = request.path().pathParameters().get("name");
-        response.send(listByTypeName(name)
-                              .stream()
-                              .map(PokemonDto::create)
-                              .toList());
-    }
-
-    /**
-     * Returns Pokemon whose name or type matches the supplied search term.
-     */
-    private void search(ServerRequest request, ServerResponse response) {
-        String term = request.path().pathParameters().get("term");
-        response.send(listByNameOrType(term)
-                              .stream()
-                              .map(PokemonDto::create)
-                              .toList());
-    }
-
-    /**
-     * Returns the Pokemon having the name supplied in the request path.
-     */
-    private void pokemon(ServerRequest request, ServerResponse response) {
-        String name = request.path().pathParameters().get("name");
-        response.send(findByName(name).map(PokemonDto::create));
-    }
-
-    /**
-     * Returns a Pokemon mapped with the recognizable alternate row mapper.
-     */
-    private void pokemonWithExplicitMapper(ServerRequest request, ServerResponse response) {
-        String name = request.path().pathParameters().get("name");
-        response.send(findByNameWithAlternateMapper(name).map(PokemonDto::create));
-    }
-
-    /**
-     * Returns the Pokemon matching both path parameters.
-     */
-    private void pokemonByTypeAndName(ServerRequest request, ServerResponse response) {
-        String type = request.path().pathParameters().get("type");
-        String name = request.path().pathParameters().get("name");
-        response.send(findByTypeAndName(type, name).map(PokemonDto::create));
-    }
-
-    /**
-     * Returns the number of stored Pokemon.
-     */
-    private void count(ServerRequest request, ServerResponse response) {
-        response.send(count());
-    }
-
-    /**
-     * Reads a Pokemon from JSON and returns the inserted representation.
-     */
-    private void insert(PokemonDto pokemonDto, ServerResponse response) {
-        if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
-            throw new BadRequestException("Pokemon name must not be null or blank");
-        }
-        if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
-            throw new BadRequestException("Pokemon type must not be null or blank");
-        }
-        response.send(insertPokemon(pokemonDto));
-    }
-
-    /**
      * Resolves the requested type and inserts the Pokemon in one local JDBC transaction.
      *
      * @param pokemonDto requested Pokemon
@@ -162,18 +88,6 @@ final class PokemonService implements HttpService {
             int id = insert(pokemonDto.name(), type.id());
             return PokemonDto.create(new Pokemon(id, pokemonDto.name(), type));
         });
-    }
-
-    /**
-     * Deletes the Pokemon identified by the request path.
-     */
-    private void delete(ServerRequest request, ServerResponse response) {
-        int id = request.path()
-                .pathParameters()
-                .first("id")
-                .asInt()
-                .orElseThrow(() -> new BadRequestException("No Pokemon id"));
-        response.send("Deleted: " + deleteById(id) + " values");
     }
 
     /**
@@ -360,5 +274,94 @@ final class PokemonService implements HttpService {
         JdbcClient.Statement statement = jdbcClient.create(sql);
         statement.bind(1, name);
         return statement.map(TYPE_MAPPER).one();
+    }
+
+    /**
+     * Returns every Pokemon ordered by name.
+     */
+    private void all(ServerRequest request, ServerResponse response) {
+        response.send(listOrderByName()
+                              .stream()
+                              .map(PokemonDto::create)
+                              .toList());
+    }
+
+    /**
+     * Returns Pokemon having the type supplied in the request path.
+     */
+    private void type(ServerRequest request, ServerResponse response) {
+        String name = request.path().pathParameters().get("name");
+        response.send(listByTypeName(name)
+                              .stream()
+                              .map(PokemonDto::create)
+                              .toList());
+    }
+
+    /**
+     * Returns Pokemon whose name or type matches the supplied search term.
+     */
+    private void search(ServerRequest request, ServerResponse response) {
+        String term = request.path().pathParameters().get("term");
+        response.send(listByNameOrType(term)
+                              .stream()
+                              .map(PokemonDto::create)
+                              .toList());
+    }
+
+    /**
+     * Returns the Pokemon having the name supplied in the request path.
+     */
+    private void pokemon(ServerRequest request, ServerResponse response) {
+        String name = request.path().pathParameters().get("name");
+        response.send(findByName(name).map(PokemonDto::create));
+    }
+
+    /**
+     * Returns a Pokemon mapped with the recognizable alternate row mapper.
+     */
+    private void pokemonWithExplicitMapper(ServerRequest request, ServerResponse response) {
+        String name = request.path().pathParameters().get("name");
+        response.send(findByNameWithAlternateMapper(name).map(PokemonDto::create));
+    }
+
+    /**
+     * Returns the Pokemon matching both path parameters.
+     */
+    private void pokemonByTypeAndName(ServerRequest request, ServerResponse response) {
+        String type = request.path().pathParameters().get("type");
+        String name = request.path().pathParameters().get("name");
+        response.send(findByTypeAndName(type, name).map(PokemonDto::create));
+    }
+
+    /**
+     * Returns the number of stored Pokemon.
+     */
+    private void count(ServerRequest request, ServerResponse response) {
+        response.send(count());
+    }
+
+    /**
+     * Reads a Pokemon from JSON and returns the inserted representation.
+     */
+    private void insert(PokemonDto pokemonDto, ServerResponse response) {
+        if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
+            throw new BadRequestException("Pokemon name must not be null or blank");
+        }
+        if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
+            throw new BadRequestException("Pokemon type must not be null or blank");
+        }
+        response.send(insertPokemon(pokemonDto));
+    }
+
+    /**
+     * Deletes the Pokemon identified by the request path.
+     */
+    private void delete(ServerRequest request, ServerResponse response) {
+        int id = request.path()
+                .pathParameters()
+                .first("id")
+                .asInt()
+                .orElseThrow(() -> new BadRequestException("No Pokemon id"));
+        response.send("Deleted: " + deleteById(id) + " values");
     }
 }
