@@ -29,10 +29,15 @@ the `JdbcClient` API directly:
 
 ```java
 @Service.Inject
-PokemonService(@Service.Named("pokemon") JdbcClient jdbcClient) {
+PokemonService(@Data.ProviderType("jdbc")
+               @Service.Named("pokemon")
+               JdbcClient jdbcClient) {
     this.jdbcClient = jdbcClient;
 }
 ```
+
+`@Data.ProviderType("jdbc")` selects the JDBC provider contract while `@Service.Named("pokemon")` selects the configured
+client within that provider.
 
 The standalone setup client uses the same existing data source without being published:
 

@@ -64,7 +64,7 @@ class PokemonEndpoint {
     @Http.Path("/all")
     @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
     List<PokemonDto> all() {
-        return pokemonRepository.listOrderByName()
+        return pokemonRepository.listByOptionalTypeName(null)
                 .stream()
                 .map(PokemonDto::create)
                 .toList();
@@ -80,7 +80,7 @@ class PokemonEndpoint {
     @Http.Path("/type/{name}")
     @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
     List<PokemonDto> type(@Http.PathParam("name") String name) {
-        return pokemonRepository.listByTypeName(name)
+        return pokemonRepository.listByOptionalTypeName(name)
                 .stream()
                 .map(PokemonDto::create)
                 .toList();
