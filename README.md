@@ -19,36 +19,13 @@ git checkout helidon-4.x
 mvn clean install
 ```
 
-### How Repository is Organized
-
-| Branch      | Used By    | Modified By      | Description                                               |
-| ----------- |------------|------------------|--------------------------------------------------|
-| helidon-N.x | Customers  | Release workflow | Latest examples for major version N of Helidon   |
-| dev-N.x     | Developers | PRs              | Examples under development for major version N of Helidon |
-
-| Tags  | Used By    | Created By       | Description                                         |
-|-------|------------|------------------|-----------------------------------------------------|
-| N.N.N | Customers  | Release workflow | Released examples for a specific version of Helidon |
-
-To checkout examples for the most recent release of Helidon 4:
-
-```
-git checkout helidon-4.x
-```
-
-To checkout examples for a specific release of Helidon:
-
-```
-git checkout tags/4.1.0
-```
-
 ## Documentation
 
 Each example has a README that contains additional details for building and running the example.
 
 ## Help
 
-* See the [Helidon FAQ](https://github.com/oracle/helidon/wiki/FAQ)
+* See the [Helidon FAQ](https://github.com/helidon-io/helidon/wiki/FAQ)
 * Ask questions on Stack Overflow using the [helidon tag](https://stackoverflow.com/tags/helidon)
 * Join us on Slack: [#helidon-users](http://slack.helidon.io)
 
@@ -67,4 +44,3 @@ Released under [Apache License 2.0](./LICENSE.txt).
 ## Third Party Attributions
 
 Developers choosing to distribute a binary implementation of this project are responsible for obtaining and providing all required licenses and copyright notices for the third-party code used in order to ensure compliance with their respective open source licenses.
-
