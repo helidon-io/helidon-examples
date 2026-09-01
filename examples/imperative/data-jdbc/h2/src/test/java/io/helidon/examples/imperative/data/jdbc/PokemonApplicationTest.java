@@ -37,10 +37,12 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Exercises the H2-backed HTTP endpoints and imperative {@link io.helidon.data.jdbc.JdbcClient} operations.
@@ -79,29 +81,29 @@ class PokemonApplicationTest {
     @Test
     void queriesPokemon() {
         // Verify GET /pokemon/count returns the size of the seeded data set.
-        assertEquals(12, count());
+        assertThat(count(), is(12));
 
         // Verify GET /pokemon/all returns every seeded Pokemon in the expected order.
-        assertEquals(SEEDED_POKEMON, pokemonList(get("/pokemon/all")));
+        assertThat(pokemonList(get("/pokemon/all")), is(SEEDED_POKEMON));
 
         List<Pokemon> normalPokemon = List.of(new Pokemon(5, "Meowth", "Normal"),
                                               new Pokemon(4, "Snorlax", "Normal"));
 
         // Verify GET /pokemon/type/{type} finds Pokemon using the type query.
-        assertEquals(normalPokemon, pokemonList(get("/pokemon/type/Normal")));
+        assertThat(pokemonList(get("/pokemon/type/Normal")), is(normalPokemon));
 
         // Verify GET /pokemon/search/{term} binds one value to both positional parameters.
-        assertEquals(normalPokemon, pokemonList(get("/pokemon/search/Normal")));
+        assertThat(pokemonList(get("/pokemon/search/Normal")), is(normalPokemon));
 
         // Verify GET /pokemon/search/{type}/{name} binds both positional query parameters.
-        assertEquals(new Pokemon(5, "Meowth", "Normal"),
-                     pokemon(get("/pokemon/search/Normal/Meowth")));
+        assertThat(pokemon(get("/pokemon/search/Normal/Meowth")),
+                   is(new Pokemon(5, "Meowth", "Normal")));
     }
 
     @Test
     void returnsEmptyListForUnknownType() {
         // A list terminal represents a query with no rows as an empty JSON array.
-        assertEquals(List.of(), pokemonList(get("/pokemon/type/DoesNotExist")));
+        assertThat(pokemonList(get("/pokemon/type/DoesNotExist")), is(List.of()));
     }
 
     @Test
@@ -119,17 +121,17 @@ class PokemonApplicationTest {
         assertThrows(NoResultException.class, () -> service.getByName("DoesNotExist"));
 
         // A successful endpoint query proves that the failed terminal released its JDBC resources.
-        assertEquals(expectedCount, count());
+        assertThat(count(), is(expectedCount));
     }
 
     @Test
     void usesConfiguredRowMappers() {
         // Verify GET /pokemon/get/{name} returns the Pokemon with the requested name.
-        assertEquals(new Pokemon(5, "Meowth", "Normal"), pokemon(get("/pokemon/get/Meowth")));
+        assertThat(pokemon(get("/pokemon/get/Meowth")), is(new Pokemon(5, "Meowth", "Normal")));
 
         // Verify GET /pokemon/explicit-mapper/{name} applies the explicitly selected mapper.
-        assertEquals(new Pokemon(5, "LOW-WEIGHT EXPLICIT: Meowth", "Normal"),
-                     pokemon(get("/pokemon/explicit-mapper/Meowth")));
+        assertThat(pokemon(get("/pokemon/explicit-mapper/Meowth")),
+                   is(new Pokemon(5, "LOW-WEIGHT EXPLICIT: Meowth", "Normal")));
     }
 
     @Test
@@ -147,14 +149,14 @@ class PokemonApplicationTest {
             Pokemon inserted = pokemon(post("/pokemon", request.toString()));
             insertedId = inserted.id();
 
-            assertTrue(insertedId >= 20, "Expected a generated identifier of at least 20");
-            assertEquals(new Pokemon(insertedId, name, "Fire"), inserted);
+            assertThat("Expected a generated identifier of at least 20", insertedId, greaterThanOrEqualTo(20));
+            assertThat(inserted, is(new Pokemon(insertedId, name, "Fire")));
 
             // Verify GET /pokemon/count reflects the inserted Pokemon.
-            assertEquals(expectedCount + 1, count());
+            assertThat(count(), is(expectedCount + 1));
 
             // Verify a subsequent query can observe the committed Pokemon.
-            assertEquals(inserted, pokemon(get("/pokemon/get/" + name)));
+            assertThat(pokemon(get("/pokemon/get/" + name)), is(inserted));
         } finally {
             if (insertedId != null) {
                 // Remove the test Pokemon after validation or if validation failed after insertion.
@@ -162,7 +164,7 @@ class PokemonApplicationTest {
             }
         }
         // Cleanup must restore the committed row count for tests that share this application.
-        assertEquals(expectedCount, count());
+        assertThat(count(), is(expectedCount));
     }
 
     @Test
@@ -180,10 +182,10 @@ class PokemonApplicationTest {
             }));
 
             // Reaching the deliberate failure proves that the insert itself completed successfully.
-            assertEquals("Deliberate rollback", failure.getCause().getMessage());
+            assertThat(failure.getCause().getMessage(), is("Deliberate rollback"));
             // The client must not observe the rolled-back row after the transaction completes.
-            assertTrue(service.findByName(name).isEmpty());
-            assertEquals(expectedCount, count());
+            assertThat(service.findByName(name).isEmpty(), is(true));
+            assertThat(count(), is(expectedCount));
         } finally {
             // Protect later tests from contamination if rollback behavior regresses.
             service.findByName(name)
@@ -208,14 +210,15 @@ class PokemonApplicationTest {
             }));
 
             // Verify that JDBC classified and translated the real database failure.
-            DataException cause = assertInstanceOf(DataException.class, failure.getCause());
-            assertTrue(cause.getMessage().contains("integrity-constraint violation"));
+            assertThat(failure.getCause(), instanceOf(DataException.class));
+            DataException cause = (DataException) failure.getCause();
+            assertThat(cause.getMessage(), containsString("integrity-constraint violation"));
 
             // The first operation after the failure verifies that the connection and transaction state were released.
-            assertEquals(expectedCount, service.count());
+            assertThat(service.count(), is((long) expectedCount));
             // Neither the earlier insert nor the seeded row may change after rollback.
-            assertTrue(service.findByName(name).isEmpty());
-            assertEquals("Electric", service.findByName("Pikachu").orElseThrow().type().name());
+            assertThat(service.findByName(name).isEmpty(), is(true));
+            assertThat(service.findByName("Pikachu").orElseThrow().type().name(), is("Electric"));
         } finally {
             // Protect later tests from contamination if rollback behavior regresses.
             service.findByName(name)
@@ -237,11 +240,11 @@ class PokemonApplicationTest {
             insertedId = pokemon(post("/pokemon", request.toString())).id();
 
             // Verify DELETE /pokemon/{id} removes the inserted Pokemon.
-            assertEquals("Deleted: 1 values", delete("/pokemon/" + insertedId));
+            assertThat(delete("/pokemon/" + insertedId), is("Deleted: 1 values"));
             insertedId = null;
 
             // Verify GET /pokemon/count returns to its value before the test.
-            assertEquals(expectedCount, count());
+            assertThat(count(), is(expectedCount));
         } finally {
             if (insertedId != null) {
                 // Remove the test Pokemon if validation failed before deletion completed.
@@ -253,7 +256,7 @@ class PokemonApplicationTest {
     @Test
     void returnsZeroWhenDeletingUnknownId() {
         // An update that matches no row succeeds with update count zero.
-        assertEquals("Deleted: 0 values", delete("/pokemon/" + Integer.MAX_VALUE));
+        assertThat(delete("/pokemon/" + Integer.MAX_VALUE), is("Deleted: 0 values"));
     }
 
     @Test
@@ -304,9 +307,9 @@ class PokemonApplicationTest {
 
     private void assertNotFound(String path) {
         try (Http1ClientResponse response = client.get(path).request()) {
-            assertEquals(404,
-                         response.status().code(),
-                         () -> "Unexpected response from " + response.lastEndpointUri());
+            assertThat("Unexpected response from " + response.lastEndpointUri(),
+                       response.status().code(),
+                       is(404));
         }
     }
 
@@ -329,12 +332,12 @@ class PokemonApplicationTest {
         try (Http1ClientResponse response = client.post("/pokemon")
                 .contentType(MediaTypes.APPLICATION_JSON)
                 .submit(request.toString())) {
-            assertEquals(400,
-                         response.status().code(),
-                         () -> "Unexpected response from " + response.lastEndpointUri());
+            assertThat("Unexpected response from " + response.lastEndpointUri(),
+                       response.status().code(),
+                       is(400));
         }
         // Rejected input must not change committed state.
-        assertEquals(expectedCount, count());
+        assertThat(count(), is(expectedCount));
     }
 
     private static PokemonService pokemonService() {
@@ -344,9 +347,9 @@ class PokemonApplicationTest {
 
     private static String successful(Http1ClientResponse response) {
         String body = response.as(String.class);
-        assertEquals(200,
-                     response.status().code(),
-                     () -> "Unexpected response from " + response.lastEndpointUri() + ": " + body);
+        assertThat("Unexpected response from " + response.lastEndpointUri() + ": " + body,
+                   response.status().code(),
+                   is(200));
         return body;
     }
 

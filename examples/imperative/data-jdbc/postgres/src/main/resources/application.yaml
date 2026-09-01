@@ -28,3 +28,7 @@ data:
           username: "user"
           password: "pgsql123"
           url: "${data.url}"
+  clients:
+    jdbc:
+      - name: "pokemon"
+        data-source: "example"
