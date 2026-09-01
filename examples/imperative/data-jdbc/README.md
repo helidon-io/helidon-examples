@@ -24,8 +24,9 @@ Each database module is a self-contained Maven application. Its `src/main` direc
 sample schema initialization utility, and database specific configuration. JDBC dependencies and supporting
 documentation also remain with the corresponding database module.
 
-The H2 application contributes a `JdbcClientConfig` programmatically and obtains the resulting registry managed client.
-It also constructs a standalone setup client from the same existing `DataSource`. The other applications construct
+The H2 application contributes a named `JdbcClientConfig` programmatically and injects the resulting registry managed
+client into its imperative HTTP service. It also constructs a standalone setup client from the same existing
+`DataSource`. The other applications construct
 standalone clients through different public API forms. Each `SchemaInitializer` recreates and populates the schema as a
 convenience for running the sample, and is not intended for production schema management. In a production environment,
 create the schema and populate the required data before starting the application. Every database module supplies its

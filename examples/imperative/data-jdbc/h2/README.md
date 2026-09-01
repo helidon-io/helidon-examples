@@ -3,9 +3,9 @@
 This example runs an imperative Pokemon application using an embedded, in-memory H2 database. It demonstrates direct
 use of `JdbcClient` for list, optional, scalar, generated-key, update, and transactional operations.
 
-The configuration creates an H2 data source through HikariCP. `Main` builds an immutable `JdbcClientConfig` from that
-existing data source and contributes the complete client configuration list with `Services.set`. The Service Registry
-then publishes the Default JDBC Client used by `PokemonService`.
+The configuration creates an H2 data source through HikariCP. `Main` builds a named immutable `JdbcClientConfig` from
+that existing data source and contributes the client configuration with `Services.set`. The Service Registry then
+publishes the named JDBC Client injected into `PokemonService`.
 
 `Main` also constructs a standalone client from the existing `DataSource` and passes it to `SchemaInitializer`. This
 keeps schema setup outside the managed transaction path while demonstrating both construction modes. No external
@@ -18,9 +18,20 @@ The programmatic registry configuration must be installed before the first looku
 
 ```java
 JdbcClientConfig jdbcClientConfig = JdbcClient.builder()
+        .name("pokemon")
         .dataSource(dataSource)
         .buildPrototype();
 Services.set(JdbcClientConfig.class, jdbcClientConfig);
+```
+
+`PokemonService` is still an imperative service. It receives the named JDBC client from the Service Registry and uses
+the `JdbcClient` API directly:
+
+```java
+@Service.Inject
+PokemonService(@Service.Named("pokemon") JdbcClient jdbcClient) {
+    this.jdbcClient = jdbcClient;
+}
 ```
 
 The standalone setup client uses the same existing data source without being published:
@@ -46,8 +57,8 @@ java -jar target/helidon-examples-imperative-data-jdbc-h2.jar
 ```
 
 Before HTTP routing starts, the application owned `SchemaInitializer` recreates and populates the sample schema through
-the standalone setup client. The schema and sample data live only for the duration of the process. The registry managed
-client handles application operations and participates in `Tx.transaction`. The application listens on
+the standalone setup client. The schema and sample data live only for the duration of the process. The named registry
+managed client handles application operations and participates in `Tx.transaction`. The application listens on
 `http://localhost:8080/pokemon`.
 
 ## Invoke the Endpoints

@@ -28,6 +28,7 @@ import io.helidon.service.registry.Service;
  */
 @Service.Singleton
 @Weight(Weighted.DEFAULT_WEIGHT - 10)
+@SuppressWarnings("helidon:api:preview")
 public final class PokemonAlternateRowMapper implements JdbcClient.RowMapper<Pokemon> {
     private static final String NAME_PREFIX = "LOW-WEIGHT EXPLICIT: ";
 

@@ -33,6 +33,7 @@ import io.helidon.webserver.http.ServerResponse;
 /**
  * Exposes Pokemon operations using imperative HTTP routing and a standalone {@link JdbcClient}.
  */
+@SuppressWarnings("helidon:api:preview")
 final class PokemonService implements HttpService {
     private static final JdbcClient.RowMapper<Type> TYPE_MAPPER =
             row -> new Type(row.required("id", Integer.class), row.required("name", String.class));
