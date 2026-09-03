@@ -38,6 +38,7 @@
     </description>
 
     <properties>
+        <flyway.version>13.4.0</flyway.version>
         <mainClass>io.helidon.examples.declarative.data.jdbc.Main</mainClass>
     </properties>
 
@@ -70,6 +71,11 @@
             <groupId>io.helidon.logging</groupId>
             <artifactId>helidon-logging-jul</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
