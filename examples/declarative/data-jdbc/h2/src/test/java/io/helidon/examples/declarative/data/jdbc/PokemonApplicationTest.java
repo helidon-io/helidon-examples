@@ -19,13 +19,13 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.UUID;
 
+import javax.sql.DataSource;
+
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.data.DataException;
 import io.helidon.data.NoResultException;
-import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.examples.declarative.data.jdbc.model.PokemonRepository;
 import io.helidon.examples.declarative.data.jdbc.model.TypeRepository;
-import io.helidon.service.registry.Service;
 import io.helidon.service.registry.Services;
 import io.helidon.transaction.Tx;
 import io.helidon.transaction.TxException;
@@ -76,12 +76,20 @@ class PokemonApplicationTest {
     }
 
     /**
-     * Recreates and seeds the H2 schema before the HTTP tests run.
+     * Migrates the H2 schema before the tests run.
      */
     @BeforeAll
-    static void initializeSchema() {
-        JdbcClient jdbcClient = Services.getNamed(JdbcClient.class, Service.Named.DEFAULT_NAME);
-        new SchemaInitializer(jdbcClient).initialize();
+    static void migrateSchema() {
+        DatabaseMigration.migrate(Services.getNamed(DataSource.class, "example"));
+    }
+
+    @Test
+    void doesNotReapplyCurrentMigrations() {
+        var result = DatabaseMigration.migrate(Services.getNamed(DataSource.class, "example"));
+
+        assertThat(result.success, is(true));
+        assertThat(result.migrationsExecuted, is(0));
+        assertThat(count(), is(12));
     }
 
     @Test
