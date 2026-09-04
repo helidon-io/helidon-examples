@@ -15,8 +15,6 @@
  */
 package io.helidon.examples.imperative.data.jdbc;
 
-import javax.sql.DataSource;
-
 import io.helidon.config.Config;
 import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.data.jdbc.JdbcClientConfig;
@@ -59,16 +57,10 @@ public final class Main {
     }
 
     static void routing(HttpRouting.Builder routing) {
-        DataSource dataSource = Services.getNamed(DataSource.class, "example");
-        JdbcClientConfig jdbcClientConfig = JdbcClient.builder()
-                .name(POKEMON_CLIENT)
-                .dataSource(dataSource)
+        JdbcClientConfig setupClientConfig = JdbcClient.builder()
+                .dataSource("example")
                 .buildPrototype();
-        Services.set(JdbcClientConfig.class, jdbcClientConfig);
-
-        JdbcClient setupClient = JdbcClient.builder()
-                .dataSource(dataSource)
-                .build();
+        JdbcClient setupClient = JdbcClient.create(setupClientConfig);
         SchemaInitializer.initialize(setupClient);
 
         routing.register("/pokemon", Services.get(PokemonService.class));
