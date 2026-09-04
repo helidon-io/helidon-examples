@@ -28,3 +28,7 @@ data:
           username: "sa"
           password: ""
           url: "${data.url}"
+  clients:
+    jdbc:
+      - name: "pokemon"
+        data-source: "example"
