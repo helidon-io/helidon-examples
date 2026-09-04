@@ -14,7 +14,6 @@ The sample validates:
 - named SQL parameter binding, repeated named markers, and positional binding in repository parameter declaration order;
 - generated typed-null binding for reference parameters;
 - generated mapping of a flat `Type` record;
-- generated mapping of a dedicated flat `PokemonSummary` record without `@Jdbc.RowMapper`;
 - marker form `@Jdbc.RowMapper` selection by the exact `JdbcClient.RowMapper<Pokemon>` service contract;
 - Service Registry selection of the matching mapper with the highest `@Weight`;
 - class-valued `@Jdbc.RowMapper(PokemonAlternateRowMapper.class)` selection independently of service weight;
@@ -30,21 +29,6 @@ its JDBC annotations. The generated `PokemonRepository` implementation includes 
 The example uses an embedded, in-memory H2 database through HikariCP. No external database installation or container is
 required.
 
-## Database Migrations
-
-The example uses embedded Flyway to manage its database schema and sample data. Everything needed by Flyway is packaged
-with this sample under `src/main/resources/db/migration`:
-
-- `V1__create_schema.sql` creates the `TYPE` and `POKEMON` tables and their foreign key;
-- `V2__load_types.sql` inserts the Pokemon type reference data; and
-- `V3__load_pokemon.sql` inserts the sample Pokemon.
-
-Flyway records applied migrations and their checksums in `flyway_schema_history`. Calling the migration service again
-validates the three scripts and performs no DDL or seed-data inserts when the schema is current. Normal migrations do
-not drop the application tables. The logging configuration hides Flyway's routine progress messages while retaining
-its warnings and errors; the application logs one summary containing the current schema version and the number of
-migrations applied.
-
 ## Build and Run
 
 Build the application from this directory:
@@ -59,11 +43,9 @@ Start the packaged application:
 java -jar target/helidon-examples-declarative-data-jdbc-h2.jar
 ```
 
-Before the web server starts, embedded Flyway uses the configured `example` data source to apply the versioned SQL
-migrations under `src/main/resources/db/migration`. Flyway creates its schema history table and applies the schema,
-type, and Pokemon migrations on a new in-memory database. A subsequent migration in the same process validates the
-history and does nothing when the database is current. The schema and sample data live only for the duration of the
-process. The application listens on `http://localhost:8080/pokemon`.
+Before the web server starts, the application owned `SchemaInitializer` recreates and populates the sample schema
+through the Default JDBC Client. The schema and sample data live only for the duration of the process. The application
+listens on `http://localhost:8080/pokemon`.
 
 ## Try the Application
 
@@ -75,17 +57,6 @@ curl http://localhost:8080/pokemon/all
 
 The endpoint passes Java `null` to a nullable `String` repository parameter. The generated implementation binds typed
 SQL `NULL` at both occurrences of `:typeName`, and the SQL disables the optional type filter.
-
-List flat Pokemon summaries mapped directly from matching result-set column labels:
-
-```shell
-curl http://localhost:8080/pokemon/summaries
-```
-
-`PokemonRepository.listSummaries()` uses `SELECT *` and returns `List<PokemonSummary>` without declaring
-`@Jdbc.RowMapper`. The generated repository maps the `ID` and `NAME` labels to the case-insensitively matching `id` and
-`name` record components, ignores the additional `TYPE_ID` result column, and invokes the record's canonical
-constructor.
 
 List Pokemon having the `Normal` type:
 
