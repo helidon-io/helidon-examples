@@ -28,8 +28,7 @@ import io.helidon.data.jdbc.Jdbc;
  * row to a nested {@link Pokemon} model.
  */
 @Data.Repository
-@SuppressWarnings("helidon:api:preview")
-public interface PokemonRepository extends PokemonLookup {
+public interface PokemonRepository {
 
     /**
      * Retrieves all Pokemon ordered by name.
@@ -89,6 +88,25 @@ public interface PokemonRepository extends PokemonLookup {
     @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     @Jdbc.RowMapper
     List<Pokemon> listByNameOrType(String term);
+
+    /**
+     * Retrieves a Pokemon by name.
+     *
+     * @param name Pokemon name
+     * @return matching Pokemon, or an empty optional when it does not exist
+     */
+    @Jdbc.Statement("""
+            SELECT p.ID AS id,
+                   p.NAME AS name,
+                   p.TYPE_ID AS typeId,
+                   t.NAME AS typeName
+            FROM POKEMON p
+            JOIN TYPE t ON t.ID = p.TYPE_ID
+            WHERE p.NAME = :name
+            """)
+    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
+    @Jdbc.RowMapper
+    Optional<Pokemon> findByName(String name);
 
     /**
      * Retrieves a Pokemon by name with an explicitly selected mapper.
