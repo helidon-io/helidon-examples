@@ -22,15 +22,14 @@ declarative:
   ignore-incubating: true
 
 data:
-  url: "jdbc:oracle:thin:@localhost:1521/FREE"
+  url: "jdbc:oracle:thin:@localhost:1521/FREEPDB1"
   sources:
     sql:
       - name: "example"
         provider.hikari:
-          username: "system"
-          password: "oracle123"
+          username: "pokemon"
+          password: "changeit"
           url: "${data.url}"
   clients:
     jdbc:
-      - name: "@default"
-        data-source: "example"
+      - data-source: "example"
