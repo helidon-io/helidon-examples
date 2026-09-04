@@ -46,10 +46,10 @@ public final class PokemonAlternateRowMapper implements JdbcClient.RowMapper<Pok
      */
     @Override
     public Pokemon map(JdbcClient.Row row) {
-        Type type = new Type(row.get("typeId", Integer.class),
-                             row.get("typeName", String.class));
-        return new Pokemon(row.get("id", Integer.class),
-                           NAME_PREFIX + row.get("name", String.class),
+        Type type = new Type(row.required("typeId", Integer.class),
+                             row.required("typeName", String.class));
+        return new Pokemon(row.required("id", Integer.class),
+                           NAME_PREFIX + row.required("name", String.class),
                            type);
     }
 }
