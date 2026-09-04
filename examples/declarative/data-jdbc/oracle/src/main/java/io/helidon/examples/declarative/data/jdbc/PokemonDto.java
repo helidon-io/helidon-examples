@@ -28,7 +28,6 @@ import io.helidon.json.binding.Json;
  * @param type Pokemon type name
  */
 @Json.Entity
-@SuppressWarnings("helidon:api:preview")
 public record PokemonDto(Optional<Integer> id,
                          String name,
                          String type) {

@@ -17,33 +17,79 @@ The sample validates:
 - marker form `@Jdbc.RowMapper` selection by the exact `JdbcClient.RowMapper<Pokemon>` service contract;
 - Service Registry selection of the matching mapper with the highest `@Weight`;
 - class-valued `@Jdbc.RowMapper(PokemonAlternateRowMapper.class)` selection independently of service weight;
-- generation of an inherited method declared by a parent repository contract;
 - mapping one joined database row to a `Pokemon` containing a nested `Type`;
 - staged generated-key retrieval for inserts and update-count handling for deletes;
 - explicit query selection for a primitive `long` count result; and
 - one local JDBC transaction that looks up a type and inserts a Pokemon.
 
-`PokemonRepository` extends the ordinary `PokemonLookup` interface. The parent declares `findByName(String name)` and
-its JDBC annotations. The generated `PokemonRepository` implementation includes that inherited method.
+The example uses Oracle Database Free and HikariCP. Before running the application, you must run `etc/schema.sql`
+against the database to create and populate the sample tables. The application does not create its own schema.
 
-The example uses Oracle Database Free and HikariCP. The credentials below are intended only for local development.
+For this demo, the application connects to the `FREEPDB1` pluggable database with username `pokemon` and password
+`changeit`. These credentials are part of the example and are not intended for use outside a local demo.
 
-## Start Oracle Database
+The container and volume instructions below are one convenient way to prepare a database and run the SQL script. They
+are provided to make the demo easy to try and are not recommendations for configuring or securing a production
+environment. You can instead use an existing Oracle Database and run the scripts with the database tools and account
+management process appropriate for that environment.
 
-Run this command from the `examples/declarative/data-jdbc/oracle` directory.
+## Optional Local Oracle Container
+
+If you want to use a local Oracle Database container for the demo, run the following command from the
+`examples/declarative/data-jdbc/oracle` directory:
 
 ```shell
 docker run --name oracle \
        -p 1521:1521 \
        -e ORACLE_PWD='oracle123' \
-       -d container-registry.oracle.com/database/free:latest-lite
+       -v "$PWD/etc/setup-user.sql:/opt/oracle/scripts/startup/01-setup-user.sql:ro" \
+       -v "$PWD/etc:/opt/helidon:ro" \
+       -d container-registry.oracle.com/database/free:23.26.3.0-lite
 ```
 
-Before starting the application, ensure that the Oracle Database container is running and ready to use.
+The first volume makes the demo user provisioning script available in the container's startup directory. The
+`latest-lite` image runs scripts from this directory when the database starts. The provisioning script can run
+repeatedly and creates the user only when it does not already exist. The second volume makes `etc/schema.sql` and its
+SQL*Plus wrapper available inside the container.
 
-The password used in this example is intended only for local development. Use a strong, unique password and update both
-the Docker command and `src/main/resources/application.yaml` with the new value. For production deployments, provide
-credentials through external configuration or a secrets manager instead of storing them in source control.
+Before continuing, follow the startup log to make sure that the database has completed startup:
+
+```shell
+docker logs -f oracle
+```
+
+## Demo User Provisioning
+
+As part of the optional container setup, `etc/setup-user.sql` creates the `pokemon` user in `FREEPDB1` if it does not
+already exist. Oracle Database uses an administrator connection only while running this provisioning script. The demo
+application and its sample schema connect as `pokemon`, not as `SYS` or `SYSTEM`.
+
+The script grants the permissions required by the demo and gives `pokemon` a limited quota on a dedicated
+`POKEMON_DATA` tablespace. It creates that tablespace because the `latest-lite` image does not include a general-purpose
+`USERS` tablespace.
+
+## Initialize the Sample Schema (Required)
+
+> **Warning:** The following command drops the existing `POKEMON` and `TYPE` tables in the `pokemon` schema, including
+> all their data, before recreating and populating them. It does not modify tables in other schemas.
+
+Running `etc/schema.sql` is a prerequisite for the demo. When using the optional container setup above, this single
+command runs the script as the demo user:
+
+```shell
+docker exec oracle \
+       sqlplus -s pokemon/changeit@//localhost:1521/FREEPDB1 \
+       @/opt/helidon/run-schema.sql
+```
+
+The mounted `run-schema.sql` wrapper stops on the first SQL error and executes `etc/schema.sql`. The schema script drops
+the sample tables, recreates them and their foreign key, inserts the Pokemon types and sample Pokemon, and commits the
+sample data. If you use a different Oracle Database setup, run `etc/schema.sql` there as the user the application will
+use before starting the application.
+
+The container, volume mounts, demo credentials, and SQL*Plus commands in this section are conveniences for running the
+example. Production database provisioning, credential management, storage, and security policies are outside the scope
+of this README.
 
 ## Build and Run
 
@@ -53,14 +99,26 @@ Build the application from this directory:
 mvn package
 ```
 
+This example uses Helidon APIs that are currently marked as preview. The Maven compiler configuration passes
+`-Ahelidon.api.preview=ignore` for this module so that the preview API diagnostic does not need to be suppressed in
+individual Java files.
+
 Start the packaged application:
 
 ```shell
-java -jar target/helidon-examples-declarative-data-jdbc-oracle.jar
+java '-Dhelidon.serialFilter.pattern=oracle.sql.converter.*' \
+     -jar target/helidon-examples-declarative-data-jdbc-oracle.jar
 ```
 
-Before the web server starts, the application owned `SchemaInitializer` recreates and populates the sample schema
-through the Default JDBC Client.
+The `helidon.serialFilter.pattern` Java system property is required because Oracle JDBC reads bundled character-set
+conversion data using Java serialization. Helidon rejects Java deserialization by default unless the application
+explicitly allows the classes involved. The schema setup performed earlier by SQL*Plus runs in a separate process and
+does not initialize the Oracle JDBC driver in the application. When the application makes its first JDBC request, the
+property allows the Oracle converter package through Helidon's serialization filter while retaining the reject-all
+default for other classes.
+
+The Maven test suite uses H2 in Oracle compatibility mode and runs the same `etc/schema.sql` used by Oracle Database.
+The test does not require a running Oracle Database container.
 
 The application listens on `http://localhost:8080/pokemon`.
 

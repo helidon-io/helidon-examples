@@ -27,7 +27,6 @@ import io.helidon.service.registry.Service;
  */
 @Service.Singleton
 @Weight(Weighted.DEFAULT_WEIGHT + 10)
-@SuppressWarnings("helidon:api:preview")
 public final class PokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
 
     /**
