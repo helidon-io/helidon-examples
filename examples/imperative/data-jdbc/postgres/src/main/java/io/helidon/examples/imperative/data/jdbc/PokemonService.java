@@ -40,7 +40,7 @@ import io.helidon.webserver.http.ServerResponse;
 @SuppressWarnings("helidon:api:preview")
 final class PokemonService implements HttpService {
     private static final JdbcClient.RowMapper<Type> TYPE_MAPPER =
-            row -> new Type(row.get("id", Integer.class), row.get("name", String.class));
+            row -> new Type(row.required("id", Integer.class), row.required("name", String.class));
 
     private final JdbcClient jdbcClient;
     private final JdbcClient.RowMapper<Pokemon> pokemonRowMapper = new PokemonRowMapper();
@@ -234,7 +234,7 @@ final class PokemonService implements HttpService {
         statement.bind(2, typeId);
         return statement.generatedKeys()
                 .addColumn("ID")
-                .map(row -> row.get(1, Integer.class))
+                .map(row -> row.required(1, Integer.class))
                 .one();
     }
 

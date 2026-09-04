@@ -27,22 +27,6 @@ The sample validates:
 its JDBC annotations. The generated `PokemonRepository` implementation includes that inherited method.
 
 The example uses Oracle Database Free and HikariCP. The credentials below are intended only for local development.
-Oracle JDBC deserializes internal character-conversion tables when preparing statements. The sample's
-`META-INF/helidon/serial-config.properties` narrowly permits the two converter classes required for that operation;
-other unlisted classes remain rejected by Helidon's deserialization filter.
-
-## Database Migrations
-
-The example uses the Flyway Maven plugin to manage its database schema and sample data separately from application
-startup. Everything needed by Flyway is contained in this sample under `src/main/resources/db/migration`:
-
-- `V1__create_schema.sql` creates the `TYPE` and `POKEMON` tables and their foreign key;
-- `V2__load_types.sql` inserts the Pokemon type reference data; and
-- `V3__load_pokemon.sql` inserts the sample Pokemon.
-
-Flyway records applied migrations and their checksums in `flyway_schema_history`. Because the example connects as the
-Oracle `SYSTEM` user, whose schema is already non-empty, the plugin baselines it at version 0 before applying the
-example's migrations.
 
 ## Start Oracle Database
 
@@ -57,29 +41,9 @@ docker run --name oracle \
 
 Before starting the application, ensure that the Oracle Database container is running and ready to use.
 
-The password used in this example is intended only for local development. Use a strong, unique password and update the
-Docker command, the Flyway environment variables shown below, and `src/main/resources/application.yaml` with the new
-value. For production deployments, provide credentials through external configuration or a secrets manager instead of
-storing them in source control.
-
-## Migrate the Database
-
-The Flyway Maven plugin reads its database connection from Flyway's standard environment variables. Set them before
-applying the database migrations:
-
-```shell
-export FLYWAY_URL='jdbc:oracle:thin:@localhost:1521/FREE'
-export FLYWAY_USER='system'
-export FLYWAY_PASSWORD='oracle123'
-
-mvn flyway:migrate
-```
-
-The first invocation creates the Flyway schema history table, the example tables, and the sample data. Subsequent
-invocations validate the migration checksums and apply only pending migrations. When the database is current, Flyway
-performs no schema or data changes. The Flyway Maven goal is intentionally not bound to the Maven build lifecycle, so
-`mvn package` does not require or modify a database. The Flyway connection values are deliberately absent from
-`pom.xml`; CI systems should supply these environment variables from their secret store.
+The password used in this example is intended only for local development. Use a strong, unique password and update both
+the Docker command and `src/main/resources/application.yaml` with the new value. For production deployments, provide
+credentials through external configuration or a secrets manager instead of storing them in source control.
 
 ## Build and Run
 
@@ -95,8 +59,8 @@ Start the packaged application:
 java -jar target/helidon-examples-declarative-data-jdbc-oracle.jar
 ```
 
-The application assumes that `mvn flyway:migrate` has already initialized or upgraded the database. It does not create
-or modify the schema during startup.
+Before the web server starts, the application owned `SchemaInitializer` recreates and populates the sample schema
+through the Default JDBC Client.
 
 The application listens on `http://localhost:8080/pokemon`.
 
