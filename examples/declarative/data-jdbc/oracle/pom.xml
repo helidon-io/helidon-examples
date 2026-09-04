@@ -38,7 +38,6 @@
     </description>
 
     <properties>
-        <flyway.version>13.4.0</flyway.version>
         <mainClass>io.helidon.examples.declarative.data.jdbc.Main</mainClass>
     </properties>
 
@@ -82,33 +81,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>${flyway.version}</version>
-                <configuration>
-                    <locations>
-                        <location>filesystem:src/main/resources/db/migration</location>
-                    </locations>
-                    <validateOnMigrate>true</validateOnMigrate>
-                    <baselineOnMigrate>true</baselineOnMigrate>
-                    <baselineVersion>0</baselineVersion>
-                    <outOfOrder>false</outOfOrder>
-                    <cleanDisabled>true</cleanDisabled>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.flywaydb</groupId>
-                        <artifactId>flyway-database-oracle</artifactId>
-                        <version>${flyway.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.oracle.database.jdbc</groupId>
-                        <artifactId>ojdbc17</artifactId>
-                        <version>${version.lib.ojdbc}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
