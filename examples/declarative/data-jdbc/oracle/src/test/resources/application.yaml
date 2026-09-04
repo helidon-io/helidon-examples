@@ -15,20 +15,20 @@
 #
 
 server:
-  port: 8080
+  port: 0
   host: 0.0.0.0
 
 declarative:
   ignore-incubating: true
 
 data:
-  url: "jdbc:oracle:thin:@localhost:1521/FREEPDB1"
+  url: "jdbc:h2:mem:pokemons;MODE=Oracle;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1"
   sources:
     sql:
       - name: "example"
         provider.hikari:
-          username: "pokemon"
-          password: "changeit"
+          username: "sa"
+          password: ""
           url: "${data.url}"
   clients:
     jdbc:
