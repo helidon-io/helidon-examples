@@ -56,12 +56,11 @@ public class DeclarativeMetricsTest {
                 .request(JsonObject.class);
 
         assertThat(metricsResponse.status(), is(Status.OK_200));
-        var json = metricsResponse.entity();
+        var json = applicationMetrics(metricsResponse.entity());
 
         String metricName = "MetricsEndpoint.counted;application=MetricsExample;endpoint=MetricsEndpoint;location=method";
-        Optional<Integer> applicationOpt = json.objectValue("application")
-                .flatMap(it -> it.intValue(metricName));
-        assertThat(applicationOpt, OptionalMatcher.optionalValue(is(1)));
+        Optional<Integer> metricValue = json.intValue(metricName);
+        assertThat(metricValue, OptionalMatcher.optionalValue(is(1)));
     }
 
     @Test
@@ -79,13 +78,12 @@ public class DeclarativeMetricsTest {
                 .request(JsonObject.class);
 
         assertThat(metricsResponse.status(), is(Status.OK_200));
-        var json = metricsResponse.entity();
+        var json = applicationMetrics(metricsResponse.entity());
 
         String metricName = "my-timed-metric";
-        Optional<Integer> applicationOpt = json.objectValue("application")
-                .flatMap(it -> it.objectValue(metricName))
+        Optional<Integer> metricValue = json.objectValue(metricName)
                 .flatMap(it -> it.intValue("count;application=MetricsExample;endpoint=MetricsEndpoint"));
-        assertThat(applicationOpt, OptionalMatcher.optionalValue(is(1)));
+        assertThat(metricValue, OptionalMatcher.optionalValue(is(1)));
     }
 
     @Test
@@ -106,11 +104,14 @@ public class DeclarativeMetricsTest {
                 .request(JsonObject.class);
 
         assertThat(metricsResponse.status(), is(Status.OK_200));
-        var json = metricsResponse.entity();
+        var json = applicationMetrics(metricsResponse.entity());
 
         String metricName = "MetricsEndpoint.gaugeValue;application=MetricsExample;endpoint=MetricsEndpoint";
-        Optional<Integer> applicationOpt = json.objectValue("application")
-                .flatMap(it -> it.intValue(metricName));
-        assertThat(applicationOpt, OptionalMatcher.optionalValue(is(42)));
+        Optional<Integer> metricValue = json.intValue(metricName);
+        assertThat(metricValue, OptionalMatcher.optionalValue(is(42)));
+    }
+
+    private static JsonObject applicationMetrics(JsonObject metrics) {
+        return metrics.objectValue("application").orElse(metrics);
     }
 }

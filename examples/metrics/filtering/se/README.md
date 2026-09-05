@@ -1,7 +1,7 @@
-# Helidon Filtering Metrics SE Example
+# Helidon Metrics Name Filtering SE Example
 
-This project implements a simple Hello World REST service using Helidon SE and demonstrates the
-optional metrics exemplar support.
+This project implements a simple Hello World REST service using Helidon SE and demonstrates narrowing the metrics endpoint
+report using its `name` query parameter.
 
 ## Build and run
 
@@ -24,24 +24,16 @@ curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Hola"}' http:
 curl -X GET http://localhost:8080/greet/Jose
 #Output: {"message":"Hola Jose!"}
 
-curl -X GET http://localhost:8080/greet          
+curl -X GET http://localhost:8080/greet
 #Output: {"message":"Hola World!"}
 ```
 
-## Retrieve application metrics
+## Retrieve selected metrics
+
+Use the registered meter name to select which meter family the metrics endpoint reports:
 
 ```shell
-# Prometheus format with exemplars
+curl -s 'http://localhost:8080/observe/metrics?name=counterForPersonalizedGreetings'
+```
 
-curl -s -X GET http://localhost:8080/observe/metrics/application
-```
-```
-# TYPE application_counterForPersonalizedGreetings_total counter
-# HELP application_counterForPersonalizedGreetings_total 
-application_counterForPersonalizedGreetings_total 2 # {trace_id="78e61eed351f4c9d"} 1 1617812495.016000
-. . .
-# TYPE application_timerForGets_mean_seconds gauge
-application_timerForGets_mean_seconds 0.005772598385062112 # {trace_id="b22f13c37ba8b879"} 0.001563945 1617812578.687000
-# TYPE application_timerForGets_max_seconds gauge
-application_timerForGets_max_seconds 0.028018165 # {trace_id="a1b127002725143c"} 0.028018165 1617812467.524000
-```
+The response contains the `counterForPersonalizedGreetings` meter family and does not contain `timerForGets`.

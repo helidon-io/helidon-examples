@@ -60,18 +60,18 @@ curl -X GET http://localhost:8080/greet/Jose
 ## Try metrics
 ```shell
 # Prometheus Format
-curl -s -X GET http://localhost:8080/observe/metrics/application
+curl -s -X GET http://localhost:8080/observe/metrics
 ```
 
 ```listing
 ...
-# TYPE application_httpStatus_total counter
-# HELP application_httpStatus_total Counts the number of HTTP responses in each status category (1xx, 2xx, etc.)
-application_httpStatus_total{range="1xx"} 0
-application_httpStatus_total{range="2xx"} 5
-application_httpStatus_total{range="3xx"} 0
-application_httpStatus_total{range="4xx"} 0
-application_httpStatus_total{range="5xx"} 0
+# TYPE httpStatus_total counter
+# HELP httpStatus_total Counts the number of HTTP responses in each status category (1xx, 2xx, etc.)
+httpStatus_total{range="1xx"} 0
+httpStatus_total{range="2xx"} 5
+httpStatus_total{range="3xx"} 0
+httpStatus_total{range="4xx"} 0
+httpStatus_total{range="5xx"} 0
 ...
 ```
 # JSON Format

@@ -38,20 +38,20 @@ curl -X GET http://localhost:8080/greet
 #output:  {"message":"Hola World!"}
 ```
 
-## Retrieve application metrics
+## Retrieve metrics
 
 ```
 # Prometheus format with exemplars
 
-curl -s -X GET http://localhost:8080/observe/metrics/application
-# TYPE application_counterForPersonalizedGreetings_total counter
-# HELP application_counterForPersonalizedGreetings_total 
-application_counterForPersonalizedGreetings_total 2 # {trace_id="78e61eed351f4c9d"} 1 1617812495.016000
+curl -s -X GET http://localhost:8080/observe/metrics
+# TYPE counterForPersonalizedGreetings_total counter
+# HELP counterForPersonalizedGreetings_total
+counterForPersonalizedGreetings_total 2 # {trace_id="78e61eed351f4c9d"} 1 1617812495.016000
 . . .
-# TYPE application_timerForGets_mean_seconds gauge
-application_timerForGets_mean_seconds 0.005772598385062112 # {trace_id="b22f13c37ba8b879"} 0.001563945 1617812578.687000
-# TYPE application_timerForGets_max_seconds gauge
-application_timerForGets_max_seconds 0.028018165 # {trace_id="a1b127002725143c"} 0.028018165 1617812467.524000
+# TYPE timerForGets_mean_seconds gauge
+timerForGets_mean_seconds 0.005772598385062112 # {trace_id="b22f13c37ba8b879"} 0.001563945 1617812578.687000
+# TYPE timerForGets_max_seconds gauge
+timerForGets_max_seconds 0.028018165 # {trace_id="a1b127002725143c"} 0.028018165 1617812467.524000
 ```
 The exemplars contain `trace_id` values tying them to specific samples.
 Note that the exemplar for the counter refers to the most recent update to the counter. 
