@@ -28,12 +28,12 @@ import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 
 /**
- * Helidon SE service to update a family of counters based on the HTTP status of each response. Add an instance of this service
- * to the application's routing.
+ * Helidon SE service to update a family of counters based on the final HTTP status of each response. Add an instance of this
+ * service to the application's routing.
  * <p>
- *     The service uses one {@link io.helidon.metrics.api.Counter} for each HTTP status family (1xx, 2xx, etc.).
+ *     The service uses one {@link io.helidon.metrics.api.Counter} for each final HTTP status family (2xx, 3xx, 4xx, and 5xx).
  *     All counters share the same name--{@value STATUS_COUNTER_NAME}--and each has the tag {@value STATUS_TAG_NAME} with
- *     value {@code 1xx}, {@code 2xx}, etc.
+ *     value {@code 2xx}, {@code 3xx}, {@code 4xx}, or {@code 5xx}.
  * </p>
  */
 public class HttpStatusMetricService implements HttpService {
@@ -42,7 +42,8 @@ public class HttpStatusMetricService implements HttpService {
 
     static final String STATUS_TAG_NAME = "range";
 
-    private static final String COUNTER_DESCR = "Counts the number of HTTP responses in each status category (1xx, 2xx, etc.)";
+    private static final String COUNTER_DESCR =
+            "Counts the number of HTTP responses in each final status category (2xx, 3xx, 4xx, and 5xx)";
 
     private static final AtomicInteger IN_PROGRESS = new AtomicInteger();
 
@@ -57,7 +58,7 @@ public class HttpStatusMetricService implements HttpService {
         MeterRegistry registry = Services.get(MeterRegistry.class);
 
         // Declare the counters and keep references to them.
-        for (int i = 1; i < responseCounters.length; i++) {
+        for (int i = 2; i < responseCounters.length; i++) {
 
             responseCounters[i] = registry.getOrCreate(
                     metricsFactory.counterBuilder(STATUS_COUNTER_NAME)
@@ -84,7 +85,7 @@ public class HttpStatusMetricService implements HttpService {
 
     private void logMetric(ServerResponse response) {
         int range = response.status().code() / 100;
-        if (range > 0 && range < responseCounters.length) {
+        if (range > 1 && range < responseCounters.length) {
             responseCounters[range].increment();
         }
         IN_PROGRESS.decrementAndGet();
