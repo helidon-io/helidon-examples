@@ -16,16 +16,9 @@
 
 package io.helidon.examples.metrics.filtering.se;
 
-import java.util.regex.Pattern;
-
 import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
-import io.helidon.metrics.api.Meter;
 import io.helidon.metrics.api.MeterRegistry;
-import io.helidon.metrics.api.MetricsConfig;
-import io.helidon.metrics.api.MetricsFactory;
-import io.helidon.metrics.api.ScopeConfig;
-import io.helidon.metrics.api.ScopingConfig;
 import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
@@ -68,30 +61,8 @@ public final class Main {
 
         // By default, this will pick up application.yaml from the classpath
         Config config = Services.get(Config.class);
-
-        // Programmatically (not through config), tell the metrics feature to ignore the "gets" timer.
-        // To do so, create the scope config, then add it to the metrics config that ultimately
-        // the metrics feature class will use.
-        ScopeConfig scopeConfig = ScopeConfig.builder()
-                .name(Meter.Scope.APPLICATION)
-                .exclude(Pattern.compile(GreetService.TIMER_FOR_GETS))
-                .build();
-
-        MetricsFactory metricsFactory = Services.get(MetricsFactory.class);
-        // This global registry initialization can be removed once custom registries own their publishers.
-        Services.get(MeterRegistry.class);
-        MetricsConfig metricsConfig = MetricsConfig.builder(metricsFactory.metricsConfig())
-                .scoping(ScopingConfig.builder()
-                                 .putScope(Meter.Scope.APPLICATION, scopeConfig))
-                .warnOnMultipleRegistries(false)
-                .build();
-
-        MeterRegistry meterRegistry = metricsFactory.createMeterRegistry(metricsConfig);
-
-        MetricsObserver metrics = MetricsObserver.builder()
-                .meterRegistry(meterRegistry)
-                .metricsConfig(metricsConfig)
-                .build();
+        MeterRegistry meterRegistry = Services.get(MeterRegistry.class);
+        MetricsObserver metrics = MetricsObserver.create();
 
         server.featuresDiscoverServices(false)
                 .addFeature(ObserveFeature.just(metrics))

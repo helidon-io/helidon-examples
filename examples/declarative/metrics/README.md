@@ -167,27 +167,25 @@ curl -H "Accept: application/json" http://localhost:8080/observe/metrics | json_
 Expected output:
 ```
 {
-   "application" : {
-      "MetricsEndpoint.counted;application=MetricsExample;endpoint=MetricsEndpoint;location=method" : 1,
-      "MetricsEndpoint.gaugeValue;application=MetricsExample;endpoint=MetricsEndpoint" : 42,
-      "my-timed-metric" : {
-         "count;application=MetricsExample;endpoint=MetricsEndpoint" : 1,
-         "elapsedTime;application=MetricsExample;endpoint=MetricsEndpoint" : 8.81e-06,
-         "max;application=MetricsExample;endpoint=MetricsEndpoint" : 8.81e-06,
-         "mean;application=MetricsExample;endpoint=MetricsEndpoint" : 8.81e-06,
-         "p0.5;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06,
-         "p0.75;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06,
-         "p0.95;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06,
-         "p0.98;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06,
-         "p0.999;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06,
-         "p0.99;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06
-      }
+   "MetricsEndpoint.counted;application=MetricsExample;endpoint=MetricsEndpoint;location=method" : 1,
+   "MetricsEndpoint.gaugeValue;application=MetricsExample;endpoint=MetricsEndpoint" : 42,
+   "my-timed-metric" : {
+      "count;application=MetricsExample;endpoint=MetricsEndpoint" : 1,
+      "elapsedTime;application=MetricsExample;endpoint=MetricsEndpoint" : 8.81e-06,
+      "max;application=MetricsExample;endpoint=MetricsEndpoint" : 8.81e-06,
+      "mean;application=MetricsExample;endpoint=MetricsEndpoint" : 8.81e-06,
+      "p0.5;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06,
+      "p0.75;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06,
+      "p0.95;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06,
+      "p0.98;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06,
+      "p0.999;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06,
+      "p0.99;application=MetricsExample;endpoint=MetricsEndpoint" : 8.704e-06
    },
-   "vendor" : {
-      "requests.count" : 5
-   }
+   "requests.count" : 5
 }
 ```
+
+Earlier Helidon 27 builds group the same entries under `application` and `vendor` objects.
 
 All three metrics are visible (if we called all three endpoint mentioned above). Note that the non-gauge metrics will not be created unless the endpoint is called at least once.
 
@@ -201,24 +199,24 @@ Expected output:
 ```
 # HELP MetricsEndpoint_gaugeValue_bytes Metrics.Gauge annotation on method MetricsEndpoint.gaugeValue()
 # TYPE MetricsEndpoint_gaugeValue_bytes gauge
-MetricsEndpoint_gaugeValue_bytes{application="MetricsExample",endpoint="MetricsEndpoint",scope="application",} 42.0
+MetricsEndpoint_gaugeValue_bytes{application="MetricsExample",endpoint="MetricsEndpoint",} 42.0
 # HELP my_timed_metric_seconds_max Metrics.Timed annotation on method MetricsEndpoint.timed()
 # TYPE my_timed_metric_seconds_max gauge
-my_timed_metric_seconds_max{application="MetricsExample",endpoint="MetricsEndpoint",scope="application",} 8.81E-6
+my_timed_metric_seconds_max{application="MetricsExample",endpoint="MetricsEndpoint",} 8.81E-6
 # HELP my_timed_metric_seconds Metrics.Timed annotation on method MetricsEndpoint.timed()
 # TYPE my_timed_metric_seconds summary
-my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",scope="application",quantile="0.5",} 0.0
-my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",scope="application",quantile="0.75",} 0.0
-my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",scope="application",quantile="0.95",} 0.0
-my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",scope="application",quantile="0.98",} 0.0
-my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",scope="application",quantile="0.99",} 0.0
-my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",scope="application",quantile="0.999",} 0.0
-my_timed_metric_seconds_count{application="MetricsExample",endpoint="MetricsEndpoint",scope="application",} 1.0
-my_timed_metric_seconds_sum{application="MetricsExample",endpoint="MetricsEndpoint",scope="application",} 8.81E-6
+my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",quantile="0.5",} 0.0
+my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",quantile="0.75",} 0.0
+my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",quantile="0.95",} 0.0
+my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",quantile="0.98",} 0.0
+my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",quantile="0.99",} 0.0
+my_timed_metric_seconds{application="MetricsExample",endpoint="MetricsEndpoint",quantile="0.999",} 0.0
+my_timed_metric_seconds_count{application="MetricsExample",endpoint="MetricsEndpoint",} 1.0
+my_timed_metric_seconds_sum{application="MetricsExample",endpoint="MetricsEndpoint",} 8.81E-6
 # HELP requests_count_total Each request (regardless of HTTP method) will increase this counter
 # TYPE requests_count_total counter
-requests_count_total{scope="vendor",} 6.0
+requests_count_total 6.0
 # HELP MetricsEndpoint_counted_none_total Metrics.Counted annotation on method MetricsEndpoint.counted()
 # TYPE MetricsEndpoint_counted_none_total counter
-MetricsEndpoint_counted_none_total{application="MetricsExample",endpoint="MetricsEndpoint",location="method",scope="application",} 1.0
+MetricsEndpoint_counted_none_total{application="MetricsExample",endpoint="MetricsEndpoint",location="method",} 1.0
 ```

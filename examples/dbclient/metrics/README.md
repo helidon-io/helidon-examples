@@ -31,5 +31,5 @@ curl -X PUT -d 'bar' http://localhost:8080/db/foo
 curl -X DELETE http://localhost:8080/db/foo
 
 # look at the metrics
-curl -X GET -H "Accept: application/json" http://localhost:8080/observe/metrics/application | jq
+curl -X GET -H "Accept: application/json" http://localhost:8080/observe/metrics | jq
 ```

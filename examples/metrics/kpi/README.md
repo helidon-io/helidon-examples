@@ -41,7 +41,7 @@ curl -X GET http://localhost:8080/greet
 #Output: {"message":"Hola World!"}
 ```
 
-## Retrieve vendor metrics with key performance indicators
+## Retrieve key performance indicator metrics
 
 For brevity, the example output below shows only some of the KPI metrics. 
 
@@ -75,35 +75,35 @@ long-running.
 
 ## Prometheus format
 ```shell
-curl -s -X GET http://localhost:8080/observe/metrics/vendor
+curl -s -X GET http://localhost:8080/observe/metrics
 ```
 ```
 ...
-# TYPE vendor_requests_inFlight_current concurrent gauge
-# HELP vendor_requests_inFlight_current Measures the number of currently in-flight requests
-vendor_requests_inFlight_current 1
-# TYPE vendor_requests_inFlight_min concurrent gauge
-vendor_requests_inFlight_min 0
-# TYPE vendor_requests_inFlight_max concurrent gauge
-vendor_requests_inFlight_max 1
-# TYPE vendor_requests_load_total counter
-# HELP vendor_requests_load_total Measures the total number of in-flight requests and rates at which they occur
-vendor_requests_load_total 6
-# TYPE vendor_requests_load_rate_per_second gauge
-vendor_requests_load_rate_per_second 0.04932913209653636
-# TYPE vendor_requests_load_one_min_rate_per_second gauge
-vendor_requests_load_one_min_rate_per_second 0.025499793037824785
-# TYPE vendor_requests_load_five_min_rate_per_second gauge
-vendor_requests_load_five_min_rate_per_second 0.012963147773962286
-# TYPE vendor_requests_load_fifteen_min_rate_per_second gauge
-vendor_requests_load_fifteen_min_rate_per_second 0.005104944851522425
+# TYPE requests_inFlight_current concurrent gauge
+# HELP requests_inFlight_current Measures the number of currently in-flight requests
+requests_inFlight_current 1
+# TYPE requests_inFlight_min concurrent gauge
+requests_inFlight_min 0
+# TYPE requests_inFlight_max concurrent gauge
+requests_inFlight_max 1
+# TYPE requests_load_total counter
+# HELP requests_load_total Measures the total number of in-flight requests and rates at which they occur
+requests_load_total 6
+# TYPE requests_load_rate_per_second gauge
+requests_load_rate_per_second 0.04932913209653636
+# TYPE requests_load_one_min_rate_per_second gauge
+requests_load_one_min_rate_per_second 0.025499793037824785
+# TYPE requests_load_five_min_rate_per_second gauge
+requests_load_five_min_rate_per_second 0.012963147773962286
+# TYPE requests_load_fifteen_min_rate_per_second gauge
+requests_load_fifteen_min_rate_per_second 0.005104944851522425
 ...
 ```
 ## JSON output
 
 
 ```shell
-curl -s -X GET -H "Accept: application/json" http://localhost:8080/observe/metrics/vendor
+curl -s -X GET -H "Accept: application/json" http://localhost:8080/observe/metrics
 ```
 ```
 {

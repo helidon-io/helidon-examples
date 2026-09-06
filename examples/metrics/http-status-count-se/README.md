@@ -1,6 +1,7 @@
 # http-status-count-se
 
-This Helidon SE project illustrates a service which updates a family of counters based on the HTTP status returned in each response.
+This Helidon SE project illustrates a service which updates a family of counters based on the final HTTP status returned
+in each response.
 
 The main source in this example is identical to that in the Helidon SE QuickStart application except in these ways:
 * The `HttpStatusMetricService` class creates and updates the status metrics.
@@ -60,18 +61,17 @@ curl -X GET http://localhost:8080/greet/Jose
 ## Try metrics
 ```shell
 # Prometheus Format
-curl -s -X GET http://localhost:8080/observe/metrics/application
+curl -s -X GET http://localhost:8080/observe/metrics
 ```
 
 ```listing
 ...
-# TYPE application_httpStatus_total counter
-# HELP application_httpStatus_total Counts the number of HTTP responses in each status category (1xx, 2xx, etc.)
-application_httpStatus_total{range="1xx"} 0
-application_httpStatus_total{range="2xx"} 5
-application_httpStatus_total{range="3xx"} 0
-application_httpStatus_total{range="4xx"} 0
-application_httpStatus_total{range="5xx"} 0
+# TYPE httpStatus_total counter
+# HELP httpStatus_total Counts the number of HTTP responses in each final status category (2xx, 3xx, 4xx, and 5xx)
+httpStatus_total{range="2xx"} 5
+httpStatus_total{range="3xx"} 0
+httpStatus_total{range="4xx"} 0
+httpStatus_total{range="5xx"} 0
 ...
 ```
 # JSON Format
@@ -82,7 +82,6 @@ curl -H "Accept: application/json" -X GET http://localhost:8080/observe/metrics
 ```json
 {
 ...
-    "httpStatus;range=1xx": 0,
     "httpStatus;range=2xx": 5,
     "httpStatus;range=3xx": 0,
     "httpStatus;range=4xx": 0,

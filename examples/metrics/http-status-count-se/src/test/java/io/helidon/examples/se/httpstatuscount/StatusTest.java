@@ -64,7 +64,7 @@ public class StatusTest {
 
     @BeforeEach
     void findStatusMetrics() {
-        for (int i = 1; i < STATUS_COUNTERS.length; i++) {
+        for (int i = 2; i < STATUS_COUNTERS.length; i++) {
             STATUS_COUNTERS[i] = meterRegistry.getOrCreate(
                     metricsFactory.counterBuilder(STATUS_COUNTER_NAME)
                             .tags(Set.of(metricsFactory.tagCreate(STATUS_TAG_NAME, i + "xx"))));
@@ -84,7 +84,7 @@ public class StatusTest {
     @Test
     void checkStatusAfterGreet() throws InterruptedException {
         long[] before = new long[6];
-        for (int i = 1; i < 6; i++) {
+        for (int i = 2; i < 6; i++) {
             before[i] = STATUS_COUNTERS[i].count();
         }
         try (Http1ClientResponse response = client.get("/greet")
@@ -99,7 +99,7 @@ public class StatusTest {
 
     void checkAfterStatus(Status status) throws InterruptedException {
         long[] before = new long[6];
-        for (int i = 1; i < 6; i++) {
+        for (int i = 2; i < 6; i++) {
             before[i] = STATUS_COUNTERS[i].count();
         }
         try (Http1ClientResponse response = client.get("/status/" + status.code())
@@ -124,7 +124,7 @@ public class StatusTest {
         }
 
         int family = status.code() / 100;
-        for (int i = 1; i < 6; i++) {
+        for (int i = 2; i < 6; i++) {
             long expectedDiff = i == family ? 1 : 0;
             assertThat("Diff in counter " + family + "xx", STATUS_COUNTERS[i].count() - before[i], is(expectedDiff));
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2018, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package io.helidon.examples.metrics.filtering.se;
 
 import java.util.Collections;
 
-import io.helidon.webserver.testing.junit5.ServerTest;
-import io.helidon.webserver.testing.junit5.SetUpServer;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webclient.http1.Http1ClientResponse;
 import io.helidon.webserver.WebServerConfig;
+import io.helidon.webserver.testing.junit5.ServerTest;
+import io.helidon.webserver.testing.junit5.SetUpServer;
 
 import jakarta.json.Json;
 import jakarta.json.JsonBuilderFactory;
@@ -31,6 +31,7 @@ import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 
@@ -79,7 +80,7 @@ public class MainTest {
     }
 
     @Test
-    public void testMetrics() {
+    public void testMetricsNameFiltering() {
         try (Http1ClientResponse response = client.get("/greet").request()) {
             assertThat(response.as(String.class), containsString("Hello World!"));
         }
@@ -88,10 +89,23 @@ public class MainTest {
             assertThat(response.as(String.class), containsString("Hello Joe!"));
         }
 
-        try (Http1ClientResponse response = client.get("/observe/metrics/application").request()) {
+        try (Http1ClientResponse response = client.get("/observe/metrics").request()) {
             String openMetricsOutput = response.as(String.class);
-            assertThat("Metrics output", openMetricsOutput, not(containsString(GreetService.TIMER_FOR_GETS)));
-            assertThat("Metrics output", openMetricsOutput, containsString(GreetService.COUNTER_FOR_PERSONALIZED_GREETINGS));
+            assertThat("Unfiltered metrics output",
+                       openMetricsOutput,
+                       allOf(containsString(GreetService.TIMER_FOR_GETS),
+                             containsString(GreetService.COUNTER_FOR_PERSONALIZED_GREETINGS)));
+        }
+
+        try (Http1ClientResponse response = client.get("/observe/metrics")
+                .queryParam("name", GreetService.COUNTER_FOR_PERSONALIZED_GREETINGS)
+                .request()) {
+            String openMetricsOutput = response.as(String.class);
+            assertThat("Name-filtered metrics response status", response.status().code(), CoreMatchers.is(200));
+            assertThat("Name-filtered metrics output",
+                       openMetricsOutput,
+                       allOf(containsString(GreetService.COUNTER_FOR_PERSONALIZED_GREETINGS),
+                             not(containsString(GreetService.TIMER_FOR_GETS))));
         }
     }
 }
