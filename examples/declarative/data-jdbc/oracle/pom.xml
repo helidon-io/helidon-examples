@@ -56,7 +56,7 @@
         </dependency>
         <dependency>
             <groupId>io.helidon.data.sql.datasource</groupId>
-            <artifactId>helidon-data-sql-datasource-hikari</artifactId>
+            <artifactId>helidon-data-sql-datasource-ucp</artifactId>
         </dependency>
         <dependency>
             <groupId>io.helidon.webserver</groupId>
@@ -69,12 +69,6 @@
         <dependency>
             <groupId>io.helidon.logging</groupId>
             <artifactId>helidon-logging-jul</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc17-production</artifactId>
-            <type>pom</type>
             <scope>runtime</scope>
         </dependency>
         <dependency>
