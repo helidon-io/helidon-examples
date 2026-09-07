@@ -22,8 +22,9 @@ The sample validates:
 - explicit query selection for a primitive `long` count result; and
 - one local JDBC transaction that looks up a type and inserts a Pokemon.
 
-The example uses Oracle Database Free and HikariCP. Before running the application, you must run `etc/schema.sql`
-against the database to create and populate the sample tables. The application does not create its own schema.
+The example uses Oracle Database Free with Oracle Universal Connection Pool (UCP). Before running the application, you
+must run `etc/schema.sql` against the database to create and populate the sample tables. The application does not create
+its own schema.
 
 For this demo, the application connects to the `FREEPDB1` pluggable database with username `pokemon` and password
 `changeit`. These credentials are part of the example and are not intended for use outside a local demo.
@@ -117,8 +118,8 @@ does not initialize the Oracle JDBC driver in the application. When the applicat
 property allows the Oracle converter package through Helidon's serialization filter while retaining the reject-all
 default for other classes.
 
-The Maven test suite uses H2 in Oracle compatibility mode and runs the same `etc/schema.sql` used by Oracle Database.
-The test does not require a running Oracle Database container.
+The Maven test suite runs UCP with H2 in Oracle compatibility mode and uses the same `etc/schema.sql` used by Oracle
+Database. The test does not require a running Oracle Database container.
 
 The application listens on `http://localhost:8080/pokemon`.
 

@@ -63,7 +63,6 @@ public final class Main {
                         .password(database.get("password").asString().get().toCharArray())
                         .jdbcDriverClassName(database.get("jdbc-driver-class-name").asString().get()))
                 .build();
-        SchemaInitializer.initialize(jdbcClient);
         routing.register("/pokemon", new PokemonService(jdbcClient));
     }
 }

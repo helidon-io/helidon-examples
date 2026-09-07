@@ -26,10 +26,15 @@ data:
   sources:
     sql:
       - name: "example"
-        provider.hikari:
+        provider.ucp:
           username: "pokemon"
           password: "changeit"
           url: "${data.url}"
+          connection-factory-class-name: "oracle.jdbc.pool.OracleDataSource"
+          connection-pool-name: "pokemon-pool"
+          initial-pool-size: 1
+          min-pool-size: 1
+          max-pool-size: 10
   clients:
     jdbc:
       - data-source: "example"

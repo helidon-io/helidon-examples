@@ -26,22 +26,28 @@ The sample validates:
 `PokemonRepository` extends the ordinary `PokemonLookup` interface. The parent declares `findByName(String name)` and
 its JDBC annotations. The generated `PokemonRepository` implementation includes that inherited method.
 
-The example uses the PostgreSQL JDBC driver. The named JDBC client contains its connection properties directly, so
-this variant does not configure a separate SQL data source. The credentials below are intended only for local
-development.
+The example uses the PostgreSQL JDBC driver. Before running the application, you must run `etc/schema.sql` against the
+database to create and populate the sample tables. The application does not create its own schema.
 
-## Build the PostgreSQL Image
+For this demo, the application connects to the `pokemons` database with username `user` and password `pgsql123`. These
+credentials are part of the example and are not intended for use outside a local demo.
+
+The container instructions below are one convenient way to prepare a database and run the SQL script. They are provided
+to make the demo easy to try; they are not recommendations for configuring or securing a production environment. You
+can instead use an existing PostgreSQL database and run the script with the database tools and account management
+process appropriate for that environment.
+
+## Optional Local PostgreSQL Container
 
 Like the DbClient PostgreSQL example, the local image installs PostgreSQL Server on Oracle Linux 9 and adds a
-standalone initialization entrypoint:
+standalone entrypoint. If you want to use this image for the demo, build it from the
+`examples/declarative/data-jdbc/postgres` directory:
 
 ```shell
 docker build etc/docker -t helidon-postgres
 ```
 
-## Start PostgreSQL
-
-Run this command from the `examples/declarative/data-jdbc/postgres` directory.
+Then start the container:
 
 ```shell
 docker run --name postgres \
@@ -52,14 +58,37 @@ docker run --name postgres \
        -d helidon-postgres
 ```
 
-Before starting the application, ensure that the PostgreSQL container is running and ready to accept connections.
+Before continuing, follow the startup log to make sure that the database has completed startup:
 
-The password used in this example is intended only for local development. Use a strong, unique password and update both
-the Docker command and `src/main/resources/application.yaml` with the new value. For production deployments, provide
-credentials through external configuration or a secrets manager instead of storing them in source control.
+```shell
+docker logs -f postgres
+```
 
 The JDBC URL disables quoting of `RETURNING` identifiers so PostgreSQL can fold the shared generated-key column name
 `ID` in the same way as the unquoted schema and repository SQL.
+
+## Initialize the Sample Schema (Required)
+
+> **Warning:** The following command drops the existing `POKEMON` and `TYPE` tables in the `pokemons` database,
+> including all their data, before recreating and populating them. It does not modify tables in other databases.
+
+Running `etc/schema.sql` is a prerequisite for the demo. When using the optional container setup above, this single
+command runs the local script as the demo user:
+
+```shell
+docker exec -i postgres \
+       psql --username=user --dbname=pokemons \
+       < etc/schema.sql
+```
+
+The command sends `etc/schema.sql` to the PostgreSQL client in the container. The script drops the sample tables,
+recreates them and their foreign key, inserts the Pokemon types and sample Pokemon, and commits the sample data. If you
+use a different PostgreSQL setup, run `etc/schema.sql` there as the user the application will use before starting the
+application.
+
+The container, demo credentials, and PostgreSQL commands in this section are conveniences for running the example.
+Production database provisioning, credential management, storage, and security policies are outside the scope of this
+README.
 
 ## Build and Run
 
@@ -75,9 +104,11 @@ Start the packaged application:
 java -jar target/helidon-examples-declarative-data-jdbc-postgres.jar
 ```
 
-The registry managed JDBC client is named `pokemon` and uses the inline connection from `data.clients.jdbc`. Both
-repository interfaces select it with `@Jdbc.Client("pokemon")`. Before the web server starts, the application
-owned `SchemaInitializer` recreates and populates the sample schema through the same named client and PostgreSQL driver.
+The Maven test suite uses H2 in PostgreSQL compatibility mode and runs the same `etc/schema.sql` used by PostgreSQL. The
+test does not require a running PostgreSQL container.
+
+The registry-managed JDBC client is named `pokemon` and uses the inline connection from `data.clients.jdbc`. Both
+repository interfaces select it with `@Jdbc.Client("pokemon")`.
 
 The application listens on `http://localhost:8080/pokemon`.
 

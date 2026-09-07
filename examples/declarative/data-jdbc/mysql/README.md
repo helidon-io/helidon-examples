@@ -26,11 +26,21 @@ The sample validates:
 `PokemonRepository` extends the ordinary `PokemonLookup` interface. The parent declares `findByName(String name)` and
 its JDBC annotations. The generated `PokemonRepository` implementation includes that inherited method.
 
-The example uses MySQL and HikariCP. The credentials below are intended only for local development.
+The example uses MySQL and HikariCP. Before running the application, you must run `etc/schema.sql` against the database
+to create and populate the sample tables. The application does not create its own schema.
 
-## Start MySQL
+For this demo, the application connects to the `pokemons` database with username `user` and password `changeit`. These
+credentials are part of the example and are not intended for use outside a local demo.
 
-Run this command from the `examples/declarative/data-jdbc/mysql` directory.
+The container instructions below are one convenient way to prepare a database and run the SQL script. They are provided
+to make the demo easy to try; they are not recommendations for configuring or securing a production environment. You
+can instead use an existing MySQL Database and run the script with the database tools and account management process
+appropriate for that environment.
+
+## Optional Local MySQL Container
+
+If you want to use a local MySQL container for the demo, run the following command from the
+`examples/declarative/data-jdbc/mysql` directory:
 
 ```shell
 docker run --name mysql \
@@ -42,11 +52,35 @@ docker run --name mysql \
        -d container-registry.oracle.com/mysql/community-server:9.7.1
 ```
 
-Before starting the application, ensure that the MySQL container is running and ready for connections.
+Before continuing, follow the startup log to make sure that the database has completed startup:
 
-The password used in this example is intended only for local development. Use a strong, unique password and update both
-the Docker command and `src/main/resources/application.yaml` with the new value. For production deployments, provide
-credentials through external configuration or a secrets manager instead of storing them in source control.
+```shell
+docker logs -f mysql
+```
+
+## Initialize the Sample Schema (Required)
+
+> **Warning:** The following command drops the existing `POKEMON` and `TYPE` tables in the `pokemons` database,
+> including all their data, before recreating and populating them. It does not modify tables in other databases.
+
+Running `etc/schema.sql` is a prerequisite for the demo. When using the optional container setup above, this single
+command runs the local script as the demo user:
+
+```shell
+docker exec -i mysql \
+       sh -c 'MYSQL_PWD="$MYSQL_PASSWORD" exec mysql --user=user pokemons' \
+       < etc/schema.sql
+```
+
+The command uses the container's `MYSQL_PASSWORD` environment variable without passing the password as a MySQL
+command-line argument, and sends `etc/schema.sql` to the MySQL client in the container. The script drops the sample
+tables, recreates them and their foreign key, inserts the Pokemon types and sample Pokemon, and commits the sample data.
+If you use a different MySQL setup, run `etc/schema.sql` there as the user the application will use before starting the
+application.
+
+The container, demo credentials, and MySQL commands in this section are conveniences for running the example.
+Production database provisioning, credential management, storage, and security policies are outside the scope of this
+README.
 
 ## Build and Run
 
@@ -62,8 +96,8 @@ Start the packaged application:
 java -jar target/helidon-examples-declarative-data-jdbc-mysql.jar
 ```
 
-The JDBC client configuration omits `name`, so the client uses the default name. Before the web server starts, the
-application owned `SchemaInitializer` recreates and populates the sample schema through that client.
+The Maven test suite uses H2 in MySQL compatibility mode and runs the same `etc/schema.sql` used by MySQL. The test does
+not require a running MySQL container.
 
 The application listens on `http://localhost:8080/pokemon`.
 
