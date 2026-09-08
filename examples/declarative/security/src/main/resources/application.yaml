@@ -36,7 +36,3 @@ security:
           - login: "jack"
             password: "changeit"
             roles: ["user"]
-
-# Ignore this feature's warning
-declarative:
-  ignore-incubating: true

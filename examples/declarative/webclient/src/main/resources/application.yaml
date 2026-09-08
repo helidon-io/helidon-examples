@@ -22,6 +22,3 @@ app:
 server:
   port: 8080
   host: 0.0.0.0
-
-declarative:
-  ignore-incubating: true
