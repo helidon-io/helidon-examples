@@ -32,6 +32,7 @@ env:
   HELIDON_PIPELINES: 'true'
   MVN_ARGS: |
     -B -fae -e
+    -nsu
     -Dmaven.wagon.httpconnectionManager.ttlSeconds=60
     -Dmaven.wagon.http.retryHandler.count=3
 
@@ -60,6 +61,7 @@ jobs:
           cache: maven
       - name: Helidon Priming build
         run: |
+          rm -rf ~/.m2/repository/io/helidon
           mkdir -p ~/.m2/repository/io/helidon/
           echo "empty file" > ~/.m2/repository/io/helidon/empty.txt
           etc/scripts/prime-build.sh
@@ -83,6 +85,13 @@ jobs:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
+      - name: Remove cached Helidon artifacts
+        run: rm -rf ~/.m2/repository/io/helidon
+      - name: Download Maven Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: io-helidon-maven-artifacts
+          path: ~/.m2/repository/io/helidon
       - name: Copyright
         run: etc/scripts/copyright.sh
   checkstyle:
@@ -90,11 +99,6 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-22.04
     steps:
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
@@ -104,6 +108,13 @@ jobs:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
+      - name: Remove cached Helidon artifacts
+        run: rm -rf ~/.m2/repository/io/helidon
+      - name: Download Maven Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: io-helidon-maven-artifacts
+          path: ~/.m2/repository/io/helidon
       - name: Checkstyle
         run: etc/scripts/checkstyle.sh
   shellcheck:
@@ -120,11 +131,6 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-22.04
     steps:
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
@@ -134,6 +140,13 @@ jobs:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
+      - name: Remove cached Helidon artifacts
+        run: rm -rf ~/.m2/repository/io/helidon
+      - name: Download Maven Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: io-helidon-maven-artifacts
+          path: ~/.m2/repository/io/helidon
       - name: Spotbugs
         run: |
           mvn ${MVN_ARGS} \
@@ -155,11 +168,6 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/share/powershell
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
@@ -169,6 +177,13 @@ jobs:
           distribution: ${{ env.JAVA_DISTRO }}
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
+      - name: Remove cached Helidon artifacts
+        run: rm -rf ~/.m2/repository/io/helidon
+      - name: Download Maven Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: io-helidon-maven-artifacts
+          path: ~/.m2/repository/io/helidon
       - name: Maven build
         run: |
           mvn ${MVN_ARGS} \
@@ -195,11 +210,6 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/share/powershell
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
@@ -209,6 +219,13 @@ jobs:
           website: jdk.java.net
           release: ea
           version: stable
+      - name: Remove cached Helidon artifacts
+        run: rm -rf ~/.m2/repository/io/helidon
+      - name: Download Maven Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: io-helidon-maven-artifacts
+          path: ~/.m2/repository/io/helidon
       - name: Maven build
         run: |
           mvn ${MVN_ARGS} \
