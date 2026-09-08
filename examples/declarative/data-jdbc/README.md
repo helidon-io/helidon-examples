@@ -30,17 +30,34 @@ Each module configures a client under `data.clients.jdbc`. Oracle Database names
 MySQL omits the name and uses the default value. PostgreSQL configures a client named `pokemon` and selects it with
 `@Jdbc.Client("pokemon")`. PostgreSQL places its connection properties directly in the JDBC client configuration;
 MySQL uses a named HikariCP data source and Oracle Database uses a named UCP data source. Each external-database module
-provides `etc/schema.sql`, which must be run before starting the application, and uses H2 in the matching compatibility
-mode for tests. Oracle Database and PostgreSQL use standard identity syntax. MySQL uses the equivalent `AUTO_INCREMENT`
-definition.
+provides `etc/schema.sql`, which must be run before starting the application. Tests use Testcontainers to exercise each
+module against its corresponding database and initialize it with that same schema. Oracle Database and PostgreSQL use
+standard identity syntax. MySQL uses the equivalent `AUTO_INCREMENT` definition.
+
+All variants expose the same `/pokemon` API. It lists, searches, retrieves, and counts the seeded Pokemon; `POST`
+inserts a Pokemon, `PUT /pokemon/{id}` updates its name and type, and `DELETE /pokemon/{id}` removes it. The
+database-specific READMEs provide runnable requests and explain each endpoint's result.
+
+Each module passes `-Ahelidon.api.preview=ignore` through Maven compiler configuration instead of placing preview-warning
+suppression annotations in Java source.
 
 ## Build the Examples
 
-From this directory, build every database variant:
+From this directory, build and test every database variant:
 
 ```shell
 mvn verify
 ```
+
+To build every variant without running the tests, use:
+
+```shell
+mvn verify -DskipTests
+```
+
+The build uses Testcontainers with each sample's actual database image. Testcontainers manages the test databases and
+loads the module's `etc/schema.sql`; no manually started database is needed. When Docker is unavailable, JUnit skips the
+container-backed test classes.
 
 To build only one variant, change to its directory. For example:
 

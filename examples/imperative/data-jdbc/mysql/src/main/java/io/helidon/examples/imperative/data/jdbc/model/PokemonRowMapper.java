@@ -23,7 +23,6 @@ import io.helidon.data.jdbc.JdbcClient;
  * Maps joined Pokemon and type JDBC rows to the nested {@link Pokemon} model.
  */
 @Weight(Weighted.DEFAULT_WEIGHT + 10)
-@SuppressWarnings("helidon:api:preview")
 public final class PokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
 
     /**

@@ -15,12 +15,9 @@
  */
 package io.helidon.examples.declarative.data.jdbc;
 
-import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import io.helidon.common.media.type.MediaTypes;
@@ -39,11 +36,13 @@ import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
-import org.h2.tools.RunScript;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -52,13 +51,18 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Exercises the HTTP endpoints and generated JDBC repositories with H2 in MySQL compatibility mode.
+ * Exercises the HTTP endpoints and generated JDBC repositories with MySQL.
  */
+@Testcontainers(disabledWithoutDocker = true)
 @ServerTest
-@SuppressWarnings("helidon:api:preview")
 class PokemonApplicationTest {
-    private static final String TEST_DATABASE_URL =
-            "jdbc:h2:mem:pokemons;MODE=MySQL;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1";
+    private static final DockerImageName IMAGE =
+            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:9.7.1")
+                    .asCompatibleSubstituteFor("mysql");
+
+    @Container
+    @SuppressWarnings("resource")
+    static final PokemonMySqlContainer CONTAINER = new PokemonMySqlContainer();
 
     // The /pokemon/all query orders by name, so this fixture follows name order rather than identifier order.
     private static final List<Pokemon> SEEDED_POKEMON = List.of(
@@ -79,20 +83,6 @@ class PokemonApplicationTest {
 
     PokemonApplicationTest(Http1Client client) {
         this.client = client;
-    }
-
-    /**
-     * Recreates and seeds the H2 database from the schema distributed with the MySQL example.
-     *
-     * @throws Exception if the test database or schema script cannot be opened
-     */
-    @BeforeAll
-    static void initializeSchema() throws Exception {
-        try (Connection connection = DriverManager.getConnection(TEST_DATABASE_URL, "sa", "");
-             var script = new InputStreamReader(
-                     Objects.requireNonNull(PokemonApplicationTest.class.getResourceAsStream("/schema.sql")), UTF_8)) {
-            RunScript.execute(connection, script);
-        }
     }
 
     @Test
@@ -159,6 +149,50 @@ class PokemonApplicationTest {
             }
         }
         assertThat(count(), is(expectedCount));
+    }
+
+    @Test
+    void updatesPokemonThroughTransactionalPath() {
+        int expectedCount = count();
+        String originalName = "E2E" + UUID.randomUUID().toString().replace("-", "");
+        String updatedName = originalName + "Updated";
+        Integer insertedId = null;
+        try {
+            JsonObject request = Json.createObjectBuilder()
+                    .add("name", originalName)
+                    .add("type", "Fire")
+                    .build();
+            insertedId = pokemon(post("/pokemon", request.toString())).id();
+
+            JsonObject update = Json.createObjectBuilder()
+                    .add("name", updatedName)
+                    .add("type", "Water")
+                    .build();
+            Pokemon updated = pokemon(put("/pokemon/" + insertedId, update.toString()));
+
+            assertThat(updated, is(new Pokemon(insertedId, updatedName, "Water")));
+            assertThat(count(), is(expectedCount + 1));
+            assertNotFound("/pokemon/get/" + originalName);
+            assertThat(pokemon(get("/pokemon/get/" + updatedName)), is(updated));
+        } finally {
+            if (insertedId != null) {
+                delete("/pokemon/" + insertedId);
+            }
+        }
+        assertThat(count(), is(expectedCount));
+    }
+
+    @Test
+    void returnsNotFoundWhenUpdatingUnknownId() {
+        JsonObject update = Json.createObjectBuilder()
+                .add("name", "Missing")
+                .add("type", "Water")
+                .build();
+        try (Http1ClientResponse response = client.put("/pokemon/" + Integer.MAX_VALUE)
+                .contentType(MediaTypes.APPLICATION_JSON)
+                .submit(update.toString())) {
+            assertThat("Unexpected response from " + response.lastEndpointUri(), response.status().code(), is(404));
+        }
     }
 
     @Test
@@ -296,6 +330,14 @@ class PokemonApplicationTest {
         }
     }
 
+    private String put(String path, String body) {
+        try (Http1ClientResponse response = client.put(path)
+                .contentType(MediaTypes.APPLICATION_JSON)
+                .submit(body)) {
+            return successful(response);
+        }
+    }
+
     private String delete(String path) {
         try (Http1ClientResponse response = client.delete(path).request()) {
             return successful(response);
@@ -342,5 +384,23 @@ class PokemonApplicationTest {
     }
 
     private record Pokemon(int id, String name, String type) {
+    }
+
+    private static final class PokemonMySqlContainer extends MySQLContainer<PokemonMySqlContainer> {
+        private PokemonMySqlContainer() {
+            super(PokemonApplicationTest.IMAGE);
+            withDatabaseName("pokemons");
+            withUsername("user");
+            withPassword("changeit");
+            withInitScript("schema.sql");
+            waitingFor(Wait.forListeningPort()
+                               .withStartupTimeout(Duration.ofMinutes(5)));
+        }
+
+        @Override
+        public void start() {
+            super.start();
+            System.setProperty("data.url", getJdbcUrl());
+        }
     }
 }

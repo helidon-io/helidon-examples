@@ -33,7 +33,6 @@ import io.helidon.webserver.http.ServerResponse;
 /**
  * Exposes Pokemon operations using imperative HTTP routing and a standalone {@link JdbcClient}.
  */
-@SuppressWarnings("helidon:api:preview")
 final class PokemonService implements HttpService {
     private static final JdbcClient.RowMapper<Type> TYPE_MAPPER =
             row -> new Type(row.get("id", Integer.class), row.get("name", String.class));
@@ -66,6 +65,7 @@ final class PokemonService implements HttpService {
                 .get("/search/{type}/{name}", this::pokemonByTypeAndName)
                 .get("/count", this::count)
                 .post("/", Handler.create(PokemonDto.class, this::insert))
+                .put("/{id}", this::update)
                 .delete("/{id}", this::delete);
     }
 
@@ -79,6 +79,22 @@ final class PokemonService implements HttpService {
         Type type = getByName(pokemonDto.type());
         int id = insert(pokemonDto.name(), type.id());
         return PokemonDto.create(new Pokemon(id, pokemonDto.name(), type));
+    }
+
+    /**
+     * Resolves the new type and updates the Pokemon using separate JDBC operations.
+     *
+     * @param id Pokemon identifier
+     * @param pokemonDto new Pokemon name and type
+     * @return updated Pokemon, or an empty optional when the identifier does not exist
+     */
+    Optional<PokemonDto> updatePokemon(int id, PokemonDto pokemonDto) {
+        Type type = getByName(pokemonDto.type());
+        long updated = updateById(id, pokemonDto.name(), type.id());
+        if (updated == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(PokemonDto.create(new Pokemon(id, pokemonDto.name(), type)));
     }
 
     /**
@@ -230,6 +246,23 @@ final class PokemonService implements HttpService {
     }
 
     /**
+     * Updates the name and type of a Pokemon.
+     *
+     * @param id Pokemon identifier
+     * @param name new Pokemon name
+     * @param typeId new type identifier
+     * @return number of updated rows
+     */
+    long updateById(int id, String name, int typeId) {
+        String sql = "UPDATE POKEMON SET NAME = ?, TYPE_ID = ? WHERE ID = ?";
+        return jdbcClient.create(sql)
+                .bind(1, name)
+                .bind(2, typeId)
+                .bind(3, id)
+                .execute();
+    }
+
+    /**
      * Counts all Pokemon rows.
      *
      * @return number of Pokemon
@@ -335,25 +368,43 @@ final class PokemonService implements HttpService {
      * Reads a Pokemon from JSON and returns the inserted representation.
      */
     private void insert(PokemonDto pokemonDto, ServerResponse response) {
-        if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
-            throw new BadRequestException("Pokemon name must not be null or blank");
-        }
-        if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
-            throw new BadRequestException("Pokemon type must not be null or blank");
-        }
+        validate(pokemonDto);
         response.send(insertPokemon(pokemonDto));
+    }
+
+    /**
+     * Updates the Pokemon identified by the request path.
+     */
+    private void update(ServerRequest request, ServerResponse response) {
+        int id = pokemonId(request);
+        PokemonDto pokemonDto = request.content().as(PokemonDto.class);
+        validate(pokemonDto);
+        response.send(updatePokemon(id, pokemonDto));
     }
 
     /**
      * Deletes the Pokemon identified by the request path.
      */
     private void delete(ServerRequest request, ServerResponse response) {
-        int id = request.path()
+        int id = pokemonId(request);
+        response.send("Deleted: " + deleteById(id) + " values");
+    }
+
+    private static int pokemonId(ServerRequest request) {
+        return request.path()
                 .pathParameters()
                 .first("id")
                 .asInt()
                 .orElseThrow(() -> new BadRequestException("No Pokemon id"));
-        response.send("Deleted: " + deleteById(id) + " values");
+    }
+
+    private static void validate(PokemonDto pokemonDto) {
+        if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
+            throw new BadRequestException("Pokemon name must not be null or blank");
+        }
+        if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
+            throw new BadRequestException("Pokemon type must not be null or blank");
+        }
     }
 
 }
