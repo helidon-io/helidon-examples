@@ -25,7 +25,6 @@ import io.helidon.webserver.http.HttpRouting;
 /**
  * Starts the imperative JDBC Pokemon application.
  */
-@SuppressWarnings("helidon:api:preview")
 public final class Main {
 
     static {

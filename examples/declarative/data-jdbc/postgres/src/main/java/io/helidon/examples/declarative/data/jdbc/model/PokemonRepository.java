@@ -24,13 +24,15 @@ import io.helidon.data.jdbc.Jdbc;
 /**
  * Defines the declarative JDBC queries used by the Pokemon example.
  * <p>
+ * {@link Data.GenericRepository} identifies the repository's entity and identifier types without adding derived
+ * operations. Every operation remains defined by an explicit JDBC statement.
+ * <p>
  * The {@link Jdbc.RowMapper} marker selects the {@code JdbcClient.RowMapper<Pokemon>} service that maps each joined
  * row to a nested {@link Pokemon} model.
  */
 @Data.Repository
 @Jdbc.Client("pokemon")
-@SuppressWarnings("helidon:api:preview")
-public interface PokemonRepository extends PokemonLookup {
+public interface PokemonRepository extends Data.GenericRepository<Pokemon, Integer>, PokemonLookup {
 
     /**
      * Retrieves all Pokemon ordered by name.
@@ -144,6 +146,18 @@ public interface PokemonRepository extends PokemonLookup {
     @Jdbc.Statement("INSERT INTO POKEMON (NAME, TYPE_ID) VALUES (:name, :typeId)")
     @Jdbc.GeneratedKeys("ID")
     int insert(String name, int typeId);
+
+    /**
+     * Updates the name and type of a Pokemon.
+     *
+     * @param id Pokemon identifier
+     * @param name new Pokemon name
+     * @param typeId new type identifier
+     * @return number of updated rows
+     */
+    @Jdbc.Statement("UPDATE POKEMON SET NAME = :name, TYPE_ID = :typeId WHERE ID = :id")
+    @Jdbc.Execution(Jdbc.ExecutionType.UPDATE)
+    long updateById(int id, String name, int typeId);
 
     /**
      * Counts all Pokemon rows.

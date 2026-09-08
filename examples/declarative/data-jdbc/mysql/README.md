@@ -10,7 +10,7 @@ execution. Primitive `int` and `long` results use `@Jdbc.Execution` when the met
 
 The sample validates:
 
-- generated JDBC repository implementations for list, optional, insert, and delete operations;
+- generated JDBC repository implementations for list, optional, insert, update, and delete operations;
 - named SQL parameter binding, repeated named markers, and positional binding in repository parameter declaration order;
 - generated typed-null binding for reference parameters;
 - generated mapping of a flat `Type` record;
@@ -19,7 +19,7 @@ The sample validates:
 - class-valued `@Jdbc.RowMapper(PokemonAlternateRowMapper.class)` selection independently of service weight;
 - generation of an inherited method declared by a parent repository contract;
 - mapping one joined database row to a `Pokemon` containing a nested `Type`;
-- staged generated-key retrieval for inserts and update-count handling for deletes;
+- staged generated-key retrieval for inserts and update-count handling for updates and deletes;
 - explicit query selection for a primitive `long` count result; and
 - one local JDBC transaction that looks up a type and inserts a Pokemon.
 
@@ -84,11 +84,21 @@ README.
 
 ## Build and Run
 
-Build the application from this directory:
+Build the application and run its tests from this directory:
 
 ```shell
 mvn package
 ```
+
+To build the application without running the tests, use:
+
+```shell
+mvn package -DskipTests
+```
+
+This example uses Helidon APIs that are currently marked as preview. Maven passes
+`-Ahelidon.api.preview=ignore` to the compiler, so individual Java files do not need preview-warning suppression
+annotations.
 
 Start the packaged application:
 
@@ -96,8 +106,11 @@ Start the packaged application:
 java -jar target/helidon-examples-declarative-data-jdbc-mysql.jar
 ```
 
-The Maven test suite uses H2 in MySQL compatibility mode and runs the same `etc/schema.sql` used by MySQL. The test does
-not require a running MySQL container.
+The Maven test suite uses Testcontainers to start
+`container-registry.oracle.com/mysql/community-server:9.7.1`, the same image shown above. It creates the `pokemons`
+database, initializes it with the same `etc/schema.sql`, and exercises the documented query and mutation endpoints
+through the MySQL connection. Testcontainers manages this database, so the optional local container is not needed for
+tests. When Docker is unavailable, JUnit skips the container-backed test class.
 
 The application listens on `http://localhost:8080/pokemon`.
 
@@ -180,7 +193,22 @@ code adds the `ID` column through the staged generated-key builder before mappin
 
 The schema starts generated Pokemon identifiers at `20`, so the JSON object returned by the first insert into a fresh
 database contains that ID.
-Delete it with:
+
+Update the inserted Pokemon's name and type, using the identifier returned by `POST` (the first identifier is `20` in a
+freshly initialized database):
+
+```shell
+curl -i -X PUT \
+     -H 'Content-Type: application/json' \
+     -d '{"name":"Charmeleon","type":"Fire"}' \
+     http://localhost:8080/pokemon/20
+```
+
+`PUT /pokemon/{id}` updates the row selected by the path identifier and returns its new JSON representation. The body
+supplies the new nonblank `name` and an existing Pokemon `type`; it does not need an `id`. A missing row returns HTTP
+`404`.
+
+Delete the updated Pokemon:
 
 ```shell
 curl -i -X DELETE http://localhost:8080/pokemon/20

@@ -163,6 +163,18 @@ public interface PokemonRepository {
     int insert(String name, int typeId);
 
     /**
+     * Updates the name and type of a Pokemon.
+     *
+     * @param id Pokemon identifier
+     * @param name new Pokemon name
+     * @param typeId new type identifier
+     * @return number of updated rows
+     */
+    @Jdbc.Statement("UPDATE POKEMON SET NAME = :name, TYPE_ID = :typeId WHERE ID = :id")
+    @Jdbc.Execution(Jdbc.ExecutionType.UPDATE)
+    long updateById(int id, String name, int typeId);
+
+    /**
      * Counts all Pokemon rows.
      * <p>
      * The explicit query type distinguishes a scalar count from an update count.

@@ -28,7 +28,6 @@ import io.helidon.data.jdbc.Jdbc;
  * row to a nested {@link Pokemon} model.
  */
 @Data.Repository
-@SuppressWarnings("helidon:api:preview")
 public interface PokemonRepository extends PokemonLookup {
 
     /**
@@ -143,6 +142,18 @@ public interface PokemonRepository extends PokemonLookup {
     @Jdbc.Statement("INSERT INTO POKEMON (NAME, TYPE_ID) VALUES (:name, :typeId)")
     @Jdbc.GeneratedKeys("ID")
     int insert(String name, int typeId);
+
+    /**
+     * Updates the name and type of a Pokemon.
+     *
+     * @param id Pokemon identifier
+     * @param name new Pokemon name
+     * @param typeId new type identifier
+     * @return number of updated rows
+     */
+    @Jdbc.Statement("UPDATE POKEMON SET NAME = :name, TYPE_ID = :typeId WHERE ID = :id")
+    @Jdbc.Execution(Jdbc.ExecutionType.UPDATE)
+    long updateById(int id, String name, int typeId);
 
     /**
      * Counts all Pokemon rows.

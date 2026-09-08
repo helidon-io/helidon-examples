@@ -23,7 +23,6 @@ import io.helidon.data.jdbc.Jdbc;
  */
 @Data.Repository
 @Jdbc.Client("pokemon")
-@SuppressWarnings("helidon:api:preview")
 public interface TypeRepository {
 
     /**
