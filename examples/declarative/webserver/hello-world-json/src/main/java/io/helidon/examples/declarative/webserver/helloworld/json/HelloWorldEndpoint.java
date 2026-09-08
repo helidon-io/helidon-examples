@@ -26,7 +26,7 @@ import io.helidon.http.Status;
 import io.helidon.service.registry.Service;
 import io.helidon.webserver.http.RestServer;
 
-@SuppressWarnings(Api.SUPPRESS_INCUBATING)
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @RestServer.Endpoint // webserver declarative endpoint
 @Http.Path("/hello") // path to serve this endpoint on
 @Service.Singleton // service registry scope (must be singleton)

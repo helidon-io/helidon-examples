@@ -26,7 +26,7 @@ import io.helidon.http.Status;
 import io.helidon.service.registry.Service;
 import io.helidon.webserver.http.RestServer;
 
-@SuppressWarnings(Api.SUPPRESS_INCUBATING) // Helidon declarative is an incubating feature
+@SuppressWarnings(Api.SUPPRESS_PREVIEW) // Helidon declarative is a preview feature
 @RestServer.Endpoint // webserver declarative endpoint
 @Http.Path("/hello") // path to serve this endpoint on
 @Service.Singleton // service registry scope (must be singleton)

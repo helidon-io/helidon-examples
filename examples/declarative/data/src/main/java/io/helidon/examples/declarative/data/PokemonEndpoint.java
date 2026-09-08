@@ -29,7 +29,7 @@ import io.helidon.service.registry.Service;
 import io.helidon.transaction.Tx;
 import io.helidon.webserver.http.RestServer;
 
-@SuppressWarnings(Api.SUPPRESS_INCUBATING) // Helidon declarative is an incubating feature
+@SuppressWarnings(Api.SUPPRESS_PREVIEW) // Helidon declarative is a preview feature
 @Http.Path("/pokemon")
 @Service.Singleton
 @RestServer.Endpoint

@@ -28,7 +28,7 @@ import io.helidon.tracing.Span;
 import io.helidon.tracing.Tracing;
 import io.helidon.webserver.http.RestServer;
 
-@SuppressWarnings(Api.SUPPRESS_INCUBATING)
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @RestServer.Endpoint
 @Http.Path("/hello")
 @Service.Singleton
