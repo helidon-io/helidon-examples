@@ -18,7 +18,6 @@ package io.helidon.examples.declarative.webclient;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.helidon.common.Default;
 import io.helidon.config.Configuration;
 import io.helidon.http.Http;
 import io.helidon.http.Status;
@@ -34,7 +33,7 @@ class HelloWorldServerEndpoint implements HelloWorldApi {
     private final AtomicReference<String> greeting = new AtomicReference<>();
 
     @Service.Inject
-    HelloWorldServerEndpoint(@Default.Value("Ciao") @Configuration.Value("app.greeting") String greeting) {
+    HelloWorldServerEndpoint(@Configuration.Value("${app.greeting:Ciao}") String greeting) {
         this.greeting.set(greeting);
     }
 
