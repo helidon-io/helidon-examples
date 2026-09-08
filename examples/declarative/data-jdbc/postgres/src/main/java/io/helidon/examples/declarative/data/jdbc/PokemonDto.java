@@ -23,12 +23,11 @@ import io.helidon.json.binding.Json;
 /**
  * HTTP representation of a Pokemon.
  *
- * @param id database identifier, empty when a client requests an insert
+ * @param id database identifier, omitted in insert and update requests; the update path identifies the row
  * @param name Pokemon name
  * @param type Pokemon type name
  */
 @Json.Entity
-@SuppressWarnings("helidon:api:preview")
 public record PokemonDto(Optional<Integer> id,
                          String name,
                          String type) {

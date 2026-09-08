@@ -168,12 +168,7 @@ class PokemonEndpoint {
     @Http.Consumes(MediaTypes.APPLICATION_JSON_VALUE)
     @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
     PokemonDto insert(@Http.Entity PokemonDto pokemonDto) {
-        if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
-            throw new BadRequestException("Pokemon name must not be null or blank");
-        }
-        if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
-            throw new BadRequestException("Pokemon type must not be null or blank");
-        }
+        validate(pokemonDto);
         return insertPokemon(pokemonDto);
     }
 
@@ -191,6 +186,36 @@ class PokemonEndpoint {
     }
 
     /**
+     * Updates a Pokemon and returns its new representation.
+     *
+     * @param id Pokemon identifier
+     * @param pokemonDto new Pokemon name and type
+     * @return updated Pokemon, or an empty optional when the identifier does not exist
+     */
+    @Http.PUT
+    @Http.Path("/{id}")
+    @Http.Consumes(MediaTypes.APPLICATION_JSON_VALUE)
+    @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
+    Optional<PokemonDto> update(@Http.PathParam("id") int id,
+                                @Http.Entity PokemonDto pokemonDto) {
+        validate(pokemonDto);
+        return updatePokemon(id, pokemonDto);
+    }
+
+    /**
+     * Resolves the new type and updates the Pokemon in one local JDBC transaction.
+     */
+    @Tx.Required
+    Optional<PokemonDto> updatePokemon(int id, PokemonDto pokemonDto) {
+        Type type = typeRepository.getByName(pokemonDto.type());
+        long updated = pokemonRepository.updateById(id, pokemonDto.name(), type.id());
+        if (updated == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(PokemonDto.create(new Pokemon(id, pokemonDto.name(), type)));
+    }
+
+    /**
      * Deletes a Pokemon by identifier.
      *
      * @param id Pokemon identifier
@@ -201,5 +226,14 @@ class PokemonEndpoint {
     @Http.Produces(MediaTypes.TEXT_PLAIN_VALUE)
     String delete(@Http.PathParam("id") int id) {
         return "Deleted: " + pokemonRepository.deleteById(id) + " values";
+    }
+
+    private static void validate(PokemonDto pokemonDto) {
+        if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
+            throw new BadRequestException("Pokemon name must not be null or blank");
+        }
+        if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
+            throw new BadRequestException("Pokemon type must not be null or blank");
+        }
     }
 }

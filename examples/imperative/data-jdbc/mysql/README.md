@@ -10,7 +10,7 @@ driver. The application does not publish this client in the Service Registry.
 
 The sample demonstrates:
 
-- list, optional, scalar, insert, and delete JDBC operations;
+- list, optional, scalar, insert, update, and delete JDBC operations;
 - positional parameter binding, including binding one value to multiple positions;
 - mapping joined rows to a `Pokemon` containing a nested `Type`;
 - selecting either the normal or alternate row mapper;
@@ -95,11 +95,21 @@ README.
 
 ## Build and Run
 
-From `examples/imperative/data-jdbc/mysql`, build the application:
+From `examples/imperative/data-jdbc/mysql`, build the application and run its tests:
 
 ```shell
 mvn package
 ```
+
+To build the application without running the tests, use:
+
+```shell
+mvn package -DskipTests
+```
+
+This example uses Helidon APIs that are currently marked as preview. Maven passes
+`-Ahelidon.api.preview=ignore` to the compiler, so individual Java files do not need preview-warning suppression
+annotations.
 
 Start the packaged application:
 
@@ -107,8 +117,11 @@ Start the packaged application:
 java -jar target/helidon-examples-imperative-data-jdbc-mysql.jar
 ```
 
-The Maven test suite uses H2 in MySQL compatibility mode and runs the same `etc/schema.sql` used by MySQL. The test does
-not require a running MySQL container.
+The Maven test suite uses Testcontainers to start
+`container-registry.oracle.com/mysql/community-server:9.7.1`, the same image shown above. It creates the `pokemons`
+database, initializes it with the same `etc/schema.sql`, and exercises the documented query and mutation endpoints
+through its MySQL connection. Testcontainers manages this database, so the optional local container is not needed for
+tests. When Docker is unavailable, JUnit skips the container-backed test class.
 
 The application listens on `http://localhost:8080/pokemon`.
 
@@ -172,7 +185,21 @@ curl -i -X POST \
 The type lookup and insert are separate JDBC operations. The schema starts generated identifiers at `20`, so the JSON
 object returned by the first insert into a freshly initialized database contains that ID.
 
-Delete the inserted Pokemon:
+Update the inserted Pokemon's name and type, using the identifier returned by `POST` (the first identifier is `20` in a
+freshly initialized database):
+
+```shell
+curl -i -X PUT \
+     -H 'Content-Type: application/json' \
+     -d '{"name":"Charmeleon","type":"Fire"}' \
+     http://localhost:8080/pokemon/20
+```
+
+`PUT /pokemon/{id}` updates the row selected by the path identifier and returns its new JSON representation. The body
+supplies the new nonblank `name` and an existing Pokemon `type`; it does not need an `id`. A missing row returns HTTP
+`404`. The standalone client performs the type lookup and update as separate JDBC operations.
+
+Delete the updated Pokemon:
 
 ```shell
 curl -i -X DELETE http://localhost:8080/pokemon/20

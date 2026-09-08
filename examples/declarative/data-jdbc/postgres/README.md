@@ -8,18 +8,29 @@ This example uses Helidon Data to generate pure JDBC implementations of two decl
 Repository methods declare SQL with `@Jdbc.Statement`. Most result shapes let code generation infer query or update
 execution. Primitive `int` and `long` results use `@Jdbc.Execution` when the method shape is ambiguous.
 
+`PokemonRepository` extends `Data.GenericRepository<Pokemon, Integer>`, declaring `Pokemon` as its entity type and
+`Integer` as its identifier type. For a JDBC repository, `Data.GenericRepository` supplies metadata only: it does not
+add CRUD methods or generate SQL. Every repository operation still requires an explicit `@Jdbc.Statement`.
+
+`TypeRepository` does not declare entity and identifier types at the repository level and extends no Data repository
+interface. Together, the two repositories demonstrate both supported declarative JDBC shapes. JDBC repositories must
+not extend `Data.BasicRepository`, `Data.CrudRepository`, or `Data.PageableRepository`, because those interfaces
+declare operations that JDBC repositories do not support.
+
 The sample validates:
 
-- generated JDBC repository implementations for list, optional, insert, and delete operations;
+- generated JDBC repository implementations for list, optional, insert, update, and delete operations;
 - named SQL parameter binding, repeated named markers, and positional binding in repository parameter declaration order;
 - generated typed-null binding for reference parameters;
 - generated mapping of a flat `Type` record;
+- metadata-only `Data.GenericRepository<Pokemon, Integer>` inheritance alongside a repository that does not declare
+  entity and identifier types at the repository level;
 - marker form `@Jdbc.RowMapper` selection by the exact `JdbcClient.RowMapper<Pokemon>` service contract;
 - Service Registry selection of the matching mapper with the highest `@Weight`;
 - class-valued `@Jdbc.RowMapper(PokemonAlternateRowMapper.class)` selection independently of service weight;
 - generation of an inherited method declared by a parent repository contract;
 - mapping one joined database row to a `Pokemon` containing a nested `Type`;
-- staged generated-key retrieval for inserts and update-count handling for deletes;
+- staged generated-key retrieval for inserts and update-count handling for updates and deletes;
 - explicit query selection for a primitive `long` count result; and
 - one local JDBC transaction that looks up a type and inserts a Pokemon.
 
@@ -92,11 +103,21 @@ README.
 
 ## Build and Run
 
-Build the application from this directory:
+Build the application and run its tests from this directory:
 
 ```shell
 mvn package
 ```
+
+To build the application without running the tests, use:
+
+```shell
+mvn package -DskipTests
+```
+
+This example uses Helidon APIs that are currently marked as preview. Maven passes
+`-Ahelidon.api.preview=ignore` to the compiler, so individual Java files do not need preview-warning suppression
+annotations.
 
 Start the packaged application:
 
@@ -104,8 +125,11 @@ Start the packaged application:
 java -jar target/helidon-examples-declarative-data-jdbc-postgres.jar
 ```
 
-The Maven test suite uses H2 in PostgreSQL compatibility mode and runs the same `etc/schema.sql` used by PostgreSQL. The
-test does not require a running PostgreSQL container.
+The Maven test suite uses Testcontainers to build the same `etc/docker/Dockerfile` shown above, whose base image is
+`container-registry.oracle.com/os/oraclelinux:9-slim`, and start the PostgreSQL server installed by that Dockerfile. It
+creates the `pokemons` database, initializes it with the same `etc/schema.sql`, and exercises the documented query and
+mutation endpoints through its PostgreSQL connection. Testcontainers manages this database, so the optional local
+container is not needed for tests. When Docker is unavailable, JUnit skips the container-backed test class.
 
 The registry-managed JDBC client is named `pokemon` and uses the inline connection from `data.clients.jdbc`. Both
 repository interfaces select it with `@Jdbc.Client("pokemon")`.
@@ -191,7 +215,22 @@ code adds the `ID` column through the staged generated-key builder before mappin
 
 The schema starts generated Pokemon identifiers at `20`, so the JSON object returned by the first insert into a fresh
 database contains that ID.
-Delete it with:
+
+Update the inserted Pokemon's name and type, using the identifier returned by `POST` (the first identifier is `20` in a
+freshly initialized database):
+
+```shell
+curl -i -X PUT \
+     -H 'Content-Type: application/json' \
+     -d '{"name":"Charmeleon","type":"Fire"}' \
+     http://localhost:8080/pokemon/20
+```
+
+`PUT /pokemon/{id}` updates the row selected by the path identifier and returns its new JSON representation. The body
+supplies the new nonblank `name` and an existing Pokemon `type`; it does not need an `id`. A missing row returns HTTP
+`404`.
+
+Delete the updated Pokemon:
 
 ```shell
 curl -i -X DELETE http://localhost:8080/pokemon/20

@@ -24,20 +24,37 @@ creates or replaces its own schema. Follow the database-specific README to run t
 
 The PostgreSQL application injects a configuration-managed named client into its imperative HTTP service. MySQL and
 Oracle Database construct standalone application clients through different public API forms. Every database module
-supplies its corresponding production JDBC driver and uses H2 for its test suite. Tests run the same `etc/schema.sql`
-in the matching H2 compatibility mode, so no database container is required for tests. Oracle Database and PostgreSQL
-use standard identity syntax. MySQL uses the equivalent `AUTO_INCREMENT` definition.
+supplies its corresponding production JDBC driver. Tests use Testcontainers to exercise each module against its
+corresponding database and initialize it with the same `etc/schema.sql`. Oracle Database and PostgreSQL use standard
+identity syntax. MySQL uses the equivalent `AUTO_INCREMENT` definition.
 
 The registry-managed PostgreSQL client participates in `Tx.transaction`. The standalone clients use an operation-owned
 connection for each terminal JDBC operation.
 
+All variants expose the same `/pokemon` API. It lists, searches, retrieves, and counts the seeded Pokemon; `POST`
+inserts a Pokemon, `PUT /pokemon/{id}` updates its name and type, and `DELETE /pokemon/{id}` removes it. The
+database-specific READMEs provide runnable requests and explain each endpoint's result.
+
+Each module passes `-Ahelidon.api.preview=ignore` through Maven compiler configuration instead of placing preview-warning
+suppression annotations in Java source.
+
 ## Build the Examples
 
-From this directory, build every database variant:
+From this directory, build and test every database variant:
 
 ```shell
 mvn verify
 ```
+
+To build every variant without running the tests, use:
+
+```shell
+mvn verify -DskipTests
+```
+
+The build uses Testcontainers with each sample's actual database image. Testcontainers manages the test databases and
+loads the module's `etc/schema.sql`; no manually started database is needed. When Docker is unavailable, JUnit skips the
+container-backed test classes.
 
 To build only one variant, change to its directory. For example:
 
