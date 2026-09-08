@@ -72,8 +72,13 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -111,7 +116,9 @@
             <testResource>
                 <directory>${project.basedir}/etc</directory>
                 <includes>
+                    <include>run-schema.sql</include>
                     <include>schema.sql</include>
+                    <include>setup-user.sql</include>
                 </includes>
             </testResource>
         </testResources>
