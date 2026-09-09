@@ -29,7 +29,3 @@ server:
       observers:
         health:
           details: true
-
-# Ignore this feature's warning
-declarative:
-  ignore-incubating: true

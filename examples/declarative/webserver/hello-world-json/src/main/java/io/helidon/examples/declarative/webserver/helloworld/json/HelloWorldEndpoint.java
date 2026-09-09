@@ -19,7 +19,6 @@ package io.helidon.examples.declarative.webserver.helloworld.json;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.helidon.common.Api;
-import io.helidon.common.Default;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.config.Configuration;
 import io.helidon.http.Http;
@@ -27,7 +26,7 @@ import io.helidon.http.Status;
 import io.helidon.service.registry.Service;
 import io.helidon.webserver.http.RestServer;
 
-@SuppressWarnings(Api.SUPPRESS_INCUBATING)
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @RestServer.Endpoint // webserver declarative endpoint
 @Http.Path("/hello") // path to serve this endpoint on
 @Service.Singleton // service registry scope (must be singleton)
@@ -35,7 +34,7 @@ class HelloWorldEndpoint {
     private final AtomicReference<String> greeting = new AtomicReference<>();
 
     @Service.Inject
-    HelloWorldEndpoint(@Default.Value("Ciao") @Configuration.Value("app.greeting") String greeting) {
+    HelloWorldEndpoint(@Configuration.Value("${app.greeting:Ciao}") String greeting) {
         this.greeting.set(greeting);
     }
 

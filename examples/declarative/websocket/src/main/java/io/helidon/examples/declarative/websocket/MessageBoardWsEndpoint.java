@@ -28,7 +28,7 @@ import io.helidon.websocket.WsSession;
 @WebSocketServer.Endpoint
 @Http.Path("/websocket")
 @Service.Singleton
-@SuppressWarnings(Api.SUPPRESS_INCUBATING)
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 class MessageBoardWsEndpoint {
     private static final System.Logger LOGGER = System.getLogger(MessageBoardWsEndpoint.class.getName());
 
