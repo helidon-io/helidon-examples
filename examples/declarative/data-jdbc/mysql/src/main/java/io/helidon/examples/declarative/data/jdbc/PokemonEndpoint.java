@@ -117,16 +117,16 @@ class PokemonEndpoint {
     }
 
     /**
-     * Looks up a Pokemon with the alternate row mapper selected explicitly.
+     * Looks up a Pokemon with the explicitly selected row mapper.
      *
      * @param name Pokemon name
-     * @return Pokemon mapped by the alternate mapper, if present
+     * @return Pokemon mapped by the explicit mapper, if present
      */
     @Http.GET
     @Http.Path("/explicit-mapper/{name}")
     @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
     Optional<PokemonDto> pokemonWithExplicitMapper(@Http.PathParam("name") String name) {
-        return pokemonRepository.findByNameWithAlternateMapper(name)
+        return pokemonRepository.findByNameWithExplicitMapper(name)
                 .map(PokemonDto::create);
     }
 

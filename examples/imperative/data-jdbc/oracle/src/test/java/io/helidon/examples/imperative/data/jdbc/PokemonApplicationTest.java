@@ -57,7 +57,7 @@ class PokemonApplicationTest {
 
     @Container
     @SuppressWarnings("resource")
-    static final OracleContainer CONTAINER = new OracleContainer();
+    private static final OracleContainer CONTAINER = new OracleContainer();
 
     private static final List<Pokemon> SEEDED_POKEMON = List.of(
             new Pokemon(8, "Arbok", "Poison"),
@@ -95,7 +95,7 @@ class PokemonApplicationTest {
         assertThat(pokemonList(get("/pokemon/search/Normal")), is(normalPokemon));
         assertThat(pokemon(get("/pokemon/get/Meowth")), is(new Pokemon(5, "Meowth", "Normal")));
         assertThat(pokemon(get("/pokemon/explicit-mapper/Meowth")),
-                   is(new Pokemon(5, "LOW-WEIGHT EXPLICIT: Meowth", "Normal")));
+                   is(new Pokemon(5, "EXPLICIT: Meowth", "Normal")));
         assertThat(pokemon(get("/pokemon/search/Normal/Meowth")),
                    is(new Pokemon(5, "Meowth", "Normal")));
     }
@@ -208,6 +208,33 @@ class PokemonApplicationTest {
         assertBadRequest(Json.createObjectBuilder().add("name", "Charmander").add("type", "  ").build());
     }
 
+    private static String successful(Http1ClientResponse response) {
+        String body = response.as(String.class);
+        assertThat("Unexpected response from " + response.lastEndpointUri() + ": " + body,
+                   response.status().code(),
+                   is(200));
+        return body;
+    }
+
+    private static List<Pokemon> pokemonList(String response) {
+        JsonArray array = json(response).asJsonArray();
+        return array.stream().map(JsonValue::asJsonObject).map(PokemonApplicationTest::pokemon).toList();
+    }
+
+    private static Pokemon pokemon(String response) {
+        return pokemon(json(response).asJsonObject());
+    }
+
+    private static Pokemon pokemon(JsonObject json) {
+        return new Pokemon(json.getInt("id"), json.getString("name"), json.getString("type"));
+    }
+
+    private static JsonValue json(String value) {
+        try (var reader = Json.createReader(new StringReader(value))) {
+            return reader.readValue();
+        }
+    }
+
     private int count() {
         return Integer.parseInt(get("/pokemon/count"));
     }
@@ -256,33 +283,6 @@ class PokemonApplicationTest {
         assertThat(count(), is(expectedCount));
     }
 
-    private static String successful(Http1ClientResponse response) {
-        String body = response.as(String.class);
-        assertThat("Unexpected response from " + response.lastEndpointUri() + ": " + body,
-                   response.status().code(),
-                   is(200));
-        return body;
-    }
-
-    private static List<Pokemon> pokemonList(String response) {
-        JsonArray array = json(response).asJsonArray();
-        return array.stream().map(JsonValue::asJsonObject).map(PokemonApplicationTest::pokemon).toList();
-    }
-
-    private static Pokemon pokemon(String response) {
-        return pokemon(json(response).asJsonObject());
-    }
-
-    private static Pokemon pokemon(JsonObject json) {
-        return new Pokemon(json.getInt("id"), json.getString("name"), json.getString("type"));
-    }
-
-    private static JsonValue json(String value) {
-        try (var reader = Json.createReader(new StringReader(value))) {
-            return reader.readValue();
-        }
-    }
-
     private record Pokemon(int id, String name, String type) {
     }
 
@@ -310,6 +310,18 @@ class PokemonApplicationTest {
             initializeDatabase();
             System.setProperty("data.url", jdbcUrl());
             System.setProperty("helidon.serialFilter.pattern", "oracle.sql.converter.*");
+        }
+
+        private static boolean sqlPlusSucceeded(ExecResult result) {
+            return result.getExitCode() == 0 && !result.getStdout().contains("ORA-");
+        }
+
+        private static void verifySqlPlus(ExecResult result, String action) {
+            if (!sqlPlusSucceeded(result)) {
+                throw new IllegalStateException("Could not " + action + ":\n"
+                                                        + result.getStdout()
+                                                        + result.getStderr());
+            }
         }
 
         private String jdbcUrl() {
@@ -344,16 +356,5 @@ class PokemonApplicationTest {
             }
         }
 
-        private static boolean sqlPlusSucceeded(ExecResult result) {
-            return result.getExitCode() == 0 && !result.getStdout().contains("ORA-");
-        }
-
-        private static void verifySqlPlus(ExecResult result, String action) {
-            if (!sqlPlusSucceeded(result)) {
-                throw new IllegalStateException("Could not " + action + ":\n"
-                                                        + result.getStdout()
-                                                        + result.getStderr());
-            }
-        }
     }
 }
