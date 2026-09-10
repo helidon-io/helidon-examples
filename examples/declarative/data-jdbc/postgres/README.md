@@ -126,6 +126,11 @@ To build the application without running tests:
 mvn package -DskipTests
 ```
 
+> **Note**
+> Helidon Data JDBC is incubating. This example opts in with
+> `-Ahelidon.api.incubating=ignore` in [`pom.xml`](pom.xml). An application can instead scope the opt in to its source
+> with `@SuppressWarnings(Api.SUPPRESS_INCUBATING)`.
+
 Start the packaged application:
 
 ```shell
