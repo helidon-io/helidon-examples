@@ -3,6 +3,9 @@
 These examples show how to execute SQL directly with the Helidon Data `JdbcClient`. Application code creates statements,
 binds parameters, selects row mappers, and invokes terminal operations for queries, updates, and generated keys.
 
+NOTE: Helidon Data JDBC is an incubating feature introduced in Helidon 27.0.0. Its APIs are not production ready, may
+change incompatibly, and may be removed in any release.
+
 Choose the imperative approach when you want JDBC operations to remain explicit in application code. To define data
 access as repository interfaces and generate their implementations, use the
 [declarative JDBC examples](../../declarative/data-jdbc).
