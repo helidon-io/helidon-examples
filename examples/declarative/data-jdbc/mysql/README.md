@@ -17,33 +17,22 @@ Use this example to explore generated repository implementations. If you prefer 
 
 The repositories cover:
 
-- generated JDBC repository implementations for list, optional, insert, update, and delete operations;
-- named SQL parameter binding, repeated named markers, and positional binding in repository parameter declaration order;
-- generated typed-null binding for reference parameters;
-- generated mapping of a flat `Type` record;
-- marker form `@Jdbc.RowMapper` selection by the exact `JdbcClient.RowMapper<Pokemon>` service contract;
-- Service Registry selection of the matching mapper with the highest `@Weight`;
-- class-valued `@Jdbc.RowMapper(ExplicitPokemonRowMapper.class)` selection independently of service weight;
-- generation of an inherited method declared by a parent repository contract;
-- mapping one joined database row to a `Pokemon` containing a nested `Type`;
-- staged generated-key retrieval for inserts and update-count handling for updates and deletes;
-- explicit query selection for a primitive `long` count result; and
-- local JDBC transactions that combine each type lookup with its insert or update.
+- generated JDBC repository implementations for list, optional, insert, update, and delete operations
+- named SQL parameter binding, repeated named markers, and positional binding in repository parameter declaration order
+- generated typed-null binding for reference parameters
+- generated mapping of a flat `Type` record
+- marker form `@Jdbc.RowMapper` selection by the exact `JdbcClient.RowMapper<Pokemon>` service contract
+- Service Registry selection of the matching mapper with the highest `@Weight`
+- class-valued `@Jdbc.RowMapper(ExplicitPokemonRowMapper.class)` selection independently of service weight
+- generation of an inherited method declared by a parent repository contract
+- mapping one joined database row to a `Pokemon` containing a nested `Type`
+- staged generated-key retrieval for inserts and update-count handling for updates and deletes
+- explicit query selection for a primitive `long` count result
+- local JDBC transactions that combine each type lookup with its insert or update
 
 `PokemonRepository` extends the ordinary `PokemonLookup` interface. `PokemonLookup` declares
 `findByName(String name)` and its JDBC annotations, and the generated `PokemonRepository` implementation includes that
 inherited method.
-
-## Prerequisites
-
-To build and run the example, you need:
-
-- A JDK
-- Maven
-- A running MySQL database
-
-You can use an existing database or start the optional Docker container described below. Docker is also required to run
-the database-backed tests.
 
 ## Database Configuration
 
@@ -102,6 +91,8 @@ Use your normal provisioning and credential-management practices for any environ
 
 ## Build and Run
 
+Use JDK 26 and Maven 3.8.0 or newer.
+
 From this directory, build the application and run its tests:
 
 ```shell
@@ -113,9 +104,6 @@ To build the application without running tests:
 ```shell
 mvn package -DskipTests
 ```
-
-This example uses Helidon APIs marked as preview. Maven passes `-Ahelidon.api.preview=ignore` to the compiler, so the
-Java sources do not need preview-warning suppression annotations.
 
 Start the packaged application:
 
@@ -162,8 +150,8 @@ curl http://localhost:8080/pokemon/get/Meowth
 
 Two services match the marker method's exact `JdbcClient.RowMapper<Pokemon>` contract:
 
-- `ExplicitPokemonRowMapper` has weight `Weighted.DEFAULT_WEIGHT - 10`;
-- `PokemonRowMapper` has weight `Weighted.DEFAULT_WEIGHT + 10`.
+- `ExplicitPokemonRowMapper` has weight `Weighted.DEFAULT_WEIGHT - 10`
+- `PokemonRowMapper` has weight `Weighted.DEFAULT_WEIGHT + 10`
 
 `ExplicitPokemonRowMapper` comes first alphabetically. The marker lookup nevertheless selects `PokemonRowMapper`
 because Service Registry evaluates higher weight before service type name. The ordinary result therefore retains the

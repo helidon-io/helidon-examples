@@ -15,12 +15,12 @@ client for local transactions. To generate implementations from annotated reposi
 
 The application covers:
 
-- list, optional, scalar, insert, update, and delete JDBC operations;
-- positional parameter binding, including binding one value to multiple positions;
-- mapping joined rows to a `Pokemon` containing a nested `Type`;
-- selecting either the standard or explicit row mapper;
-- retrieving a database-generated identifier; and
-- looking up a type before inserting or updating a Pokemon in one local JDBC transaction.
+- list, optional, scalar, insert, update, and delete JDBC operations
+- positional parameter binding, including binding one value to multiple positions
+- mapping joined rows to a `Pokemon` containing a nested `Type`
+- selecting either the standard or explicit row mapper
+- retrieving a database-generated identifier
+- looking up a type before inserting or updating a Pokemon in one local JDBC transaction
 
 ## Client Construction and Transaction Behavior
 
@@ -47,17 +47,6 @@ PokemonService(@Data.ProviderType("jdbc")
 
 The named client participates in `Tx.transaction`. `PokemonService` wraps each type lookup and its corresponding insert
 or update in one local transaction.
-
-## Prerequisites
-
-To build and run the example, you need:
-
-- A JDK
-- Maven
-- A running PostgreSQL database
-
-You can use an existing database or start the optional Docker container described below. Docker is also required to run
-the database-backed tests.
 
 ## Database Configuration
 
@@ -121,6 +110,8 @@ Use your normal provisioning and credential-management practices for any environ
 
 ## Build and Run
 
+Use JDK 26 and Maven 3.8.0 or newer.
+
 From `examples/imperative/data-jdbc/postgres`, build the application and run its tests:
 
 ```shell
@@ -132,9 +123,6 @@ To build the application without running tests:
 ```shell
 mvn package -DskipTests
 ```
-
-This example uses Helidon APIs marked as preview. Maven passes `-Ahelidon.api.preview=ignore` to the compiler, so the
-Java sources do not need preview-warning suppression annotations.
 
 Start the packaged application:
 
