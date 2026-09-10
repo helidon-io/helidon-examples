@@ -92,10 +92,10 @@ public interface PokemonRepository extends PokemonLookup {
     /**
      * Retrieves a Pokemon by name with an explicitly selected mapper.
      * <p>
-     * The class value selects {@link PokemonAlternateRowMapper} instead of relying on service weight.
+     * The class value selects {@link ExplicitPokemonRowMapper} instead of relying on service weight.
      *
      * @param name Pokemon name
-     * @return Pokemon mapped by the alternate mapper, or an empty optional when it does not exist
+     * @return Pokemon mapped by the explicit mapper, or an empty optional when it does not exist
      */
     @Jdbc.Statement("""
             SELECT p.ID AS id,
@@ -107,8 +107,8 @@ public interface PokemonRepository extends PokemonLookup {
             WHERE p.NAME = :name
             """)
     @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
-    @Jdbc.RowMapper(PokemonAlternateRowMapper.class)
-    Optional<Pokemon> findByNameWithAlternateMapper(String name);
+    @Jdbc.RowMapper(ExplicitPokemonRowMapper.class)
+    Optional<Pokemon> findByNameWithExplicitMapper(String name);
 
     /**
      * Retrieves a Pokemon by type and name.

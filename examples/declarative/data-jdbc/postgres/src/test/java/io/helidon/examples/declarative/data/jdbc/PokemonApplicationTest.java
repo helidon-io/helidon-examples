@@ -64,7 +64,7 @@ class PokemonApplicationTest {
 
     @Container
     @SuppressWarnings("resource")
-    static final PokemonPostgresContainer CONTAINER = new PokemonPostgresContainer(IMAGE)
+    private static final PokemonPostgresContainer CONTAINER = new PokemonPostgresContainer(IMAGE)
             .withDatabaseName("pokemons")
             .withUsername("user")
             .withPassword("pgsql123")
@@ -115,6 +115,18 @@ class PokemonApplicationTest {
         assertNotFound("/pokemon/get/DoesNotExist");
     }
 
+    /**
+     * Verifies that generated code binds a null repository argument as typed SQL NULL without losing the client.
+     */
+    @Test
+    void bindsNullRepositoryArgumentAsSqlNull() {
+        int expectedCount = count();
+        PokemonRepository pokemonRepository = Services.get(PokemonRepository.class);
+
+        assertThat(pokemonRepository.findByName(null).isEmpty(), is(true));
+        assertThat(count(), is(expectedCount));
+    }
+
     @Test
     void oneThrowsForUnknownTypeAndApplicationRemainsUsable() {
         int expectedCount = count();
@@ -125,7 +137,7 @@ class PokemonApplicationTest {
     }
 
     @Test
-    void usesConfiguredRowMappers() {
+    void markerSelectsHighestWeight() {
         assertThat(pokemon(get("/pokemon/get/Meowth")), is(new Pokemon(5, "Meowth", "Normal")));
         assertThat(pokemon(get("/pokemon/explicit-mapper/Meowth")),
                    is(new Pokemon(5, "LOW-WEIGHT EXPLICIT: Meowth", "Normal")));
@@ -310,6 +322,33 @@ class PokemonApplicationTest {
                                  .build());
     }
 
+    private static String successful(Http1ClientResponse response) {
+        String body = response.as(String.class);
+        assertThat("Unexpected response from " + response.lastEndpointUri() + ": " + body,
+                   response.status().code(),
+                   is(200));
+        return body;
+    }
+
+    private static List<Pokemon> pokemonList(String response) {
+        JsonArray array = json(response).asJsonArray();
+        return array.stream().map(JsonValue::asJsonObject).map(PokemonApplicationTest::pokemon).toList();
+    }
+
+    private static Pokemon pokemon(String response) {
+        return pokemon(json(response).asJsonObject());
+    }
+
+    private static Pokemon pokemon(JsonObject json) {
+        return new Pokemon(json.getInt("id"), json.getString("name"), json.getString("type"));
+    }
+
+    private static JsonValue json(String value) {
+        try (var reader = Json.createReader(new StringReader(value))) {
+            return reader.readValue();
+        }
+    }
+
     private int count() {
         return Integer.parseInt(get("/pokemon/count"));
     }
@@ -360,33 +399,6 @@ class PokemonApplicationTest {
                        is(400));
         }
         assertThat(count(), is(expectedCount));
-    }
-
-    private static String successful(Http1ClientResponse response) {
-        String body = response.as(String.class);
-        assertThat("Unexpected response from " + response.lastEndpointUri() + ": " + body,
-                   response.status().code(),
-                   is(200));
-        return body;
-    }
-
-    private static List<Pokemon> pokemonList(String response) {
-        JsonArray array = json(response).asJsonArray();
-        return array.stream().map(JsonValue::asJsonObject).map(PokemonApplicationTest::pokemon).toList();
-    }
-
-    private static Pokemon pokemon(String response) {
-        return pokemon(json(response).asJsonObject());
-    }
-
-    private static Pokemon pokemon(JsonObject json) {
-        return new Pokemon(json.getInt("id"), json.getString("name"), json.getString("type"));
-    }
-
-    private static JsonValue json(String value) {
-        try (var reader = Json.createReader(new StringReader(value))) {
-            return reader.readValue();
-        }
     }
 
     private record Pokemon(int id, String name, String type) {

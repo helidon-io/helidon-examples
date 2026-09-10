@@ -54,7 +54,7 @@ public final class Main {
     }
 
     static void routing(HttpRouting.Builder routing) {
-        JdbcClient jdbcClient = JdbcClient.create(builder -> builder.dataSource("example"));
+        JdbcClient jdbcClient = JdbcClient.create(builder -> builder.dataSourceName("example"));
         routing.register("/pokemon", new PokemonService(jdbcClient));
     }
 }

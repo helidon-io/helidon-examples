@@ -1,14 +1,21 @@
-# Helidon Data JDBC Declarative using MySQL Database
+# Helidon Data JDBC Declarative with MySQL
 
-This example uses Helidon Data to generate pure JDBC implementations of two declarative repository interfaces:
+This example shows how to use Helidon Data declarative repositories with MySQL. Helidon generates JDBC-backed
+implementations of two repository interfaces:
 
 - `PokemonRepository`
 - `TypeRepository`
 
-Repository methods declare SQL with `@Jdbc.Statement`. Most result shapes let code generation infer query or update
-execution. Primitive `int` and `long` results use `@Jdbc.Execution` when the method shape is ambiguous.
+Repository methods declare SQL with `@Jdbc.Statement`. Helidon can infer query or update execution for most result
+shapes. Methods with ambiguous primitive `int` or `long` results use `@Jdbc.Execution` to select the operation
+explicitly.
 
-The sample validates:
+Use this example to explore generated repository implementations. If you prefer to construct statements and call
+`JdbcClient` directly, see the [imperative MySQL example](../../../imperative/data-jdbc/mysql).
+
+## What the Example Demonstrates
+
+The repositories cover:
 
 - generated JDBC repository implementations for list, optional, insert, update, and delete operations;
 - named SQL parameter binding, repeated named markers, and positional binding in repository parameter declaration order;
@@ -16,26 +23,42 @@ The sample validates:
 - generated mapping of a flat `Type` record;
 - marker form `@Jdbc.RowMapper` selection by the exact `JdbcClient.RowMapper<Pokemon>` service contract;
 - Service Registry selection of the matching mapper with the highest `@Weight`;
-- class-valued `@Jdbc.RowMapper(PokemonAlternateRowMapper.class)` selection independently of service weight;
+- class-valued `@Jdbc.RowMapper(ExplicitPokemonRowMapper.class)` selection independently of service weight;
 - generation of an inherited method declared by a parent repository contract;
 - mapping one joined database row to a `Pokemon` containing a nested `Type`;
 - staged generated-key retrieval for inserts and update-count handling for updates and deletes;
 - explicit query selection for a primitive `long` count result; and
-- one local JDBC transaction that looks up a type and inserts a Pokemon.
+- local JDBC transactions that combine each type lookup with its insert or update.
 
-`PokemonRepository` extends the ordinary `PokemonLookup` interface. The parent declares `findByName(String name)` and
-its JDBC annotations. The generated `PokemonRepository` implementation includes that inherited method.
+`PokemonRepository` extends the ordinary `PokemonLookup` interface. `PokemonLookup` declares
+`findByName(String name)` and its JDBC annotations, and the generated `PokemonRepository` implementation includes that
+inherited method.
 
-The example uses MySQL and HikariCP. Before running the application, you must run `etc/schema.sql` against the database
-to create and populate the sample tables. The application does not create its own schema.
+## Prerequisites
 
-For this demo, the application connects to the `pokemons` database with username `user` and password `changeit`. These
-credentials are part of the example and are not intended for use outside a local demo.
+To build and run the example, you need:
 
-The container instructions below are one convenient way to prepare a database and run the SQL script. They are provided
-to make the demo easy to try; they are not recommendations for configuring or securing a production environment. You
-can instead use an existing MySQL Database and run the script with the database tools and account management process
-appropriate for that environment.
+- A JDK
+- Maven
+- A running MySQL database
+
+You can use an existing database or start the optional Docker container described below. Docker is also required to run
+the database-backed tests.
+
+## Database Configuration
+
+The application uses MySQL Connector/J and a HikariCP data source. Its settings are in
+`src/main/resources/application.yaml`. By default, the application connects to the `pokemons` database at
+`localhost:3306` with username `user` and password `changeit`. If you use another database, update `data.url` and the
+data source credentials before starting the application.
+
+The configuration registers the default JDBC client and backs it with the HikariCP data source named `example`.
+The application does not create or migrate the schema, so initialize the database before starting the application.
+
+The default credentials are intended only for this local demo.
+
+You can use an existing MySQL database or start the optional local container described below. With an existing database,
+create the configured database and user, then run `etc/schema.sql` as that user.
 
 ## Optional Local MySQL Container
 
@@ -52,7 +75,7 @@ docker run --name mysql \
        -d container-registry.oracle.com/mysql/community-server:9.7.1
 ```
 
-Before continuing, follow the startup log to make sure that the database has completed startup:
+Follow the startup log and wait for MySQL to accept connections:
 
 ```shell
 docker logs -f mysql
@@ -63,8 +86,7 @@ docker logs -f mysql
 > **Warning:** The following command drops the existing `POKEMON` and `TYPE` tables in the `pokemons` database,
 > including all their data, before recreating and populating them. It does not modify tables in other databases.
 
-Running `etc/schema.sql` is a prerequisite for the demo. When using the optional container setup above, this single
-command runs the local script as the demo user:
+When using the optional container, run the schema script as the demo user:
 
 ```shell
 docker exec -i mysql \
@@ -72,33 +94,28 @@ docker exec -i mysql \
        < etc/schema.sql
 ```
 
-The command uses the container's `MYSQL_PASSWORD` environment variable without passing the password as a MySQL
-command-line argument, and sends `etc/schema.sql` to the MySQL client in the container. The script drops the sample
-tables, recreates them and their foreign key, inserts the Pokemon types and sample Pokemon, and commits the sample data.
-If you use a different MySQL setup, run `etc/schema.sql` there as the user the application will use before starting the
-application.
+The command reads the password from the container's `MYSQL_PASSWORD` environment variable and sends `etc/schema.sql` to
+the MySQL client. The script recreates the sample tables and their foreign key, inserts the Pokemon types and Pokemon,
+and commits the sample data.
 
-The container, demo credentials, and MySQL commands in this section are conveniences for running the example.
-Production database provisioning, credential management, storage, and security policies are outside the scope of this
-README.
+Use your normal provisioning and credential-management practices for any environment beyond this local demo.
 
 ## Build and Run
 
-Build the application and run its tests from this directory:
+From this directory, build the application and run its tests:
 
 ```shell
 mvn package
 ```
 
-To build the application without running the tests, use:
+To build the application without running tests:
 
 ```shell
 mvn package -DskipTests
 ```
 
-This example uses Helidon APIs that are currently marked as preview. Maven passes
-`-Ahelidon.api.preview=ignore` to the compiler, so individual Java files do not need preview-warning suppression
-annotations.
+This example uses Helidon APIs marked as preview. Maven passes `-Ahelidon.api.preview=ignore` to the compiler, so the
+Java sources do not need preview-warning suppression annotations.
 
 Start the packaged application:
 
@@ -106,7 +123,7 @@ Start the packaged application:
 java -jar target/helidon-examples-declarative-data-jdbc-mysql.jar
 ```
 
-The Maven test suite uses Testcontainers to start
+The test suite uses Testcontainers to start
 `container-registry.oracle.com/mysql/community-server:9.7.1`, the same image shown above. It creates the `pokemons`
 database, initializes it with the same `etc/schema.sql`, and exercises the documented query and mutation endpoints
 through the MySQL connection. Testcontainers manages this database, so the optional local container is not needed for
@@ -145,10 +162,10 @@ curl http://localhost:8080/pokemon/get/Meowth
 
 Two services match the marker method's exact `JdbcClient.RowMapper<Pokemon>` contract:
 
-- `PokemonAlternateRowMapper` has weight `Weighted.DEFAULT_WEIGHT - 10`;
+- `ExplicitPokemonRowMapper` has weight `Weighted.DEFAULT_WEIGHT - 10`;
 - `PokemonRowMapper` has weight `Weighted.DEFAULT_WEIGHT + 10`.
 
-`PokemonAlternateRowMapper` comes first alphabetically. The marker lookup nevertheless selects `PokemonRowMapper`
+`ExplicitPokemonRowMapper` comes first alphabetically. The marker lookup nevertheless selects `PokemonRowMapper`
 because Service Registry evaluates higher weight before service type name. The ordinary result therefore retains the
 database name `"Meowth"`.
 
@@ -158,8 +175,8 @@ Select the lower-weight mapper explicitly:
 curl http://localhost:8080/pokemon/explicit-mapper/Meowth
 ```
 
-The class-valued mapper annotation ignores marker lookup ordering and returns the recognizable name
-`"LOW-WEIGHT EXPLICIT: Meowth"`.
+The class-valued mapper annotation bypasses marker lookup and returns `"LOW-WEIGHT EXPLICIT: Meowth"`, which makes the
+selected mapper visible in the response.
 
 Retrieve `Meowth` by type and name:
 
@@ -179,7 +196,7 @@ curl http://localhost:8080/pokemon/count
 The count method uses `@Jdbc.Execution(QUERY)` because primitive `long` could otherwise mean either a scalar query or an
 update count. The list method omits `@Jdbc.Execution` to demonstrate AUTO inference from its `List<Pokemon>` result.
 
-Insert a Pokemon and return a JSON object containing its generated identifier, name, and type:
+Insert a Pokemon. The response is a JSON object containing the generated identifier, name, and type:
 
 ```shell
 curl -i -X POST \
@@ -194,8 +211,8 @@ code adds the `ID` column through the staged generated-key builder before mappin
 The schema starts generated Pokemon identifiers at `20`, so the JSON object returned by the first insert into a fresh
 database contains that ID.
 
-Update the inserted Pokemon's name and type, using the identifier returned by `POST` (the first identifier is `20` in a
-freshly initialized database):
+Update the inserted Pokemon's name and type. Use the identifier returned by `POST`; the first identifier is `20` in a
+freshly initialized database:
 
 ```shell
 curl -i -X PUT \

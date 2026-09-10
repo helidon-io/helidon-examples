@@ -15,14 +15,11 @@
  */
 package io.helidon.examples.imperative.data.jdbc.model;
 
-import io.helidon.common.Weight;
-import io.helidon.common.Weighted;
 import io.helidon.data.jdbc.JdbcClient;
 
 /**
  * Maps joined Pokemon and type JDBC rows to the nested {@link Pokemon} model.
  */
-@Weight(Weighted.DEFAULT_WEIGHT + 10)
 public final class PokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
 
     /**

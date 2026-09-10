@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.examples.imperative.data.jdbc.model.Pokemon;
-import io.helidon.examples.imperative.data.jdbc.model.PokemonAlternateRowMapper;
+import io.helidon.examples.imperative.data.jdbc.model.ExplicitPokemonRowMapper;
 import io.helidon.examples.imperative.data.jdbc.model.PokemonRowMapper;
 import io.helidon.examples.imperative.data.jdbc.model.Type;
 import io.helidon.http.BadRequestException;
@@ -39,7 +39,7 @@ final class PokemonService implements HttpService {
 
     private final JdbcClient jdbcClient;
     private final JdbcClient.RowMapper<Pokemon> pokemonRowMapper = new PokemonRowMapper();
-    private final JdbcClient.RowMapper<Pokemon> pokemonAlternateRowMapper = new PokemonAlternateRowMapper();
+    private final JdbcClient.RowMapper<Pokemon> explicitPokemonRowMapper = new ExplicitPokemonRowMapper();
 
     /**
      * Creates the HTTP service with the standalone JDBC client.
@@ -184,12 +184,12 @@ final class PokemonService implements HttpService {
     }
 
     /**
-     * Retrieves a Pokemon by name using the alternate mapper.
+     * Retrieves a Pokemon by name using the explicitly selected mapper.
      *
      * @param name Pokemon name
-     * @return alternately mapped Pokemon, if present
+     * @return Pokemon mapped by the explicit mapper, if present
      */
-    Optional<Pokemon> findByNameWithAlternateMapper(String name) {
+    Optional<Pokemon> findByNameWithExplicitMapper(String name) {
         String sql = """
                 SELECT p.ID AS id,
                        p.NAME AS name,
@@ -201,7 +201,7 @@ final class PokemonService implements HttpService {
                 """;
         JdbcClient.Statement statement = jdbcClient.create(sql);
         statement.bind(1, name);
-        return statement.map(pokemonAlternateRowMapper).optional();
+        return statement.map(explicitPokemonRowMapper).optional();
     }
 
     /**
@@ -341,11 +341,11 @@ final class PokemonService implements HttpService {
     }
 
     /**
-     * Returns a Pokemon mapped with the recognizable alternate row mapper.
+     * Returns a Pokemon mapped with the explicitly selected row mapper.
      */
     private void pokemonWithExplicitMapper(ServerRequest request, ServerResponse response) {
         String name = request.path().pathParameters().get("name");
-        response.send(findByNameWithAlternateMapper(name).map(PokemonDto::create));
+        response.send(findByNameWithExplicitMapper(name).map(PokemonDto::create));
     }
 
     /**

@@ -21,20 +21,20 @@ import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.service.registry.Service;
 
 /**
- * Maps joined rows with a recognizable alternate Pokemon name.
+ * Maps joined rows with a recognizable Pokemon name for explicit mapper selection.
  * <p>
  * Its lower weight makes {@link PokemonRowMapper} the default mapper for the marker annotation. Repository methods can
- * select this mapper directly when they need the alternate result.
+ * select this mapper directly by its class.
  */
 @Service.Singleton
 @Weight(Weighted.DEFAULT_WEIGHT - 10)
-public final class PokemonAlternateRowMapper implements JdbcClient.RowMapper<Pokemon> {
+public final class ExplicitPokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
     private static final String NAME_PREFIX = "LOW-WEIGHT EXPLICIT: ";
 
     /**
-     * Creates the alternate Pokemon row mapper.
+     * Creates the explicitly selected Pokemon row mapper.
      */
-    public PokemonAlternateRowMapper() {
+    public ExplicitPokemonRowMapper() {
     }
 
     /**
