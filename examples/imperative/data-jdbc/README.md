@@ -40,19 +40,10 @@ start an application against your own database. The application does not create 
 use Testcontainers to start the corresponding database and load the same schema automatically. Oracle Database and
 PostgreSQL use standard identity syntax; MySQL uses `AUTO_INCREMENT`.
 
-All modules pass `-Ahelidon.api.preview=ignore` through the Maven compiler configuration, so the Java sources do not
-need preview-warning suppression annotations.
-
-## Prerequisites
-
-To build the examples, you need:
-
-- A JDK
-- Maven
-
-Docker is required only for the container-backed tests. If Docker is unavailable, JUnit skips those test classes.
-
 ## Build the Examples
+
+Use JDK 26 and Maven 3.8.0 or newer to build the examples. Docker is required only for the container-backed tests. If
+Docker is unavailable, JUnit skips those test classes.
 
 From this directory, build and test every database variant:
 
