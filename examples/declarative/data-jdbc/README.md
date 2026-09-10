@@ -3,6 +3,9 @@
 These examples show how to define JDBC data access as Helidon Data repository interfaces. Repository methods declare
 their SQL and result mapping with annotations, and Helidon generates the JDBC-backed implementations at build time.
 
+NOTE: Helidon Data JDBC is an incubating feature introduced in Helidon 27.0.0. Its APIs are not production ready, may
+change incompatibly, and may be removed in any release.
+
 Choose the declarative approach when a repository interface is the right boundary for your application and you want
 Helidon to generate the implementation. To construct statements and invoke `JdbcClient` operations directly, use the
 [imperative JDBC examples](../../imperative/data-jdbc).
