@@ -15,12 +15,12 @@ annotated repository interfaces, see the
 
 The application covers:
 
-- list, optional, scalar, insert, update, and delete JDBC operations;
-- positional parameter binding, including binding one value to multiple positions;
-- mapping joined rows to a `Pokemon` containing a nested `Type`;
-- selecting either the standard or explicit row mapper;
-- retrieving a database-generated identifier; and
-- looking up a type before inserting or updating a Pokemon through separate JDBC operations.
+- list, optional, scalar, insert, update, and delete JDBC operations
+- positional parameter binding, including binding one value to multiple positions
+- mapping joined rows to a `Pokemon` containing a nested `Type`
+- selecting either the standard or explicit row mapper
+- retrieving a database-generated identifier
+- looking up a type before inserting or updating a Pokemon through separate JDBC operations
 
 ## Client Construction and Transaction Behavior
 
@@ -33,17 +33,6 @@ JdbcClient jdbcClient = JdbcClient.create(builder -> builder.dataSourceName("exa
 The client remains standalone, and its JDBC operations do not participate in `Tx.transaction`. The configured UCP data
 source remains externally managed. As a result, the type lookup and mutation in each insert or update flow run as
 separate JDBC operations.
-
-## Prerequisites
-
-To build and run the example, you need:
-
-- A JDK
-- Maven
-- A running Oracle Database
-
-You can use an existing database or start the optional Docker container described below. Docker is also required to run
-the database-backed tests.
 
 ## Database Configuration
 
@@ -109,6 +98,8 @@ Use your normal provisioning and credential-management practices for any environ
 
 ## Build and Run
 
+Use JDK 26 and Maven 3.8.0 or newer.
+
 From `examples/imperative/data-jdbc/oracle`, build the application and run its tests:
 
 ```shell
@@ -120,9 +111,6 @@ To build the application without running tests:
 ```shell
 mvn package -DskipTests
 ```
-
-This example uses Helidon APIs marked as preview. Maven passes `-Ahelidon.api.preview=ignore` to the compiler, so the
-Java sources do not need preview-warning suppression annotations.
 
 Start the packaged application:
 
