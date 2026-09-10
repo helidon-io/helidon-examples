@@ -36,9 +36,6 @@
     <name>Helidon Examples Declarative Data JDBC Project</name>
     <description>Declarative examples for Helidon Data JDBC</description>
 
-    <properties>
-    </properties>
-
     <modules>
         <module>mysql</module>
         <module>oracle</module>

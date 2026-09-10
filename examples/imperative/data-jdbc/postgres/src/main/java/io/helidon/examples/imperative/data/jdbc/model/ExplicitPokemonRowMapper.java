@@ -15,16 +15,13 @@
  */
 package io.helidon.examples.imperative.data.jdbc.model;
 
-import io.helidon.common.Weight;
-import io.helidon.common.Weighted;
 import io.helidon.data.jdbc.JdbcClient;
 
 /**
- * Maps joined JDBC rows with a recognizable alternate Pokemon name.
+ * Maps joined JDBC rows with a recognizable Pokemon name for explicit mapper selection.
  */
-@Weight(Weighted.DEFAULT_WEIGHT - 10)
-public final class PokemonAlternateRowMapper implements JdbcClient.RowMapper<Pokemon> {
-    private static final String NAME_PREFIX = "LOW-WEIGHT EXPLICIT: ";
+public final class ExplicitPokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
+    private static final String NAME_PREFIX = "EXPLICIT: ";
 
     /**
      * Maps the current row with a name that identifies this mapper.

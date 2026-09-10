@@ -1,42 +1,56 @@
 # Helidon Data JDBC Imperative Examples
 
-These examples demonstrate imperative use of Helidon Data JDBC. The applications execute SQL for queries, updates,
-generated keys, row mapping, and transaction behavior without generated repository implementations.
+These examples show how to execute SQL directly with the Helidon Data `JdbcClient`. Application code creates statements,
+binds parameters, selects row mappers, and invokes terminal operations for queries, updates, and generated keys.
 
-The same Pokemon application is available for several databases. Each database directory is a separate Maven application
-with its own JDBC dependency, datasource configuration, and instructions for preparing and connecting to that database.
+Choose the imperative approach when you want JDBC operations to remain explicit in application code. To define data
+access as repository interfaces and generate their implementations, use the
+[declarative JDBC examples](../../declarative/data-jdbc).
+
+Each database directory contains a self-contained Maven application for the same Pokemon API:
 
 | Directory | Database | JDBC client construction |
 | --- | --- | --- |
-| [`mysql`](mysql) | MySQL | `JdbcClient.builder()` with direct connection properties |
-| [`oracle`](oracle) | Oracle Database | Standalone client configured with a named data source |
-| [`postgres`](postgres) | PostgreSQL | Configuration-managed named client |
+| [`mysql`](mysql) | MySQL | Standalone client built from direct connection settings |
+| [`oracle`](oracle) | Oracle Database | Standalone client built from a named UCP data source |
+| [`postgres`](postgres) | PostgreSQL | Registry-managed named client backed by a HikariCP data source |
 
-See the `README.md` in the selected database directory for database setup, application startup, and endpoint examples.
-Those READMEs identify the Docker images used by the samples. Ensure you have permission to pull each image, or use an
-image from the appropriate registry.
+Open the README in your chosen directory for database preparation, configuration, startup, and runnable endpoint
+examples. Each README also identifies the container image used by its tests and optional local setup.
 
-## Application Layout
+## How the Examples Work
 
-Each database module is a self-contained Maven application. Its `src/main` directory contains the Java application and
-database-specific configuration, while `etc/schema.sql` contains the schema and sample data. The application never
-creates or replaces its own schema. Follow the database-specific README to run that script before application startup.
+Each module implements its database operations in `PokemonService`. The service creates a `JdbcClient.Statement`, binds
+positional parameters, applies a mapper where needed, and invokes a terminal operation such as `list()`, `optional()`,
+`one()`, or `execute()`.
 
-The PostgreSQL application injects a configuration-managed named client into its imperative HTTP service. MySQL and
-Oracle Database construct standalone application clients through different public API forms. Every database module
-supplies its corresponding production JDBC driver. Tests use Testcontainers to exercise each module against its
-corresponding database and initialize it with the same `etc/schema.sql`. Oracle Database and PostgreSQL use standard
-identity syntax. MySQL uses the equivalent `AUTO_INCREMENT` definition.
+The modules deliberately demonstrate different client construction and ownership models. MySQL builds a standalone
+client from connection settings under `app.database`. Oracle Database builds a standalone client from the configured
+UCP data source named `example`. Each terminal operation on these standalone clients owns its connection and does not
+participate in `Tx.transaction`. PostgreSQL injects the registry-managed client named `pokemon`, which can participate
+in local transactions.
 
-The registry-managed PostgreSQL client participates in `Tx.transaction`. The standalone clients use an operation-owned
-connection for each terminal JDBC operation.
+Every database variant exposes the same `/pokemon` HTTP API. The API lists, searches, retrieves, and counts seeded
+Pokemon. It also inserts a Pokemon with `POST`, updates one with `PUT /pokemon/{id}`, and deletes one with
+`DELETE /pokemon/{id}`. The database-specific READMEs include the complete request sequence and explain the relevant
+`JdbcClient` behavior.
 
-All variants expose the same `/pokemon` API. It lists, searches, retrieves, and counts the seeded Pokemon; `POST`
-inserts a Pokemon, `PUT /pokemon/{id}` updates its name and type, and `DELETE /pokemon/{id}` removes it. The
-database-specific READMEs provide runnable requests and explain each endpoint's result.
+Each module includes an `etc/schema.sql` file that creates and populates the sample tables. Run that script before you
+start an application against your own database. The application does not create or migrate its schema. Tests instead
+use Testcontainers to start the corresponding database and load the same schema automatically. Oracle Database and
+PostgreSQL use standard identity syntax; MySQL uses `AUTO_INCREMENT`.
 
-Each module passes `-Ahelidon.api.preview=ignore` through Maven compiler configuration instead of placing preview-warning
-suppression annotations in Java source.
+All modules pass `-Ahelidon.api.preview=ignore` through the Maven compiler configuration, so the Java sources do not
+need preview-warning suppression annotations.
+
+## Prerequisites
+
+To build the examples, you need:
+
+- A JDK
+- Maven
+
+Docker is required only for the container-backed tests. If Docker is unavailable, JUnit skips those test classes.
 
 ## Build the Examples
 
@@ -46,22 +60,19 @@ From this directory, build and test every database variant:
 mvn verify
 ```
 
-To build every variant without running the tests, use:
+Your environment must be able to pull each configured database image from its registry to run the tests.
+
+To build every variant without running tests:
 
 ```shell
 mvn verify -DskipTests
 ```
 
-The build uses Testcontainers with each sample's actual database image. Testcontainers manages the test databases and
-loads the module's `etc/schema.sql`; no manually started database is needed. When Docker is unavailable, JUnit skips the
-container-backed test classes.
-
-To build only one variant, change to its directory. For example:
+To build one variant, change to its directory. For example:
 
 ```shell
 cd mysql
 mvn package
 ```
 
-The database specific README.md provides the command for starting the resulting application and any database preparation
-required before startup.
+Follow that variant's README to prepare the database and start the packaged application.
