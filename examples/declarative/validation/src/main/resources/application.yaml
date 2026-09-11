@@ -21,6 +21,3 @@ server:
     # THIS MUST NOT BE USED IN PRODUCTION!
     # exception message will be sent back over the network - this may give potential attackers information about your application
     include-entity: true
-
-declarative:
-  ignore-incubating: true

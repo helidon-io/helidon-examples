@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package io.helidon.examples.quickstart.inject;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.helidon.common.Default;
 import io.helidon.config.Configuration;
 import io.helidon.http.Status;
 import io.helidon.service.registry.Service;
@@ -58,7 +57,7 @@ class GreetService implements HttpService {
     private final AtomicReference<String> greeting = new AtomicReference<>();
 
     @Service.Inject
-    GreetService(@Default.Value("Ciao") @Configuration.Value("app.greeting") String greeting) {
+    GreetService(@Configuration.Value("${app.greeting:Ciao}") String greeting) {
         this.greeting.set(greeting);
     }
 

@@ -26,7 +26,7 @@ import io.helidon.webserver.http.RestServer;
 @Http.Path("/rest")
 @Service.Singleton
 @RestServer.Endpoint
-@SuppressWarnings(Api.SUPPRESS_INCUBATING)
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 class MessageQueueHttpEndpoint {
     private static final System.Logger LOGGER = System.getLogger(MessageQueueHttpEndpoint.class.getName());
 

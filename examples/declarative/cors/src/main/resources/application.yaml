@@ -29,6 +29,3 @@ cors:
     - path-pattern: "/observe/health/*"
       allow-methods: "GET"
       allow-origins: "http://www.example.com"
-
-declarative:
-  ignore-incubating: true
