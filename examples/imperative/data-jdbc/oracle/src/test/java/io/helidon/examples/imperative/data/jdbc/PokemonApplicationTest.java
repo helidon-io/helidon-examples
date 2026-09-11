@@ -15,7 +15,6 @@
  */
 package io.helidon.examples.imperative.data.jdbc;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.time.Duration;
 import java.util.List;
@@ -33,7 +32,6 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.Container.ExecResult;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
@@ -300,60 +298,20 @@ class PokemonApplicationTest {
             withCopyFileToContainer(MountableFile.forClasspathResource("run-schema.sql"),
                                     "/opt/helidon/run-schema.sql");
             withStartupAttempts(3);
-            waitingFor(Wait.forListeningPort()
+            waitingFor(Wait.forSuccessfulCommand(
+                    "sqlplus -s -L pokemon/changeit@//localhost:1521/FREEPDB1 @/opt/helidon/run-schema.sql")
                                .withStartupTimeout(DATABASE_STARTUP_TIMEOUT));
         }
 
         @Override
         public void start() {
             super.start();
-            initializeDatabase();
             System.setProperty("data.url", jdbcUrl());
             System.setProperty("helidon.serialFilter.pattern", "oracle.sql.converter.*");
         }
 
-        private static boolean sqlPlusSucceeded(ExecResult result) {
-            return result.getExitCode() == 0 && !result.getStdout().contains("ORA-");
-        }
-
-        private static void verifySqlPlus(ExecResult result, String action) {
-            if (!sqlPlusSucceeded(result)) {
-                throw new IllegalStateException("Could not " + action + ":\n"
-                                                        + result.getStdout()
-                                                        + result.getStderr());
-            }
-        }
-
         private String jdbcUrl() {
             return "jdbc:oracle:thin:@%s:%d/FREEPDB1".formatted(getHost(), getMappedPort(ORACLE_PORT));
-        }
-
-        private void initializeDatabase() {
-            try {
-                initializeSchemaWhenDatabaseIsReady();
-            } catch (IOException e) {
-                throw new IllegalStateException("Could not initialize the Oracle test database", e);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new IllegalStateException("Interrupted while initializing the Oracle test database", e);
-            }
-        }
-
-        private void initializeSchemaWhenDatabaseIsReady() throws IOException, InterruptedException {
-            long deadline = System.nanoTime() + DATABASE_STARTUP_TIMEOUT.toNanos();
-            while (true) {
-                var result = execInContainer("sqlplus",
-                                             "-s",
-                                             "pokemon/changeit@//localhost:1521/FREEPDB1",
-                                             "@/opt/helidon/run-schema.sql");
-                if (sqlPlusSucceeded(result)) {
-                    return;
-                }
-                if (System.nanoTime() >= deadline) {
-                    verifySqlPlus(result, "initialize the Oracle test schema");
-                }
-                Thread.sleep(1000);
-            }
         }
 
     }
