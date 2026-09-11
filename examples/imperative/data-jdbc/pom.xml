@@ -42,16 +42,6 @@
         <module>postgres</module>
     </modules>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.helidon.data.jdbc</groupId>
-                <artifactId>helidon-data-jdbc</artifactId>
-                <version>${helidon.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <build>
         <resources>
             <resource>
