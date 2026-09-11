@@ -125,9 +125,8 @@ mvn package -DskipTests
 ```
 
 > **Note**
-> Helidon Data JDBC is incubating. This example opts in with
-> `-Ahelidon.api.incubating=ignore` in [`pom.xml`](pom.xml). An application can instead scope the opt in to its source
-> with `@SuppressWarnings(Api.SUPPRESS_INCUBATING)`.
+> Helidon Data JDBC is incubating, and some APIs used by this example are preview. Source types opt in locally with
+> `@SuppressWarnings` and the corresponding `Api.SUPPRESS_INCUBATING` or `Api.SUPPRESS_PREVIEW` constant.
 
 Start the packaged application:
 
