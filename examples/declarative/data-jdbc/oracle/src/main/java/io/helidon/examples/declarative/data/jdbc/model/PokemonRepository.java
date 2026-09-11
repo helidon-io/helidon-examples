@@ -18,6 +18,7 @@ package io.helidon.examples.declarative.data.jdbc.model;
 import java.util.List;
 import java.util.Optional;
 
+import io.helidon.common.Api;
 import io.helidon.data.Data;
 import io.helidon.data.jdbc.Jdbc;
 
@@ -27,6 +28,7 @@ import io.helidon.data.jdbc.Jdbc;
  * The {@link Jdbc.RowMapper} marker selects the {@code JdbcClient.RowMapper<Pokemon>} service that maps each joined
  * row to a nested {@link Pokemon} model.
  */
+@SuppressWarnings({Api.SUPPRESS_PREVIEW, Api.SUPPRESS_INCUBATING})
 @Data.Repository
 public interface PokemonRepository {
 

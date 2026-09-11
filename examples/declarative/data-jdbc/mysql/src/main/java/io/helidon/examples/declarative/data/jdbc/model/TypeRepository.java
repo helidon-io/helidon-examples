@@ -15,12 +15,14 @@
  */
 package io.helidon.examples.declarative.data.jdbc.model;
 
+import io.helidon.common.Api;
 import io.helidon.data.Data;
 import io.helidon.data.jdbc.Jdbc;
 
 /**
  * Defines the declarative JDBC query for Pokemon types.
  */
+@SuppressWarnings({Api.SUPPRESS_PREVIEW, Api.SUPPRESS_INCUBATING})
 @Data.Repository
 public interface TypeRepository {
 
