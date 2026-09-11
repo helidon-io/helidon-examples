@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
+import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.data.DataException;
 import io.helidon.data.NoResultException;
@@ -54,6 +55,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Exercises the HTTP endpoints and generated JDBC repositories with Oracle Database Free.
  */
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @Testcontainers(disabledWithoutDocker = true)
 @ServerTest
 class PokemonApplicationTest {

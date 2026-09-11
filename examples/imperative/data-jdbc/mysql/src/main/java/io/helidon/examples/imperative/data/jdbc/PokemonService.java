@@ -18,9 +18,10 @@ package io.helidon.examples.imperative.data.jdbc;
 import java.util.List;
 import java.util.Optional;
 
+import io.helidon.common.Api;
 import io.helidon.data.jdbc.JdbcClient;
-import io.helidon.examples.imperative.data.jdbc.model.Pokemon;
 import io.helidon.examples.imperative.data.jdbc.model.ExplicitPokemonRowMapper;
+import io.helidon.examples.imperative.data.jdbc.model.Pokemon;
 import io.helidon.examples.imperative.data.jdbc.model.PokemonRowMapper;
 import io.helidon.examples.imperative.data.jdbc.model.Type;
 import io.helidon.http.BadRequestException;
@@ -33,6 +34,7 @@ import io.helidon.webserver.http.ServerResponse;
 /**
  * Exposes Pokemon operations using imperative HTTP routing and a standalone {@link JdbcClient}.
  */
+@SuppressWarnings(Api.SUPPRESS_INCUBATING)
 final class PokemonService implements HttpService {
     private static final JdbcClient.RowMapper<Type> TYPE_MAPPER =
             row -> new Type(row.get("id", Integer.class), row.get("name", String.class));

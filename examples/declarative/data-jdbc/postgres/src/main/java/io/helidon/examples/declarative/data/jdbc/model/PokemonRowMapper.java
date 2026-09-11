@@ -15,6 +15,7 @@
  */
 package io.helidon.examples.declarative.data.jdbc.model;
 
+import io.helidon.common.Api;
 import io.helidon.common.Weight;
 import io.helidon.common.Weighted;
 import io.helidon.data.jdbc.JdbcClient;
@@ -27,6 +28,7 @@ import io.helidon.service.registry.Service;
  */
 @Service.Singleton
 @Weight(Weighted.DEFAULT_WEIGHT + 10)
+@SuppressWarnings(Api.SUPPRESS_INCUBATING)
 public final class PokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
 
     /**
