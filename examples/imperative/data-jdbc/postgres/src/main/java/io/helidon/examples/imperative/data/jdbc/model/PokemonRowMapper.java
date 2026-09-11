@@ -15,11 +15,13 @@
  */
 package io.helidon.examples.imperative.data.jdbc.model;
 
+import io.helidon.common.Api;
 import io.helidon.data.jdbc.JdbcClient;
 
 /**
  * Maps joined Pokemon and type JDBC rows to the nested {@link Pokemon} model.
  */
+@SuppressWarnings(Api.SUPPRESS_INCUBATING)
 public final class PokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
 
     /**

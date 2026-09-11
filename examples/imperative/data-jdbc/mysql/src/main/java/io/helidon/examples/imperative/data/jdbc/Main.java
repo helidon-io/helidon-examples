@@ -15,6 +15,7 @@
  */
 package io.helidon.examples.imperative.data.jdbc;
 
+import io.helidon.common.Api;
 import io.helidon.config.Config;
 import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.logging.common.LogConfig;
@@ -25,6 +26,7 @@ import io.helidon.webserver.http.HttpRouting;
 /**
  * Starts the imperative JDBC Pokemon application.
  */
+@SuppressWarnings(Api.SUPPRESS_INCUBATING)
 public final class Main {
 
     static {

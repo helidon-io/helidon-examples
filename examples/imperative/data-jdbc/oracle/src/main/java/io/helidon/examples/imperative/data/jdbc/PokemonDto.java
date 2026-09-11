@@ -17,6 +17,7 @@ package io.helidon.examples.imperative.data.jdbc;
 
 import java.util.Optional;
 
+import io.helidon.common.Api;
 import io.helidon.examples.imperative.data.jdbc.model.Pokemon;
 import io.helidon.json.binding.Json;
 
@@ -27,6 +28,7 @@ import io.helidon.json.binding.Json;
  * @param name Pokemon name
  * @param type Pokemon type name
  */
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @Json.Entity
 public record PokemonDto(Optional<Integer> id,
                          String name,

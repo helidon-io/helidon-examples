@@ -15,11 +15,13 @@
  */
 package io.helidon.examples.imperative.data.jdbc.model;
 
+import io.helidon.common.Api;
 import io.helidon.data.jdbc.JdbcClient;
 
 /**
  * Maps joined JDBC rows with a recognizable Pokemon name for explicit mapper selection.
  */
+@SuppressWarnings(Api.SUPPRESS_INCUBATING)
 public final class ExplicitPokemonRowMapper implements JdbcClient.RowMapper<Pokemon> {
     private static final String NAME_PREFIX = "EXPLICIT: ";
 

@@ -33,7 +33,7 @@ import io.helidon.webserver.http.RestServer;
 /**
  * Exposes Pokemon operations backed by JDBC repositories.
  */
-@SuppressWarnings(Api.SUPPRESS_INCUBATING) // Helidon Declarative is an incubating feature.
+@SuppressWarnings({Api.SUPPRESS_PREVIEW, Api.SUPPRESS_INCUBATING})
 @Http.Path("/pokemon")
 @Service.Singleton
 @RestServer.Endpoint
