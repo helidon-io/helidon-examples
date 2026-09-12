@@ -5,7 +5,8 @@ each statement, binds its positional parameters, selects a mapper, and invokes t
 
 `Main` constructs a standalone `JdbcClient` from the MySQL connection properties in `application.yaml` and passes it to
 `PokemonService`, which owns the imperative HTTP handlers and JDBC operations. MySQL Connector/J supplies the JDBC
-driver. The application does not publish this client in the Service Registry.
+driver. This example does not use `data.clients.jdbc` because it demonstrates how to construct a standalone client from
+direct connection properties. For a client managed by Service Registry, see the [PostgreSQL example](../postgres).
 
 Use this example when you want JDBC operations to remain explicit in application code. To generate implementations from
 annotated repository interfaces, see the [declarative MySQL example](../../../declarative/data-jdbc/mysql).
