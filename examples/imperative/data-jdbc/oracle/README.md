@@ -4,8 +4,9 @@ This example shows how to execute Oracle Database statements directly with the H
 code creates each statement, binds its positional parameters, selects a mapper, and invokes the terminal operation.
 
 The configuration defines an Oracle Universal Connection Pool (UCP) data source named `example`. The HTTP service uses
-a standalone client configured with that data source name. The application does not publish the client in the Service
-Registry.
+a standalone client configured with that data source name. This example does not use `data.clients.jdbc` because it
+demonstrates how to construct a standalone client from a registered data source. For a client managed by Service Registry,
+see the [PostgreSQL example](../postgres).
 
 Use this example when you want JDBC operations to remain explicit in application code. To generate implementations from
 annotated repository interfaces, see the

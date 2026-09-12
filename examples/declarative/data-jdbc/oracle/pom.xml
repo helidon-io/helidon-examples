@@ -54,6 +54,10 @@
             <groupId>io.helidon.data.jdbc</groupId>
             <artifactId>helidon-data-jdbc</artifactId>
         </dependency>
+        <!--
+            Registers the configured provider.ucp SQL data source. It transitively supplies
+            Oracle JDBC driver and UCP library.
+        -->
         <dependency>
             <groupId>io.helidon.data.sql.datasource</groupId>
             <artifactId>helidon-data-sql-datasource-ucp</artifactId>
