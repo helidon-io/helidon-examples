@@ -59,7 +59,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ServerTest
 class PokemonApplicationTest {
     private static final DockerImageName IMAGE =
-            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:9.7.1")
+            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:9.7.3")
                     .asCompatibleSubstituteFor("mysql");
 
     @Container
