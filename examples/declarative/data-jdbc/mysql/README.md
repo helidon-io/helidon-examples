@@ -61,7 +61,7 @@ docker run --name mysql \
        -e MYSQL_RANDOM_ROOT_PASSWORD='yes' \
        -e MYSQL_USER='user' \
        -e MYSQL_PASSWORD='changeit' \
-       -d container-registry.oracle.com/mysql/community-server:9.7.1
+       -d container-registry.oracle.com/mysql/community-server:9.7.3
 ```
 
 Follow the startup log and wait for MySQL to accept connections:
@@ -116,7 +116,7 @@ java -jar target/helidon-examples-declarative-data-jdbc-mysql.jar
 ```
 
 The test suite uses Testcontainers to start
-`container-registry.oracle.com/mysql/community-server:9.7.1`, the same image shown above. It creates the `pokemons`
+`container-registry.oracle.com/mysql/community-server:9.7.3`, the same image shown above. It creates the `pokemons`
 database, initializes it with the same `etc/schema.sql`, and exercises the documented query and mutation endpoints
 through the MySQL connection. Testcontainers manages this database, so the optional local container is not needed for
 tests. When Docker is unavailable, JUnit skips the container-backed test class.
@@ -203,7 +203,7 @@ code adds the `ID` column through the staged generated-key builder before mappin
 The schema starts generated Pokemon identifiers at `20`, so the JSON object returned by the first insert into a fresh
 database contains that ID.
 
-Update the inserted Pokemon's name and type. Use the identifier returned by `POST`; the first identifier is `20` in a
+Update the inserted Pokemon's name and type. Use the identifier returned by `POST`, the first identifier is `20` in a
 freshly initialized database:
 
 ```shell
