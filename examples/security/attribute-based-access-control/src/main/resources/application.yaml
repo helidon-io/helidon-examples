@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017, 2025 Oracle and/or its affiliates.
+# Copyright (c) 2017, 2026 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -64,10 +64,10 @@ security:
       - path: "/query"
         audit: true
       - path: "/noRoles"
-        methods: ["get"]
+        methods: ["GET"]
         authenticate: true
       - path: "/user/*"
-        methods: ["get"]
+        methods: ["GET"]
         # implies authentication and authorization
         abac:
           scopes: ["calendar_read", "calendar_edit"]
@@ -83,6 +83,5 @@ security:
             #ref: "service/policy_id"
             statement: "object.owner == subject.principal.id"
           resource: "com.oracle.ResourceProvider"
-
 
 

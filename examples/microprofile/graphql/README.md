@@ -153,7 +153,7 @@ for convenience.
        <script>
          const graphQLFetcher = graphQLParams =>
            fetch('http://127.0.0.1:7001/graphql', {
-             method: 'post',
+             method: 'POST',
              headers: { 'Content-Type': 'application/json' },
              body: JSON.stringify(graphQLParams),
            })
