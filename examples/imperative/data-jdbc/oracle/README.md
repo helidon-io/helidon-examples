@@ -19,7 +19,7 @@ The application covers:
 - list, optional, scalar, insert, update, and delete JDBC operations
 - positional parameter binding, including binding one value to multiple positions
 - mapping joined rows to a `Pokemon` containing a nested `Type`
-- selecting either the standard or explicit row mapper
+- selecting a row mapper for joined query results
 - retrieving a database-generated identifier
 - looking up a type before inserting or updating a Pokemon through separate JDBC operations
 
@@ -166,14 +166,6 @@ Retrieve `Meowth` by name:
 ```shell
 curl http://localhost:8080/pokemon/get/Meowth
 ```
-
-Retrieve `Meowth` with the explicitly selected row mapper:
-
-```shell
-curl http://localhost:8080/pokemon/explicit-mapper/Meowth
-```
-
-The explicit mapper returns `"EXPLICIT: Meowth"`, which makes the selected mapper visible in the response.
 
 Retrieve `Meowth` by type and name:
 

@@ -30,4 +30,3 @@ data:
           url: "${data.url}"
           username: "user"
           password: "pgsql123"
-          jdbc-driver-class-name: "org.postgresql.Driver"

@@ -22,7 +22,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
+import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
+import io.helidon.data.DataException;
+import io.helidon.service.registry.Services;
+import io.helidon.transaction.Tx;
+import io.helidon.transaction.TxException;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webclient.http1.Http1ClientResponse;
 import io.helidon.webserver.http.HttpRouting;
@@ -40,13 +45,17 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Verifies the sample against PostgreSQL.
  */
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @Testcontainers(disabledWithoutDocker = true)
 @ServerTest
 class PokemonApplicationTest {
@@ -75,6 +84,9 @@ class PokemonApplicationTest {
             new Pokemon(9, "Sandshrew", "Ground"),
             new Pokemon(10, "Sandslash", "Ground"),
             new Pokemon(4, "Snorlax", "Normal"));
+    private static final List<Pokemon> NORMAL_POKEMON = List.of(
+            new Pokemon(5, "Meowth", "Normal"),
+            new Pokemon(4, "Snorlax", "Normal"));
 
     private final Http1Client client;
 
@@ -88,17 +100,32 @@ class PokemonApplicationTest {
     }
 
     @Test
-    void queriesDocumentedEndpoints() {
+    void mapsScalarCount() {
         assertThat(count(), is(12));
-        assertThat(pokemonList(get("/pokemon/all")), is(SEEDED_POKEMON));
+    }
 
-        List<Pokemon> normalPokemon = List.of(new Pokemon(5, "Meowth", "Normal"),
-                                              new Pokemon(4, "Snorlax", "Normal"));
-        assertThat(pokemonList(get("/pokemon/type/Normal")), is(normalPokemon));
-        assertThat(pokemonList(get("/pokemon/search/Normal")), is(normalPokemon));
+    @Test
+    void mapsOrderedPokemonList() {
+        assertThat(pokemonList(get("/pokemon/all")), is(SEEDED_POKEMON));
+    }
+
+    @Test
+    void bindsTypeName() {
+        assertThat(pokemonList(get("/pokemon/type/Normal")), is(NORMAL_POKEMON));
+    }
+
+    @Test
+    void bindsRepeatedSearchTerm() {
+        assertThat(pokemonList(get("/pokemon/search/Normal")), is(NORMAL_POKEMON));
+    }
+
+    @Test
+    void mapsOptionalPokemon() {
         assertThat(pokemon(get("/pokemon/get/Meowth")), is(new Pokemon(5, "Meowth", "Normal")));
-        assertThat(pokemon(get("/pokemon/explicit-mapper/Meowth")),
-                   is(new Pokemon(5, "EXPLICIT: Meowth", "Normal")));
+    }
+
+    @Test
+    void bindsTypeAndNameByPosition() {
         assertThat(pokemon(get("/pokemon/search/Normal/Meowth")),
                    is(new Pokemon(5, "Meowth", "Normal")));
     }
@@ -183,6 +210,54 @@ class PokemonApplicationTest {
                 .contentType(MediaTypes.APPLICATION_JSON)
                 .submit(update.toString())) {
             assertThat("Unexpected response from " + response.lastEndpointUri(), response.status().code(), is(404));
+        }
+    }
+
+    @Test
+    void rollsBackInsertWhenTransactionFails() {
+        int expectedCount = count();
+        String name = "E2E" + UUID.randomUUID().toString().replace("-", "");
+        PokemonStore pokemonStore = Services.get(PokemonStore.class);
+
+        try {
+            TxException failure = assertThrows(TxException.class, () -> Tx.transaction(() -> {
+                var type = pokemonStore.getTypeByName("Fire");
+                pokemonStore.insertRow(name, type.id());
+                throw new IllegalStateException("Deliberate rollback");
+            }));
+
+            assertThat(failure.getCause().getMessage(), is("Deliberate rollback"));
+            assertThat(pokemonStore.findByName(name).isEmpty(), is(true));
+            assertThat(count(), is(expectedCount));
+        } finally {
+            pokemonStore.findByName(name)
+                    .ifPresent(pokemon -> pokemonStore.deleteById(pokemon.id()));
+        }
+    }
+
+    @Test
+    void recoversAfterDuplicateNameConstraintViolation() {
+        int expectedCount = count();
+        String name = "E2E" + UUID.randomUUID().toString().replace("-", "");
+        PokemonStore pokemonStore = Services.get(PokemonStore.class);
+
+        try {
+            TxException failure = assertThrows(TxException.class, () -> Tx.transaction(() -> {
+                var type = pokemonStore.getTypeByName("Fire");
+                pokemonStore.insertRow(name, type.id());
+                pokemonStore.insertRow("Pikachu", type.id());
+                return null;
+            }));
+
+            assertThat(failure.getCause(), instanceOf(DataException.class));
+            DataException cause = (DataException) failure.getCause();
+            assertThat(cause.getMessage(), containsString("integrity-constraint violation"));
+            assertThat(pokemonStore.count(), is((long) expectedCount));
+            assertThat(pokemonStore.findByName(name).isEmpty(), is(true));
+            assertThat(pokemonStore.findByName("Pikachu").orElseThrow().type().name(), is("Electric"));
+        } finally {
+            pokemonStore.findByName(name)
+                    .ifPresent(pokemon -> pokemonStore.deleteById(pokemon.id()));
         }
     }
 

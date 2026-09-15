@@ -41,7 +41,6 @@ public interface PokemonLookup {
             JOIN TYPE t ON t.ID = p.TYPE_ID
             WHERE p.NAME = :name
             """)
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     @Jdbc.RowMapper
     Optional<Pokemon> findByName(String name);
 }
