@@ -65,7 +65,6 @@ public interface PokemonRepository {
             WHERE t.NAME = :typeName
             ORDER BY p.NAME
             """)
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     @Jdbc.RowMapper
     List<Pokemon> listByTypeName(String typeName);
 
@@ -87,7 +86,6 @@ public interface PokemonRepository {
             WHERE p.NAME = :term OR t.NAME = :term
             ORDER BY p.NAME
             """)
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     @Jdbc.RowMapper
     List<Pokemon> listByNameOrType(String term);
 
@@ -106,7 +104,6 @@ public interface PokemonRepository {
             JOIN TYPE t ON t.ID = p.TYPE_ID
             WHERE p.NAME = :name
             """)
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     @Jdbc.RowMapper
     Optional<Pokemon> findByName(String name);
 
@@ -127,7 +124,6 @@ public interface PokemonRepository {
             JOIN TYPE t ON t.ID = p.TYPE_ID
             WHERE p.NAME = :name
             """)
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     @Jdbc.RowMapper(ExplicitPokemonRowMapper.class)
     Optional<Pokemon> findByNameWithExplicitMapper(String name);
 
@@ -149,7 +145,6 @@ public interface PokemonRepository {
             JOIN TYPE t ON t.ID = p.TYPE_ID
             WHERE t.NAME = ? AND p.NAME = ?
             """)
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     @Jdbc.RowMapper
     Optional<Pokemon> findByTypeAndName(String typeName, String name);
 

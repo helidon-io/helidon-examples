@@ -24,4 +24,3 @@ app:
     url: "jdbc:mysql://localhost:3306/pokemons"
     username: "user"
     password: "changeit"
-    jdbc-driver-class-name: "com.mysql.cj.jdbc.Driver"

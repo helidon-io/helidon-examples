@@ -4,8 +4,9 @@ This example shows how to execute PostgreSQL statements directly with the Helido
 creates each statement, binds its positional parameters, selects a mapper, and invokes the terminal operation.
 
 The configuration defines a HikariCP data source named `example` and a registry-managed JDBC client named `pokemon`.
-The Service Registry injects that client into `PokemonService`. The client uses the configured data source and
-PostgreSQL JDBC driver.
+The Service Registry injects that client into `PokemonStore`. The client uses the configured data source and
+PostgreSQL JDBC driver. `PokemonStore` contains the JDBC and transaction operations, while `PokemonService` handles
+HTTP routing, validation, and responses.
 
 Use this example when you want JDBC operations to remain explicit in application code while using a registry-managed
 client for local transactions. To generate implementations from annotated repository interfaces, see the
@@ -18,7 +19,7 @@ The application covers:
 - list, optional, scalar, insert, update, and delete JDBC operations
 - positional parameter binding, including binding one value to multiple positions
 - mapping joined rows to a `Pokemon` containing a nested `Type`
-- selecting either the standard or explicit row mapper
+- selecting a row mapper for joined query results
 - retrieving a database-generated identifier
 - looking up a type before inserting or updating a Pokemon in one local JDBC transaction
 
@@ -34,18 +35,18 @@ data:
         data-source: "example"
 ```
 
-`PokemonService` selects both the JDBC provider and the named client:
+`PokemonStore` selects both the JDBC provider and the named client:
 
 ```java
 @Service.Inject
-PokemonService(@Data.ProviderType("jdbc")
-               @Service.Named("pokemon")
-               JdbcClient jdbcClient) {
+PokemonStore(@Data.ProviderType("jdbc")
+             @Service.Named("pokemon")
+             JdbcClient jdbcClient) {
     this.jdbcClient = jdbcClient;
 }
 ```
 
-The named client participates in `Tx.transaction`. `PokemonService` wraps each type lookup and its corresponding insert
+The named client participates in `Tx.transaction`. `PokemonStore` wraps each type lookup and its corresponding insert
 or update in one local transaction.
 
 ## Database Configuration
@@ -170,14 +171,6 @@ Retrieve `Meowth` by name:
 ```shell
 curl http://localhost:8080/pokemon/get/Meowth
 ```
-
-Retrieve `Meowth` with the explicitly selected row mapper:
-
-```shell
-curl http://localhost:8080/pokemon/explicit-mapper/Meowth
-```
-
-The explicit mapper returns `"EXPLICIT: Meowth"`, which makes the selected mapper visible in the response.
 
 Retrieve `Meowth` by type and name:
 
