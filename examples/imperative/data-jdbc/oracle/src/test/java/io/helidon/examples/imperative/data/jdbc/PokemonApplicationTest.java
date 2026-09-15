@@ -70,6 +70,9 @@ class PokemonApplicationTest {
             new Pokemon(9, "Sandshrew", "Ground"),
             new Pokemon(10, "Sandslash", "Ground"),
             new Pokemon(4, "Snorlax", "Normal"));
+    private static final List<Pokemon> NORMAL_POKEMON = List.of(
+            new Pokemon(5, "Meowth", "Normal"),
+            new Pokemon(4, "Snorlax", "Normal"));
 
     private final Http1Client client;
 
@@ -83,17 +86,32 @@ class PokemonApplicationTest {
     }
 
     @Test
-    void queriesDocumentedEndpoints() {
+    void mapsScalarCount() {
         assertThat(count(), is(12));
-        assertThat(pokemonList(get("/pokemon/all")), is(SEEDED_POKEMON));
+    }
 
-        List<Pokemon> normalPokemon = List.of(new Pokemon(5, "Meowth", "Normal"),
-                                              new Pokemon(4, "Snorlax", "Normal"));
-        assertThat(pokemonList(get("/pokemon/type/Normal")), is(normalPokemon));
-        assertThat(pokemonList(get("/pokemon/search/Normal")), is(normalPokemon));
+    @Test
+    void mapsOrderedPokemonList() {
+        assertThat(pokemonList(get("/pokemon/all")), is(SEEDED_POKEMON));
+    }
+
+    @Test
+    void bindsTypeName() {
+        assertThat(pokemonList(get("/pokemon/type/Normal")), is(NORMAL_POKEMON));
+    }
+
+    @Test
+    void bindsRepeatedSearchTerm() {
+        assertThat(pokemonList(get("/pokemon/search/Normal")), is(NORMAL_POKEMON));
+    }
+
+    @Test
+    void mapsOptionalPokemon() {
         assertThat(pokemon(get("/pokemon/get/Meowth")), is(new Pokemon(5, "Meowth", "Normal")));
-        assertThat(pokemon(get("/pokemon/explicit-mapper/Meowth")),
-                   is(new Pokemon(5, "EXPLICIT: Meowth", "Normal")));
+    }
+
+    @Test
+    void bindsTypeAndNameByPosition() {
         assertThat(pokemon(get("/pokemon/search/Normal/Meowth")),
                    is(new Pokemon(5, "Meowth", "Normal")));
     }

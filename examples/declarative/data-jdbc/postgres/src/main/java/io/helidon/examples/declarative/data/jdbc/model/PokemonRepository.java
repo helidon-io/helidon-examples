@@ -69,7 +69,6 @@ public interface PokemonRepository extends Data.GenericRepository<Pokemon, Integ
             WHERE t.NAME = :typeName
             ORDER BY p.NAME
             """)
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     @Jdbc.RowMapper
     List<Pokemon> listByTypeName(String typeName);
 
@@ -91,7 +90,6 @@ public interface PokemonRepository extends Data.GenericRepository<Pokemon, Integ
             WHERE p.NAME = :term OR t.NAME = :term
             ORDER BY p.NAME
             """)
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     @Jdbc.RowMapper
     List<Pokemon> listByNameOrType(String term);
 
@@ -112,7 +110,6 @@ public interface PokemonRepository extends Data.GenericRepository<Pokemon, Integ
             JOIN TYPE t ON t.ID = p.TYPE_ID
             WHERE p.NAME = :name
             """)
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     @Jdbc.RowMapper(ExplicitPokemonRowMapper.class)
     Optional<Pokemon> findByNameWithExplicitMapper(String name);
 
@@ -134,7 +131,6 @@ public interface PokemonRepository extends Data.GenericRepository<Pokemon, Integ
             JOIN TYPE t ON t.ID = p.TYPE_ID
             WHERE t.NAME = ? AND p.NAME = ?
             """)
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     @Jdbc.RowMapper
     Optional<Pokemon> findByTypeAndName(String typeName, String name);
 
