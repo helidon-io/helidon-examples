@@ -34,6 +34,5 @@ public interface TypeRepository {
      * @return matching type
      */
     @Jdbc.Statement("SELECT ID AS id, NAME AS name FROM TYPE WHERE NAME = :name")
-    @Jdbc.Execution(Jdbc.ExecutionType.QUERY)
     Type getByName(String name);
 }

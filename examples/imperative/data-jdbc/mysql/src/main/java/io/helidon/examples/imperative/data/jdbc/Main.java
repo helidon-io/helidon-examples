@@ -61,8 +61,7 @@ public final class Main {
                 .connection(connection -> connection
                         .url(database.get("url").asString().get())
                         .username(database.get("username").asString().get())
-                        .password(database.get("password").asString().get().toCharArray())
-                        .jdbcDriverClassName(database.get("jdbc-driver-class-name").asString().get()))
+                        .password(database.get("password").asString().get().toCharArray()))
                 .build();
         routing.register("/pokemon", new PokemonService(jdbcClient));
     }

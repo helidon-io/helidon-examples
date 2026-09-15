@@ -18,7 +18,7 @@ The application covers:
 - list, optional, scalar, insert, update, and delete JDBC operations
 - positional parameter binding, including binding one value to multiple positions
 - mapping joined rows to a `Pokemon` containing a nested `Type`
-- selecting either the standard or explicit row mapper
+- selecting a row mapper for joined query results
 - retrieving a MySQL-generated identifier
 - looking up a type before inserting or updating a Pokemon through separate JDBC operations
 
@@ -31,10 +31,11 @@ JdbcClient jdbcClient = JdbcClient.builder()
         .connection(connection -> connection
                 .url(url)
                 .username(username)
-                .password(password)
-                .jdbcDriverClassName("com.mysql.cj.jdbc.Driver"))
+                .password(password))
         .build();
 ```
+
+MySQL Connector/J registers itself and is selected from the configured JDBC URL.
 
 The directly constructed client is standalone. Each terminal operation owns its connection and does not participate in
 `Tx.transaction`. As a result, the type lookup and mutation in each insert or update flow run as separate JDBC
@@ -153,14 +154,6 @@ Retrieve `Meowth` by name:
 ```shell
 curl http://localhost:8080/pokemon/get/Meowth
 ```
-
-Retrieve `Meowth` with the explicitly selected row mapper:
-
-```shell
-curl http://localhost:8080/pokemon/explicit-mapper/Meowth
-```
-
-The explicit mapper returns `"EXPLICIT: Meowth"`, which makes the selected mapper visible in the response.
 
 Retrieve `Meowth` by type and name:
 

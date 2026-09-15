@@ -20,7 +20,6 @@ import java.util.Optional;
 
 import io.helidon.common.Api;
 import io.helidon.data.jdbc.JdbcClient;
-import io.helidon.examples.imperative.data.jdbc.model.ExplicitPokemonRowMapper;
 import io.helidon.examples.imperative.data.jdbc.model.Pokemon;
 import io.helidon.examples.imperative.data.jdbc.model.PokemonRowMapper;
 import io.helidon.examples.imperative.data.jdbc.model.Type;
@@ -41,7 +40,6 @@ final class PokemonService implements HttpService {
 
     private final JdbcClient jdbcClient;
     private final JdbcClient.RowMapper<Pokemon> pokemonRowMapper = new PokemonRowMapper();
-    private final JdbcClient.RowMapper<Pokemon> explicitPokemonRowMapper = new ExplicitPokemonRowMapper();
 
     /**
      * Creates the HTTP service with the standalone JDBC client.
@@ -63,7 +61,6 @@ final class PokemonService implements HttpService {
                 .get("/type/{name}", this::type)
                 .get("/search/{term}", this::search)
                 .get("/get/{name}", this::pokemon)
-                .get("/explicit-mapper/{name}", this::pokemonWithExplicitMapper)
                 .get("/search/{type}/{name}", this::pokemonByTypeAndName)
                 .get("/count", this::count)
                 .post("/", Handler.create(PokemonDto.class, this::insert))
@@ -183,27 +180,6 @@ final class PokemonService implements HttpService {
         JdbcClient.Statement statement = jdbcClient.create(sql);
         statement.bind(1, name);
         return statement.map(pokemonRowMapper).optional();
-    }
-
-    /**
-     * Retrieves a Pokemon by name using the explicitly selected mapper.
-     *
-     * @param name Pokemon name
-     * @return Pokemon mapped by the explicit mapper, if present
-     */
-    Optional<Pokemon> findByNameWithExplicitMapper(String name) {
-        String sql = """
-                SELECT p.ID AS id,
-                       p.NAME AS name,
-                       p.TYPE_ID AS typeId,
-                       t.NAME AS typeName
-                FROM POKEMON p
-                JOIN TYPE t ON t.ID = p.TYPE_ID
-                WHERE p.NAME = ?
-                """;
-        JdbcClient.Statement statement = jdbcClient.create(sql);
-        statement.bind(1, name);
-        return statement.map(explicitPokemonRowMapper).optional();
     }
 
     /**
@@ -340,14 +316,6 @@ final class PokemonService implements HttpService {
     private void pokemon(ServerRequest request, ServerResponse response) {
         String name = request.path().pathParameters().get("name");
         response.send(findByName(name).map(PokemonDto::create));
-    }
-
-    /**
-     * Returns a Pokemon mapped with the explicitly selected row mapper.
-     */
-    private void pokemonWithExplicitMapper(ServerRequest request, ServerResponse response) {
-        String name = request.path().pathParameters().get("name");
-        response.send(findByNameWithExplicitMapper(name).map(PokemonDto::create));
     }
 
     /**

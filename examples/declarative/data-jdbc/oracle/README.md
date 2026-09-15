@@ -205,7 +205,7 @@ curl http://localhost:8080/pokemon/count
 ```
 
 The count method uses `@Jdbc.Execution(QUERY)` because primitive `long` could otherwise mean either a scalar query or an
-update count. The list method omits `@Jdbc.Execution` to demonstrate AUTO inference from its `List<Pokemon>` result.
+update count. List, optional, and record result methods omit `@Jdbc.Execution` to demonstrate AUTO inference.
 
 Insert a Pokemon. The response is a JSON object containing the generated identifier, name, and type:
 
