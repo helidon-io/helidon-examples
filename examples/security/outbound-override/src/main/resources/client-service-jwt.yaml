@@ -56,8 +56,8 @@ security:
       authenticate: true
     paths:
     - path: "/propagate"
-      methods: ["get"]
+      methods: ["GET"]
       roles-allowed: "user"
     - path: "/override"
-      methods: ["get"]
+      methods: ["GET"]
       roles-allowed: "user"
