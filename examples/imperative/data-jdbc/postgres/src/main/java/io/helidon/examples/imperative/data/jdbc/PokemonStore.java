@@ -237,15 +237,6 @@ final class PokemonStore {
                 .one();
     }
 
-    private long updateRow(int id, String name, int typeId) {
-        String sql = "UPDATE POKEMON SET NAME = ?, TYPE_ID = ? WHERE ID = ?";
-        return jdbcClient.create(sql)
-                .bind(1, name)
-                .bind(2, typeId)
-                .bind(3, id)
-                .execute();
-    }
-
     /**
      * Retrieves a Pokemon type by name.
      *
@@ -257,5 +248,14 @@ final class PokemonStore {
         JdbcClient.Statement statement = jdbcClient.create(sql);
         statement.bind(1, name);
         return statement.map(TYPE_MAPPER).one();
+    }
+
+    private long updateRow(int id, String name, int typeId) {
+        String sql = "UPDATE POKEMON SET NAME = ?, TYPE_ID = ? WHERE ID = ?";
+        return jdbcClient.create(sql)
+                .bind(1, name)
+                .bind(2, typeId)
+                .bind(3, id)
+                .execute();
     }
 }
