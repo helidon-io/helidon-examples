@@ -1,77 +1,32 @@
 # Helidon Data JDBC Imperative with PostgreSQL
 
 This example shows how to execute PostgreSQL statements directly with the Helidon Data `JdbcClient`. Application code
-creates each statement, binds its positional parameters, selects a mapper, and invokes the terminal operation.
+creates each statement, binds positional parameters, selects a mapper, and invokes the terminal operation. To define
+data access as repository interfaces, see the
+[Declarative PostgreSQL example](../../../declarative/data-jdbc/postgres).
 
-The configuration defines a HikariCP data source named `example` and a registry-managed JDBC client named `pokemon`.
-The Service Registry injects that client into `PokemonStore`. The client uses the configured data source and
-PostgreSQL JDBC driver. `PokemonStore` contains the JDBC and transaction operations, while `PokemonService` handles
-HTTP routing, validation, and responses.
+This module separates the HTTP and JDBC responsibilities. `PokemonService` handles routing, validation, and responses.
+`PokemonStore` contains the SQL, mapping, generated key, and transaction operations.
 
-Use this example when you want JDBC operations to remain explicit in application code while using a registry-managed
-client for local transactions. To generate implementations from annotated repository interfaces, see the
-[declarative PostgreSQL example](../../../declarative/data-jdbc/postgres).
+## Run This Example
 
-## What the Example Demonstrates
+### Prerequisites
 
-The application covers:
+- JDK 26
+- Maven 3.8.0 or newer
+- Docker to run the local PostgreSQL container and the integration tests
 
-- list, optional, scalar, insert, update, and delete JDBC operations
-- positional parameter binding, including binding one value to multiple positions
-- mapping joined rows to a `Pokemon` containing a nested `Type`
-- selecting a row mapper for joined query results
-- retrieving a database-generated identifier
-- looking up a type before inserting or updating a Pokemon in one local JDBC transaction
+Run all commands from `examples/imperative/data-jdbc/postgres`.
 
-## Client Construction and Transaction Behavior
+### 1. Start PostgreSQL
 
-The application client is configured under `data.clients.jdbc`:
-
-```yaml
-data:
-  clients:
-    jdbc:
-      - name: "pokemon"
-        data-source: "example"
-```
-
-`PokemonStore` selects both the JDBC provider and the named client:
-
-```java
-@Service.Inject
-PokemonStore(@Data.ProviderType("jdbc")
-             @Service.Named("pokemon")
-             JdbcClient jdbcClient) {
-    this.jdbcClient = jdbcClient;
-}
-```
-
-The named client participates in `Tx.transaction`. `PokemonStore` wraps each type lookup and its corresponding insert
-or update in one local transaction.
-
-## Database Configuration
-
-The data source and client settings are in `src/main/resources/application.yaml`. By default, the application connects
-to the `pokemons` database at `localhost:5432` with username `user` and password `pgsql123`. If you use another
-database, update `data.url` and the HikariCP credentials before starting the application.
-
-The application does not create or migrate the schema, so initialize the database before starting the application.
-
-The default credentials are intended only for this local demo. You can use an existing PostgreSQL database or start the
-optional local container described below. With an existing database, create the configured database and user, then run
-`etc/schema.sql` as that user.
-
-## Optional Local PostgreSQL Container
-
-Like the DbClient PostgreSQL example, the local image installs PostgreSQL Server on Oracle Linux 9 and adds a
-standalone entrypoint. If you want to use this image for the demo, build it from the
-`examples/imperative/data-jdbc/postgres` directory:
+Build the PostgreSQL image:
 
 ```shell
 docker build etc/docker -t helidon-postgres
 ```
 
-Then start the container:
+Start the container:
 
 ```shell
 docker run --name postgres \
@@ -82,21 +37,20 @@ docker run --name postgres \
        -d helidon-postgres
 ```
 
-Follow the startup log and wait for PostgreSQL to accept connections:
+The image installs PostgreSQL Server on Oracle Linux 9 and uses the standalone entry point supplied by this example.
+
+Wait until PostgreSQL accepts connections:
 
 ```shell
 docker logs -f postgres
 ```
 
-The JDBC URL disables quoting of `RETURNING` identifiers so PostgreSQL folds the shared generated-key column name `ID`
-in the same way as the unquoted schema and application SQL.
+### 2. Initialize the Schema
 
-## Initialize the Sample Schema (Required)
+> **Warning:** This command drops the existing `POKEMON` and `TYPE` tables in the `pokemons` database, including all
+> their data, before recreating and populating them. It does not modify tables in other databases.
 
-> **Warning:** The following command drops the existing `POKEMON` and `TYPE` tables in the `pokemons` database,
-> including all their data, before recreating and populating them. It does not modify tables in other databases.
-
-When using the optional container, run the schema script as the demo user:
+Run the schema script as the demo user:
 
 ```shell
 docker exec -i postgres \
@@ -104,128 +58,230 @@ docker exec -i postgres \
        < etc/schema.sql
 ```
 
-The command sends `etc/schema.sql` to the PostgreSQL client in the container. The script recreates the sample tables and
-their foreign key, inserts the Pokemon types and Pokemon, and commits the sample data.
+The command sends `etc/schema.sql` to the PostgreSQL client in the container. The script recreates the sample tables
+and their foreign key, inserts the Pokemon types and Pokemon, and commits the sample data.
 
-Use your normal provisioning and credential-management practices for any environment beyond this local demo.
+### 3. Build and Start the Application
 
-## Build and Run
-
-Use JDK 26 and Maven 3.8.0 or newer.
-
-From `examples/imperative/data-jdbc/postgres`, build the application and run its tests:
+Build the application and run the tests:
 
 ```shell
 mvn package
 ```
 
-To build the application without running tests:
+To build the application without running the tests:
 
 ```shell
 mvn package -DskipTests
 ```
 
-> **Note**
-> Helidon Data JDBC is incubating, and some APIs used by this example are preview. Source types opt in locally with
-> `@SuppressWarnings` and the corresponding `Api.SUPPRESS_INCUBATING` or `Api.SUPPRESS_PREVIEW` constant.
+See [Configuration and Tests](#configuration-and-tests) for details about the test environment.
 
-Start the packaged application:
+After the build completes, start the application:
 
 ```shell
 java -jar target/helidon-examples-imperative-data-jdbc-postgres.jar
 ```
 
-The Maven test suite uses Testcontainers to build the same `etc/docker/Dockerfile` shown above, whose base image is
-`container-registry.oracle.com/os/oraclelinux:9-slim`, and start the PostgreSQL server installed by that Dockerfile. It
-creates the `pokemons` database, initializes it with the same `etc/schema.sql`, and exercises the documented query and
-mutation endpoints through its PostgreSQL connection. Testcontainers manages this database, so the optional local
-container is not needed for tests. When Docker is unavailable, JUnit skips the container-backed test class.
+The packaged application uses the `pokemon` client managed by Service Registry to connect to the local PostgreSQL
+database. It listens on `http://localhost:8080/pokemon`.
 
-The registry-managed `pokemon` client handles application operations. The application listens on
-`http://localhost:8080/pokemon`.
+### 4. Verify the Application
 
-## Try the Application
-
-List all Pokemon:
-
-```shell
-curl http://localhost:8080/pokemon/all
-```
-
-List Pokemon having the `Normal` type:
-
-```shell
-curl http://localhost:8080/pokemon/type/Normal
-```
-
-Search for a Pokemon whose name or type is `Normal`:
-
-```shell
-curl http://localhost:8080/pokemon/search/Normal
-```
-
-The same `term` value is bound to both positional parameters.
-
-Retrieve `Meowth` by name:
+In another terminal, retrieve a seeded Pokemon:
 
 ```shell
 curl http://localhost:8080/pokemon/get/Meowth
 ```
 
-Retrieve `Meowth` by type and name:
+Expected response:
 
-```shell
-curl http://localhost:8080/pokemon/search/Normal/Meowth
+```json
+{"id":5,"name":"Meowth","type":"Normal"}
 ```
 
-Count all Pokemon:
+## API
+
+All paths are relative to `http://localhost:8080`.
+
+| Method | Path | Behavior |
+| --- | --- | --- |
+| `GET` | `/pokemon/all` | Lists all Pokemon ordered by name |
+| `GET` | `/pokemon/type/{name}` | Lists Pokemon having the requested type |
+| `GET` | `/pokemon/search/{term}` | Finds Pokemon by name or type and binds the term to two positions |
+| `GET` | `/pokemon/get/{name}` | Returns a matching Pokemon or `404` when the name is not found |
+| `GET` | `/pokemon/search/{type}/{name}` | Finds a Pokemon by type and name using positional parameters |
+| `GET` | `/pokemon/count` | Returns the number of Pokemon rows |
+| `POST` | `/pokemon` | Inserts a Pokemon and returns its generated identifier |
+| `PUT` | `/pokemon/{id}` | Updates a Pokemon or returns `404` when the identifier is not found |
+| `DELETE` | `/pokemon/{id}` | Deletes a Pokemon and returns the number of rows affected |
+
+Run the following mutation examples in order against a freshly initialized database. The first generated identifier is
+`20`. If the database returns a different identifier, use that value in the update and delete requests.
+
+Insert a Pokemon:
 
 ```shell
-curl http://localhost:8080/pokemon/count
-```
-
-Insert a Pokemon. The response is a JSON object containing the generated identifier, name, and type:
-
-```shell
-curl -i -X POST \
+curl -X POST \
      -H 'Content-Type: application/json' \
      -d '{"name":"Charmander","type":"Fire"}' \
      http://localhost:8080/pokemon
 ```
 
-The registry-managed client performs the type lookup and insert in one local JDBC transaction. The schema starts
-generated identifiers at `20`, so the JSON object returned by the first insert into a freshly initialized database
-contains that ID.
+Expected response:
 
-Update the inserted Pokemon's name and type. Use the identifier returned by `POST`; the first identifier is `20` in a
-freshly initialized database:
+```json
+{"id":20,"name":"Charmander","type":"Fire"}
+```
+
+The client managed by Service Registry performs the type lookup and insert in one local JDBC transaction.
+
+Update the Pokemon returned by the insert request:
 
 ```shell
-curl -i -X PUT \
+curl -X PUT \
      -H 'Content-Type: application/json' \
      -d '{"name":"Charmeleon","type":"Fire"}' \
      http://localhost:8080/pokemon/20
 ```
 
-`PUT /pokemon/{id}` updates the row selected by the path identifier and returns its new JSON representation. The body
-supplies the new nonblank `name` and an existing Pokemon `type`; it does not need an `id`. A missing row returns HTTP
-`404`. The registry-managed client performs the type lookup and update in one local JDBC transaction.
+Expected response:
 
-Delete the updated Pokemon:
+```json
+{"id":20,"name":"Charmeleon","type":"Fire"}
+```
+
+The path supplies the Pokemon identifier. The request body supplies a name that is not blank and an existing Pokemon
+type, so it does not need an `id`. The endpoint returns `404` when the identifier does not match a row. The registry
+managed client performs the type lookup and update in one local JDBC transaction.
+
+Delete the Pokemon returned by the update request:
 
 ```shell
-curl -i -X DELETE http://localhost:8080/pokemon/20
+curl -X DELETE http://localhost:8080/pokemon/20
 ```
+
+Expected response:
+
+```text
+Deleted: 1 values
+```
+
+## Source Tour
+
+- [`PokemonStore`](src/main/java/io/helidon/examples/imperative/data/jdbc/PokemonStore.java) contains the SQL,
+  parameter binding, result mapping, generated key, and transaction operations.
+- [`PokemonService`](src/main/java/io/helidon/examples/imperative/data/jdbc/PokemonService.java) defines the routes,
+  validates requests, and converts between the database model and HTTP representation.
+- [`Main`](src/main/java/io/helidon/examples/imperative/data/jdbc/Main.java) obtains the HTTP service from Service
+  Registry and registers it with the web server.
+- [`PokemonRowMapper`](src/main/java/io/helidon/examples/imperative/data/jdbc/model/PokemonRowMapper.java) maps a joined
+  database row to a `Pokemon` with a nested `Type`.
+- [`application.yaml`](src/main/resources/application.yaml) defines the HikariCP data source, named JDBC client, and
+  local demo credentials. Change these credentials before using the example outside a local development environment.
+- [`schema.sql`](etc/schema.sql) creates the example schema and loads the sample data.
+- [`Dockerfile`](etc/docker/Dockerfile) defines the PostgreSQL image used by the local setup and tests.
+
+## What the Example Demonstrates
+
+- creating a `JdbcClient.Statement` for each SQL operation
+- binding positional parameters, including one value bound to two positions
+- mapping list and optional query results with a row mapper
+- mapping a scalar count with `long.class`
+- mapping a joined row to a `Pokemon` that contains a nested `Type`
+- retrieving a PostgreSQL generated identifier
+- executing update and delete statements and reading the number of affected rows
+- injecting a named JDBC client managed by Service Registry
+- combining a type lookup and insert or update in one local JDBC transaction
+- separating imperative JDBC operations from HTTP routing and response handling
+
+## JdbcClient Operations
+
+`PokemonStore` keeps the SQL and `JdbcClient` calls together in a focused data access class. Each method creates a
+statement, binds its parameters by position, applies a mapper when needed, and selects a terminal operation that matches
+the expected result.
+
+| Result | JdbcClient operation |
+| --- | --- |
+| Multiple rows | `statement.map(pokemonRowMapper).list()` |
+| Optional row | `statement.map(pokemonRowMapper).optional()` |
+| Exactly one scalar | `statement.map(long.class).one()` |
+| Generated identifier | `statement.generatedKeys().addColumn("ID").map(...).one()` |
+| Update or delete count | `statement.execute()` |
+
+The name or type search binds the same `term` value to positions `1` and `2`. The type and name search binds
+`typeName` to position `1` and `name` to position `2`. `PokemonRowMapper` combines columns from the joined tables into
+the nested model. A separate inline mapper converts a type row to a `Type` record.
+
+## Client Configuration and Transactions
+
+The client managed by Service Registry is configured under `data.clients.jdbc` and uses the HikariCP data source named
+`example`:
+
+```yaml
+data:
+  clients:
+    jdbc:
+      - name: "pokemon"
+        data-source: "example"
+```
+
+`PokemonStore` selects the JDBC provider and the named client at its injection point:
+
+```java
+@Service.Inject
+PokemonStore(@Data.ProviderType("jdbc")
+             @Service.Named(Main.POKEMON_CLIENT)
+             JdbcClient jdbcClient) {
+    this.jdbcClient = jdbcClient;
+}
+```
+
+Unlike a standalone client, the client managed by Service Registry participates in `Tx.transaction`. `PokemonStore`
+wraps each type lookup and its corresponding insert or update in one local transaction. The tests verify that a
+deliberate failure rolls back an insert and that the client recovers after a unique constraint violation.
+
+## Configuration and Tests
+
+`application.yaml` configures PostgreSQL, a HikariCP data source named `example`, and the JDBC client named `pokemon`.
+By default, the application connects to the `pokemons` database at `localhost:5432` with username `user` and password
+`pgsql123`. The PostgreSQL driver registers itself and is selected from the `jdbc:postgresql` URL.
+
+The sample username and password are intended only for this local demo. They are not a recommendation for production
+use. Configure credentials that are appropriate for your environment before deploying the application.
+
+The JDBC URL disables quoting for `RETURNING` identifiers. This allows PostgreSQL to fold the generated key column name
+`ID` in the same way as the unquoted schema and application SQL.
+
+The application does not create or migrate the schema. To use an existing PostgreSQL instance, update `data.url` and
+the HikariCP credentials in `application.yaml`. Then create the configured database and user, and run `etc/schema.sql`
+as that user. Follow your normal provisioning and credential management practices outside this local demo.
+
+Run the tests without packaging:
+
+```shell
+mvn test
+```
+
+Testcontainers builds `etc/docker/Dockerfile`, whose base image is
+`container-registry.oracle.com/os/oraclelinux:9-slim`. It starts PostgreSQL, creates the `pokemons` database,
+initializes it with `etc/schema.sql`, and exercises the query and mutation endpoints through the PostgreSQL connection.
+Testcontainers removes the container afterward, so the local PostgreSQL container is not required for the tests.
+Because this process requires Docker, JUnit skips the tests when Docker is not available.
+
+> **Note**
+> Helidon Data JDBC is incubating, and some APIs used by this example are preview. Source types opt in locally with
+> `@SuppressWarnings` and the corresponding `Api.SUPPRESS_INCUBATING` or `Api.SUPPRESS_PREVIEW` constant.
 
 ## Stop PostgreSQL
 
-To stop the PostgreSQL container:
+Stop the container:
 
 ```shell
 docker stop postgres
 ```
 
-To delete the stopped container:
+Remove the stopped container:
 
 ```shell
 docker rm postgres
