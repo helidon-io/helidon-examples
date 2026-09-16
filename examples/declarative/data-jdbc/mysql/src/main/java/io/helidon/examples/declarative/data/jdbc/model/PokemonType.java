@@ -21,5 +21,5 @@ package io.helidon.examples.declarative.data.jdbc.model;
  * @param id type identifier
  * @param name type name
  */
-public record Type(int id, String name) {
+public record PokemonType(int id, String name) {
 }
