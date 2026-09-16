@@ -22,8 +22,8 @@ import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.examples.declarative.data.jdbc.model.Pokemon;
 import io.helidon.examples.declarative.data.jdbc.model.PokemonRepository;
-import io.helidon.examples.declarative.data.jdbc.model.Type;
-import io.helidon.examples.declarative.data.jdbc.model.TypeRepository;
+import io.helidon.examples.declarative.data.jdbc.model.PokemonType;
+import io.helidon.examples.declarative.data.jdbc.model.PokemonTypeRepository;
 import io.helidon.http.BadRequestException;
 import io.helidon.http.Http;
 import io.helidon.service.registry.Service;
@@ -40,19 +40,19 @@ import io.helidon.webserver.http.RestServer;
 class PokemonEndpoint {
 
     private final PokemonRepository pokemonRepository;
-    private final TypeRepository typeRepository;
+    private final PokemonTypeRepository pokemonTypeRepository;
 
     /**
      * Creates the endpoint with its JDBC repositories.
      *
      * @param pokemonRepository provides Pokemon data
-     * @param typeRepository provides Pokemon type data
+     * @param pokemonTypeRepository provides Pokemon type data
      */
     @Service.Inject
     PokemonEndpoint(PokemonRepository pokemonRepository,
-                    TypeRepository typeRepository) {
+                    PokemonTypeRepository pokemonTypeRepository) {
         this.pokemonRepository = pokemonRepository;
-        this.typeRepository = typeRepository;
+        this.pokemonTypeRepository = pokemonTypeRepository;
     }
 
     /**
@@ -180,7 +180,7 @@ class PokemonEndpoint {
      */
     @Tx.Required
     PokemonDto insertPokemon(PokemonDto pokemonDto) {
-        Type type = typeRepository.getByName(pokemonDto.type());
+        PokemonType type = pokemonTypeRepository.getByName(pokemonDto.type());
         int id = pokemonRepository.insert(pokemonDto.name(), type.id());
         return PokemonDto.create(new Pokemon(id, pokemonDto.name(), type));
     }
@@ -207,7 +207,7 @@ class PokemonEndpoint {
      */
     @Tx.Required
     Optional<PokemonDto> updatePokemon(int id, PokemonDto pokemonDto) {
-        Type type = typeRepository.getByName(pokemonDto.type());
+        PokemonType type = pokemonTypeRepository.getByName(pokemonDto.type());
         long updated = pokemonRepository.updateById(id, pokemonDto.name(), type.id());
         if (updated == 0) {
             return Optional.empty();
