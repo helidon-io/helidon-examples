@@ -60,6 +60,23 @@ final class PokemonService implements HttpService {
                 .delete("/{id}", this::delete);
     }
 
+    private static int pokemonId(ServerRequest request) {
+        return request.path()
+                .pathParameters()
+                .first("id")
+                .asInt()
+                .orElseThrow(() -> new BadRequestException("No Pokemon id"));
+    }
+
+    private static void validate(PokemonDto pokemonDto) {
+        if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
+            throw new BadRequestException("Pokemon name must not be null or blank");
+        }
+        if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
+            throw new BadRequestException("Pokemon type must not be null or blank");
+        }
+    }
+
     /**
      * Returns every Pokemon ordered by name.
      */
@@ -140,23 +157,6 @@ final class PokemonService implements HttpService {
     private void delete(ServerRequest request, ServerResponse response) {
         int id = pokemonId(request);
         response.send("Deleted: " + pokemonStore.deleteById(id) + " values");
-    }
-
-    private static int pokemonId(ServerRequest request) {
-        return request.path()
-                .pathParameters()
-                .first("id")
-                .asInt()
-                .orElseThrow(() -> new BadRequestException("No Pokemon id"));
-    }
-
-    private static void validate(PokemonDto pokemonDto) {
-        if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
-            throw new BadRequestException("Pokemon name must not be null or blank");
-        }
-        if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
-            throw new BadRequestException("Pokemon type must not be null or blank");
-        }
     }
 
 }
