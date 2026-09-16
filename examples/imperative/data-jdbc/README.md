@@ -13,16 +13,17 @@ Each database directory contains a self-contained Maven application for the same
 | --- | --- | --- |
 | [`mysql`](mysql) | MySQL | Standalone client built from direct connection settings |
 | [`oracle`](oracle) | Oracle Database | Standalone client built from a named UCP data source |
-| [`postgres`](postgres) | PostgreSQL | Registry-managed named client backed by a HikariCP data source |
+| [`postgres`](postgres) | PostgreSQL | Named client managed by Service Registry that uses a HikariCP data source |
 
 Open the README in your chosen directory for database preparation, configuration, startup, and runnable endpoint
 examples. Each README also identifies the container image used by its tests and optional local setup.
 
 ## How the Examples Work
 
-Each module implements its database operations in `PokemonService`. The service creates a `JdbcClient.Statement`, binds
-positional parameters, applies a mapper where needed, and invokes a terminal operation such as `list()`, `optional()`,
-`one()`, or `execute()`.
+MySQL and Oracle Database keep their JDBC operations in `PokemonService`. PostgreSQL keeps its JDBC and transaction
+operations in `PokemonStore`, while `PokemonService` handles routing, validation, and responses. Each data access method
+creates a `JdbcClient.Statement`, binds positional parameters, applies a mapper where needed, and invokes a terminal
+operation such as `list()`, `optional()`, `one()`, or `execute()`.
 
 The modules deliberately demonstrate different client construction and ownership models. MySQL builds a standalone
 client from connection settings under `app.database`. Oracle Database builds a standalone client from the configured
@@ -32,8 +33,8 @@ in local transactions.
 
 Every database variant exposes the same `/pokemon` HTTP API. The API lists, searches, retrieves, and counts seeded
 Pokemon. It also inserts a Pokemon with `POST`, updates one with `PUT /pokemon/{id}`, and deletes one with
-`DELETE /pokemon/{id}`. The database-specific READMEs include the complete request sequence and explain the relevant
-`JdbcClient` behavior.
+`DELETE /pokemon/{id}`. The database-specific READMEs include a complete API table, a runnable mutation sequence, and
+an explanation of the relevant `JdbcClient` behavior.
 
 Each module includes an `etc/schema.sql` file that creates and populates the sample tables. Run that script before you
 start an application against your own database. The application does not create or migrate its schema. Tests instead
@@ -42,7 +43,7 @@ PostgreSQL use standard identity syntax; MySQL uses `AUTO_INCREMENT`.
 
 ## Build the Examples
 
-Use JDK 26 and Maven 3.8.0 or newer to build the examples. Docker is required only for the container-backed tests. If
+Use JDK 26 and Maven 3.8.0 or newer to build the examples. Docker is required only for tests that use containers. If
 Docker is unavailable, JUnit skips those test classes.
 
 From this directory, build and test every database variant:
@@ -59,11 +60,16 @@ To build every variant without running tests:
 mvn verify -DskipTests
 ```
 
-To build one variant, change to its directory. For example:
+To build one variant, first change to its directory. For example:
 
 ```shell
 cd mysql
+```
+
+Then build the module:
+
+```shell
 mvn package
 ```
 
-Follow that variant's README to prepare the database and start the packaged application.
+Follow the README for that variant to prepare the database and start the packaged application.

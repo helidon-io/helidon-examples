@@ -1,8 +1,7 @@
 # Helidon Data JDBC Declarative with PostgreSQL
 
 This example shows how to use Helidon Data declarative repositories with PostgreSQL. The repository interfaces define
-SQL statements and result mapping, and Helidon generates the JDBC implementations at build time. See the
-[declarative JDBC examples](../README.md) to compare the supported databases and client configurations. To work with
+SQL statements and result mapping, and Helidon generates the JDBC implementations at build time. To work with
 `JdbcClient` directly, see the [imperative PostgreSQL example](../../../imperative/data-jdbc/postgres).
 
 ## Run This Example

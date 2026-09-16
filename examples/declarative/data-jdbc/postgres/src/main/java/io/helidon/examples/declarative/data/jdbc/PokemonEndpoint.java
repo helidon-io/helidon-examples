@@ -31,7 +31,7 @@ import io.helidon.transaction.Tx;
 import io.helidon.webserver.http.RestServer;
 
 /**
- * Exposes Pokemon operations backed by JDBC repositories.
+ * Exposes Pokemon operations through JDBC repositories.
  */
 @SuppressWarnings({Api.SUPPRESS_PREVIEW, Api.SUPPRESS_INCUBATING})
 @Http.Path("/pokemon")
