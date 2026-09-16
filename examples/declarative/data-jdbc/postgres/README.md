@@ -33,11 +33,14 @@ docker run --name postgres \
        -d helidon-postgres
 ```
 
-Wait until PostgreSQL accepts connections:
+Follow the PostgreSQL container logs:
 
 ```shell
 docker logs -f postgres
 ```
+
+Wait until PostgreSQL reports that it is ready to accept connections. Then press Ctrl+C to stop following the logs. The
+database container continues to run.
 
 ### 2. Initialize the Schema
 
@@ -93,6 +96,9 @@ Expected response:
 
 All paths are relative to `http://localhost:8080`.
 
+By default, `curl` displays only the response body. Add `-i` to display the HTTP status and response headers. This is
+useful for responses without a body, such as `404 Not Found`.
+
 | Method | Path | Behavior |
 | --- | --- | --- |
 | `GET` | `/pokemon/all` | Lists all Pokemon ordered by name |
@@ -102,7 +108,7 @@ All paths are relative to `http://localhost:8080`.
 | `GET` | `/pokemon/explicit-mapper/{name}` | Uses the row mapper selected by class |
 | `GET` | `/pokemon/search/{type}/{name}` | Finds a Pokemon by type and name using positional parameters |
 | `GET` | `/pokemon/count` | Returns the number of Pokemon rows |
-| `POST` | `/pokemon` | Inserts a Pokemon and returns its generated identifier |
+| `POST` | `/pokemon` | Inserts a Pokemon and returns the inserted Pokemon with its generated identifier |
 | `PUT` | `/pokemon/{id}` | Updates a Pokemon or returns `404` when the identifier is not found |
 | `DELETE` | `/pokemon/{id}` | Deletes a Pokemon and returns the number of rows affected |
 
