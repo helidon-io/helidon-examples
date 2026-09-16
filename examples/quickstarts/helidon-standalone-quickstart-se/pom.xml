@@ -31,7 +31,7 @@
         <helidon.test.config.profile>test</helidon.test.config.profile>
         <mainClass>io.helidon.examples.quickstart.se.Main</mainClass>
 
-        <maven.compiler.source>26</maven.compiler.source>
+        <maven.compiler.source>27</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
         <maven.site.skip>true</maven.site.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,7 +42,7 @@
         <version.plugin.dependency>3.6.0</version.plugin.dependency>
         <version.plugin.exec>1.6.0</version.plugin.exec>
         <version.plugin.failsafe>3.0.0-M5</version.plugin.failsafe>
-        <version.plugin.helidon>4.0.6</version.plugin.helidon>
+        <version.plugin.helidon>4.0.26</version.plugin.helidon>
         <version.plugin.helidon-cli>4.0.6</version.plugin.helidon-cli>
         <version.plugin.jar>3.0.2</version.plugin.jar>
         <version.plugin.nativeimage>0.10.2</version.plugin.nativeimage>

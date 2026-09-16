@@ -15,7 +15,7 @@
 #
 
 # 1st stage, build the app
-FROM container-registry.oracle.com/java/jdk-no-fee-term:21 as build
+FROM container-registry.oracle.com/java/openjdk:27-oraclelinux9 AS build
 
 # Install maven
 WORKDIR /usr/share
@@ -42,7 +42,7 @@ RUN mvn package -DskipTests
 RUN echo "done!"
 
 # 2nd stage, build the runtime image
-FROM container-registry.oracle.com/java/jdk-no-fee-term:21
+FROM container-registry.oracle.com/java/openjdk:27-oraclelinux9
 WORKDIR /helidon
 
 # Copy the binary built in the 1st stage

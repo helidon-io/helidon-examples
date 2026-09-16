@@ -21,20 +21,14 @@ java -jar target/helidon-examples-declarative-webclient.jar
 Expected output should be similar to the following:
 
 ```text
-2026.03.02 17:23:05.365 INFO Logging at runtime configured using classpath: /logging.properties
-2026.03.02 17:23:05.589 INFO [0x6217ea6a] http://0.0.0.0:8080 bound for socket '@default'
-2026.03.02 17:23:05.589 INFO Helidon SE 4.4.0-SNAPSHOT features: [Config, Encoding, JSON, Media, Registry, WebClient, WebServer]
-2026.03.02 17:23:05.589 WARNING You are using incubating features. These APIs are not production ready!
-2026.03.02 17:23:05.590 INFO    Incubating feature: JSON Binding (JSON/Binding)
-2026.03.02 17:23:05.592 INFO Started all channels in 5 milliseconds. 262 milliseconds since JVM startup. Java 21.0.7+8-LTS-245
+2026.09.16 13:32:26.933 INFO Logging at runtime configured using classpath: /logging.properties
+2026.09.16 13:32:27.774 INFO Helidon SE 27.0.0-SNAPSHOT features: [Config, Encoding, JSON, Media, Registry, WebClient, WebServer]
+2026.09.16 13:32:27.777 INFO [0x4b73cae2] http://0.0.0.0:8080 bound for socket '@default'
+2026.09.16 13:32:27.796 INFO Started all channels in 21 milliseconds. 937 milliseconds since JVM startup. Java 27+35-2325
 Server started on: http://localhost:8080/hello
-^C2026.03.02 17:23:13.725 INFO Shutdown requested by JVM shutting down
-2026.03.02 17:23:13.727 INFO [0x6217ea6a] @default socket closed.
-2026.03.02 17:23:13.727 INFO Helidon WebServer stopped all channels.
-2026.03.02 17:23:13.727 INFO Shutdown finished
 ```
 
-Helidon JSON Binding is currently an incubating feature.
+Helidon JSON Binding is a preview feature.
 
 # Declarative Typed WebClient
 

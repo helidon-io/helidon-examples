@@ -6,9 +6,9 @@ This example shows how to use slf4j with MDC
 
 The example moves all Java Util Logging to slf4j
  
-The example can be built using GraalVM native image as well.
+GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
 
-Expected output should be similar to the following (for both hotspot and native):
+Expected output should be similar to the following:
 ```text
 15:40:44.240 INFO  [main] i.h.examples.logging.slf4j.Main - Starting up startup
 15:40:44.241 INFO  [main] i.h.examples.logging.slf4j.Main - Using System logger startup
@@ -27,19 +27,4 @@ mvn clean package
 Run from command line:
 ```shell
 java -jar target/helidon-examples-logging-slf4j.jar
-```
-
-# Running as native image
-You must use GraalVM with native image installed as your JDK,
-or you can specify an environment variable `GRAALVM_HOME` that points
-to such an installation.
-
-Build this application:
-```shell
-mvn clean package -Pnative-image
-```
-
-Run from command line:
-```shell
-./target/helidon-examples-logging-slf4j
 ```

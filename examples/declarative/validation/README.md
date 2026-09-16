@@ -7,7 +7,7 @@ This example uses WebServer endpoint, as it is easy to invoke the endpoints to s
 *IMPORTANT*: configuration uses `server.error-handling.include-entity: true` so we can easily see why our request failed; this
 MUST NOT be used in production settings where the endpoint is invoked by untrusted parties, as this may leak internal information
 
-The example can be built using GraalVM native image as well.
+GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
 
 # Running as jar
 
@@ -32,36 +32,6 @@ Expected output should be similar to the following:
 2026.01.09 13:11:44.630 INFO [0x403469ef] http://0.0.0.0:8080 bound for socket '@default'
 2026.01.09 13:11:44.630 INFO    Preview feature: Validation (Validation)
 2026.01.09 13:11:44.634 INFO Started all channels in 10 milliseconds. 327 milliseconds since JVM startup. Java 21.0.3+7-LTS-jvmci-23.1-b37
-Server started on: http://localhost:8080/validate
-```
-
-# Running as native image
-
-You must use GraalVM with native image installed as your JDK,
-or you can specify an environment variable `GRAALVM_HOME` that points
-to such an installation.
-
-Build this application:
-
-```shell
-mvn clean package -Pnative-image
-```
-
-Run from command line:
-
-```shell
-./target/helidon-examples-declarative-metrics 
-```
-
-Expected output should be the same as when starting regular Java
-
-```text
-2026.01.09 13:31:35.730 INFO Logging at runtime configured using classpath: /logging.properties
-2026.01.09 13:31:35.736 INFO Helidon SE 4.4.0-SNAPSHOT features: [Config, Encoding, Media, Registry, Validation, WebServer]
-2026.01.09 13:31:35.736 INFO You are using preview features. These APIs are production ready, yet may change more frequently. Please follow Helidon release changelog!
-2026.01.09 13:31:35.736 INFO    Preview feature: Validation (Validation)
-2026.01.09 13:31:35.737 INFO [0x741bade2] http://0.0.0.0:8080 bound for socket '@default'
-2026.01.09 13:31:35.737 INFO Started all channels in 1 milliseconds. 8 milliseconds since JVM startup. Java 21.0.3+7-LTS-jvmci-23.1-b37
 Server started on: http://localhost:8080/validate
 ```
 

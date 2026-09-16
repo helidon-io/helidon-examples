@@ -65,61 +65,17 @@ kubectl create -f app.yaml   # Deply application
 kubectl get service helidon-quickstart-inject  # Get service info
 ```
 
-## Build a native image with GraalVM
+## Native Image
 
-GraalVM allows you to compile your programs ahead-of-time into a native
- executable. See https://www.graalvm.org/docs/reference-manual/aot-compilation/
- for more information.
-
-You can build a native executable in 2 different ways:
-* With a local installation of GraalVM
-* Using Docker
-
-### Local build
-
-Download Graal VM at https://www.graalvm.org/downloads. We recommend
-version `23.1.0` or later.
-
-```shell
-# Setup the environment
-export GRAALVM_HOME=/path
-# build the native executable
-mvn package -Pnative-image
-```
-
-You can also put the Graal VM `bin` directory in your PATH, or pass
- `-DgraalVMHome=/path` to the Maven command.
-
-See https://github.com/oracle/helidon-build-tools/tree/master/helidon-maven-plugin#goal-native-image
- for more information.
-
-Start the application:
-
-```shell
-./target/helidon-quickstart-inject
-```
-
-### Multi-stage Docker build
-
-Build the "native" Docker Image
-
-```shell
-docker build -t helidon-quickstart-inject-native -f Dockerfile.native .
-```
-
-Start the application:
-
-```shell
-docker run --rm -p 8080:8080 helidon-quickstart-inject-native:latest
-```
+GraalVM Native Image is not supported in Helidon 27. Use the JVM or jlink instructions in this example.
 
 ## Build a Java Runtime Image using jlink
 
 You can build a custom Java Runtime Image (JRI) containing the application jars and the JDK modules 
 on which they depend. This image also:
 
-* Enables Class Data Sharing by default to reduce startup time. 
-* Contains a customized `start` script to simplify CDS usage and support debug and test modes. 
+* Creates an ahead-of-time (AOT) cache by default to reduce startup time.
+* Contains a customized `start` script to simplify AOT cache usage and support debug and test modes.
  
 You can build a custom JRI in two different ways:
 * Local

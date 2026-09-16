@@ -16,11 +16,13 @@
 
 package io.helidon.examples.declarative.webclient;
 
+import io.helidon.common.Api;
 import io.helidon.webclient.api.RestClient;
 
 /**
  * Client side interface to generate the typed webclient.
  */
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @RestClient.Endpoint("${app.client.endpoint:http://localhost:8080}")
 interface HelloWorldClientEndpoint extends HelloWorldApi {
 }

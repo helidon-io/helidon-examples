@@ -16,11 +16,13 @@
 
 package io.helidon.examples.declarative.webclient;
 
+import io.helidon.common.Api;
 import io.helidon.json.binding.Json;
 
 /**
  * Data transfer object for greeting response.
  */
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @Json.Entity
 record GreetingDto(String greeting, String name) {
 }

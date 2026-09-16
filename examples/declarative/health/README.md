@@ -3,7 +3,7 @@ Declarative Security Example
 
 This example shows how to use Helidon declarative to create an HTTP server "Hello World" endpoint with a protected path.
 
-The example can be built using GraalVM native image as well.
+GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
 
 # Running as jar
 
@@ -26,34 +26,6 @@ Expected output should be similar to the following:
 2026.01.06 14:13:12.915 INFO [0x3050f673] http://0.0.0.0:8080 bound for socket '@default'
 2026.01.06 14:13:12.915 INFO Helidon SE 4.4.0-SNAPSHOT features: [Config, Encoding, Media, Registry, Security, WebServer]
 2026.01.06 14:13:12.927 INFO Started all channels in 7 milliseconds. 276 milliseconds since JVM startup. Java 21.0.7+8-LTS-245
-Server started on: http://localhost:8080/hello
-```
-
-# Running as native image
-
-You must use GraalVM with native image installed as your JDK,
-or you can specify an environment variable `GRAALVM_HOME` that points
-to such an installation.
-
-Build this application:
-
-```shell
-mvn clean package -Pnative-image
-```
-
-Run from command line:
-
-```shell
-./target/helidon-examples-declarative-health 
-```
-
-Expected output should be the same as when starting regular Java
-
-```text
-2026.01.06 14:14:19.234 INFO Logging at runtime configured using classpath: /logging.properties
-2026.01.06 14:14:19.240 INFO Helidon SE 4.4.0-SNAPSHOT features: [Config, Encoding, Media, Registry, Security, WebServer]
-2026.01.06 14:14:19.241 INFO [0x6929dd42] http://0.0.0.0:8080 bound for socket '@default'
-2026.01.06 14:14:19.241 INFO Started all channels in 1 milliseconds. 8 milliseconds since JVM startup. Java 21.0.3+7-LTS-jvmci-23.1-b37
 Server started on: http://localhost:8080/hello
 ```
 

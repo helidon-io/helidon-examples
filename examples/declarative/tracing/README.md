@@ -96,7 +96,7 @@ Hola Jose
 
 The trace should include:
 
-* the incoming `GET` or `POST` span created by WebServer tracing,
+* the incoming `HTTP Request` span created by WebServer tracing,
 * the `content-write` span for the response, and
 * the declarative method span such as `greet-world` or `greet-name`.
 

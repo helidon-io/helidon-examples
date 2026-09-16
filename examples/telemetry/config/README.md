@@ -17,7 +17,7 @@ Look at the `src/main/resources/application.yaml` file. It contains configuratio
 
 ## Build and run
 
-With JDK26
+With JDK 27
 ```bash
 mvn package
 java -jar target/helidon-examples-telemetry-config.jar

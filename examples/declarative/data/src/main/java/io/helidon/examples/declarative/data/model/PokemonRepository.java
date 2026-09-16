@@ -18,6 +18,7 @@ package io.helidon.examples.declarative.data.model;
 import java.util.List;
 import java.util.Optional;
 
+import io.helidon.common.Api;
 import io.helidon.data.Data;
 
 /**
@@ -30,6 +31,7 @@ import io.helidon.data.Data;
  * @see Data.CrudRepository
  * @see Pokemon
  */
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @Data.Repository
 public interface PokemonRepository extends Data.CrudRepository<Pokemon, Integer> {
 

@@ -6,17 +6,19 @@ This example shows how to use slf4j with MDC backed by Logback
 
 The example moves all Java Util Logging to slf4j and supports more advance configuration of logback.
 
-# AOT (native image)
-To support native image, we need to use a different logback configuration at build time and at runtime.
-To achieve this, we bundle `logback.xml` on classpath, and then have `logback-runtime.xml` with 
-configuration that requires started threads (which is not supported at build time).
+GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
+
+# Logging configuration
+
+The example bundles `logback.xml` on the classpath and uses `logback-runtime.xml` for runtime
+configuration that requires started threads.
 
 The implementation will re-configure logback (see method `setupLogging` in `Main.java).
 
 To see that configuration works as expected at runtime, change the log level of our package to `debug`.
 Within 30 seconds the configuration should be reloaded, and next request will have two more debug messages.
 
-Expected output should be similar to the following (for both hotspot and native):
+Expected output should be similar to the following:
 ```text
 15:40:44.240 [INFO ] [io.helidon.examples.logging.logback.aot.Main.logging:128] Starting up startup
 15:40:44.241 [INFO ] [o.slf4j.jdk.platform.logging.SLF4JPlatformLogger.performLog:151] Using System logger startup
@@ -42,19 +44,4 @@ java -jar target/helidon-examples-logging-slf4j-aot.jar
 Execute endpoint:
 ```shell
 curl -i http://localhost:8080
-```
-
-# Running as native image
-You must use GraalVM with native image installed as your JDK,
-or you can specify an environment variable `GRAALVM_HOME` that points
-to such an installation.
-
-Build this application:
-```shell script
-mvn clean package -Pnative-image
-```
-
-Run from command line:
-```shell
-./target/helidon-examples-logging-slf4j-aot
 ```
