@@ -160,8 +160,8 @@ Deleted: 1 values
 
 - [`PokemonRepository`](src/main/java/io/helidon/examples/declarative/data/jdbc/model/PokemonRepository.java) defines
   the SQL operations for Pokemon.
-- [`TypeRepository`](src/main/java/io/helidon/examples/declarative/data/jdbc/model/TypeRepository.java) shows a
-  repository that does not define entity metadata at the repository level.
+- [`PokemonTypeRepository`](src/main/java/io/helidon/examples/declarative/data/jdbc/model/PokemonTypeRepository.java)
+  shows a repository that does not define entity metadata at the repository level.
 - [`PokemonLookup`](src/main/java/io/helidon/examples/declarative/data/jdbc/model/PokemonLookup.java) defines the
   inherited `findByName` operation.
 - [`PokemonEndpoint`](src/main/java/io/helidon/examples/declarative/data/jdbc/PokemonEndpoint.java) provides the HTTP
@@ -177,7 +177,7 @@ Deleted: 1 values
   a row mapper
 - explicit execution selection for ambiguous primitive count and update results
 - named and positional parameter binding, including one named parameter used twice
-- mapping joined rows to a `Pokemon` containing a nested `Type`
+- mapping joined rows to a `Pokemon` containing a nested `PokemonType`
 - generated key retrieval for inserts
 - local JDBC transactions that combine a type lookup with an insert or update
 - inherited repository methods
@@ -185,14 +185,18 @@ Deleted: 1 values
 ### Repository Shapes and Execution Inference
 
 `PokemonRepository` extends `Data.GenericRepository<Pokemon, Integer>`, which supplies entity and identifier metadata
-at the repository level. It does not add CRUD operations or generate SQL. `TypeRepository` is a standalone repository
-interface that does not provide this metadata. Every operation in both repositories declares its SQL with
+at the repository level. It does not add CRUD operations or generate SQL. `PokemonTypeRepository` is a standalone
+repository interface that does not provide this metadata. Every operation in both repositories declares its SQL with
 `@Jdbc.Statement`.
 
 Helidon infers query execution for methods that return `List`, `Optional`, or record types, including methods annotated
 with `@Jdbc.RowMapper`. Primitive `int` and `long` results are ambiguous, so `count`, update, and delete operations
 select `QUERY` or `UPDATE` explicitly. `@Jdbc.GeneratedKeys("ID")` identifies the insert as an update and maps the
 generated identifier.
+
+`PokemonTypeRepository.listNames()` maps the first selected column in each row to a `String`.
+`PokemonTypeRepository.listTypes()` maps the selected columns in each row to a `PokemonType` record. Helidon provides
+both mappings, so the methods do not declare `@Jdbc.RowMapper`.
 
 Named parameters bind by Java parameter name. The search by name or type uses the `term` argument for both occurrences
 of `:term`. The search by type and name uses positional `?` parameters in the order that the method parameters are

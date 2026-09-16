@@ -20,17 +20,21 @@ examples. Each README also identifies the container image used by its tests and 
 
 ## How the Examples Work
 
-Each module defines `PokemonRepository` and `TypeRepository` interfaces under `src/main`. The repositories use
+Each module defines `PokemonRepository` and `PokemonTypeRepository` interfaces under `src/main`. The repositories use
 `@Jdbc.Statement` to associate SQL with each method and use method return types and JDBC annotations to select execution
 and mapping behavior. The generated implementations use the JDBC client configured under `data.clients.jdbc`.
+
+`PokemonTypeRepository` includes two methods that return multiple rows without `@Jdbc.RowMapper`. The `listNames`
+method maps the first selected column in each row to a `String`. The `listTypes` method maps the selected columns in
+each row to a `PokemonType` record. Helidon provides both mappings.
 
 The repository interfaces omit `@Data.Provider("jdbc")` because `helidon-data-jdbc-codegen` is the only Helidon Data
 provider on the annotation processor path. Specify the provider when an annotation processor path contains more than
 one Helidon Data provider.
 
 MySQL and Oracle Database configure the default JDBC client with named HikariCP and UCP data sources, respectively.
-PostgreSQL configures a client named `pokemon` with direct connection settings; both PostgreSQL repositories select that
-client with `@Jdbc.Client("pokemon")`.
+PostgreSQL configures a client named `pokemon` with direct connection settings. Both PostgreSQL repositories select
+that client with `@Jdbc.Client("pokemon")`.
 
 Every database variant exposes the same `/pokemon` HTTP API. The API lists, searches, retrieves, and counts seeded
 Pokemon. It also inserts a Pokemon with `POST`, updates one with `PUT /pokemon/{id}`, and deletes one with
@@ -40,7 +44,7 @@ an explanation of the relevant repository behavior.
 Each module includes an `etc/schema.sql` file that creates and populates the sample tables. Run that script before you
 start an application against your own database. The application does not create or migrate its schema. Tests instead
 use Testcontainers to start the corresponding database and load the same schema automatically. Oracle Database and
-PostgreSQL use standard identity syntax; MySQL uses `AUTO_INCREMENT`.
+PostgreSQL use standard identity syntax. MySQL uses `AUTO_INCREMENT`.
 
 ## Build the Examples
 

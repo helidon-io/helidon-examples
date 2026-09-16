@@ -15,6 +15,8 @@
  */
 package io.helidon.examples.declarative.data.jdbc.model;
 
+import java.util.List;
+
 import io.helidon.common.Api;
 import io.helidon.data.Data;
 import io.helidon.data.jdbc.Jdbc;
@@ -24,7 +26,23 @@ import io.helidon.data.jdbc.Jdbc;
  */
 @SuppressWarnings({Api.SUPPRESS_PREVIEW, Api.SUPPRESS_INCUBATING})
 @Data.Repository
-public interface TypeRepository {
+public interface PokemonTypeRepository {
+
+    /**
+     * Retrieves every Pokemon type name with scalar mapping.
+     *
+     * @return type names in identifier order
+     */
+    @Jdbc.Statement("SELECT NAME FROM TYPE ORDER BY ID")
+    List<String> listNames();
+
+    /**
+     * Retrieves every Pokemon type with generated record mapping.
+     *
+     * @return types in identifier order
+     */
+    @Jdbc.Statement("SELECT ID AS id, NAME AS name FROM TYPE ORDER BY ID")
+    List<PokemonType> listTypes();
 
     /**
      * Retrieves a type by name.
@@ -33,5 +51,5 @@ public interface TypeRepository {
      * @return matching type
      */
     @Jdbc.Statement("SELECT ID AS id, NAME AS name FROM TYPE WHERE NAME = :name")
-    Type getByName(String name);
+    PokemonType getByName(String name);
 }
