@@ -3,8 +3,6 @@ Declarative Scheduling Example
 
 This example shows how to use Helidon declarative to create a scheduled task.
 
-GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
-
 # Description
 
 The class `ScheduledTask` contains a single scheduled method `refreshTask`.

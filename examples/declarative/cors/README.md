@@ -3,8 +3,6 @@ Declarative Server Example
 
 This example shows how to use Helidon declarative to protect a few endpoints with Cross-Origin Resource Sharing (CORS).
 
-GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
-
 # Running as jar
 
 Build this application:

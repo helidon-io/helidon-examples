@@ -4,8 +4,6 @@ JUL Example
 This example shows how to use Java Util Logging with MDC
  using Helidon API.
  
-GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
-
 # Running as jar
 
 Build this application:

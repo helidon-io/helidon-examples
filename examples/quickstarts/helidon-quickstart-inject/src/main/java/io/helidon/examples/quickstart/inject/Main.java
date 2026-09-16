@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import io.helidon.service.registry.ServiceRegistryManager;
 @Service.GenerateBinding
 public class Main {
     static {
-        // initialize logging at build time (for native-image build)
         LogConfig.initClass();
     }
 
@@ -43,7 +42,6 @@ public class Main {
      */
     public static void main(String[] args) {
         // initialize logging at runtime
-        // (if in GraalVM native image, this will re-configure logging with runtime configuration)
         LogConfig.configureRuntime();
 
         // start the service registry - uses generated application binding to avoid reflection and runtime lookup

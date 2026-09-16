@@ -6,8 +6,6 @@ This example shows how to use slf4j with MDC
 
 The example moves all Java Util Logging to slf4j
  
-GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
-
 Expected output should be similar to the following:
 ```text
 15:40:44.240 INFO  [main] i.h.examples.logging.slf4j.Main - Starting up startup

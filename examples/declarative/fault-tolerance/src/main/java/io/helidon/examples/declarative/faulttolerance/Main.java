@@ -33,7 +33,6 @@ import io.helidon.webserver.WebServer;
 @Service.GenerateBinding
 public class Main {
     static {
-        // used when building with GraalVM native image to configure logging during build
         LogConfig.initClass();
     }
 

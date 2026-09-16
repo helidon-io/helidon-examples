@@ -63,10 +63,6 @@ kubectl create -f app.yaml   # Deply application
 kubectl get service helidon-standalone-quickstart-se  # Get service info
 ```
 
-## Native Image
-
-GraalVM Native Image is not supported in Helidon 27. Use the JVM or jlink instructions in this example.
-
 ## Build a Java Runtime Image using jlink
 
 You can build a custom Java Runtime Image (JRI) containing the application jars and the JDK modules 

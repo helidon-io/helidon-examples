@@ -120,10 +120,6 @@ mvn package -Pjlink-zip
 ```
 This will create `target/appplication-se-jlink.zip` just like we did with the `zip` command.
 
-## Native Image
-
-GraalVM Native Image is not supported in Helidon 27. Use the thin jar or jlink image described above.
-
 ## Fat Jar
 
 Fat jars are application jars that contain your application code plus all of its runtime dependencies.

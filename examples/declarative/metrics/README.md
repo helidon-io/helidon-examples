@@ -4,8 +4,6 @@ Declarative Server Example with Metrics
 This example shows how to use Helidon declarative with metrics.
 This example uses WebServer endpoint, as it is easy to invoke the endpoints to show the behavior.
 
-GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
-
 # Running as jar
 
 Build this application:

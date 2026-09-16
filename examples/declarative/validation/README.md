@@ -7,8 +7,6 @@ This example uses WebServer endpoint, as it is easy to invoke the endpoints to s
 *IMPORTANT*: configuration uses `server.error-handling.include-entity: true` so we can easily see why our request failed; this
 MUST NOT be used in production settings where the endpoint is invoked by untrusted parties, as this may leak internal information
 
-GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
-
 # Running as jar
 
 Build this application:

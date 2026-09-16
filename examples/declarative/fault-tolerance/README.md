@@ -4,8 +4,6 @@ Declarative Server Example with Fault Tolerance
 This example shows how to use Helidon declarative to create an HTTP server endpoint and use fault tolerance
 with it. This example shows usage of fallback and retry fault tolerance handlers.
 
-GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
-
 # Running as jar
 
 Build this application:

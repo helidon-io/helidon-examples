@@ -4,8 +4,6 @@ Declarative Server Example with JSON-B
 This example shows how to use Helidon declarative to create an HTTP server "Hello World" endpoint using Jakarta JSON-B for JSON
 binding.
 
-GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
-
 # Running as jar
 
 Build this application:

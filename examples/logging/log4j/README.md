@@ -6,8 +6,6 @@ This example shows how to use log4j with MDC (`ThreadContext`)
  
 The example moves all Java Util Logging to log4j.
 
-GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
-
 # Running as jar
 
 Build this application:

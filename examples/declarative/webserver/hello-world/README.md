@@ -3,8 +3,6 @@ Declarative Server Example
 
 This example shows how to use Helidon declarative to create an HTTP server "Hello World" endpoint.
 
-GraalVM Native Image is not supported in Helidon 27. Run this example on the JVM as described below.
-
 # Running as jar
 
 Build this application:
