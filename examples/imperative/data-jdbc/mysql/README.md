@@ -1,62 +1,23 @@
 # Helidon Data JDBC Imperative with MySQL
 
-This example shows how to execute MySQL statements directly with the Helidon Data `JdbcClient`. Application code creates
-each statement, binds its positional parameters, selects a mapper, and invokes the terminal operation.
+This example shows how to execute MySQL statements directly with the Helidon Data `JdbcClient`. Application code
+creates each statement, binds positional parameters, selects a mapper, and invokes the terminal operation. To define
+data access as repository interfaces, see the
+[Declarative MySQL example](../../../declarative/data-jdbc/mysql).
 
-`Main` constructs a standalone `JdbcClient` from the MySQL connection properties in `application.yaml` and passes it to
-`PokemonService`, which owns the imperative HTTP handlers and JDBC operations. MySQL Connector/J supplies the JDBC
-driver. This example does not use `data.clients.jdbc` because it demonstrates how to construct a standalone client from
-direct connection properties. For a client managed by Service Registry, see the [PostgreSQL example](../postgres).
+## Run This Example
 
-Use this example when you want JDBC operations to remain explicit in application code. To generate implementations from
-annotated repository interfaces, see the [declarative MySQL example](../../../declarative/data-jdbc/mysql).
+### Prerequisites
 
-## What the Example Demonstrates
+- JDK 26
+- Maven 3.8.0 or newer
+- Docker to run the local MySQL container and the integration tests
 
-The application covers:
+Run all commands from `examples/imperative/data-jdbc/mysql`.
 
-- list, optional, scalar, insert, update, and delete JDBC operations
-- positional parameter binding, including binding one value to multiple positions
-- mapping joined rows to a `Pokemon` containing a nested `Type`
-- selecting a row mapper for joined query results
-- retrieving a MySQL-generated identifier
-- looking up a type before inserting or updating a Pokemon through separate JDBC operations
+### 1. Start MySQL
 
-## Client Construction and Transaction Behavior
-
-The example uses the public builder with direct connection properties:
-
-```java
-JdbcClient jdbcClient = JdbcClient.builder()
-        .connection(connection -> connection
-                .url(url)
-                .username(username)
-                .password(password))
-        .build();
-```
-
-MySQL Connector/J registers itself and is selected from the configured JDBC URL.
-
-The directly constructed client is standalone. Each terminal operation owns its connection and does not participate in
-`Tx.transaction`. As a result, the type lookup and mutation in each insert or update flow run as separate JDBC
-operations.
-
-## Database Configuration
-
-The connection settings are under `app.database` in `src/main/resources/application.yaml`. By default, the application
-connects to the `pokemons` database at `localhost:3306` with username `user` and password `changeit`. If you use another
-database, update the URL and credentials before starting the application.
-
-The application does not create or migrate the schema, so initialize the database before starting the application.
-
-The default credentials are intended only for this local demo. You can use an existing MySQL database or start the
-optional local container described below. With an existing database, create the configured database and user, then run
-`etc/schema.sql` as that user.
-
-## Optional Local MySQL Container
-
-If you want to use a local MySQL container for the demo, run the following command from the
-`examples/imperative/data-jdbc/mysql` directory:
+Start the MySQL container:
 
 ```shell
 docker run --name mysql \
@@ -68,18 +29,18 @@ docker run --name mysql \
        -d container-registry.oracle.com/mysql/community-server:9.7.3
 ```
 
-Follow the startup log and wait for MySQL to accept connections:
+Wait until MySQL accepts connections:
 
 ```shell
 docker logs -f mysql
 ```
 
-## Initialize the Sample Schema (Required)
+### 2. Initialize the Schema
 
-> **Warning:** The following command drops the existing `POKEMON` and `TYPE` tables in the `pokemons` database,
-> including all their data, before recreating and populating them. It does not modify tables in other databases.
+> **Warning:** This command drops the existing `POKEMON` and `TYPE` tables in the `pokemons` database, including all
+> their data, before recreating and populating them. It does not modify tables in other databases.
 
-When using the optional container, run the schema script as the demo user:
+Run the schema script as the demo user:
 
 ```shell
 docker exec -i mysql \
@@ -87,127 +48,212 @@ docker exec -i mysql \
        < etc/schema.sql
 ```
 
-The command reads the password from the container's `MYSQL_PASSWORD` environment variable and sends `etc/schema.sql` to
-the MySQL client. The script recreates the sample tables and their foreign key, inserts the Pokemon types and Pokemon,
-and commits the sample data.
+The command reads the password from the `MYSQL_PASSWORD` environment variable in the container and sends
+`etc/schema.sql` to the MySQL client. The script recreates the sample tables and their foreign key, inserts the Pokemon
+types and Pokemon, and commits the sample data.
 
-Use your normal provisioning and credential-management practices for any environment beyond this local demo.
+### 3. Build and Start the Application
 
-## Build and Run
-
-Use JDK 26 and Maven 3.8.0 or newer.
-
-From `examples/imperative/data-jdbc/mysql`, build the application and run its tests:
+Build the application and run the tests:
 
 ```shell
 mvn package
 ```
 
-To build the application without running tests:
+To build the application without running the tests:
 
 ```shell
 mvn package -DskipTests
 ```
 
-> **Note**
-> Helidon Data JDBC is incubating, and some APIs used by this example are preview. Source types opt in locally with
-> `@SuppressWarnings` and the corresponding `Api.SUPPRESS_INCUBATING` or `Api.SUPPRESS_PREVIEW` constant.
+See [Configuration and Tests](#configuration-and-tests) for details about the test environment.
 
-Start the packaged application:
+After the build completes, start the application:
 
 ```shell
 java -jar target/helidon-examples-imperative-data-jdbc-mysql.jar
 ```
 
-The test suite uses Testcontainers to start
-`container-registry.oracle.com/mysql/community-server:9.7.3`, the same image shown above. It creates the `pokemons`
-database, initializes it with the same `etc/schema.sql`, and exercises the documented query and mutation endpoints
-through its MySQL connection. Testcontainers manages this database, so the optional local container is not needed for
-tests. When Docker is unavailable, JUnit skips the container-backed test class.
+The packaged application connects to the local MySQL database and listens on
+`http://localhost:8080/pokemon`.
 
-The application listens on `http://localhost:8080/pokemon`.
+### 4. Verify the Application
 
-## Try the Application
-
-List all Pokemon:
-
-```shell
-curl http://localhost:8080/pokemon/all
-```
-
-List Pokemon having the `Normal` type:
-
-```shell
-curl http://localhost:8080/pokemon/type/Normal
-```
-
-Search for a Pokemon whose name or type is `Normal`:
-
-```shell
-curl http://localhost:8080/pokemon/search/Normal
-```
-
-The same `term` value is bound to both positional parameters.
-
-Retrieve `Meowth` by name:
+In another terminal, retrieve a seeded Pokemon:
 
 ```shell
 curl http://localhost:8080/pokemon/get/Meowth
 ```
 
-Retrieve `Meowth` by type and name:
+Expected response:
 
-```shell
-curl http://localhost:8080/pokemon/search/Normal/Meowth
+```json
+{"id":5,"name":"Meowth","type":"Normal"}
 ```
 
-Count all Pokemon:
+## API
+
+All paths are relative to `http://localhost:8080`.
+
+| Method | Path | Behavior |
+| --- | --- | --- |
+| `GET` | `/pokemon/all` | Lists all Pokemon ordered by name |
+| `GET` | `/pokemon/type/{name}` | Lists Pokemon having the requested type |
+| `GET` | `/pokemon/search/{term}` | Finds Pokemon by name or type and binds the term to two positions |
+| `GET` | `/pokemon/get/{name}` | Returns a matching Pokemon or `404` when the name is not found |
+| `GET` | `/pokemon/search/{type}/{name}` | Finds a Pokemon by type and name using positional parameters |
+| `GET` | `/pokemon/count` | Returns the number of Pokemon rows |
+| `POST` | `/pokemon` | Inserts a Pokemon and returns its generated identifier |
+| `PUT` | `/pokemon/{id}` | Updates a Pokemon or returns `404` when the identifier is not found |
+| `DELETE` | `/pokemon/{id}` | Deletes a Pokemon and returns the number of rows affected |
+
+Run the following mutation examples in order against a freshly initialized database. The first generated identifier is
+`20`. If the database returns a different identifier, use that value in the update and delete requests.
+
+Insert a Pokemon:
 
 ```shell
-curl http://localhost:8080/pokemon/count
-```
-
-Insert a Pokemon. The response is a JSON object containing the generated identifier, name, and type:
-
-```shell
-curl -i -X POST \
+curl -X POST \
      -H 'Content-Type: application/json' \
      -d '{"name":"Charmander","type":"Fire"}' \
      http://localhost:8080/pokemon
 ```
 
-The type lookup and insert are separate JDBC operations. The schema starts generated identifiers at `20`, so the JSON
-object returned by the first insert into a freshly initialized database contains that ID.
+Expected response:
 
-Update the inserted Pokemon's name and type. Use the identifier returned by `POST`, the first identifier is `20` in a
-freshly initialized database:
+```json
+{"id":20,"name":"Charmander","type":"Fire"}
+```
+
+The standalone client performs the type lookup and insert as separate JDBC operations.
+
+Update the Pokemon returned by the insert request:
 
 ```shell
-curl -i -X PUT \
+curl -X PUT \
      -H 'Content-Type: application/json' \
      -d '{"name":"Charmeleon","type":"Fire"}' \
      http://localhost:8080/pokemon/20
 ```
 
-`PUT /pokemon/{id}` updates the row selected by the path identifier and returns its new JSON representation. The body
-supplies the new nonblank `name` and an existing Pokemon `type`; it does not need an `id`. A missing row returns HTTP
-`404`. The standalone client performs the type lookup and update as separate JDBC operations.
+Expected response:
 
-Delete the updated Pokemon:
+```json
+{"id":20,"name":"Charmeleon","type":"Fire"}
+```
+
+The path supplies the Pokemon identifier. The request body supplies a name that is not blank and an existing Pokemon
+type, so it does not need an `id`. The endpoint returns `404` when the identifier does not match a row. The standalone
+client performs the type lookup and update as separate JDBC operations.
+
+Delete the Pokemon returned by the update request:
 
 ```shell
-curl -i -X DELETE http://localhost:8080/pokemon/20
+curl -X DELETE http://localhost:8080/pokemon/20
 ```
+
+Expected response:
+
+```text
+Deleted: 1 values
+```
+
+## Source Tour
+
+- [`Main`](src/main/java/io/helidon/examples/imperative/data/jdbc/Main.java) builds the standalone `JdbcClient` from
+  direct connection settings and registers the HTTP service.
+- [`PokemonService`](src/main/java/io/helidon/examples/imperative/data/jdbc/PokemonService.java) defines the routes,
+  validates requests, and performs the JDBC operations.
+- [`PokemonRowMapper`](src/main/java/io/helidon/examples/imperative/data/jdbc/model/PokemonRowMapper.java) maps a joined
+  database row to a `Pokemon` with a nested `Type`.
+- [`application.yaml`](src/main/resources/application.yaml) contains the direct connection settings and local demo
+  credentials. Change these credentials before using the example outside a local development environment.
+- [`schema.sql`](etc/schema.sql) creates the example schema and loads the sample data.
+
+## What the Example Demonstrates
+
+- creating a `JdbcClient.Statement` for each SQL operation
+- binding positional parameters, including one value bound to two positions
+- mapping list and optional query results with a row mapper
+- mapping a scalar count with `long.class`
+- mapping a joined row to a `Pokemon` that contains a nested `Type`
+- retrieving a MySQL generated identifier
+- executing update and delete statements and reading the number of affected rows
+- looking up a type before inserting or updating a Pokemon through separate JDBC operations
+
+## JdbcClient Operations
+
+`PokemonService` keeps the SQL and `JdbcClient` calls visible in application code. Each method creates a statement,
+binds its parameters by position, applies a mapper when needed, and selects a terminal operation that matches the
+expected result.
+
+| Result | JdbcClient operation |
+| --- | --- |
+| Multiple rows | `statement.map(pokemonRowMapper).list()` |
+| Optional row | `statement.map(pokemonRowMapper).optional()` |
+| Exactly one scalar | `statement.map(long.class).one()` |
+| Generated identifier | `statement.generatedKeys().addColumn("ID").map(...).one()` |
+| Update or delete count | `statement.execute()` |
+
+The name or type search binds the same `term` value to positions `1` and `2`. The type and name search binds
+`typeName` to position `1` and `name` to position `2`. `PokemonRowMapper` combines columns from the joined tables into
+the nested model. A separate inline mapper converts a type row to a `Type` record.
+
+## Client Construction and Transaction Behavior
+
+`Main` reads the values under `app.database` and uses the public builder to create the client:
+
+```java
+JdbcClient jdbcClient = JdbcClient.builder()
+        .connection(connection -> connection
+                .url(url)
+                .username(username)
+                .password(password))
+        .build();
+```
+
+MySQL Connector/J registers itself and is selected from the configured JDBC URL. This client is standalone and does
+not use `data.clients.jdbc`. Each terminal operation owns its connection and does not participate in `Tx.transaction`.
+The type lookup and mutation in each insert or update flow therefore run as separate JDBC operations. For a client
+managed by Service Registry that participates in local transactions, see the [PostgreSQL example](../postgres).
+
+## Configuration and Tests
+
+The connection settings are under `app.database` in `application.yaml`. By default, the application connects to the
+`pokemons` database at `localhost:3306` with username `user` and password `changeit`.
+
+The sample username and password are intended only for this local demo. They are not a recommendation for production
+use. Configure credentials that are appropriate for your environment before deploying the application.
+
+The application does not create or migrate the schema. To use an existing MySQL instance, update the URL and
+credentials in `application.yaml`. Then create the configured database and user, and run `etc/schema.sql` as that user.
+Follow your normal provisioning and credential management practices outside this local demo.
+
+Run the tests without packaging:
+
+```shell
+mvn test
+```
+
+Testcontainers runs the tests against `container-registry.oracle.com/mysql/community-server:9.7.3`, the same image used
+for the local setup. It creates the `pokemons` database, initializes it with `etc/schema.sql`, and exercises the query
+and mutation endpoints through the MySQL connection. Testcontainers removes the container afterward, so the local
+MySQL container is not required for the tests. Because this process requires Docker, JUnit skips the tests when Docker
+is not available.
+
+> **Note**
+> Helidon Data JDBC is incubating, and some APIs used by this example are preview. Source types opt in locally with
+> `@SuppressWarnings` and the corresponding `Api.SUPPRESS_INCUBATING` or `Api.SUPPRESS_PREVIEW` constant.
 
 ## Stop MySQL
 
-To stop the MySQL container:
+Stop the container:
 
 ```shell
 docker stop mysql
 ```
 
-To delete the stopped container:
+Remove the stopped container:
 
 ```shell
 docker rm mysql

@@ -1,56 +1,23 @@
 # Helidon Data JDBC Imperative with Oracle Database
 
 This example shows how to execute Oracle Database statements directly with the Helidon Data `JdbcClient`. Application
-code creates each statement, binds its positional parameters, selects a mapper, and invokes the terminal operation.
+code creates each statement, binds positional parameters, selects a mapper, and invokes the terminal operation. To define
+data access as repository interfaces, see the
+[Declarative Oracle Database example](../../../declarative/data-jdbc/oracle).
 
-The configuration defines an Oracle Universal Connection Pool (UCP) data source named `example`. The HTTP service uses
-a standalone client configured with that data source name. This example does not use `data.clients.jdbc` because it
-demonstrates how to construct a standalone client from a registered data source. For a client managed by Service Registry,
-see the [PostgreSQL example](../postgres).
+## Run This Example
 
-Use this example when you want JDBC operations to remain explicit in application code. To generate implementations from
-annotated repository interfaces, see the
-[declarative Oracle Database example](../../../declarative/data-jdbc/oracle).
+### Prerequisites
 
-## What the Example Demonstrates
+- JDK 26
+- Maven 3.8.0 or newer
+- Docker to run the local Oracle Database container and the integration tests
 
-The application covers:
+Run all commands from `examples/imperative/data-jdbc/oracle`.
 
-- list, optional, scalar, insert, update, and delete JDBC operations
-- positional parameter binding, including binding one value to multiple positions
-- mapping joined rows to a `Pokemon` containing a nested `Type`
-- selecting a row mapper for joined query results
-- retrieving a database-generated identifier
-- looking up a type before inserting or updating a Pokemon through separate JDBC operations
+### 1. Start Oracle Database
 
-## Client Construction and Transaction Behavior
-
-The HTTP service constructs its client using the configured data source name:
-
-```java
-JdbcClient jdbcClient = JdbcClient.create(builder -> builder.dataSourceName("example"));
-```
-
-The client remains standalone, and its JDBC operations do not participate in `Tx.transaction`. The configured UCP data
-source remains externally managed. As a result, the type lookup and mutation in each insert or update flow run as
-separate JDBC operations.
-
-## Database Configuration
-
-The data source settings are in `src/main/resources/application.yaml`. By default, the application connects to the
-`FREEPDB1` pluggable database at `localhost:1521` with username `pokemon` and password `changeit`. If you use another
-database, update `data.url` and the UCP credentials before starting the application.
-
-The application does not create or migrate the schema, so initialize the database before starting the application.
-
-The default credentials are intended only for this local demo. You can use an existing Oracle Database or start the
-optional local container described below. With an existing database, provision the configured user and run
-`etc/schema.sql` as that user.
-
-## Optional Local Oracle Container
-
-If you want to use a local Oracle Database container for the demo, run the following command from the
-`examples/imperative/data-jdbc/oracle` directory:
+Start the Oracle Database container:
 
 ```shell
 docker run --name oracle \
@@ -61,30 +28,32 @@ docker run --name oracle \
        -d container-registry.oracle.com/database/free:23.26.3.0-lite
 ```
 
-The first volume makes the demo user provisioning script available in the container's startup directory. The second
-volume makes `etc/schema.sql` and its SQL*Plus wrapper available inside the container.
+The first volume places the demo user provisioning script in the startup directory for the container. The
+`23.26.3.0-lite` image runs scripts from this directory when the database starts. The second volume makes
+`etc/schema.sql` and its SQL*Plus wrapper available in the container.
 
-Follow the startup log and wait for the database to complete startup and setup-user.sql run successfully:
+Wait until the database finishes starting and `setup-user.sql` completes successfully:
 
 ```shell
 docker logs -f oracle
 ```
 
-## Demo User Provisioning
+#### Demo User Provisioning
 
-As part of the optional container setup, `etc/setup-user.sql` creates the `pokemon` user in `FREEPDB1` if it does not
-already exist. Oracle Database uses an administrator connection only while running this provisioning script. The demo
-application and its sample schema connect as `pokemon`, not as `SYS` or `SYSTEM`.
+During startup, `etc/setup-user.sql` creates the `pokemon` user in `FREEPDB1` if the user does not already exist. The
+script can run more than once without trying to recreate the user. It uses an administrator connection only while it
+performs this provisioning. The application and its schema connect as `pokemon`, not as `SYS` or `SYSTEM`.
 
-The script grants the permissions required by the demo and gives `pokemon` a limited quota on a dedicated
-`POKEMON_DATA` tablespace.
+The script grants the permissions required by the demo and gives `pokemon` a limited quota on the dedicated
+`POKEMON_DATA` tablespace. It creates this tablespace because the `23.26.3.0-lite` image does not provide a general
+purpose `USERS` tablespace.
 
-## Initialize the Sample Schema (Required)
+### 2. Initialize the Schema
 
-> **Warning:** The following command drops the existing `POKEMON` and `TYPE` tables in the `pokemon` schema, including
-> all their data, before recreating and populating them. It does not modify tables in other schemas.
+> **Warning:** This command drops the existing `POKEMON` and `TYPE` tables in the `pokemon` schema, including all their
+> data, before recreating and populating them. It does not modify tables in other schemas.
 
-When using the optional container, run the schema script as the demo user:
+Run the schema script as the demo user:
 
 ```shell
 docker exec oracle \
@@ -92,134 +61,229 @@ docker exec oracle \
        @/opt/helidon/run-schema.sql
 ```
 
-The mounted `run-schema.sql` wrapper stops on the first SQL error and executes `etc/schema.sql`. The schema script
-recreates the sample tables and their foreign key, inserts the Pokemon types and Pokemon, and commits the sample data.
+The mounted `run-schema.sql` wrapper stops at the first SQL error and runs `etc/schema.sql`. The schema script recreates
+the sample tables and their foreign key, inserts the Pokemon types and Pokemon, and commits the sample data.
 
-Use your normal provisioning and credential-management practices for any environment beyond this local demo.
+### 3. Build and Start the Application
 
-## Build and Run
-
-Use JDK 26 and Maven 3.8.0 or newer.
-
-From `examples/imperative/data-jdbc/oracle`, build the application and run its tests:
+Build the application and run the tests:
 
 ```shell
 mvn package
 ```
 
-To build the application without running tests:
+To build the application without running the tests:
 
 ```shell
 mvn package -DskipTests
 ```
 
-> **Note**
-> Helidon Data JDBC is incubating, and some APIs used by this example are preview. Source types opt in locally with
-> `@SuppressWarnings` and the corresponding `Api.SUPPRESS_INCUBATING` or `Api.SUPPRESS_PREVIEW` constant.
+See [Configuration and Tests](#configuration-and-tests) for details about the test environment.
 
-Start the packaged application:
+After the build completes, start the application:
 
 ```shell
 java '-Dhelidon.serialFilter.pattern=oracle.sql.converter.*' \
      -jar target/helidon-examples-imperative-data-jdbc-oracle.jar
 ```
 
-Oracle JDBC reads bundled character-set conversion data using Java serialization. The system property permits the
-Oracle converter package while Helidon's serialization filter continues to reject other classes by default.
+The system property allows Oracle JDBC to read its character set conversion data through Java serialization. See
+[Oracle JDBC Serialization](#oracle-jdbc-serialization) for details.
 
-The test suite uses Testcontainers to start
-`container-registry.oracle.com/database/free:23.26.3.0-lite`, the same image shown above. It provisions the `pokemon`
-user, initializes the database with the same `etc/schema.sql`, and exercises the documented query and mutation
-endpoints through its Oracle UCP data source. Testcontainers manages this database, so the optional local container is
-not needed for tests. When Docker is unavailable, JUnit skips the container-backed test class.
+The packaged application connects to the local Oracle Database instance and listens on
+`http://localhost:8080/pokemon`.
 
-The application listens on `http://localhost:8080/pokemon`.
+### 4. Verify the Application
 
-After application startup, UCP initializes the connection pool when the first database connection is requested. The
-first invocation of an endpoint that accesses the database may therefore take longer while UCP creates the initial
-pooled connections. Subsequent invocations reuse pooled connections.
-
-## Try the Application
-
-List all Pokemon:
-
-```shell
-curl http://localhost:8080/pokemon/all
-```
-
-List Pokemon having the `Normal` type:
-
-```shell
-curl http://localhost:8080/pokemon/type/Normal
-```
-
-Search for a Pokemon whose name or type is `Normal`:
-
-```shell
-curl http://localhost:8080/pokemon/search/Normal
-```
-
-The same `term` value is bound to both positional parameters.
-
-Retrieve `Meowth` by name:
+In another terminal, retrieve a seeded Pokemon:
 
 ```shell
 curl http://localhost:8080/pokemon/get/Meowth
 ```
 
-Retrieve `Meowth` by type and name:
+Expected response:
 
-```shell
-curl http://localhost:8080/pokemon/search/Normal/Meowth
+```json
+{"id":5,"name":"Meowth","type":"Normal"}
 ```
 
-Count all Pokemon:
+UCP creates the initial connections when the application first accesses the database. The first request can therefore
+take longer than later requests, which reuse connections from the pool.
+
+## API
+
+All paths are relative to `http://localhost:8080`.
+
+| Method | Path | Behavior |
+| --- | --- | --- |
+| `GET` | `/pokemon/all` | Lists all Pokemon ordered by name |
+| `GET` | `/pokemon/type/{name}` | Lists Pokemon having the requested type |
+| `GET` | `/pokemon/search/{term}` | Finds Pokemon by name or type and binds the term to two positions |
+| `GET` | `/pokemon/get/{name}` | Returns a matching Pokemon or `404` when the name is not found |
+| `GET` | `/pokemon/search/{type}/{name}` | Finds a Pokemon by type and name using positional parameters |
+| `GET` | `/pokemon/count` | Returns the number of Pokemon rows |
+| `POST` | `/pokemon` | Inserts a Pokemon and returns its generated identifier |
+| `PUT` | `/pokemon/{id}` | Updates a Pokemon or returns `404` when the identifier is not found |
+| `DELETE` | `/pokemon/{id}` | Deletes a Pokemon and returns the number of rows affected |
+
+Run the following mutation examples in order against a freshly initialized schema. The first generated identifier is
+`20`. If the database returns a different identifier, use that value in the update and delete requests.
+
+Insert a Pokemon:
 
 ```shell
-curl http://localhost:8080/pokemon/count
-```
-
-Insert a Pokemon. The response is a JSON object containing the generated identifier, name, and type:
-
-```shell
-curl -i -X POST \
+curl -X POST \
      -H 'Content-Type: application/json' \
      -d '{"name":"Charmander","type":"Fire"}' \
      http://localhost:8080/pokemon
 ```
 
-The type lookup and insert are separate JDBC operations. The schema starts generated identifiers at `20`, so the JSON
-object returned by the first insert into a freshly initialized database contains that ID.
+Expected response:
 
-Update the inserted Pokemon's name and type. Use the identifier returned by `POST`; the first identifier is `20` in a
-freshly initialized database:
+```json
+{"id":20,"name":"Charmander","type":"Fire"}
+```
+
+The standalone client performs the type lookup and insert as separate JDBC operations.
+
+Update the Pokemon returned by the insert request:
 
 ```shell
-curl -i -X PUT \
+curl -X PUT \
      -H 'Content-Type: application/json' \
      -d '{"name":"Charmeleon","type":"Fire"}' \
      http://localhost:8080/pokemon/20
 ```
 
-`PUT /pokemon/{id}` updates the row selected by the path identifier and returns its new JSON representation. The body
-supplies the new nonblank `name` and an existing Pokemon `type`; it does not need an `id`. A missing row returns HTTP
-`404`. The standalone client performs the type lookup and update as separate JDBC operations.
+Expected response:
 
-Delete the updated Pokemon:
+```json
+{"id":20,"name":"Charmeleon","type":"Fire"}
+```
+
+The path supplies the Pokemon identifier. The request body supplies a name that is not blank and an existing Pokemon
+type, so it does not need an `id`. The endpoint returns `404` when the identifier does not match a row. The standalone
+client performs the type lookup and update as separate JDBC operations.
+
+Delete the Pokemon returned by the update request:
 
 ```shell
-curl -i -X DELETE http://localhost:8080/pokemon/20
+curl -X DELETE http://localhost:8080/pokemon/20
 ```
+
+Expected response:
+
+```text
+Deleted: 1 values
+```
+
+## Source Tour
+
+- [`Main`](src/main/java/io/helidon/examples/imperative/data/jdbc/Main.java) creates the standalone `JdbcClient` from
+  the configured UCP data source and registers the HTTP service.
+- [`PokemonService`](src/main/java/io/helidon/examples/imperative/data/jdbc/PokemonService.java) defines the routes,
+  validates requests, and performs the JDBC operations.
+- [`PokemonRowMapper`](src/main/java/io/helidon/examples/imperative/data/jdbc/model/PokemonRowMapper.java) maps a joined
+  database row to a `Pokemon` with a nested `Type`.
+- [`application.yaml`](src/main/resources/application.yaml) defines the UCP data source and its local demo credentials.
+  Change these credentials before using the example outside a local development environment.
+- [`setup-user.sql`](etc/setup-user.sql) creates the demo user and its tablespace. Change its demo password together
+  with the password in `application.yaml`.
+- [`run-schema.sql`](etc/run-schema.sql) runs the schema script and stops if SQL*Plus reports an error.
+- [`schema.sql`](etc/schema.sql) creates the example schema and loads the sample data.
+
+## What the Example Demonstrates
+
+- creating a `JdbcClient.Statement` for each SQL operation
+- binding positional parameters, including one value bound to two positions
+- mapping list and optional query results with a row mapper
+- mapping a scalar count with `long.class`
+- mapping a joined row to a `Pokemon` that contains a nested `Type`
+- retrieving an Oracle Database generated identifier
+- executing update and delete statements and reading the number of affected rows
+- looking up a type before inserting or updating a Pokemon through separate JDBC operations
+
+## JdbcClient Operations
+
+`PokemonService` keeps the SQL and `JdbcClient` calls visible in application code. Each method creates a statement,
+binds its parameters by position, applies a mapper when needed, and selects a terminal operation that matches the
+expected result.
+
+| Result | JdbcClient operation |
+| --- | --- |
+| Multiple rows | `statement.map(pokemonRowMapper).list()` |
+| Optional row | `statement.map(pokemonRowMapper).optional()` |
+| Exactly one scalar | `statement.map(long.class).one()` |
+| Generated identifier | `statement.generatedKeys().addColumn("ID").map(...).one()` |
+| Update or delete count | `statement.execute()` |
+
+The name or type search binds the same `term` value to positions `1` and `2`. The type and name search binds
+`typeName` to position `1` and `name` to position `2`. `PokemonRowMapper` combines columns from the joined tables into
+the nested model. A separate inline mapper converts a type row to a `Type` record.
+
+## Client Construction and Transaction Behavior
+
+`Main` creates the client from the configured UCP data source name:
+
+```java
+JdbcClient jdbcClient = JdbcClient.create(builder -> builder.dataSourceName("example"));
+```
+
+The client remains standalone, and the UCP data source remains externally managed. Each terminal operation owns its
+connection and does not participate in `Tx.transaction`. The type lookup and mutation in each insert or update flow
+therefore run as separate JDBC operations. This example does not use `data.clients.jdbc`. For a client managed by
+Service Registry that participates in local transactions, see the [PostgreSQL example](../postgres).
+
+## Configuration and Tests
+
+`application.yaml` configures Oracle JDBC and a UCP data source named `example`. By default, the application connects
+to the `FREEPDB1` pluggable database at `localhost:1521` with username `pokemon` and password `changeit`.
+
+The sample application password and the `oracle123` administrator password used by the local container are intended
+only for this demo. They are not recommendations for production use. Configure credentials that are appropriate for
+your environment before deploying the application.
+
+The application does not create or migrate the schema. To use an existing Oracle Database instance, update `data.url`
+and the UCP credentials in `application.yaml`. Then provision the configured user and run `etc/schema.sql` as that user.
+Follow your normal provisioning and credential management practices outside this local demo.
+
+### Oracle JDBC Serialization
+
+Oracle JDBC reads bundled character set conversion data through Java serialization. Helidon rejects Java
+deserialization by default unless the application explicitly allows the required classes. The schema setup runs in a
+separate SQL*Plus process and does not initialize the Oracle JDBC driver in the application.
+
+When the application makes its first JDBC request, `helidon.serialFilter.pattern` allows the
+`oracle.sql.converter.*` package through the Helidon serialization filter. Other classes remain subject to the default
+rejection policy.
+
+### Tests
+
+Run the tests without packaging:
+
+```shell
+mvn test
+```
+
+Testcontainers runs the tests against `container-registry.oracle.com/database/free:23.26.3.0-lite`, the same image used
+for the local setup. It provisions the `pokemon` user, initializes the database with `etc/schema.sql`, and exercises the
+query and mutation endpoints through the Oracle UCP data source. Testcontainers removes the container afterward, so the
+local Oracle Database container is not required for the tests. Because this process requires Docker, JUnit skips the
+tests when Docker is not available.
+
+> **Note**
+> Helidon Data JDBC is incubating, and some APIs used by this example are preview. Source types opt in locally with
+> `@SuppressWarnings` and the corresponding `Api.SUPPRESS_INCUBATING` or `Api.SUPPRESS_PREVIEW` constant.
 
 ## Stop Oracle Database
 
-To stop the Oracle Database container:
+Stop the container:
 
 ```shell
 docker stop oracle
 ```
 
-To delete the stopped container:
+Remove the stopped container:
 
 ```shell
 docker rm oracle

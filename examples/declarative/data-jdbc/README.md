@@ -1,7 +1,7 @@
 # Helidon Data JDBC Declarative Examples
 
 These examples show how to define JDBC data access as Helidon Data repository interfaces. Repository methods declare
-their SQL and result mapping with annotations, and Helidon generates the JDBC-backed implementations at build time.
+their SQL and result mapping with annotations, and Helidon generates the JDBC implementations at build time.
 
 Choose the declarative approach when a repository interface is the right boundary for your application and you want
 Helidon to generate the implementation. To construct statements and invoke `JdbcClient` operations directly, use the
@@ -11,8 +11,8 @@ Each database directory contains a self-contained Maven application for the same
 
 | Directory | Database | JDBC configuration |
 | --- | --- | --- |
-| [`mysql`](mysql) | MySQL | Default client backed by a named HikariCP data source |
-| [`oracle`](oracle) | Oracle Database | Default client backed by a named UCP data source |
+| [`mysql`](mysql) | MySQL | Default client that uses a named HikariCP data source |
+| [`oracle`](oracle) | Oracle Database | Default client that uses a named UCP data source |
 | [`postgres`](postgres) | PostgreSQL | Named `pokemon` client with direct connection settings |
 
 Open the README in your chosen directory for database preparation, configuration, startup, and runnable endpoint
@@ -34,8 +34,8 @@ client with `@Jdbc.Client("pokemon")`.
 
 Every database variant exposes the same `/pokemon` HTTP API. The API lists, searches, retrieves, and counts seeded
 Pokemon. It also inserts a Pokemon with `POST`, updates one with `PUT /pokemon/{id}`, and deletes one with
-`DELETE /pokemon/{id}`. The database-specific READMEs include the complete request sequence and explain the relevant
-repository behavior.
+`DELETE /pokemon/{id}`. The database-specific READMEs include a complete API table, a runnable mutation sequence, and
+an explanation of the relevant repository behavior.
 
 Each module includes an `etc/schema.sql` file that creates and populates the sample tables. Run that script before you
 start an application against your own database. The application does not create or migrate its schema. Tests instead
@@ -44,7 +44,7 @@ PostgreSQL use standard identity syntax; MySQL uses `AUTO_INCREMENT`.
 
 ## Build the Examples
 
-Use JDK 26 and Maven 3.8.0 or newer to build the examples. Docker is required only for the container-backed tests. If
+Use JDK 26 and Maven 3.8.0 or newer to build the examples. Docker is required only for tests that use containers. If
 Docker is unavailable, JUnit skips those test classes.
 
 From this directory, build and test every database variant:
@@ -61,11 +61,16 @@ To build every variant without running tests:
 mvn verify -DskipTests
 ```
 
-To build one variant, change to its directory. For example:
+To build one variant, first change to its directory. For example:
 
 ```shell
 cd mysql
+```
+
+Then build the module:
+
+```shell
 mvn package
 ```
 
-Follow that variant's README to prepare the database and start the packaged application.
+Follow the README for that variant to prepare the database and start the packaged application.
