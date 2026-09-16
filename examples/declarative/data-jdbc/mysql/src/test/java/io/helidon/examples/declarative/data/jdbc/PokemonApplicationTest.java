@@ -25,7 +25,8 @@ import io.helidon.common.media.type.MediaTypes;
 import io.helidon.data.DataException;
 import io.helidon.data.NoResultException;
 import io.helidon.examples.declarative.data.jdbc.model.PokemonRepository;
-import io.helidon.examples.declarative.data.jdbc.model.TypeRepository;
+import io.helidon.examples.declarative.data.jdbc.model.PokemonType;
+import io.helidon.examples.declarative.data.jdbc.model.PokemonTypeRepository;
 import io.helidon.service.registry.Services;
 import io.helidon.transaction.Tx;
 import io.helidon.transaction.TxException;
@@ -126,10 +127,21 @@ class PokemonApplicationTest {
     @Test
     void oneThrowsForUnknownTypeAndApplicationRemainsUsable() {
         int expectedCount = count();
-        TypeRepository typeRepository = Services.get(TypeRepository.class);
+        PokemonTypeRepository pokemonTypeRepository = Services.get(PokemonTypeRepository.class);
 
-        assertThrows(NoResultException.class, () -> typeRepository.getByName("DoesNotExist"));
+        assertThrows(NoResultException.class, () -> pokemonTypeRepository.getByName("DoesNotExist"));
         assertThat(count(), is(expectedCount));
+    }
+
+    @Test
+    void mapsMultipleScalarAndRecordRowsWithoutRowMapper() {
+        PokemonTypeRepository pokemonTypeRepository = Services.get(PokemonTypeRepository.class);
+        List<PokemonType> types = pokemonTypeRepository.listTypes();
+
+        assertThat(pokemonTypeRepository.listNames(), is(types.stream().map(PokemonType::name).toList()));
+        assertThat(types.size(), is(18));
+        assertThat(types.getFirst(), is(new PokemonType(1, "Normal")));
+        assertThat(types.getLast(), is(new PokemonType(18, "Fairy")));
     }
 
     @Test
@@ -214,11 +226,11 @@ class PokemonApplicationTest {
         int expectedCount = count();
         String name = "E2E" + UUID.randomUUID().toString().replace("-", "");
         PokemonRepository pokemonRepository = Services.get(PokemonRepository.class);
-        TypeRepository typeRepository = Services.get(TypeRepository.class);
+        PokemonTypeRepository pokemonTypeRepository = Services.get(PokemonTypeRepository.class);
 
         try {
             TxException failure = assertThrows(TxException.class, () -> Tx.transaction(() -> {
-                var type = typeRepository.getByName("Fire");
+                var type = pokemonTypeRepository.getByName("Fire");
                 pokemonRepository.insert(name, type.id());
                 throw new IllegalStateException("Deliberate rollback");
             }));
@@ -237,11 +249,11 @@ class PokemonApplicationTest {
         int expectedCount = count();
         String name = "E2E" + UUID.randomUUID().toString().replace("-", "");
         PokemonRepository pokemonRepository = Services.get(PokemonRepository.class);
-        TypeRepository typeRepository = Services.get(TypeRepository.class);
+        PokemonTypeRepository pokemonTypeRepository = Services.get(PokemonTypeRepository.class);
 
         try {
             TxException failure = assertThrows(TxException.class, () -> Tx.transaction(() -> {
-                var type = typeRepository.getByName("Fire");
+                var type = pokemonTypeRepository.getByName("Fire");
                 pokemonRepository.insert(name, type.id());
                 pokemonRepository.insert("Pikachu", type.id());
                 return null;

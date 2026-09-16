@@ -24,5 +24,5 @@ package io.helidon.examples.declarative.data.jdbc.model;
  */
 public record Pokemon(int id,
                       String name,
-                      Type type) {
+                      PokemonType type) {
 }
