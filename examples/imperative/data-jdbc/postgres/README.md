@@ -1,8 +1,11 @@
 # Helidon Data JDBC Imperative with PostgreSQL
 
-This example executes PostgreSQL statements directly with Helidon Data `JdbcClient`. Application code creates each
-statement, binds positional parameters, selects a mapper, and invokes a terminal operation. To define data access as
-repository interfaces, see the [declarative PostgreSQL example](../../../declarative/data-jdbc/postgres).
+This example demonstrates a Java SE imperative application that uses Helidon Data JDBC, Helidon WebServer,
+a HikariCP data source, and a PostgreSQL database. The application obtains its `JdbcClient` from the Helidon
+Service Registry and uses it directly to execute SQL operations and manage local transactions.
+
+To define data access with repository interfaces, see the
+[declarative PostgreSQL example](../../../declarative/data-jdbc/postgres).
 
 `PokemonService` handles routing, validation, and responses. `PokemonStore` handles SQL, row mapping, generated keys,
 and transactions.

@@ -1,7 +1,8 @@
 # Helidon Data JDBC Imperative Examples
 
-These examples show how to execute SQL directly with Helidon Data `JdbcClient`. Application code creates statements,
-binds parameters, selects row mappers, and invokes terminal operations.
+These examples demonstrate Java SE imperative applications that use Helidon Data JDBC and Helidon WebServer
+to access MySQL, Oracle Database, and PostgreSQL. Application code works directly with `JdbcClient` to create
+statements, bind parameters, map result rows, and execute database operations.
 
 Each directory contains the same Pokémon application for a different database. To define data access as repository
 interfaces, see the [declarative JDBC examples](../../declarative/data-jdbc).
