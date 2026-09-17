@@ -16,6 +16,7 @@
 
 package io.helidon.examples.declarative.webclient;
 
+import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.http.Http;
 
@@ -23,6 +24,7 @@ import io.helidon.http.Http;
  * API used by both server and client.
  * This API should only use annotations from {@code io.helidon.http.Http} class.
  */
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @Http.Path("/hello") // path this endpoint is served on
 interface HelloWorldApi {
     @Http.GET

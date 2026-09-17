@@ -16,16 +16,12 @@
 
 package io.helidon.examples.declarative.webserver.helloworld.jsonb;
 
-import io.helidon.common.Reflected;
-
 import jakarta.json.bind.annotation.JsonbCreator;
 import jakarta.json.bind.annotation.JsonbProperty;
 
 /**
  * Data transfer object for greeting response.
  */
-// JSON-B uses reflection, so this must be added when using GraalVM native-image
-@Reflected
 public class GreetingDto {
     private final String greeting;
     private final String name;

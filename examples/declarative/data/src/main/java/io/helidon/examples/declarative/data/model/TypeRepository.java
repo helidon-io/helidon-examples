@@ -15,6 +15,7 @@
  */
 package io.helidon.examples.declarative.data.model;
 
+import io.helidon.common.Api;
 import io.helidon.data.Data;
 
 /**
@@ -26,6 +27,7 @@ import io.helidon.data.Data;
  * @see Data.GenericRepository
  * @see Type
  */
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @Data.Repository
 public interface TypeRepository extends Data.GenericRepository<Type, Integer> {
 

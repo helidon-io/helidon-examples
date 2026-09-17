@@ -16,6 +16,7 @@
 
 package io.helidon.examples.declarative.webclient;
 
+import io.helidon.common.Api;
 import io.helidon.service.registry.ServiceRegistry;
 import io.helidon.webclient.api.RestClient;
 import io.helidon.webserver.testing.junit5.ServerTest;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @ServerTest
 public class DeclarativeWebclientTest {
     private final HelloWorldClientEndpoint client;

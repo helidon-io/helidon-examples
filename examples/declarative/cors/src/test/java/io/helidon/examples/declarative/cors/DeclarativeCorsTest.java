@@ -18,6 +18,7 @@ package io.helidon.examples.declarative.cors;
 
 import java.util.List;
 
+import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.Status;
@@ -39,6 +40,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @ServerTest
 class DeclarativeCorsTest {
     private final Http1Client client;

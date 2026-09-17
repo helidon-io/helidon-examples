@@ -4,8 +4,6 @@ Declarative Server Example with Metrics
 This example shows how to use Helidon declarative with metrics.
 This example uses WebServer endpoint, as it is easy to invoke the endpoints to show the behavior.
 
-The example can be built using GraalVM native image as well.
-
 # Running as jar
 
 Build this application:
@@ -24,30 +22,6 @@ Expected output should be similar to the following:
 2026.01.09 12:32:02.237 INFO Helidon SE 4.4.0-SNAPSHOT features: [Config, Encoding, Media, Metrics, Observe, Registry, WebServer]
 2026.01.09 12:32:02.237 INFO [0x26c1825a] http://0.0.0.0:8080 bound for socket '@default'
 2026.01.09 12:32:02.241 INFO Started all channels in 6 milliseconds. 329 milliseconds since JVM startup. Java 21.0.3+7-LTS-jvmci-23.1-b37
-Server started on: http://localhost:8080/hello
-```
-
-# Running as native image
-You must use GraalVM with native image installed as your JDK,
-or you can specify an environment variable `GRAALVM_HOME` that points
-to such an installation.
-
-Build this application:
-```shell
-mvn clean package -Pnative-image
-```
-
-Run from command line:
-```shell
-./target/helidon-examples-declarative-metrics 
-```
-
-Expected output should be the same as when starting regular Java
-```text
-2026.01.09 12:56:28.791 INFO Logging at runtime configured using classpath: /logging.properties
-2026.01.09 12:56:28.798 INFO Helidon SE 4.4.0-SNAPSHOT features: [Config, Encoding, Media, Metrics, Observe, Registry, WebServer]
-2026.01.09 12:56:28.798 INFO [0x55b4e273] http://0.0.0.0:8080 bound for socket '@default'
-2026.01.09 12:56:28.799 INFO Started all channels in 1 milliseconds. 9 milliseconds since JVM startup. Java 21.0.3+7-LTS-jvmci-23.1-b37
 Server started on: http://localhost:8080/hello
 ```
 

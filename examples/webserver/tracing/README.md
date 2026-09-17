@@ -30,7 +30,7 @@ The example keeps the same service and sampling behavior as before and makes the
 
 ## Build and run
 
-With JDK 26:
+With JDK 27:
 
 ```bash
 mvn package

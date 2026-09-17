@@ -18,6 +18,7 @@ package io.helidon.examples.declarative.webclient;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import io.helidon.common.Api;
 import io.helidon.config.Configuration;
 import io.helidon.http.Http;
 import io.helidon.http.Status;
@@ -27,6 +28,7 @@ import io.helidon.webserver.http.RestServer;
 /**
  * Server side implementation of the {@link io.helidon.examples.declarative.webclient.HelloWorldApi}.
  */
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @RestServer.Endpoint // webserver declarative endpoint
 @Service.Singleton // service registry scope (must be singleton)
 class HelloWorldServerEndpoint implements HelloWorldApi {

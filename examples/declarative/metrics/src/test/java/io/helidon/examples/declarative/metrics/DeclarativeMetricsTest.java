@@ -18,6 +18,7 @@ package io.helidon.examples.declarative.metrics;
 
 import java.util.Optional;
 
+import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.common.testing.junit5.OptionalMatcher;
 import io.helidon.http.Status;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @ServerTest
 public class DeclarativeMetricsTest {
     private final Http1Client client;

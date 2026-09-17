@@ -58,7 +58,7 @@
     </scm>
 
     <properties>
-        <version.java>26</version.java>
+        <version.java>27</version.java>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <helidon.version>27.0.0-SNAPSHOT</helidon.version>
@@ -85,7 +85,7 @@
         <version.plugin.resources>3.3.1</version.plugin.resources>
         <version.plugin.version-plugin>2.15.0</version.plugin.version-plugin>
         <version.plugin.buildnumber>3.1.0</version.plugin.buildnumber>
-        <version.plugin.spotbugs>4.7.3.5</version.plugin.spotbugs>
+        <version.plugin.spotbugs>4.10.4.1</version.plugin.spotbugs>
         <version.plugin.findsecbugs>1.12.0</version.plugin.findsecbugs>
         <version.plugin.dependency-check>10.0.3</version.plugin.dependency-check>
     </properties>
@@ -176,7 +176,7 @@
                     <artifactId>spotbugs-maven-plugin</artifactId>
                     <version>${version.plugin.spotbugs}</version>
                     <configuration>
-                        <omitVisitors>FindReturnRef</omitVisitors>
+                        <omitVisitors>FindReturnRef,ConstructorThrow,SharedVariableAtomicityDetector</omitVisitors>
                         <skip>${spotbugs.skip}</skip>
                         <threshold>${spotbugs.threshold}</threshold>
                         <!--suppress UnresolvedMavenProperty -->

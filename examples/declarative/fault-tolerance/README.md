@@ -4,8 +4,6 @@ Declarative Server Example with Fault Tolerance
 This example shows how to use Helidon declarative to create an HTTP server endpoint and use fault tolerance
 with it. This example shows usage of fallback and retry fault tolerance handlers.
 
-The example can be built using GraalVM native image as well.
-
 # Running as jar
 
 Build this application:
@@ -27,34 +25,6 @@ Expected output should be similar to the following:
 2026.01.09 12:08:28.484 INFO Helidon SE 4.4.0-SNAPSHOT features: [Config, Encoding, Fault Tolerance, Media, Registry, WebServer]
 2026.01.09 12:08:28.484 INFO [0x4feacf62] http://0.0.0.0:8080 bound for socket '@default'
 2026.01.09 12:08:28.495 INFO Started all channels in 6 milliseconds. 273 milliseconds since JVM startup. Java 21.0.7+8-LTS-245
-Server started on: http://localhost:8080/ft
-```
-
-# Running as native image
-
-You must use GraalVM with native image installed as your JDK,
-or you can specify an environment variable `GRAALVM_HOME` that points
-to such an installation.
-
-Build this application:
-
-```shell
-mvn clean package -Pnative-image
-```
-
-Run from command line:
-
-```shell
-./target/helidon-examples-declarative-fault-tolerance 
-```
-
-Expected output should be the same as when starting regular Java
-
-```text
-2026.01.09 12:11:34.470 INFO Logging at runtime configured using classpath: /logging.properties
-2026.01.09 12:11:34.476 INFO Helidon SE 4.4.0-SNAPSHOT features: [Config, Encoding, Fault Tolerance, Media, Registry, WebServer]
-2026.01.09 12:11:34.476 INFO [0x692ddcb1] http://0.0.0.0:8080 bound for socket '@default'
-2026.01.09 12:11:34.476 INFO Started all channels in 0 milliseconds. 7 milliseconds since JVM startup. Java 21.0.3+7-LTS-jvmci-23.1-b37
 Server started on: http://localhost:8080/ft
 ```
 

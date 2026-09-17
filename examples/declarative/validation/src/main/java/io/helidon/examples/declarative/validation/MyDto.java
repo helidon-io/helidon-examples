@@ -16,6 +16,7 @@
 
 package io.helidon.examples.declarative.validation;
 
+import io.helidon.common.Api;
 import io.helidon.json.binding.Json;
 import io.helidon.validation.Validation;
 
@@ -25,6 +26,7 @@ import io.helidon.validation.Validation;
  * @param name name
  * @param age  age
  */
+@SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @Validation.Validated
 @Json.Entity
 public record MyDto(@Validation.String.NotBlank

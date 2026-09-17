@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,6 @@ import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFact
 
 /**
  * Main class of the example, runnable from command line.
- * There is a limitation of log4j in native image - we only have loggers that are
- * initialized after we configure logging, which unfortunately excludes Helidon loggers.
- * You would need to use JUL or slf4j to have Helidon logs combined with application logs.
  */
 public final class Main {
     private static System.Logger systemLogger;
@@ -54,8 +51,6 @@ public final class Main {
      * @param args not used
      */
     public static void main(String[] args) {
-        // file based logging configuration does not work
-        // with native image!
         configureLog4j();
         LogConfig.configureRuntime();
         // get logger after configuration

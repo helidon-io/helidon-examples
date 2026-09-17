@@ -1,11 +1,10 @@
 
 # Helidon Application Packaging Example
 
-Helidon supports three packaging options for your application:
+Helidon supports two packaging options for your application:
 
 1. Thin Jar (the default)
 2. JLink Custom Image
-3. Native Image
 
 It is also possible to package your Helidon application as a fat jar (although this is not recommended).
 
@@ -76,7 +75,7 @@ This will create `target/appplication-se-thin.zip` just like we did with the `zi
 
 The Jlink image creates a custom Java runtime image that is bundled with your application.
 This custom runtime image contains only the JDK modules your application requires. It also
-(by default) creates a CDS archive to speed up application launching.
+(by default) creates an ahead-of-time (AOT) cache to speed up application launching.
 
 To build and run:
 
@@ -89,7 +88,7 @@ If you look in `target/helidon-examples-packaging-jri` you will see:
 
 1. `app`: this contains your application jar and dependencies, just like the thin jar case.
 2. `bin`: this contains the start script for your application plus some JDK commands.
-3. `lib/start.jsa`: this is a CDS archive for your application. It makes starting it a bit faster.
+3. `lib`: this includes an AOT cache for your application to improve startup performance.
 4. The rest of the files are the JDK files needed to run your application.
 
 ### JLink Zip Distribution
@@ -120,29 +119,6 @@ To generate the zip using the `maven-assembly-plugin`:
 mvn package -Pjlink-zip
 ```
 This will create `target/appplication-se-jlink.zip` just like we did with the `zip` command.
-
-## Native Image
-
-Native image creates a native executable of your Java application. You will need
-Oracle GraalVM 21 installed on your system and set `GRAALVM_HOME` to point to your
-installation. You can verify it by doing `${GRAALVM_HOME}/bin/native-image --version`.
-
-To build and run:
-
-```shell
-mvn package -Pnative-image
-target/helidon-examples-packaging
-```
-
-Your application is a native executable. You can see that by running:
-
-```shell
-file target/helidon-examples-packaging
-```
-
-### Native image Distribution
-
-Your application is a single executable file so no distribution archive is required.
 
 ## Fat Jar
 
@@ -176,4 +152,3 @@ This will create `target/helidon-examples-packaging-fat.jar` which can be run wi
 ```shell
 java -jar target/helidon-examples-packaging-fat.jar
 ```
-
