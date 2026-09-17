@@ -1,8 +1,11 @@
 # Helidon Data JDBC Imperative with Oracle Database
 
-This example executes Oracle Database statements directly with Helidon Data `JdbcClient`. Application code creates
-each statement, binds positional parameters, selects a mapper, and invokes a terminal operation. To define data access
-as repository interfaces, see the [declarative Oracle Database example](../../../declarative/data-jdbc/oracle).
+This example demonstrates a Java SE imperative application that uses Helidon Data JDBC, Helidon WebServer,
+an Oracle Universal Connection Pool data source, and Oracle Database. The application creates a standalone
+`JdbcClient` backed by the configured data source and uses it directly to execute SQL operations.
+
+To define data access with repository interfaces, see the
+[declarative Oracle Database example](../../../declarative/data-jdbc/oracle).
 
 Run the commands from `examples/imperative/data-jdbc/oracle`.
 
@@ -38,10 +41,14 @@ docker run --name oracle \
        -d container-registry.oracle.com/database/free:23.26.3.0-lite
 ```
 
-Oracle Database runs the first mounted file at startup. It creates the `pokemon` user, grants its required permissions,
-and creates the `POKEMON_DATA` tablespace in `FREEPDB1`. The script can run again without recreating the user. The
-`23.26.3.0-lite` image does not provide a general-purpose `USERS` tablespace, so the example creates its own. The
-second mount makes the schema files available to SQL*Plus in the container.
+At startup, Oracle Database runs `etc/setup-user.sql`, which is mounted in the container as
+`/opt/oracle/scripts/startup/01-setup-user.sql`. The script creates the `pokemon` user, grants the required
+permissions, and creates the `POKEMON_DATA` tablespace in `FREEPDB1`. The script can run again without
+recreating the user. The `23.26.3.0-lite` image does not provide a general-purpose `USERS` tablespace, so
+the example creates its own.
+
+The `etc` directory is mounted at `/opt/helidon`, which makes the schema files available to SQL*Plus in
+the container.
 
 Follow the container logs until Oracle Database reports that it is ready and the user setup script has completed:
 

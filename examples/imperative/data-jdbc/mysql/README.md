@@ -1,8 +1,11 @@
 # Helidon Data JDBC Imperative with MySQL
 
-This example executes MySQL statements directly with Helidon Data `JdbcClient`. Application code creates each
-statement, binds positional parameters, selects a mapper, and invokes a terminal operation. To define data access as
-repository interfaces, see the [declarative MySQL example](../../../declarative/data-jdbc/mysql).
+This example demonstrates a Java SE imperative application that uses Helidon Data JDBC, Helidon WebServer,
+MySQL Connector/J, and a MySQL database. The application creates a standalone `JdbcClient` and uses it directly
+to execute SQL operations.
+
+To define data access with repository interfaces, see the
+[declarative MySQL example](../../../declarative/data-jdbc/mysql).
 
 Run the commands from `examples/imperative/data-jdbc/mysql`.
 

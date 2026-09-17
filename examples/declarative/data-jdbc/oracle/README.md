@@ -1,15 +1,23 @@
 # Helidon Data JDBC Declarative with Oracle Database
 
-This example uses Helidon Data JDBC repository interfaces with Oracle Database. Helidon generates the repository
-implementations during the build. To work directly with `JdbcClient`, see the
-[imperative Oracle Database example](../../../imperative/data-jdbc/oracle).
-
-Run the commands from `examples/declarative/data-jdbc/oracle`.
+This example demonstrates a Java SE declarative application that uses Helidon Data JDBC, Helidon WebServer,
+an Oracle Universal Connection Pool data source, and Oracle Database. Helidon generates the repository
+implementations during the build.
 
 > **Note**
 > Helidon Data JDBC is incubating, and this example uses some preview APIs. The affected types suppress the
 > applicable warnings locally with `@SuppressWarnings` and the corresponding Helidon API constants
 > `Api.SUPPRESS_INCUBATING` or `Api.SUPPRESS_PREVIEW`.
+
+The example defines two repository interfaces:
+
+- `PokemonRepository`
+- `PokemonTypeRepository`
+
+To work directly with `JdbcClient`, see the
+[imperative Oracle Database example](../../../imperative/data-jdbc/oracle).
+
+Run the commands from `examples/declarative/data-jdbc/oracle`.
 
 ## Build
 
@@ -38,10 +46,14 @@ docker run --name oracle \
        -d container-registry.oracle.com/database/free:23.26.3.0-lite
 ```
 
-Oracle Database runs the first mounted file at startup. It creates the `pokemon` user, grants its required permissions,
-and creates the `POKEMON_DATA` tablespace in `FREEPDB1`. The script can run again without recreating the user. The
-`23.26.3.0-lite` image does not provide a general-purpose `USERS` tablespace, so the example creates its own. The
-second mount makes the schema files available to SQL*Plus in the container.
+At startup, Oracle Database runs `etc/setup-user.sql`, which is mounted in the container as
+`/opt/oracle/scripts/startup/01-setup-user.sql`. The script creates the `pokemon` user, grants the required
+permissions, and creates the `POKEMON_DATA` tablespace in `FREEPDB1`. The script can run again without
+recreating the user. The `23.26.3.0-lite` image does not provide a general-purpose `USERS` tablespace, so
+the example creates its own.
+
+The `etc` directory is mounted at `/opt/helidon`, which makes the schema files available to SQL*Plus in
+the container.
 
 Follow the container logs until Oracle Database reports that it is ready and the user setup script has completed:
 

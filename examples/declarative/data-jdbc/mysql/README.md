@@ -1,15 +1,22 @@
 # Helidon Data JDBC Declarative with MySQL
 
-This example uses Helidon Data JDBC repository interfaces with MySQL. Helidon generates the repository
-implementations during the build. To work directly with `JdbcClient`, see the
-[imperative MySQL example](../../../imperative/data-jdbc/mysql).
-
-Run the commands from `examples/declarative/data-jdbc/mysql`.
+This example demonstrates a Java SE declarative application that uses Helidon Data JDBC, Helidon WebServer,
+a HikariCP data source, and a MySQL database. Helidon generates the repository implementations during the build.
 
 > **Note**
 > Helidon Data JDBC is incubating, and this example uses some preview APIs. The affected types suppress the
 > applicable warnings locally with `@SuppressWarnings` and the corresponding Helidon API constants
 > `Api.SUPPRESS_INCUBATING` or `Api.SUPPRESS_PREVIEW`.
+
+The example defines two repository interfaces:
+
+- `PokemonRepository`
+- `PokemonTypeRepository`
+
+To work directly with `JdbcClient`, see the
+[imperative MySQL example](../../../imperative/data-jdbc/mysql).
+
+Run the commands from `examples/declarative/data-jdbc/mysql`.
 
 ## Build
 

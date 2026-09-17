@@ -1,15 +1,23 @@
 # Helidon Data JDBC Declarative with PostgreSQL
 
-This example uses Helidon Data JDBC repository interfaces with PostgreSQL. Helidon generates the repository
-implementations during the build. To work directly with `JdbcClient`, see the
-[imperative PostgreSQL example](../../../imperative/data-jdbc/postgres).
-
-Run the commands from `examples/declarative/data-jdbc/postgres`.
+This example demonstrates a Java SE declarative application that uses Helidon Data JDBC, Helidon WebServer,
+the PostgreSQL JDBC driver, and a PostgreSQL database. Helidon generates the repository implementations
+during the build.
 
 > **Note**
 > Helidon Data JDBC is incubating, and this example uses some preview APIs. The affected types suppress the
 > applicable warnings locally with `@SuppressWarnings` and the corresponding Helidon API constants
 > `Api.SUPPRESS_INCUBATING` or `Api.SUPPRESS_PREVIEW`.
+
+The example defines two repository interfaces:
+
+- `PokemonRepository`
+- `PokemonTypeRepository`
+
+To work directly with `JdbcClient`, see the
+[imperative PostgreSQL example](../../../imperative/data-jdbc/postgres).
+
+Run the commands from `examples/declarative/data-jdbc/postgres`.
 
 ## Build
 
