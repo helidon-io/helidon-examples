@@ -34,7 +34,7 @@ tasks.withType(JavaCompile) {
 }
 
 ext {
-    helidonversion = '4.5.4'
+    helidonversion = '4.5.5'
     mainClass='io.helidon.examples.quickstart.se.Main'
 }
 
