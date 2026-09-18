@@ -38,7 +38,7 @@
     </description>
 
     <properties>
-        <mainClass>io.helidon.examples.declarative.data.jdbc.Main</mainClass>
+        <mainClass>io.helidon.examples.declarative.data.jdbc.postgres.Main</mainClass>
     </properties>
 
     <dependencies>
