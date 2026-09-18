@@ -1,10 +1,10 @@
 # Helidon Examples
 
-Examples for Helidon 27.
+Examples for Helidon 28.
 
 ## How to Run
 
-To build and run Helidon 27 examples you need:
+To build and run Helidon 28 examples you need:
 
 * Java 27 or later
 * Maven 3.8.* or later
@@ -14,7 +14,7 @@ Then:
 ```
 git clone https://github.com/helidon-io/helidon-examples.git
 cd helidon-examples
-git checkout helidon-27.x
+git checkout helidon-28.x
 mvn clean install
 ```
 

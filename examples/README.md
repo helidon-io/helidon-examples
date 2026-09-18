@@ -10,12 +10,12 @@ Helidon we recommend you start with our
 That will quickly get you going with your first Helidon application.
 
 After that you can come back here and dig into the examples. Use the
-`helidon-27.x` branch for Helidon 27 examples:
+`helidon-28.x` branch for Helidon 28 examples:
 
 ```shell
 git clone https://github.com/helidon-io/helidon-examples.git
 cd helidon-examples
-git checkout helidon-27.x
+git checkout helidon-28.x
 ```
 
 Our examples are Maven projects and can be built and run with
