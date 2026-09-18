@@ -39,7 +39,7 @@ public final class Main {
      *
      * @param args command-line arguments supplied to the application
      */
-    static void main(String... args) {
+    public static void main(String... args) {
         LogConfig.configureRuntime();
         Config config = Services.get(Config.class);
 

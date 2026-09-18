@@ -23,7 +23,7 @@ import io.helidon.service.registry.ServiceRegistryManager;
  * Starts the declarative JDBC Pokemon application.
  */
 @Service.GenerateBinding
-public class Main {
+public final class Main {
 
     static {
         LogConfig.initClass();
@@ -40,7 +40,7 @@ public class Main {
      *
      * @param args command-line arguments supplied to the application
      */
-    static void main(String... args) {
+    public static void main(String... args) {
         LogConfig.configureRuntime();
         ServiceRegistryManager.start(ApplicationBinding.create());
     }
