@@ -29,9 +29,9 @@ import io.helidon.json.binding.Json;
  */
 @SuppressWarnings(Api.SUPPRESS_PREVIEW)
 @Json.Entity
-public record PokemonDto(Optional<Integer> id,
-                         String name,
-                         String type) {
+record PokemonDto(Optional<Integer> id,
+                  String name,
+                  String type) {
 
     /**
      * Converts a database record to its HTTP representation.

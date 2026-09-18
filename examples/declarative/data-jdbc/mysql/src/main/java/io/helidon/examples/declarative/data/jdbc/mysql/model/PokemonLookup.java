@@ -24,7 +24,7 @@ import io.helidon.data.jdbc.Jdbc;
  * Declares Pokemon lookups shared by JDBC repositories.
  */
 @SuppressWarnings(Api.SUPPRESS_INCUBATING)
-public interface PokemonLookup {
+interface PokemonLookup {
 
     /**
      * Retrieves a Pokemon by name.
