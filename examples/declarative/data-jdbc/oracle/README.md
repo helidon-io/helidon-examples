@@ -132,9 +132,9 @@ tests do not require the manually started container. JUnit skips them when Docke
 The regular repository queries use `@Jdbc.RowMapper` without naming a mapper class. Two services implement
 `JdbcClient.RowMapper<Pokemon>`:
 
-- [`PokemonRowMapper`](src/main/java/io/helidon/examples/declarative/data/jdbc/model/PokemonRowMapper.java) has a
+- [`PokemonRowMapper`](src/main/java/io/helidon/examples/declarative/data/jdbc/oracle/model/PokemonRowMapper.java) has a
   service weight of `Weighted.DEFAULT_WEIGHT + 10` and returns the Pokémon name unchanged.
-- [`ExplicitPokemonRowMapper`](src/main/java/io/helidon/examples/declarative/data/jdbc/model/ExplicitPokemonRowMapper.java)
+- [`ExplicitPokemonRowMapper`](src/main/java/io/helidon/examples/declarative/data/jdbc/oracle/model/ExplicitPokemonRowMapper.java)
   has a service weight of `Weighted.DEFAULT_WEIGHT - 10`.
 
 When no mapper class is specified, Helidon selects `PokemonRowMapper` because it has the higher service weight.
