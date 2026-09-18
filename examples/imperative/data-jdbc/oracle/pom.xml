@@ -37,7 +37,7 @@
     </description>
 
     <properties>
-        <mainClass>io.helidon.examples.imperative.data.jdbc.Main</mainClass>
+        <mainClass>io.helidon.examples.imperative.data.jdbc.oracle.Main</mainClass>
     </properties>
 
     <dependencies>
