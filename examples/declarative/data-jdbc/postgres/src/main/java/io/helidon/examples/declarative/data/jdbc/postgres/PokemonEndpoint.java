@@ -159,7 +159,7 @@ class PokemonEndpoint {
     }
 
     /**
-     * Adds a Pokemon and returns its generated identifier.
+     * Adds a Pokemon and returns its complete representation, including the generated identifier.
      *
      * @param pokemonDto requested Pokemon
      * @return inserted Pokemon
