@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018, 2024 Oracle and/or its affiliates.
+# Copyright (c) 2018, 2026 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: helidon-quickstart-se
+  name: helidon-standalone-quickstart-se
   labels:
-    app: helidon-quickstart-se
+    app: helidon-standalone-quickstart-se
 spec:
   type: NodePort
   selector:
-    app: helidon-quickstart-se
+    app: helidon-standalone-quickstart-se
   ports:
     - port: 8080
       targetPort: 8080
@@ -33,25 +33,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helidon-quickstart-se
+  name: helidon-standalone-quickstart-se
   labels:
-    app: helidon-quickstart-se
+    app: helidon-standalone-quickstart-se
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: helidon-quickstart-se
+      app: helidon-standalone-quickstart-se
       version: v1
   template:
     metadata:
       labels:
-        app: helidon-quickstart-se
+        app: helidon-standalone-quickstart-se
         version: v1
     spec:
       containers:
-        - name: helidon-quickstart-se
-          image: helidon-quickstart-se
+        - name: helidon-standalone-quickstart-se
+          image: helidon-standalone-quickstart-se
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
