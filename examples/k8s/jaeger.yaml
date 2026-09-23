@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
         - name: jaeger
-          image: cr.jaegertracing.io/jaegertracing/jaeger:2.17.0
+          image: cr.jaegertracing.io/jaegertracing/jaeger:2.21.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4317
