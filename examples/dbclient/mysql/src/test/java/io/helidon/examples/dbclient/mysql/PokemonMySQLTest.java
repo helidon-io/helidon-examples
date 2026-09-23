@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,11 +50,11 @@ class PokemonMySQLTest {
     private static final JsonBuilderFactory JSON_FACTORY = Json.createBuilderFactory(Map.of());
     private static final boolean IS_ARM = System.getProperty("os.arch", "amd64").equals("aarch64");
     private static final DockerImageName X86_IMAGE =
-            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:9.4.0")
+            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:9.7.3")
                     .asCompatibleSubstituteFor("mysql");
 
     private static final DockerImageName ARM_IMAGE =
-            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:9.4.0-aarch64")
+            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:9.7.3-aarch64")
                     .asCompatibleSubstituteFor("mysql");
 
     @Container
