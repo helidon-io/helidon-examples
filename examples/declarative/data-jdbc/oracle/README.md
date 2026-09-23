@@ -1,8 +1,7 @@
 # Helidon Data JDBC Declarative with Oracle Database
 
 This example demonstrates a Java SE declarative application that uses Helidon Data JDBC, Helidon WebServer,
-an Oracle Universal Connection Pool data source, and Oracle Database. Helidon generates the repository
-implementations during the build.
+a HikariCP data source, and Oracle Database. Helidon generates the repository implementations during the build.
 
 > **Note**
 > Helidon Data JDBC is incubating, and this example uses some preview APIs. The affected types suppress the
@@ -85,29 +84,33 @@ Oracle classes while Helidon continues to reject other deserialization targets. 
 
 These credentials are for local development only. Do not use them in production.
 
-The first database request can take longer while UCP creates its initial connections.
-
 ## Test the Application
 
-The application provides its Pokémon API at `http://localhost:8080/pokemon`.
+All paths in the following table are relative to `http://localhost:8080`.
 
-**List all Pokémon:**
+By default, `curl` displays the response body. Add `-i` to include the HTTP status and response headers. This is
+especially useful for responses with an empty body, such as `404 Not Found`.
+
+| Method | Path | Behavior |
+| --- | --- | --- |
+| `GET` | `/pokemon/all` | Lists all Pokémon ordered by name |
+| `GET` | `/pokemon/type/{name}` | Lists Pokémon having the requested type; returns an empty array when none match |
+| `GET` | `/pokemon/search/{term}` | Lists Pokémon whose name or type matches the term, demonstrating reuse of a named SQL parameter |
+| `GET` | `/pokemon/get/{name}` | Returns the Pokémon having the requested name, or `404` when it does not exist |
+| `GET` | `/pokemon/explicit-mapper/{name}` | Returns the Pokémon using the explicitly selected row mapper, or `404` when it does not exist |
+| `GET` | `/pokemon/search/{type}/{name}` | Returns the Pokémon matching both values using positional SQL parameters, or `404` when it does not exist |
+| `GET` | `/pokemon/count` | Returns the number of Pokémon rows |
+| `POST` | `/pokemon` | Inserts a Pokémon and returns it with its database-generated identifier |
+| `PUT` | `/pokemon/{id}` | Updates a Pokémon and returns its updated representation, or `404` when the identifier does not exist |
+| `DELETE` | `/pokemon/{id}` | Deletes a Pokémon and reports the number of affected rows |
+
+For example, list all Pokémon:
 
 ```shell
 curl http://localhost:8080/pokemon/all
 ```
 
-**List all Pokémon of the Normal type:**
-
-```shell
-curl http://localhost:8080/pokemon/type/Normal
-```
-
-**Retrieve a Pokémon by name:**
-
-```shell
-curl http://localhost:8080/pokemon/get/Meowth
-```
+To insert, update, and delete a Pokémon, run the following requests in order:
 
 **Insert a Pokémon:**
 
@@ -116,6 +119,27 @@ curl -X POST \
      -H 'Content-Type: application/json' \
      -d '{"name":"Charmander","type":"Fire"}' \
      http://localhost:8080/pokemon
+```
+
+**Update the inserted Pokémon:**
+
+The `POST` response includes the generated identifier. It is `20` by default after schema initialization. If Pokémon
+have been inserted previously, replace `20` in the following request with the identifier returned by `POST`.
+
+```shell
+curl -X PUT \
+     -H 'Content-Type: application/json' \
+     -d '{"name":"Charmeleon","type":"Fire"}' \
+     http://localhost:8080/pokemon/20
+```
+
+**Delete the updated Pokémon:**
+
+Use the same identifier for the `DELETE` request, replacing `20` if necessary.
+
+```shell
+curl -X DELETE \
+     http://localhost:8080/pokemon/20
 ```
 
 Run the automated tests with the following command:
