@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022, 2026 Oracle and/or its affiliates.
+# Copyright (c) 2026 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
 # limitations under the License.
 #
 
-server:
-  port: 8080
-  host: 0.0.0.0
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: "0.0.0.0:4318"
 
-app:
-  greeting: "Hello"
+exporters:
+  debug:
+    verbosity: detailed
 
-metrics:
-  publishers:
-    otlp:
-      enabled: false
-      endpoint: "http://localhost:4318/v1/metrics"
-      interval: "PT1S"
-      timeout: "PT5S"
-      service-name: "http-status-count-se"
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [debug]

@@ -12,6 +12,17 @@ The main source in this example is identical to that in the Helidon SE QuickStar
 ## Incorporating status metrics into your own application
 Use this example for inspiration in writing your own service or just use the `HttpStatusMetricService` directly in your own application.
 
+Add a metrics provider to your application's dependencies. The metrics API and metrics observer do not select a provider.
+This example uses the Helidon provider:
+
+```xml
+<dependency>
+    <groupId>io.helidon.metrics.providers</groupId>
+    <artifactId>helidon-metrics-providers-helidon</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
 1. Copy and paste the `HttpStatusMetricService` class into your application, adjusting the package declaration as needed.
 2. Register routing for an instance of `HttpStatusMetricService`, as shown here:
    ```java
@@ -87,6 +98,40 @@ curl -H "Accept: application/json" -X GET http://localhost:8080/observe/metrics
     "httpStatus;range=4xx": 0,
     "httpStatus;range=5xx": 0,
 ...
+```
+
+## Export metrics using OTLP
+
+The example also includes the native OTLP publisher for the Helidon metrics provider. The counters still use the
+Helidon metrics API. The publisher writes OTLP/HTTP JSON directly to the HTTP request stream using Helidon JSON Binding.
+No Micrometer or OpenTelemetry SDK instrumentation is needed.
+
+OTLP publishing is disabled by default so the application can run without a collector. To enable it, first start an
+OpenTelemetry Collector in a separate terminal from this example's directory:
+
+```shell
+docker run --rm --name http-status-metrics-collector \
+  -p 127.0.0.1:4318:4318 \
+  -v "$PWD/collector-config.yaml:/etc/otelcol-contrib/config.yaml:ro" \
+  ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.123.0@sha256:b6be1d9c10123821bebc952c62642abc36fe93c39c143faabc14e0e05065695a
+```
+
+Then start the application with publishing enabled:
+
+```shell
+java -Dmetrics.publishers.otlp.enabled=true -jar target/http-status-count-se.jar
+```
+
+The publisher sends metrics to `http://localhost:4318/v1/metrics` every second, with a five-second export timeout and
+`service.name=http-status-count-se`. These settings are under `metrics.publishers.otlp` in `application.yaml`.
+
+Send several requests to `/greet`. The collector output shows the `httpStatus` counter with the `range=2xx` attribute
+increasing. The `/observe/metrics` endpoint remains available for Prometheus and JSON output.
+
+Stop the collector after stopping the application:
+
+```shell
+docker stop http-status-metrics-collector
 ```
 
 ## Try health
