@@ -10,7 +10,7 @@ will contain valid exemplars.
 
 With Docker:
 ```shell
-docker run --rm --name jaeger -d -p 16686:16686 -p 4317:4317 cr.jaegertracing.io/jaegertracing/jaeger:2.17.0
+docker run --rm --name jaeger -d -p 16686:16686 -p 4317:4317 cr.jaegertracing.io/jaegertracing/jaeger:2.21.0
 ```
 
 ## Build and run
