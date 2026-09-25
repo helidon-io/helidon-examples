@@ -16,7 +16,7 @@ docker run -d \
   --name jaeger \
   -p 4317:4317 \
   -p 16686:16686 \
-  cr.jaegertracing.io/jaegertracing/jaeger:2.17.0
+  cr.jaegertracing.io/jaegertracing/jaeger:2.21.0
 ```
 
 Or, if the container already exists:
@@ -43,10 +43,21 @@ curl -X PUT -d 'bar' http://localhost:8080/db/foo
 
 # delete an entry
 curl -X DELETE http://localhost:8080/db/foo
+```
 
-# look at the traces
-jq -r '.data[].spans[] | select(.tags[] | select(.key == "component" and .value == "dbclient"))' \
-  <(curl -X GET "Accept: application/json" "http://localhost:16686/api/traces?service=helidon-examples-dbclient-tracing")
+Wait a few seconds for Jaeger to receive the traces, then query the last hour
+and display spans from DbClient. Jaeger v3 requires time bounds and returns
+spans in OTLP JSON format:
+
+```shell
+curl --fail --silent --show-error --get \
+  -H 'Accept: application/json' \
+  --data-urlencode 'query.serviceName=helidon-examples-dbclient-tracing' \
+  --data-urlencode "query.startTimeMin=$(jq -nr 'now - 3600 | todateiso8601')" \
+  --data-urlencode "query.startTimeMax=$(jq -nr 'now | ceil | todateiso8601')" \
+  http://localhost:16686/api/v3/traces \
+  | jq '.result.resourceSpans[]?.scopeSpans[]?.spans[]?
+        | select(any(.attributes[]?; .key == "component" and .value.stringValue == "dbclient"))'
 ```
 
 ## Stop

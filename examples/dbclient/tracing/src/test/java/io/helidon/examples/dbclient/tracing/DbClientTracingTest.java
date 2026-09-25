@@ -16,6 +16,7 @@
 package io.helidon.examples.dbclient.tracing;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +43,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
@@ -51,7 +50,7 @@ import static org.hamcrest.Matchers.is;
 @ServerTest
 class DbClientTracingTest {
 
-    private static final DockerImageName IMAGE = DockerImageName.parse("cr.jaegertracing.io/jaegertracing/jaeger:2.17.0");
+    private static final DockerImageName IMAGE = DockerImageName.parse("cr.jaegertracing.io/jaegertracing/jaeger:2.21.0");
 
     @Container
     @SuppressWarnings("resource")
@@ -87,6 +86,8 @@ class DbClientTracingTest {
 
     @Test
     void testTracing(Http1Client client) {
+        Instant startTime = Instant.now();
+
         // create
         try (var rsp = client.post("/db/foo").submit("bar")) {
             assertThat(rsp.status().code(), is(201));
@@ -120,11 +121,11 @@ class DbClientTracingTest {
         }
 
         try {
-            checkTraces();
+            checkTraces(startTime);
         } catch (Throwable t) {
             try {
                 Thread.sleep(Duration.ofSeconds(2).toMillis());
-                checkTraces();
+                checkTraces(startTime);
             } catch (Throwable tx) {
                 // ignore the second run, just throw the first failure if fails again
                 throw t;
@@ -132,28 +133,31 @@ class DbClientTracingTest {
         }
     }
 
-    private void checkTraces() {
+    private void checkTraces(Instant startTime) {
         // there is a delay between the requests and the time Jaeger collects all the traces, let's retry once
-        ClientResponseTyped<JsonObject> response = jaegerClient.get("/api/traces")
+        ClientResponseTyped<JsonObject> response = jaegerClient.get("/api/v3/traces")
                 .accept(MediaTypes.APPLICATION_JSON)
-                .queryParam("service", "helidon-examples-dbclient-tracing")
+                .queryParam("query.serviceName", "helidon-examples-dbclient-tracing")
+                .queryParam("query.startTimeMin", startTime.toString())
+                .queryParam("query.startTimeMax", Instant.now().toString())
                 .request(JsonObject.class);
 
         assertThat(response.status().code(), is(200));
         JsonObject jsonObject = response.entity();
 
-        List<JsonValue> tags = Optional.ofNullable(jsonObject.getJsonArray("data")).stream()
-                .flatMap(Collection::stream)
+        List<JsonValue> attributes = jsonObject.getJsonObject("result").getJsonArray("resourceSpans").stream()
                 .map(JsonValue::asJsonObject)
-                .flatMap(it -> Optional.ofNullable(it.getJsonArray("spans")).stream())
-                .flatMap(Collection::stream)
+                .flatMap(it -> it.getJsonArray("scopeSpans").stream())
                 .map(JsonValue::asJsonObject)
-                .flatMap(it -> Optional.ofNullable(it.getJsonArray("tags")).stream())
+                .flatMap(it -> it.getJsonArray("spans").stream())
+                .map(JsonValue::asJsonObject)
+                .flatMap(it -> Optional.ofNullable(it.getJsonArray("attributes")).stream())
                 .flatMap(Collection::stream)
                 .toList();
 
-        assertThat(tags, hasItem(allOf(
-                hasEntry("key", Json.createValue("component")),
-                hasEntry("value", Json.createValue("dbclient")))));
+        assertThat(attributes, hasItem(Json.createObjectBuilder()
+                .add("key", "component")
+                .add("value", Json.createObjectBuilder().add("stringValue", "dbclient"))
+                .build()));
     }
 }
