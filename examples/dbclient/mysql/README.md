@@ -18,7 +18,7 @@ docker run -d \
     -e MYSQL_USER=user \
     -e MYSQL_PASSWORD=mysql123 \
     -p 3306:3306 \
-    container-registry.oracle.com/mysql/community-server:latest
+    container-registry.oracle.com/mysql/community-server:9.7.3
 ```
 
 Or for ARM machines:
@@ -29,7 +29,7 @@ docker run -d \
     -e MYSQL_USER=user \
     -e MYSQL_PASSWORD=mysql123 \
     -p 3306:3306 \
-    container-registry.oracle.com/mysql/community-server:9.4.0-aarch64
+    container-registry.oracle.com/mysql/community-server:9.7.3-aarch64
 ```
 
 Or, if the container already exists:

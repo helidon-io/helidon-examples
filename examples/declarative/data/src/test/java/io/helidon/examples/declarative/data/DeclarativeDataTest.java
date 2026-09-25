@@ -41,11 +41,11 @@ import static org.hamcrest.Matchers.containsString;
 public class DeclarativeDataTest {
     private static final boolean IS_ARM = System.getProperty("os.arch", "amd64").equals("aarch64");
     private static final DockerImageName X86_IMAGE =
-            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:9.4.0")
+            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:9.7.3")
                     .asCompatibleSubstituteFor("mysql");
 
     private static final DockerImageName ARM_IMAGE =
-            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:9.4.0-aarch64")
+            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:9.7.3-aarch64")
                     .asCompatibleSubstituteFor("mysql");
 
     @SuppressWarnings("resource")
