@@ -17,7 +17,7 @@ docker run -d --rm --name jaeger \
   -p 4318:4318 \
   -p 5778:5778 \
   -p 9411:9411 \
-  cr.jaegertracing.io/jaegertracing/jaeger:2.14.0
+  cr.jaegertracing.io/jaegertracing/jaeger:2.21.0
 ```
 
 If you have Jaeger all-in-one installed, use this command:
