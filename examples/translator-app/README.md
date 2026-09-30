@@ -7,7 +7,7 @@ This application demonstrates a pseudo application composed of two microservices
 
 With Docker:
 ```shell
-docker run --name jaeger -d -p 16686:16686 -p 4317:4317 cr.jaegertracing.io/jaegertracing/jaeger:2.17.0
+docker run --name jaeger -d -p 16686:16686 -p 4317:4317 cr.jaegertracing.io/jaegertracing/jaeger:2.21.0
 ```
 
 With Kubernetes:
