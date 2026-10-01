@@ -38,6 +38,7 @@
 
     <properties>
         <mainClass>io.helidon.examples.declarative.data.Main</mainClass>
+        <version.lib.eclipselink>4.0.7</version.lib.eclipselink>
     </properties>
 
     <dependencies>
@@ -80,11 +81,13 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa</artifactId>
+            <version>${version.lib.eclipselink}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.core</artifactId>
+            <version>${version.lib.eclipselink}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
