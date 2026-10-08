@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import io.helidon.common.Api;
 import io.helidon.common.media.type.MediaTypes;
+import io.helidon.data.NoResultException;
 import io.helidon.examples.declarative.data.jdbc.oracle.model.Pokemon;
 import io.helidon.examples.declarative.data.jdbc.oracle.model.PokemonRepository;
 import io.helidon.examples.declarative.data.jdbc.oracle.model.PokemonType;
@@ -28,6 +29,7 @@ import io.helidon.http.BadRequestException;
 import io.helidon.http.Http;
 import io.helidon.service.registry.Service;
 import io.helidon.transaction.Tx;
+import io.helidon.transaction.TxException;
 import io.helidon.webserver.http.RestServer;
 
 /**
@@ -169,7 +171,14 @@ class PokemonEndpoint {
     @Http.Produces(MediaTypes.APPLICATION_JSON_VALUE)
     PokemonDto insert(@Http.Entity PokemonDto pokemonDto) {
         validate(pokemonDto);
-        return insertPokemon(pokemonDto);
+        try {
+            return insertPokemon(pokemonDto);
+        } catch (TxException e) {
+            if (e.getCause() instanceof BadRequestException badRequest) {
+                throw badRequest;
+            }
+            throw e;
+        }
     }
 
     /**
@@ -180,7 +189,7 @@ class PokemonEndpoint {
      */
     @Tx.Required
     PokemonDto insertPokemon(PokemonDto pokemonDto) {
-        PokemonType type = pokemonTypeRepository.getByName(pokemonDto.type());
+        PokemonType type = requireType(pokemonDto.type());
         int id = pokemonRepository.insert(pokemonDto.name(), type.id());
         return PokemonDto.create(new Pokemon(id, pokemonDto.name(), type));
     }
@@ -199,7 +208,14 @@ class PokemonEndpoint {
     Optional<PokemonDto> update(@Http.PathParam("id") int id,
                                 @Http.Entity PokemonDto pokemonDto) {
         validate(pokemonDto);
-        return updatePokemon(id, pokemonDto);
+        try {
+            return updatePokemon(id, pokemonDto);
+        } catch (TxException e) {
+            if (e.getCause() instanceof BadRequestException badRequest) {
+                throw badRequest;
+            }
+            throw e;
+        }
     }
 
     /**
@@ -207,7 +223,7 @@ class PokemonEndpoint {
      */
     @Tx.Required
     Optional<PokemonDto> updatePokemon(int id, PokemonDto pokemonDto) {
-        PokemonType type = pokemonTypeRepository.getByName(pokemonDto.type());
+        PokemonType type = requireType(pokemonDto.type());
         long updated = pokemonRepository.updateById(id, pokemonDto.name(), type.id());
         if (updated == 0) {
             return Optional.empty();
@@ -229,11 +245,26 @@ class PokemonEndpoint {
     }
 
     private static void validate(PokemonDto pokemonDto) {
+        if (pokemonDto == null) {
+            throw new BadRequestException("Pokemon body must not be null");
+        }
         if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
             throw new BadRequestException("Pokemon name must not be null or blank");
         }
+        if (pokemonDto.name().length() > 255) {
+            throw new BadRequestException(
+                    "Pokemon name must not exceed 255 characters");
+        }
         if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
             throw new BadRequestException("Pokemon type must not be null or blank");
+        }
+    }
+
+    private PokemonType requireType(String name) {
+        try {
+            return pokemonTypeRepository.getByName(name);
+        } catch (NoResultException _) {
+            throw new BadRequestException("Unknown Pokemon type: " + name);
         }
     }
 }

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.helidon.common.media.type.MediaTypes;
+import io.helidon.http.Method;
 import io.helidon.webclient.http1.Http1Client;
 import io.helidon.webclient.http1.Http1ClientResponse;
 import io.helidon.webserver.http.HttpRouting;
@@ -224,6 +225,65 @@ class PokemonApplicationTest {
         assertBadRequest(Json.createObjectBuilder().add("name", "Charmander").add("type", "  ").build());
     }
 
+    @Test
+    void rejectsUnknownTypeOnInsert() {
+        String name = "E2E" + UUID.randomUUID().toString().replace("-", "");
+        assertBadRequest(Json.createObjectBuilder()
+                                 .add("name", name)
+                                 .add("type", "DoesNotExist")
+                                 .build());
+        assertNotFound("/pokemon/get/" + name);
+    }
+
+    @Test
+    void rejectsUnknownTypeOnUpdateWithoutChangingPokemon() {
+        int expectedCount = count();
+        Pokemon original = pokemon(get("/pokemon/get/Pikachu"));
+        String name = "E2E" + UUID.randomUUID().toString().replace("-", "");
+        JsonObject update = Json.createObjectBuilder()
+                .add("name", name)
+                .add("type", "DoesNotExist")
+                .build();
+        try (Http1ClientResponse response = client.put("/pokemon/" + original.id())
+                .contentType(MediaTypes.APPLICATION_JSON)
+                .submit(update.toString())) {
+            assertThat("Unexpected response from " + response.lastEndpointUri(), response.status().code(), is(400));
+        }
+        assertThat(count(), is(expectedCount));
+        assertThat(pokemon(get("/pokemon/get/Pikachu")), is(original));
+        assertNotFound("/pokemon/get/" + name);
+    }
+
+    @Test
+    void rejectsNullBodyOnInsert() {
+        assertRejectedMutation(Method.POST, "/pokemon", "null", 400);
+    }
+
+    @Test
+    void rejectsNullBodyOnUpdateWithoutChangingPokemon() {
+        Pokemon original = pokemon(get("/pokemon/get/Pikachu"));
+        assertRejectedMutation(Method.PUT, "/pokemon/" + original.id(), "null", 400);
+    }
+
+    @Test
+    void duplicateInsertReturnsServerErrorWithoutChangingPokemon() {
+        JsonObject request = Json.createObjectBuilder()
+                .add("name", "Pikachu")
+                .add("type", "Fire")
+                .build();
+        assertRejectedMutation(Method.POST, "/pokemon", request.toString(), 500);
+    }
+
+    @Test
+    void duplicateUpdateReturnsServerErrorWithoutChangingPokemon() {
+        Pokemon original = pokemon(get("/pokemon/get/Raichu"));
+        JsonObject request = Json.createObjectBuilder()
+                .add("name", "Pikachu")
+                .add("type", "Fire")
+                .build();
+        assertRejectedMutation(Method.PUT, "/pokemon/" + original.id(), request.toString(), 500);
+    }
+
     private static String successful(Http1ClientResponse response) {
         String body = response.as(String.class);
         assertThat("Unexpected response from " + response.lastEndpointUri() + ": " + body,
@@ -297,6 +357,19 @@ class PokemonApplicationTest {
             assertThat("Unexpected response from " + response.lastEndpointUri(), response.status().code(), is(400));
         }
         assertThat(count(), is(expectedCount));
+    }
+
+    private void assertRejectedMutation(Method method, String path, String request, int expectedStatus) {
+        int expectedCount = count();
+        List<Pokemon> original = pokemonList(get("/pokemon/all"));
+        try (Http1ClientResponse response = client.method(method)
+                .path(path)
+                .contentType(MediaTypes.APPLICATION_JSON)
+                .submit(request)) {
+            assertThat("Unexpected response from " + response.lastEndpointUri(), response.status().code(), is(expectedStatus));
+        }
+        assertThat(count(), is(expectedCount));
+        assertThat(pokemonList(get("/pokemon/all")), is(original));
     }
 
     private record Pokemon(int id, String name, String type) {

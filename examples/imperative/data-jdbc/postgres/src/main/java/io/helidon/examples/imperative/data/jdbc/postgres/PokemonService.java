@@ -15,9 +15,11 @@
  */
 package io.helidon.examples.imperative.data.jdbc.postgres;
 
+
 import io.helidon.common.Api;
 import io.helidon.http.BadRequestException;
 import io.helidon.service.registry.Service;
+import io.helidon.transaction.TxException;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
@@ -69,8 +71,15 @@ final class PokemonService implements HttpService {
     }
 
     private static void validate(PokemonDto pokemonDto) {
+        if (pokemonDto == null) {
+            throw new BadRequestException("Pokemon body must not be null");
+        }
         if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
             throw new BadRequestException("Pokemon name must not be null or blank");
+        }
+        if (pokemonDto.name().length() > 255) {
+            throw new BadRequestException(
+                    "Pokemon name must not exceed 255 characters");
         }
         if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
             throw new BadRequestException("Pokemon type must not be null or blank");
@@ -138,7 +147,14 @@ final class PokemonService implements HttpService {
      */
     private void insert(PokemonDto pokemonDto, ServerResponse response) {
         validate(pokemonDto);
-        response.send(PokemonDto.create(pokemonStore.insert(pokemonDto.name(), pokemonDto.type())));
+        try {
+            response.send(PokemonDto.create(pokemonStore.insert(pokemonDto.name(), pokemonDto.type())));
+        } catch (TxException e) {
+            if (e.getCause() instanceof BadRequestException badRequest) {
+                throw badRequest;
+            }
+            throw e;
+        }
     }
 
     /**
@@ -148,7 +164,14 @@ final class PokemonService implements HttpService {
         int id = pokemonId(request);
         PokemonDto pokemonDto = request.content().as(PokemonDto.class);
         validate(pokemonDto);
-        response.send(pokemonStore.update(id, pokemonDto.name(), pokemonDto.type()).map(PokemonDto::create));
+        try {
+            response.send(pokemonStore.update(id, pokemonDto.name(), pokemonDto.type()).map(PokemonDto::create));
+        } catch (TxException e) {
+            if (e.getCause() instanceof BadRequestException badRequest) {
+                throw badRequest;
+            }
+            throw e;
+        }
     }
 
     /**

@@ -272,7 +272,8 @@ final class PokemonService implements HttpService {
         String sql = "SELECT ID AS id, NAME AS name FROM TYPE WHERE NAME = ?";
         JdbcClient.Statement statement = jdbcClient.create(sql);
         statement.bind(1, name);
-        return statement.map(TYPE_MAPPER).one();
+        return statement.map(TYPE_MAPPER).optional()
+                .orElseThrow(() -> new BadRequestException("Unknown Pokemon type: " + name));
     }
 
     private static int pokemonId(ServerRequest request) {
@@ -284,8 +285,15 @@ final class PokemonService implements HttpService {
     }
 
     private static void validate(PokemonDto pokemonDto) {
+        if (pokemonDto == null) {
+            throw new BadRequestException("Pokemon body must not be null");
+        }
         if (pokemonDto.name() == null || pokemonDto.name().isBlank()) {
             throw new BadRequestException("Pokemon name must not be null or blank");
+        }
+        if (pokemonDto.name().length() > 255) {
+            throw new BadRequestException(
+                    "Pokemon name must not exceed 255 characters");
         }
         if (pokemonDto.type() == null || pokemonDto.type().isBlank()) {
             throw new BadRequestException("Pokemon type must not be null or blank");
