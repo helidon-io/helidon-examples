@@ -88,8 +88,15 @@ These credentials are for local development only. Do not use them in production.
 
 All paths in the following table are relative to `http://localhost:8080`.
 
-By default, `curl` displays the response body. Add `-i` to include the HTTP status and response headers. This is
-especially useful for responses with an empty body, such as `404 Not Found`.
+By default, `curl` displays only the response body. These examples return an empty body for errors such as
+`400 Bad Request` (including a JSON body of `null` or an unknown Pokémon type in a `POST` or `PUT` request)
+and `404 Not Found`.
+Add `-i` to display the HTTP status and response headers; the server returns the same status without this option.
+To make `curl` exit with an error code for HTTP errors, add `--fail-with-body`.
+
+Duplicate Pokémon names are rejected by the database. The example uses the default server error handling
+for these database failures, so `POST` and `PUT` return `500 Internal Server Error`.
+Rejected requests leave the stored Pokémon unchanged.
 
 | Method | Path | Behavior |
 | --- | --- | --- |

@@ -21,6 +21,7 @@ import java.util.Optional;
 import io.helidon.common.Api;
 import io.helidon.data.Data;
 import io.helidon.data.jdbc.JdbcClient;
+import io.helidon.http.BadRequestException;
 import io.helidon.service.registry.Service;
 import io.helidon.transaction.Tx;
 
@@ -244,7 +245,8 @@ final class PokemonStore {
         String sql = "SELECT ID AS id, NAME AS name FROM TYPE WHERE NAME = ?";
         JdbcClient.Statement statement = jdbcClient.create(sql);
         statement.bind(1, name);
-        return statement.map(TYPE_MAPPER).one();
+        return statement.map(TYPE_MAPPER).optional()
+                .orElseThrow(() -> new BadRequestException("Unknown Pokemon type: " + name));
     }
 
     private long updateRow(int id, String name, int typeId) {
