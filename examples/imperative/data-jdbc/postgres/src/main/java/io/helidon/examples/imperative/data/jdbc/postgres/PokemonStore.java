@@ -75,7 +75,12 @@ final class PokemonStore {
     Optional<Pokemon> update(int id, String name, String typeName) {
         return Tx.transaction(() -> {
             Type type = getTypeByName(typeName);
-            long updated = updateRow(id, name, type.id());
+            String sql = "UPDATE POKEMON SET NAME = ?, TYPE_ID = ? WHERE ID = ?";
+            long updated = jdbcClient.create(sql)
+                    .bind(1, name)
+                    .bind(2, type.id())
+                    .bind(3, id)
+                    .execute();
             if (updated == 0) {
                 return Optional.empty();
             }
@@ -247,14 +252,5 @@ final class PokemonStore {
         statement.bind(1, name);
         return statement.map(TYPE_MAPPER).optional()
                 .orElseThrow(() -> new BadRequestException("Unknown Pokemon type: " + name));
-    }
-
-    private long updateRow(int id, String name, int typeId) {
-        String sql = "UPDATE POKEMON SET NAME = ?, TYPE_ID = ? WHERE ID = ?";
-        return jdbcClient.create(sql)
-                .bind(1, name)
-                .bind(2, typeId)
-                .bind(3, id)
-                .execute();
     }
 }
