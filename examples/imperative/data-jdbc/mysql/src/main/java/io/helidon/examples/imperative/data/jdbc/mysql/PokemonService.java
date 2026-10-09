@@ -16,6 +16,7 @@
 package io.helidon.examples.imperative.data.jdbc.mysql;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.helidon.common.Api;
@@ -51,15 +52,22 @@ final class PokemonService implements HttpService {
      * Registers the Pokemon HTTP endpoints.
      *
      * @param rules routing rules to update
+     * @throws NullPointerException if rules is null
      */
     @Override
     public void routing(HttpRules rules) {
-        rules.get("/all", this::all)
+        Objects.requireNonNull(rules, "rules");
+        rules.get("/all", (_, response) -> {
+            response.send(listOrderByName()
+                                  .stream()
+                                  .map(PokemonDto::create)
+                                  .toList());
+        })
                 .get("/type/{name}", this::type)
                 .get("/search/{term}", this::search)
                 .get("/get/{name}", this::pokemon)
                 .get("/search/{type}/{name}", this::pokemonByTypeAndName)
-                .get("/count", this::count)
+                .get("/count", (_, response) -> response.send(count()))
                 .post("/", Handler.create(PokemonDto.class, this::insert))
                 .put("/{id}", this::update)
                 .delete("/{id}", this::delete);
@@ -301,16 +309,6 @@ final class PokemonService implements HttpService {
     }
 
     /**
-     * Returns every Pokemon ordered by name.
-     */
-    private void all(ServerRequest request, ServerResponse response) {
-        response.send(listOrderByName()
-                              .stream()
-                              .map(PokemonDto::create)
-                              .toList());
-    }
-
-    /**
      * Returns Pokemon having the type supplied in the request path.
      */
     private void type(ServerRequest request, ServerResponse response) {
@@ -347,13 +345,6 @@ final class PokemonService implements HttpService {
         String type = request.path().pathParameters().get("type");
         String name = request.path().pathParameters().get("name");
         response.send(findByTypeAndName(type, name).map(PokemonDto::create));
-    }
-
-    /**
-     * Returns the number of stored Pokemon.
-     */
-    private void count(ServerRequest request, ServerResponse response) {
-        response.send(count());
     }
 
     /**
