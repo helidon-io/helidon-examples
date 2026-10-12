@@ -54,6 +54,7 @@ dependencies {
 
     runtimeOnly 'io.smallrye:jandex'
     runtimeOnly 'jakarta.activation:jakarta.activation-api'
+    runtimeOnly 'io.helidon.logging:helidon-logging-jul'
 
     testImplementation 'io.helidon.microprofile.testing:helidon-microprofile-testing-junit5'
     testImplementation 'org.junit.jupiter:junit-jupiter'
