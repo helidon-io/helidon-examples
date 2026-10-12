@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2018, 2026 Oracle and/or its affiliates.
+# Copyright (c) 2022, 2026 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -66,11 +66,11 @@ cd "$(mktemp -d)"
 
 git clone https://github.com/helidon-io/helidon --branch ${HELIDON_BRANCH} --single-branch --depth 1
 
-HELIDON_VERSION_IN_REPO=$(version helidon/bom/pom.xml)
-readonly HELIDON_VERSION_IN_REPO
+SOURCE_VERSION=$(version helidon/bom/pom.xml)
+readonly SOURCE_VERSION
 
-if [ "${HELIDON_VERSION}" != "${HELIDON_VERSION_IN_REPO}" ]; then
-  echo "ERROR: Examples Helidon version ${HELIDON_VERSION} does not match version in Helidon repo ${HELIDON_VERSION_IN_REPO}"
+if [ "${HELIDON_VERSION}" != "${SOURCE_VERSION}" ]; then
+  echo "ERROR: Examples Helidon version ${HELIDON_VERSION} does not match the Helidon source version: ${SOURCE_VERSION}"
   exit 1
 fi
 
