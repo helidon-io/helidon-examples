@@ -1,8 +1,7 @@
-Declarative Server Example with JSON-B
+Declarative Server Example with Helidon JSON Binding
 ---
 
-This example shows how to use Helidon declarative to create an HTTP server "Hello World" endpoint using Jakarta JSON-B for JSON
-binding.
+This example shows how to use Helidon declarative to create an HTTP server "Hello World" endpoint using Helidon JSON binding.
 
 # Running as jar
 
@@ -15,7 +14,7 @@ mvn clean package
 Run from command line:
 
 ```shell
-java -jar target/helidon-examples-declarative-webserver-hello-world-jsonb.jar
+java -jar target/helidon-examples-declarative-webserver-hello-world-json.jar
 ```
 
 Expected output should be similar to the following:

@@ -14,7 +14,7 @@ Start the database:
 ```shell
 docker run -d \
     --name mysql \
-    -e MYSQL_DATABASE=pokemon \
+    -e MYSQL_DATABASE=db1 \
     -e MYSQL_USER=user \
     -e MYSQL_PASSWORD=mysql123 \
     -p 3306:3306 \
