@@ -30,6 +30,7 @@ env:
   JAVA_VERSION: '27'
   JAVA_DISTRO: 'oracle'
   HELIDON_PIPELINES: 'true'
+  MVN_VERSION: 3.9.9
   MVN_ARGS: |
     -B -fae -e
     -nsu
@@ -45,32 +46,19 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-22.04
     steps:
-      - name: Free disk space
-        shell: bash
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/share/powershell
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4.7.1
+      - uses: ./.github/actions/common
         with:
-          distribution: ${{ env.JAVA_DISTRO }}
-          java-version: ${{ env.JAVA_VERSION }}
-          cache: maven
-      - name: Helidon Priming build
-        run: |
-          rm -rf ~/.m2/repository/io/helidon
-          mkdir -p ~/.m2/repository/io/helidon/
-          echo "empty file" > ~/.m2/repository/io/helidon/empty.txt
-          etc/scripts/prime-build.sh
-      - name: Upload Maven Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
-          retention-days: 1
+          free-space: 'true'
+          maven-cache: read-write
+          build-cache: read-write
+          run: |
+            etc/scripts/prime-build.sh
+            mvn ${MVN_ARGS} \
+              -Dcache.offline.scopeExcludes=none \
+              build-cache:go-offline
   copyright:
     needs: prime-build
     timeout-minutes: 10
@@ -79,21 +67,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4.7.1
+      - uses: ./.github/actions/common
         with:
-          distribution: ${{ env.JAVA_DISTRO }}
-          java-version: ${{ env.JAVA_VERSION }}
-          cache: maven
-      - name: Remove cached Helidon artifacts
-        run: rm -rf ~/.m2/repository/io/helidon
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
-      - name: Copyright
-        run: etc/scripts/copyright.sh
+          build-cache: read-only
+          run: etc/scripts/copyright.sh
   checkstyle:
     needs: prime-build
     timeout-minutes: 10
@@ -102,21 +79,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4.7.1
+      - uses: ./.github/actions/common
         with:
-          distribution: ${{ env.JAVA_DISTRO }}
-          java-version: ${{ env.JAVA_VERSION }}
-          cache: maven
-      - name: Remove cached Helidon artifacts
-        run: rm -rf ~/.m2/repository/io/helidon
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
-      - name: Checkstyle
-        run: etc/scripts/checkstyle.sh
+          build-cache: read-only
+          run: etc/scripts/checkstyle.sh
   shellcheck:
     timeout-minutes: 5
     runs-on: ubuntu-22.04
@@ -134,26 +100,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4.7.1
+      - uses: ./.github/actions/common
         with:
-          distribution: ${{ env.JAVA_DISTRO }}
-          java-version: ${{ env.JAVA_VERSION }}
-          cache: maven
-      - name: Remove cached Helidon artifacts
-        run: rm -rf ~/.m2/repository/io/helidon
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
-      - name: Spotbugs
-        run: |
-          mvn ${MVN_ARGS} \
-            -DskipTests \
-            -Dmaven.test.skip=true \
-            -Pspotbugs \
-            verify
+          build-cache: read-only
+          run: |
+            mvn ${MVN_ARGS} \
+              -DskipTests \
+              -Dmaven.test.skip=true \
+              -Pspotbugs \
+              verify
   build:
     needs: prime-build
     timeout-minutes: 20
@@ -162,40 +117,17 @@ jobs:
         os: [ ubuntu-22.04 ]
     runs-on: ${{ matrix.os }}
     steps:
-      - if: runner.os == 'Linux'
-        name: Free disk space
-        shell: bash
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/share/powershell
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4.7.1
+      - uses: ./.github/actions/common
         with:
-          distribution: ${{ env.JAVA_DISTRO }}
-          java-version: ${{ env.JAVA_VERSION }}
-          cache: maven
-      - name: Remove cached Helidon artifacts
-        run: rm -rf ~/.m2/repository/io/helidon
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
-      - name: Maven build
-        run: |
-          mvn ${MVN_ARGS} \
-              clean install
-      - name: Archive test results
-        uses: actions/upload-artifact@v4
-        with:
-          if-no-files-found: 'ignore'
-          name: test-results
-          path: |
-            **/target/surefire-reports/**
-            **/target/failsafe-reports/**
+          free-space: 'true'
+          build-cache: read-only
+          test-artifact-name: test-results
+          run: |
+            mvn ${MVN_ARGS} \
+                clean install
   build-latest-java:
     needs: prime-build
     timeout-minutes: 20
@@ -204,40 +136,18 @@ jobs:
         os: [ ubuntu-22.04 ]
     runs-on: ${{ matrix.os }}
     steps:
-      - if: runner.os == 'Linux'
-        name: Free disk space
-        shell: bash
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/share/powershell
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
-      - name: Set up JDK ea-stable
-        uses: oracle-actions/setup-java@v1
+      - uses: ./.github/actions/common
         with:
-          website: jdk.java.net
-          release: ea
-          version: stable
-      - name: Remove cached Helidon artifacts
-        run: rm -rf ~/.m2/repository/io/helidon
-      - name: Download Maven Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: io-helidon-maven-artifacts
-          path: ~/.m2/repository/io/helidon
-      - name: Maven build
-        run: |
-          mvn ${MVN_ARGS} \
-              -Dcache.enabled=true \
-              -DmoduleSet=all \
-              -Dsurefire.reportNameSuffix=latest-java \
-              clean install
-      - name: Archive test results
-        uses: actions/upload-artifact@v4
-        with:
-          if-no-files-found: 'ignore'
-          name: test-results-latest-java
-          path: |
-            **/target/surefire-reports/**
-            **/target/failsafe-reports/**
+          free-space: 'true'
+          setup-latest-java: 'true'
+          build-cache: read-only
+          test-artifact-name: test-results-latest-java
+          run: |
+            mvn ${MVN_ARGS} \
+                -Dcache.enabled=true \
+                -DmoduleSet=all \
+                -Dsurefire.reportNameSuffix=latest-java \
+                clean install
