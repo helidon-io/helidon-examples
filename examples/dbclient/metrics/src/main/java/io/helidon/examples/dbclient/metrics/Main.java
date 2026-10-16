@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package io.helidon.examples.dbclient.metrics;
 
 import io.helidon.config.Config;
 import io.helidon.logging.common.LogConfig;
-import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
 
@@ -45,15 +44,14 @@ public final class Main {
         Config config = Config.global();
         WebServer server = WebServer.builder()
                 .config(config.get("server"))
-                .routing(Main::routing)
+                .routing(routing -> routing(routing, config))
                 .build()
                 .start();
 
         System.out.println("WEB server is up! http://localhost:" + server.port() + "/");
     }
 
-    static void routing(HttpRouting.Builder routing) {
-        Config config = Services.get(Config.class);
+    static void routing(HttpRouting.Builder routing, Config config) {
         routing.register("/db", new DbService(config.get("db")));
     }
 }

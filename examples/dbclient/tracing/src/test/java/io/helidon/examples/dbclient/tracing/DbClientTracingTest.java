@@ -37,6 +37,7 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -51,6 +52,18 @@ import static org.hamcrest.Matchers.is;
 class DbClientTracingTest {
 
     private static final DockerImageName IMAGE = DockerImageName.parse("cr.jaegertracing.io/jaegertracing/jaeger:2.21.0");
+    private static final boolean IS_ARM = System.getProperty("os.arch", "amd64").equals("aarch64");
+    private static final DockerImageName MYSQL_IMAGE =
+            DockerImageName.parse("container-registry.oracle.com/mysql/community-server:"
+                    + (IS_ARM ? "9.7.3-aarch64" : "9.7.3"))
+                    .asCompatibleSubstituteFor("mysql");
+
+    @Container
+    @SuppressWarnings("resource")
+    private static final MySQLContainer<?> MYSQL = new MySQLContainer<>(MYSQL_IMAGE)
+            .withUsername("user")
+            .withPassword("mysql123")
+            .withDatabaseName("db1");
 
     @Container
     @SuppressWarnings("resource")
@@ -76,12 +89,13 @@ class DbClientTracingTest {
     static void setUp(WebServerConfig.Builder server) {
         Config config = Config.builder()
                 .addSource(ConfigSources.create(Map.of(
+                        "db.connection.url", MYSQL.getJdbcUrl(),
                         "tracing.port", String.valueOf(tracingPort()),
                         "tracing.span-processor-type", "simple")))
                 .metaConfig()
                 .build();
         server.addFeature(Main.observeFeature(config));
-        server.routing(Main::routing);
+        server.routing(routing -> Main.routing(routing, config));
     }
 
     @Test
