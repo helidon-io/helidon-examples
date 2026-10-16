@@ -66,6 +66,7 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
+            <version>26.7.0</version>
         </dependency>
         <dependency>
             <groupId>jakarta.json</groupId>

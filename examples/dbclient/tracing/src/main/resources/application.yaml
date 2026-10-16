@@ -24,9 +24,9 @@ tracing:
 db:
   source: jdbc
   connection:
-    url: jdbc:h2:mem:db1;DATABASE_TO_UPPER=FALSE;TRACE_LEVEL_FILE=4
-    username: sa
-    password:
+    url: jdbc:mysql://127.0.0.1:3306/db1?useSSL=false&allowPublicKeyRetrieval=true
+    username: user
+    password: mysql123
     poolName: pool1
     initializationFailTimeout: -1
     connectionTimeout: 2000

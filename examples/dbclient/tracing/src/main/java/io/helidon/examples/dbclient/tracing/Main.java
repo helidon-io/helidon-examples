@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,15 +49,15 @@ public final class Main {
         WebServer server = WebServer.builder()
                 .config(config.get("server"))
                 .addFeature(observeFeature(config))
-                .routing(Main::routing)
+                .routing(routing -> routing(routing, config))
                 .build()
                 .start();
 
         System.out.println("WEB server is up! http://localhost:" + server.port() + "/");
     }
 
-    static void routing(HttpRouting.Builder routing) {
-        routing.register("/db", new DbService(Config.global().get("db")));
+    static void routing(HttpRouting.Builder routing, Config config) {
+        routing.register("/db", new DbService(config.get("db")));
     }
 
     static ObserveFeature observeFeature(Config config) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class DbService implements HttpService {
 
     private void init() {
         long count = db.execute()
-                .createDmlStatement("CREATE TABLE store (k VARCHAR(64) NOT NULL PRIMARY key, v VARCHAR(32))")
+                .createDmlStatement("CREATE TABLE IF NOT EXISTS store (k VARCHAR(64) NOT NULL PRIMARY KEY, v VARCHAR(32))")
                 .execute();
         LOGGER.log(System.Logger.Level.INFO, "Executed {0} statements", count);
     }
