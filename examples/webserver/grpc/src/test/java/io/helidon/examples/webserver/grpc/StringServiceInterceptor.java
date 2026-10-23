@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 
 package io.helidon.examples.webserver.grpc;
-
-import javax.annotation.Nullable;
 
 import io.grpc.CallOptions;
 import io.grpc.Channel;
@@ -47,7 +45,7 @@ class StringServiceInterceptor implements ClientInterceptor {
             }
 
             @Override
-            public void cancel(@Nullable String message, @Nullable Throwable cause) {
+            public void cancel(String message, Throwable cause) {
                 delegate.cancel(message, cause);
             }
 
