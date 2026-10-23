@@ -113,7 +113,7 @@ OpenTelemetry Collector in a separate terminal from this example's directory:
 docker run --rm --name http-status-metrics-collector \
   -p 127.0.0.1:4318:4318 \
   -v "$PWD/collector-config.yaml:/etc/otelcol-contrib/config.yaml:ro" \
-  ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.123.0@sha256:b6be1d9c10123821bebc952c62642abc36fe93c39c143faabc14e0e05065695a
+  ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.163.1@sha256:1175b03003053962012f5a231f5567f66a3e8fdb960c7835c0e48f7aa1555806
 ```
 
 Then start the application with publishing enabled:
