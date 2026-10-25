@@ -137,9 +137,7 @@ docker stop http-status-metrics-collector
 ## Try health
 
 ```shell
-curl -s -X GET http://localhost:8080/observe/health
+curl -i -X GET http://localhost:8080/observe/health
 ```
-```listing
-{"outcome":"UP",...
 
-```
+A healthy application returns `204 No Content` with an empty response body.
