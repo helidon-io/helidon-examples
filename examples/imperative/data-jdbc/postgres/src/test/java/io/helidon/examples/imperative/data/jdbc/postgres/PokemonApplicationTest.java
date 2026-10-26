@@ -202,6 +202,34 @@ class PokemonApplicationTest {
     }
 
     @Test
+    void rejectsNonnumericIdOnUpdate() {
+        JsonObject update = Json.createObjectBuilder()
+                .add("name", "Charmander")
+                .add("type", "Fire")
+                .build();
+        assertRejectedMutation(Method.PUT, "/pokemon/not-an-int", update.toString(), 400);
+    }
+
+    @Test
+    void rejectsOverflowingIdOnUpdate() {
+        JsonObject update = Json.createObjectBuilder()
+                .add("name", "Charmander")
+                .add("type", "Fire")
+                .build();
+        assertRejectedMutation(Method.PUT, "/pokemon/2147483648", update.toString(), 400);
+    }
+
+    @Test
+    void rejectsNonnumericIdOnDelete() {
+        assertRejectedMutation(Method.DELETE, "/pokemon/not-an-int", "", 400);
+    }
+
+    @Test
+    void rejectsOverflowingIdOnDelete() {
+        assertRejectedMutation(Method.DELETE, "/pokemon/2147483648", "", 400);
+    }
+
+    @Test
     void returnsNotFoundWhenUpdatingUnknownId() {
         JsonObject update = Json.createObjectBuilder()
                 .add("name", "Missing")

@@ -40,6 +40,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -185,6 +186,75 @@ class PokemonApplicationTest {
             }
         }
         assertThat(count(), is(expectedCount));
+    }
+
+    @Test
+    void rejectsNonnumericIdOnUpdate() {
+        JsonObject update = Json.createObjectBuilder()
+                .add("name", "Charmander")
+                .add("type", "Fire")
+                .build();
+        assertRejectedMutation(Method.PUT, "/pokemon/not-an-int", update.toString(), 400);
+    }
+
+    @Test
+    void rejectsOverflowingIdOnUpdate() {
+        JsonObject update = Json.createObjectBuilder()
+                .add("name", "Charmander")
+                .add("type", "Fire")
+                .build();
+        assertRejectedMutation(Method.PUT, "/pokemon/2147483648", update.toString(), 400);
+    }
+
+    @Test
+    void rejectsNonnumericIdOnDelete() {
+        assertRejectedMutation(Method.DELETE, "/pokemon/not-an-int", "", 400);
+    }
+
+    @Test
+    void rejectsOverflowingIdOnDelete() {
+        assertRejectedMutation(Method.DELETE, "/pokemon/2147483648", "", 400);
+    }
+
+    @Test
+    void acceptsMultibyteNameExceedingByteLimitOnInsert() {
+        // In AL32UTF8, 128 copies of é occupy 256 bytes, exceeding the original 255-byte column.
+        assertNameRoundTripOnInsert("é".repeat(128));
+    }
+
+    @Test
+    void acceptsMultibyteNameAtCharacterLimitOnInsert() {
+        assertNameRoundTripOnInsert("é".repeat(255));
+    }
+
+    @Test
+    void acceptsMultibyteNameExceedingByteLimitOnUpdate() {
+        // In AL32UTF8, 128 copies of é occupy 256 bytes, exceeding the original 255-byte column.
+        assertNameRoundTripOnUpdate("é".repeat(128));
+    }
+
+    @Test
+    void acceptsMultibyteNameAtCharacterLimitOnUpdate() {
+        assertNameRoundTripOnUpdate("é".repeat(255));
+    }
+
+    @Test
+    void rejectsNamesExceedingCharacterLimitOnInsert() {
+        JsonObject request = Json.createObjectBuilder()
+                .add("name", "é".repeat(256))
+                .add("type", "Fire")
+                .build();
+        assertRejectedMutation(Method.POST, "/pokemon", request.toString(), 400);
+    }
+
+    @Test
+    void rejectsNamesExceedingCharacterLimitOnUpdate() {
+        Pokemon original = pokemon(get("/pokemon/get/Pikachu"));
+        JsonObject update = Json.createObjectBuilder()
+                .add("name", "é".repeat(256))
+                .add("type", "Fire")
+                .build();
+        assertRejectedMutation(Method.PUT, "/pokemon/" + original.id(), update.toString(), 400);
     }
 
     @Test
@@ -372,6 +442,55 @@ class PokemonApplicationTest {
         assertThat(pokemonList(get("/pokemon/all")), is(original));
     }
 
+    private void assertNameRoundTripOnInsert(String name) {
+        int expectedCount = count();
+        Integer insertedId = null;
+        try {
+            JsonObject request = Json.createObjectBuilder()
+                    .add("name", name)
+                    .add("type", "Fire")
+                    .build();
+            Pokemon inserted = pokemon(post(request));
+            insertedId = inserted.id();
+
+            assertThat(inserted, is(new Pokemon(insertedId, name, "Fire")));
+            assertThat(pokemonList(get("/pokemon/all")), hasItem(inserted));
+            assertThat(count(), is(expectedCount + 1));
+        } finally {
+            if (insertedId != null) {
+                delete(insertedId);
+            }
+        }
+        assertThat(count(), is(expectedCount));
+    }
+
+    private void assertNameRoundTripOnUpdate(String name) {
+        int expectedCount = count();
+        Integer insertedId = null;
+        try {
+            JsonObject request = Json.createObjectBuilder()
+                    .add("name", "E2E" + UUID.randomUUID().toString().replace("-", ""))
+                    .add("type", "Fire")
+                    .build();
+            insertedId = pokemon(post(request)).id();
+
+            JsonObject update = Json.createObjectBuilder()
+                    .add("name", name)
+                    .add("type", "Water")
+                    .build();
+            Pokemon updated = pokemon(put(insertedId, update));
+
+            assertThat(updated, is(new Pokemon(insertedId, name, "Water")));
+            assertThat(pokemonList(get("/pokemon/all")), hasItem(updated));
+            assertThat(count(), is(expectedCount + 1));
+        } finally {
+            if (insertedId != null) {
+                delete(insertedId);
+            }
+        }
+        assertThat(count(), is(expectedCount));
+    }
+
     private record Pokemon(int id, String name, String type) {
     }
 
@@ -397,12 +516,9 @@ class PokemonApplicationTest {
         @Override
         public void start() {
             super.start();
-            System.setProperty("data.url", jdbcUrl());
+            System.setProperty("data.url",
+                               "jdbc:oracle:thin:@%s:%d/FREEPDB1".formatted(getHost(), getMappedPort(ORACLE_PORT)));
             System.setProperty("helidon.serialFilter.pattern", "oracle.sql.converter.*");
-        }
-
-        private String jdbcUrl() {
-            return "jdbc:oracle:thin:@%s:%d/FREEPDB1".formatted(getHost(), getMappedPort(ORACLE_PORT));
         }
 
     }

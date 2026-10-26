@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.helidon.common.Api;
+import io.helidon.common.mapper.MapperException;
 import io.helidon.data.jdbc.JdbcClient;
 import io.helidon.http.BadRequestException;
 import io.helidon.webserver.http.Handler;
@@ -285,11 +286,16 @@ final class PokemonService implements HttpService {
     }
 
     private static int pokemonId(ServerRequest request) {
-        return request.path()
-                .pathParameters()
-                .first("id")
-                .asInt()
-                .orElseThrow(() -> new BadRequestException("No Pokemon id"));
+        try {
+            return request.path()
+                    .pathParameters()
+                    .first("id")
+                    .asInt()
+                    .orElseThrow(() -> new BadRequestException("No Pokemon id"));
+        } catch (MapperException e) {
+            throw new BadRequestException(
+                    "Pokemon id must be a valid 32-bit integer", e);
+        }
     }
 
     private static void validate(PokemonDto pokemonDto) {

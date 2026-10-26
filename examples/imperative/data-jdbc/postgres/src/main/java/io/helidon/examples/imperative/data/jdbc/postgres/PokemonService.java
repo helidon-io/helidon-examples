@@ -18,6 +18,7 @@ package io.helidon.examples.imperative.data.jdbc.postgres;
 import java.util.Objects;
 
 import io.helidon.common.Api;
+import io.helidon.common.mapper.MapperException;
 import io.helidon.http.BadRequestException;
 import io.helidon.service.registry.Service;
 import io.helidon.transaction.TxException;
@@ -71,11 +72,16 @@ final class PokemonService implements HttpService {
     }
 
     private static int pokemonId(ServerRequest request) {
-        return request.path()
-                .pathParameters()
-                .first("id")
-                .asInt()
-                .orElseThrow(() -> new BadRequestException("No Pokemon id"));
+        try {
+            return request.path()
+                    .pathParameters()
+                    .first("id")
+                    .asInt()
+                    .orElseThrow(() -> new BadRequestException("No Pokemon id"));
+        } catch (MapperException e) {
+            throw new BadRequestException(
+                    "Pokemon id must be a valid 32-bit integer", e);
+        }
     }
 
     private static void validate(PokemonDto pokemonDto) {
