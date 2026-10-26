@@ -32,7 +32,7 @@
     <artifactId>helidon-examples-integrations-oci-adbs</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>Helidon Examples Integrations OCI ADBS</name>
-    <description>An example showing itegration with Oracle Autonomous AI Database Serverless instances running in Oracle Cloud.</description>
+    <description>An example showing integration with Oracle Autonomous AI Database Serverless instances running in Oracle Cloud.</description>
 
     <properties>
 
@@ -43,7 +43,7 @@
         <compartment.ocid>${env.COMPARTMENT_OCID}</compartment.ocid>
         <database.ocid>${env.DATABASE_OCID}</database.ocid>
         <vault.ocid>${env.VAULT_OCID}</vault.ocid>
-        
+
         <!--
             The parent pom.xml (see https://github.com/helidon-io/helidon/blob/helidon-4.x/applications/se/pom.xml#L47)
             sets a configuration profile of "test", which changes how Helidon meta-configuration is resolved (see
