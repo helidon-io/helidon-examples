@@ -32,8 +32,8 @@ if [[ ! -s "${PGDATA}/PG_VERSION" ]]; then
 
     printf 'host all all all %s\n' "$(postgres -C password_encryption)" >> "${PGDATA}/pg_hba.conf"
 
-    # Start temporarily to create the requested application database.
-    pg_ctl -D "${PGDATA}" -w start
+    # Keep the temporary server off TCP and its readiness message out of the container logs.
+    pg_ctl -D "${PGDATA}" -o "-c listen_addresses=''" -l "${PGDATA}/bootstrap.log" -w start
     psql \
         --username "${POSTGRES_USER:-test}" \
         --no-password \

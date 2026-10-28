@@ -52,7 +52,8 @@ docker run --name postgres \
        -d helidon-postgres
 ```
 
-Follow the container logs until PostgreSQL reports that it is ready to accept connections:
+Monitor the container logs to confirm that PostgreSQL has finished starting and is ready to accept connections before
+loading the schema. The temporary initialization server writes its logs to `/var/lib/pgsql/data/bootstrap.log`:
 
 ```shell
 docker logs -f postgres

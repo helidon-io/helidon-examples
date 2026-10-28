@@ -52,7 +52,8 @@ docker run --name postgres \
 
 The image installs PostgreSQL Server on Oracle Linux 9 and uses the standalone entry point supplied by this example.
 
-Follow the container logs until PostgreSQL reports that it is ready to accept connections:
+Follow the container logs and wait for the final server's `database system is ready to accept connections` message
+before loading the schema. The temporary initialization server writes its logs to `/var/lib/pgsql/data/bootstrap.log`:
 
 ```shell
 docker logs -f postgres

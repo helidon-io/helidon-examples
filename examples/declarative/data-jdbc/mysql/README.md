@@ -34,7 +34,8 @@ mvn package -DskipTests
 
 ## Run
 
-Start a MySQL container for the sample application:
+Start a MySQL container for the sample application. The command below uses the AMD64/x86-64 image (`9.7.3`).
+For an ARM64/AArch64 Docker host, use `9.7.3-aarch64` instead.
 
 ```shell
 docker run --name mysql \

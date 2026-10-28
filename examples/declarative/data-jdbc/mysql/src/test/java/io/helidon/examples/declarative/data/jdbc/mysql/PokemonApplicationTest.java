@@ -40,6 +40,7 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
@@ -498,6 +499,12 @@ class PokemonApplicationTest {
 
         @Override
         public void start() {
+            String architecture = DockerClientFactory.instance().client().versionCmd().exec().getArch();
+            DockerImageName image = PokemonApplicationTest.IMAGE;
+            if ("arm64".equals(architecture) || "aarch64".equals(architecture)) {
+                image = image.withTag(image.getVersionPart() + "-aarch64");
+            }
+            setDockerImageName(image.asCanonicalNameString());
             super.start();
             System.setProperty("data.url", getJdbcUrl());
         }
