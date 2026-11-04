@@ -60,6 +60,7 @@
         <module>coherence</module>
         <module>telemetry</module>
         <module>declarative</module>
+        <module>imperative</module>
     </modules>
 
     <build>
