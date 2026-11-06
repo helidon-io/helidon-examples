@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package io.helidon.examples.webserver.sdp;
 import java.lang.System.Logger.Level;
 import java.util.Set;
 
+import io.helidon.common.Api;
 import io.helidon.common.buffers.BufferData;
 import io.helidon.common.buffers.Bytes;
 import io.helidon.webserver.ConnectionContext;
@@ -28,6 +29,7 @@ import io.helidon.webserver.spi.ServerConnectionSelector;
 /**
  * Sniffs the incoming bytes to see if it is the SDP protocol and allocates a connection.
  */
+@SuppressWarnings(Api.SUPPRESS_INTERNAL)
 public class SdpConnectionSelector implements ServerConnectionSelector {
 
     private static final System.Logger LOGGER = System.getLogger(SdpConnectionSelector.class.getName());
