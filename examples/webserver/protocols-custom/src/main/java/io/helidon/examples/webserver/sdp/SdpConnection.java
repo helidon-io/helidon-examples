@@ -18,6 +18,7 @@ package io.helidon.examples.webserver.sdp;
 
 import java.time.Duration;
 
+import io.helidon.common.Api;
 import io.helidon.common.buffers.BufferData;
 import io.helidon.common.buffers.DataReader;
 import io.helidon.common.buffers.DataWriter;
@@ -32,6 +33,7 @@ import io.helidon.webserver.spi.ServerConnection;
 /**
  * A ServerConnection that implements the Simple Demo Protocol (SDP) protocol.
  */
+@SuppressWarnings(Api.SUPPRESS_INTERNAL)
 public class SdpConnection implements ServerConnection {
 
     private final ConnectionContext ctx;

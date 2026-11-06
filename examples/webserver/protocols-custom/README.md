@@ -2,6 +2,11 @@
 
 This example implements a custom connection handler to support a custom network protocol.
 
+The connection handling interfaces used here, `ServerConnection` and `ServerConnectionSelector`, are internal Helidon APIs.
+They are unsupported for external use and may change or disappear in any release. The example uses
+`@SuppressWarnings(Api.SUPPRESS_INTERNAL)` on the two implementation classes to acknowledge that dependency and allow
+compilation with Helidon's API stability checks enabled.
+
 ## Build and run
 
 ```bash
