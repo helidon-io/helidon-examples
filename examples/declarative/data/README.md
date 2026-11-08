@@ -4,6 +4,10 @@ Helidon Data SE Declarative Example
 This example demonstrates a Java SE declarative application that utilizes Helidon Data, EclipseLink,
 WebServer, Hikari connection pool DataSource and MySQL database.
 
+The transaction API is Incubating and may change or be removed in any release.
+`PokemonEndpoint` acknowledges this with `Api.SUPPRESS_INCUBATING` alongside its
+existing Preview API acknowledgment.
+
 There are 2 repository interfaces in the example:
 
 - `PokemonRepository`
