@@ -56,7 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Verifies the sample against PostgreSQL.
  */
-@SuppressWarnings(Api.SUPPRESS_PREVIEW)
+@SuppressWarnings({Api.SUPPRESS_PREVIEW, Api.SUPPRESS_INCUBATING})
 @Testcontainers(disabledWithoutDocker = true)
 @ServerTest
 class PokemonApplicationTest {

@@ -4,6 +4,9 @@ Helidon Data SE Imperative Example
 This example demonstrates a Java SE imperative application that utilizes Helidon Data, EclipseLink,
 WebServer, Hikari connection pool DataSource and MySQL database.
 
+The transaction API is Incubating and may change or be removed in any release.
+`PokemonService` acknowledges this with `@SuppressWarnings(Api.SUPPRESS_INCUBATING)`.
+
 There are 2 repository interfaces in the example:
 
 - `PokemonRepository`

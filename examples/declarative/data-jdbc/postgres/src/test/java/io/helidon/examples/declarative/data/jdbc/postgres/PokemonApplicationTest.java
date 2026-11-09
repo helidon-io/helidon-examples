@@ -58,7 +58,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Exercises the HTTP endpoints and generated JDBC repositories with PostgreSQL.
  */
-@SuppressWarnings(Api.SUPPRESS_PREVIEW)
+@SuppressWarnings({Api.SUPPRESS_PREVIEW, Api.SUPPRESS_INCUBATING})
 @Testcontainers(disabledWithoutDocker = true)
 @ServerTest
 class PokemonApplicationTest {

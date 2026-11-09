@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Oracle and/or its affiliates.
+ * Copyright (c) 2025, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package io.helidon.examples.data.mysql;
 
 import java.util.stream.Collector;
 
+import io.helidon.common.Api;
 import io.helidon.http.BadRequestException;
 import io.helidon.service.registry.Services;
 import io.helidon.transaction.Tx;
@@ -30,6 +31,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 
+@SuppressWarnings(Api.SUPPRESS_INCUBATING)
 class PokemonService implements HttpService {
 
     private final PokemonRepository pokemonRepository = Services.get(PokemonRepository.class);
