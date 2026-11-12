@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2026 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ public class StatusTest {
 
     @Test
     void checkStatusMetrics() throws ExecutionException, InterruptedException {
-        checkAfterStatus(ResponseStatus.create(171));
+        checkAfterStatus(ResponseStatus.create(571));
         checkAfterStatus(Status.OK_200);
         checkAfterStatus(Status.CREATED_201);
         checkAfterStatus(Status.NO_CONTENT_204);
@@ -105,7 +105,7 @@ public class StatusTest {
                 .path("/greet")
                 .accept(MediaType.APPLICATION_JSON)
                 .request()
-                .get();
+                .await(TIMEOUT);
         assertThat("Status of /greet", response.status(), is(Status.OK_200));
         String entity = response.content().as(String.class).await(TIMEOUT);
         assertThat(entity, not(isEmptyString()));
@@ -121,10 +121,10 @@ public class StatusTest {
                 .path("/status/" + status.code())
                 .accept(MediaType.APPLICATION_JSON)
                 .request()
-                .get();
+                .await(TIMEOUT);
 
         assertThat("Response status", response.status().code(), is(status.code()));
-        String entity = response.content().as(String.class).await(TIMEOUT);
+        response.content().as(String.class).await(TIMEOUT);
 
         checkCounters(status, before);
     }
