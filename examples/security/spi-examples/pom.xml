@@ -24,7 +24,7 @@
     <parent>
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-se</artifactId>
-        <version>27.0.1</version>
+        <version>27.0.2</version>
         <relativePath/>
     </parent>
     <groupId>io.helidon.examples.security</groupId>
@@ -37,7 +37,7 @@
     </description>
 
     <properties>
-        <version.lib.mockito>2.23.4</version.lib.mockito>
+        <version.lib.mockito>5.23.0</version.lib.mockito>
     </properties>
 
     <dependencies>
