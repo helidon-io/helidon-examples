@@ -37,7 +37,7 @@
     </description>
 
     <properties>
-        <version.lib.mockito>2.23.4</version.lib.mockito>
+        <version.lib.mockito>5.23.0</version.lib.mockito>
     </properties>
 
     <dependencies>
