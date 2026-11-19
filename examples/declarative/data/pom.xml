@@ -38,8 +38,30 @@
 
     <properties>
         <mainClass>io.helidon.examples.declarative.data.Main</mainClass>
+        <version.lib.asm>9.11.1</version.lib.asm>
         <version.lib.eclipselink>5.0.2</version.lib.eclipselink>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- EclipseLink needs ASM with Java 28 class file support. -->
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${version.lib.asm}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+                <version>${version.lib.asm}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-tree</artifactId>
+                <version>${version.lib.asm}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
