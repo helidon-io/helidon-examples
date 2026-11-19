@@ -35,6 +35,7 @@
 
     <modules>
         <module>adbs</module>
+        <module>adbs-iam</module>
         <module>atp</module>
         <module>atp-cdi</module>
         <module>genai</module>
