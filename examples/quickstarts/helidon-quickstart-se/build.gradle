@@ -17,6 +17,7 @@
 plugins {
     id 'java'
     id 'application'
+    id("org.graalvm.buildtools.native") version "0.11.0"
 }
 
 group = 'io.helidon.examples'
@@ -56,6 +57,7 @@ dependencies {
     implementation 'io.helidon.webserver.observe:helidon-webserver-observe-metrics'
     implementation 'io.helidon.config:helidon-config-yaml'
     implementation 'io.helidon.health:helidon-health-checks'
+    runtimeOnly 'io.helidon.logging:helidon-logging-jul'
 
     testImplementation 'io.helidon.webserver.testing.junit5:helidon-webserver-testing-junit5'
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -64,6 +66,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    nativeImageClasspath "io.helidon.integrations.graal:helidon-graal-native-image-extension"
 }
 
 // define a custom task to copy all dependencies in the runtime classpath
